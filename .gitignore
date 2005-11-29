@@ -1,7 +1,0 @@
-target/
-elateXam-integrationtest/velocity.log
-examServer/velocity.log
-examServer/examserver.log
-.classpath
-.project
-.settings/

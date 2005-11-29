@@ -1,9 +1,0 @@
-- add security interceptors in Spring config
-- css problems below footer.jsp
-- idCount: handle long overflow
-- taskmodel-core-view: image support
-- handle missing user attributes -> exception currently [done?]
-- provide more feedback if authentication fails (account disabled, WS error messages)
-
-DONE:
-- cache.ccf should be in taskmodel-core.jar

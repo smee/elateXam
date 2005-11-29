@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSPY v5 U (http://www.xmlspy.com) by tb (ul) -->
-<xs:schema targetNamespace="http://examServer.thorstenberger.de" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://examServer.thorstenberger.de" elementFormDefault="qualified" attributeFormDefault="unqualified">
-	<xs:import namespace="http://examServer.thorstenberger.de/users" schemaLocation="users.xsd"/>
-	<xs:import namespace="http://examServer.thorstenberger.de/config" schemaLocation="config.xsd"/>
-	<xs:import namespace="http://examServer.thorstenberger.de/taskDefs" schemaLocation="taskDefs.xsd"/>
-	<xs:import namespace="http://examServer.thorstenberger.de/taskHandling" schemaLocation="taskHandling.xsd"/>
-</xs:schema>

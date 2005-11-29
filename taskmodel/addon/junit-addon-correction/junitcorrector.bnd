@@ -1,9 +1,0 @@
-Bundle-Name: junit-addon-corrector
-Bundle-Activator: junitcorrector.Activator
-Bundle-SymbolicName: junit-addon-corrector
-Extension-Name: junit-addon-corrector
-Bundle-ManifestVersion: 2
-Private-Package: junitcorrector.*
-Import-Package: correction.junit
-Bundle-ClassPath: .,junit-3.8.1.jar, groovy-all-1.5.4.jar
-Include-Resource: target/lib/

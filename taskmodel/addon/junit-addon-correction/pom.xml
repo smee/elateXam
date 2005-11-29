@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  
+    <parent>
+    <artifactId>taskmodel-addon</artifactId>
+    <groupId>de.elatexam</groupId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+  
+  <groupId>de.elatexam</groupId>
+  <artifactId>junit-addon-correction</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <name>JUnit Correction Implementation</name>
+  <description>Provide java programming task corrector implementation</description>
+  <inceptionYear>2007</inceptionYear>
+  <packaging>bundle</packaging>
+  
+  <build>
+    <plugins>
+      <plugin> 
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <instructions>
+	   <Export-Package>!*</Export-Package> 
+	   <Private-Package>junitcorrector.*</Private-Package>
+	   <Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
+	  </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>  
+   <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>1.5.4</version>
+        </dependency>
+ <!-- bundle dependencies -->
+        <dependency>
+            <groupId>de.elatexam</groupId>
+            <artifactId>junit-addon-correction-interfaces</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+	  <scope>provided</scope>	    
+        </dependency> 
+<!-- osgi interfaces -->
+    <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <version>1.2.0</version>
+	  <scope>provided</scope>
+        </dependency>
+<!-- remote osgi -->
+        <!--  for remote services -->
+        <dependency>
+            <groupId>ch.ethz.iks.r-osgi</groupId>
+            <artifactId>remote</artifactId>
+            <version>1.0.0.RC3</version>
+	  <scope>provided</scope>	    
+        </dependency>
+        <dependency>
+            <groupId>ch.ethz.iks.slp</groupId>
+            <artifactId>jslp-osgi</artifactId>
+            <version>1.0.0.RC2</version>
+	  <scope>provided</scope>	    
+        </dependency> 
+</dependencies>
+</project>

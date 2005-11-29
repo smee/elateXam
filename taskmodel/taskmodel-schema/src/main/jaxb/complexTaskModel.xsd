@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v5 U (http://www.xmlspy.com) by tb (ul) -->
+<xs:schema targetNamespace="http://complex.taskmodel.thorstenberger.de" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://complex.taskmodel.thorstenberger.de" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="1.0" jaxb:extensionBindingPrefixes="xjc">
+	<xs:annotation>
+		<xs:appinfo>
+			<jaxb:globalBindings generateIsSetMethod="true">
+				<xjc:serializable uid="1"/>
+			</jaxb:globalBindings>
+		</xs:appinfo>
+	</xs:annotation>
+	<xs:import namespace="http://complex.taskmodel.thorstenberger.de/complexTaskDef" schemaLocation="complexTaskDef.xsd"/>
+	<xs:import namespace="http://complex.taskmodel.thorstenberger.de/complexTaskHandling" schemaLocation="complexTaskHandling.xsd"/>
+</xs:schema>

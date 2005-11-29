@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v5 U (http://www.xmlspy.com) by tb (ul) -->
+<xs:schema targetNamespace="http://examServer.thorstenberger.de/taskHandling" xmlns="http://examServer.thorstenberger.de/taskDefs" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="taskHandling">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="tasklet" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>attribute "annotation" is deprecated</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="correctorHistory" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:attribute name="corrector" type="xs:string" use="required"/>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="flag" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+							<xs:element name="correctorAnnotation" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute name="corrector" type="xs:string" use="required"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="studentAnnotation" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute name="date" type="xs:long" use="required"/>
+											<xs:attribute name="acknowledged" type="xs:boolean" use="optional" default="false"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:choice minOccurs="0">
+								<xs:element name="autoCorrection">
+									<xs:complexType>
+										<xs:attribute name="points" type="xs:float" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="manualCorrection" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:attribute name="points" type="xs:float" use="required"/>
+										<xs:attribute name="corrector" type="xs:string" use="optional"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:choice>
+						</xs:sequence>
+						<xs:attribute name="id" type="xs:long" use="required"/>
+						<xs:attribute name="login" type="xs:string" use="required"/>
+						<xs:attribute name="taskDefId" type="xs:long" use="required"/>
+						<xs:attribute name="status" type="xs:string" use="required"/>
+						<xs:attribute name="assignedCorrector" type="xs:string" use="optional"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="idCount" type="xs:long" use="required"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v5 U (http://www.xmlspy.com) by tb (ul) -->
+<xs:schema targetNamespace="http://complex.taskmodel.thorstenberger.de/complexTaskHandling" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://complex.taskmodel.thorstenberger.de/complexTaskHandling" elementFormDefault="qualified" attributeFormDefault="unqualified" jaxb:version="1.0" jaxb:extensionBindingPrefixes="xjc">
+	<xs:element name="complexTaskHandling">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="try" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="page" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:choice minOccurs="0" maxOccurs="unbounded">
+										<xs:element name="mcSubTask">
+											<xs:complexType>
+												<xs:complexContent>
+													<xs:extension
+														base="SubTaskType">
+														<xs:sequence>
+															<xs:element
+																name="answer" minOccurs="0" maxOccurs="unbounded">
+																<xs:complexType>
+																	<xs:attribute
+																		name="refId" type="xs:string" use="required" />
+																	<xs:attribute
+																		name="selected" type="xs:boolean" use="required" />
+																</xs:complexType>
+															</xs:element>
+														</xs:sequence>
+
+
+
+													</xs:extension>
+												</xs:complexContent>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="clozeSubTask">
+											<xs:complexType>
+												<xs:complexContent>
+													<xs:extension
+														base="SubTaskType">
+														<xs:sequence>
+															<xs:element
+																name="gap" minOccurs="0" maxOccurs="unbounded">
+																<xs:complexType>
+																	<xs:sequence>
+																		<xs:element
+																			name="gapValue" type="xs:string" />
+																		<xs:choice
+																			minOccurs="0">
+																			<xs:element
+																				name="autoCorrection">
+																				<xs:complexType>
+																					<xs:attribute
+																						name="correct" type="xs:boolean" use="required" />
+																				</xs:complexType>
+																			</xs:element>
+																			<xs:element
+																				name="manualCorrection" maxOccurs="unbounded">
+																				<xs:complexType>
+																					<xs:attribute
+																						name="corrector" type="xs:string" use="required" />
+																					<xs:attribute
+																						name="correct" type="xs:boolean" use="required" />
+																				</xs:complexType>
+																			</xs:element>
+																		</xs:choice>
+																	</xs:sequence>
+																</xs:complexType>
+															</xs:element>
+
+														</xs:sequence>
+
+
+
+													</xs:extension>
+												</xs:complexContent>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="textSubTask">
+											<xs:complexType>
+												<xs:complexContent>
+													<xs:extension
+														base="SubTaskType">
+														<xs:sequence>
+															<xs:element
+																name="answer" type="xs:string" minOccurs="0" />
+
+														</xs:sequence>
+
+
+
+													</xs:extension>
+												</xs:complexContent>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="mappingSubTask">
+											<xs:complexType>
+												<xs:complexContent>
+													<xs:extension
+														base="SubTaskType">
+														<xs:sequence>
+															<xs:element
+																name="concept" minOccurs="0" maxOccurs="unbounded">
+																<xs:complexType>
+																	<xs:attribute
+																		name="assigned" type="xs:string" use="optional" />
+																</xs:complexType>
+															</xs:element>
+														</xs:sequence>
+
+
+
+													</xs:extension>
+												</xs:complexContent>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="paintSubTask">
+											<xs:complexType>
+												<xs:complexContent>
+													<xs:extension
+														base="SubTaskType">
+														<xs:sequence>
+															<xs:element
+																name="pictureString" type="xs:string" minOccurs="0" />
+															<xs:element
+																name="textAnswer" type="xs:string" minOccurs="0" />
+															<xs:element
+																name="undoData" type="xs:string" minOccurs="0" />
+															<xs:element
+																name="resetted" type="xs:boolean" minOccurs="0" />
+														</xs:sequence>
+
+
+
+													</xs:extension>
+												</xs:complexContent>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="addonSubTask">
+											<xs:complexType>
+												<xs:complexContent>
+													<xs:extension
+														base="SubTaskType">
+														<xs:sequence>
+															<xs:element	name="Memento" type="xs:anyType" xjc:processContents="skip">
+																<xs:annotation><xs:appinfo>
+																<xjc:dom />
+															 </xs:appinfo></xs:annotation>
+															</xs:element>
+														</xs:sequence>
+														<xs:attribute
+															name="taskType" type="xs:string">
+														</xs:attribute>
+													</xs:extension>
+												</xs:complexContent>
+											</xs:complexType>
+										</xs:element>
+									</xs:choice>
+									<xs:attribute name="no" type="xs:int" use="required"/>
+									<xs:attribute name="categoryRefID" type="xs:string" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="startTime" type="xs:long" use="required"/>
+						<xs:attribute name="submitted" type="xs:boolean" use="required"/>
+						<xs:attribute name="extensionTime" type="xs:long" use="optional"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="SubTaskType">
+		<xs:sequence>
+			<xs:element name="needsManualCorrection" type="xs:boolean"
+				default="true" minOccurs="0" />
+			<xs:choice minOccurs="0">
+				<xs:element name="manualCorrection"
+					maxOccurs="unbounded" type="manualCorrectionType">
+				</xs:element>
+				<xs:element name="autoCorrection" type="autoCorrectionType">
+				</xs:element>
+			</xs:choice>
+
+		</xs:sequence>
+		<xs:attribute name="virtualNum" type="xs:string"
+			use="required">
+		</xs:attribute>
+		<xs:attribute name="refId" type="xs:string" use="optional"></xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="manualCorrectionType">
+		<xs:attribute use="required" name="points" type="xs:float"></xs:attribute>
+		<xs:attribute use="required" name="corrector"
+			type="xs:string">
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="autoCorrectionType">
+		<xs:attribute use="required" name="points" type="xs:float"></xs:attribute>
+	</xs:complexType>
+</xs:schema>

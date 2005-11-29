@@ -1,0 +1,2 @@
+fixed Dialog.js, see:
+http://trac.dojotoolkit.org/ticket/1967

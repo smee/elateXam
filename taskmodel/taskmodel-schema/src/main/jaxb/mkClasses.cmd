@@ -1,0 +1,1 @@
+..\..\jaxb\jaxb-ri-1.0.6\bin\xjc -extension -d ..\src -p de.thorstenberger.taskmodel.complex.jaxb complexTaskModel.xsd

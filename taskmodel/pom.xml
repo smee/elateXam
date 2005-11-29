@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>taskmodel</artifactId>
+  <groupId>de.elatexam</groupId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Taskmodel Parent</name>
+  <description>Parent for all taskmodel artifacts</description>
+  <url></url>
+
+  <inceptionYear>2005</inceptionYear>
+
+  <licenses>
+    <license>
+      <name>GPL v2</name>
+      <distribution>repo</distribution>
+      <comments></comments>
+      <url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <modules>
+    <module>taskmodel-schema</module>
+    <module>taskmodel-api</module>
+    <module>taskmodel-core</module>
+    <module>drawTask</module>
+    <module>taskmodel-core-view</module>
+    <module>addon</module>
+  </modules>
+  
+  <distributionManagement>
+    <snapshotRepository>
+      <id>sonatype-nexus-snapshots</id>
+        <name>Sonatype Nexus Snapshots</name>
+        <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <relocation>
+    
+    </relocation>
+  </distributionManagement>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>commons-logging</groupId>
+        <artifactId>commons-logging</artifactId>
+        <version>1.1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>2.4</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-collections</groupId>
+        <artifactId>commons-collections</artifactId>
+        <version>3.2.1</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>1.4</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-beanutils</groupId>
+        <artifactId>commons-beanutils</artifactId>
+        <version>1.7.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>2.5.4</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-core</artifactId>
+        <version>2.5.4</version>
+      </dependency>      
+      <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.14</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <developers>
+    <developer>
+      <id>berger</id>
+      <name>Thorsten Berger</name>
+      <email>berger@informatik.uni-leipzig.de</email>
+      <url />
+      <organization>University of Leipzig</organization>
+      <organizationUrl>http://bis.informatik.uni-leipzig.de/</organizationUrl>
+      <timezone />
+    </developer>
+    <developer>
+      <id>dienst</id>
+      <name>Steffen Dienst</name>
+      <email>sdienst@informatik.uni-leipzig.de</email>
+      <url />
+      <organization>University of Leipzig</organization>
+      <organizationUrl>http://bis.informatik.uni-leipzig.de/</organizationUrl>
+      <timezone />
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:svn:https://elateportal.svn.sourceforge.net/svnroot/elateportal/trunk/taskmodel</connection>
+    <developerConnection>scm:svn:https://elateportal.svn.sourceforge.net/svnroot/elateportal/trunk/taskmodel</developerConnection>
+    <tag>HEAD</tag>
+    <url>http://elateportal.svn.sourceforge.net/viewvc/elateportal/trunk/taskmodel</url>
+  </scm>
+
+  <prerequisites>
+    <maven>2.1.0</maven>
+  </prerequisites>
+
+  <repositories>
+    <repository>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>never</updatePolicy>
+        <checksumPolicy>fail</checksumPolicy>
+      </snapshots>
+      <id>codehausSnapshots</id>
+      <name>Codehaus Snapshots</name>
+      <url>http://snapshots.maven.codehaus.org/maven2</url>
+      <layout>default</layout>
+    </repository>
+<repository>
+  <id>maven2-repository.dev.java.net</id>
+  <name>Java.net Repository for Maven</name>
+  <url>http://download.java.net/maven/2/</url>
+  <layout>default</layout>
+</repository>
+
+</repositories>
+
+
+  <build>
+    <defaultGoal>install</defaultGoal>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven.compiler.plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>${maven.assembly.plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-eclipse-plugin</artifactId>
+          <version>${maven.eclipse.plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>${maven.javadoc.plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>buildnumber-maven-plugin</artifactId>
+          <version>${mojo.buildnumber.plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>${maven.release.plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>${maven.source.plugin.version}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>${java.compiler.version}</source>
+          <target>${java.compiler.version}</target>
+          <encoding>${encoding}</encoding>
+          <maxmem>300M</maxmem>
+          <fork>${java.compiler.fork}</fork>
+          <optimize>true</optimize>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-source</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- buildnumber -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>buildnumber-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>make-buildnumber</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>create</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <doUpdate>false</doUpdate>
+          <doCheck>false</doCheck>
+          <format>{0,date,yyyyMMdd}</format>
+          <items>
+            <item>timestamp</item>
+          </items>
+        </configuration>
+      </plugin>
+      <!-- erstelle eclipse projekte aus unterprojekten mit 'mvn eclipse:eclipse' -->
+      <plugin>
+        <inherited>true</inherited>
+        <artifactId>maven-eclipse-plugin</artifactId>
+        <configuration>
+          <projectNameTemplate>[artifactId]</projectNameTemplate>
+          <downloadSources>true</downloadSources>
+          <downloadJavadocs>true</downloadJavadocs>
+          <wtpmanifest>false</wtpmanifest>
+          <wtpapplicationxml>true</wtpapplicationxml>
+          <wtpversion>2.0</wtpversion>
+        </configuration>
+       </plugin>
+     
+        <!-- 
+	  Stoppe den Build, wenn unterschiedliche Versionen derselben Dependency verwendet werden soll.
+	  Aufruf mit: mvn com.hexapixel.maven.plugins:maven-breakonversionclash-plugin:clash-detection 
+	  http://hexapixel.com/software/maven-version-clash-plugin
+        -->
+<!--        
+	<plugin> 
+        <groupId>com.hexapixel.maven.plugins</groupId> 
+        <artifactId>maven-breakonversionclash-plugin</artifactId>
+        <version>1.0.1</version>
+        <configuration> 
+          <halt>FAIL</halt> 
+          <depth>DEEP</depth> 
+        </configuration>  
+      </plugin>  
+ -->      
+    </plugins>
+  </build>
+
+  <reporting>
+     <plugins>
+       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </reporting>
+
+  <profiles>
+  </profiles>
+
+  <properties>
+    <maven.compiler.plugin.version>2.0.2</maven.compiler.plugin.version>
+    <maven.eclipse.plugin.version>2.5.1</maven.eclipse.plugin.version>
+    <maven.site.plugin.version>2.0-beta-7</maven.site.plugin.version>
+    <maven.assembly.plugin.version>2.2-beta-2</maven.assembly.plugin.version>
+    <maven.javadoc.plugin.version>2.5</maven.javadoc.plugin.version>
+    <maven.release.plugin.version>2.0-beta-8</maven.release.plugin.version>
+    <maven.source.plugin.version>2.0.4</maven.source.plugin.version>
+    <maven.project-info.report.plugin.version>2.1</maven.project-info.report.plugin.version>
+    <mojo.buildnumber.plugin.version>1.0-beta-1</mojo.buildnumber.plugin.version>
+    <mojo.stat-scm.plugin.version>1.1.0</mojo.stat-scm.plugin.version>
+    <mojo.l10n-maven-plugin.version>1.0-alpha-1</mojo.l10n-maven-plugin.version>
+    <maven-overview-plugin.version>1.3</maven-overview-plugin.version>
+
+    <maven.javadoc.plugin.quiet>true</maven.javadoc.plugin.quiet>
+
+    <encoding>UTF-8</encoding>
+
+    <java.compiler.version>1.5</java.compiler.version>
+  </properties>
+
+</project>

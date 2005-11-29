@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+                               "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+<struts-config>
+ <data-sources/>
+ <form-beans>
+ <form-bean name="correctorsForm" type="de.thorstenberger.taskmodel.view.correction.CorrectorsForm"></form-bean>
+ </form-beans>
+ <global-exceptions/>
+ <global-forwards>
+  <forward name="error" path="/error.jsp"/>
+ </global-forwards>
+ <action-mappings>
+  <action path="/execute" type="de.thorstenberger.taskmodel.view.ExecuteAction">
+   <forward name="success" path="/execute.jsp"/>
+   <forward name="execute" path="/execute.do"/>
+  </action>
+  <action path="/savePage" type="de.thorstenberger.taskmodel.view.SavePageAction">
+   <forward name="success" path="/execute.do" redirect="false"/>
+  </action>
+  <action path="/commit" type="de.thorstenberger.taskmodel.view.CommitAction">
+   <forward name="success" path="/committed.jsp"/>
+  </action>
+  <action path="/showSolution" type="de.thorstenberger.taskmodel.view.ShowSolutionAction">
+   <forward name="success" path="/showCorrection.jsp"/>
+  </action>
+  <action path="/tutorCorrectionOverview" type="de.thorstenberger.taskmodel.view.correction.TutorCorrectionOverviewAction">
+   <forward name="success" path="/correction/tutorCorrectionOverview.jsp"/>
+  </action>
+  <action path="/assignTasklet" type="de.thorstenberger.taskmodel.view.correction.AssignTaskletAction">
+   <forward name="success" path="/tutorCorrectionOverview.do"/>
+   <forward name="successToCorrection" path="/doCorrection.do"/>
+  </action>
+  <action path="/bulkAssignTasklets" name="correctorsForm" validate="false" type="de.thorstenberger.taskmodel.view.correction.BulkAssignTaskletsAction">
+   <forward name="success" path="/correctionSettings.do"/>
+  </action>
+  <action path="/doCorrection" type="de.thorstenberger.taskmodel.view.correction.DoCorrectionAction">
+   <forward name="success" path="/correction/doCorrection.jsp"/>
+   <forward name="doCorrection" path="/doCorrection.do"/>
+  </action>
+  <action path="/saveCorrection" type="de.thorstenberger.taskmodel.view.correction.SaveCorrectionAction">
+   <forward name="success" path="/doCorrection.do"/>
+  </action>
+  <action path="/saveStudentAnnotation" type="de.thorstenberger.taskmodel.view.SaveStudentAnnotationAction">
+   <forward name="success" path="/showSolution.do"/>
+  </action>
+  <action path="/viewAllTasklets" type="de.thorstenberger.taskmodel.view.correction.ViewAllTaskletsAction">
+   <forward name="success" path="/correction/viewAllTasklets.jsp"/>
+  </action>
+  <action path="/acknowledge" type="de.thorstenberger.taskmodel.view.correction.AcknowledgeAction">
+   <forward name="success" path="/doCorrection.do"/>
+  </action>
+  <action path="/showCorrectionToCorrector" type="de.thorstenberger.taskmodel.view.correction.ShowCorrectionToCorrectorAction">
+   <forward name="success" path="/correction/showCorrectionToCorrector.jsp"/>
+  </action>
+  <action path="/complexTaskStructure" type="de.thorstenberger.taskmodel.view.statistics.ComplexTaskStructureAction">
+   <forward name="success" path="/statistics/complexTaskStructure.jsp"/>
+  </action>
+  <action path="/ajaxSaveStudentAnnotation" type="de.thorstenberger.taskmodel.view.AJAXSaveStudentAnnotationAction">
+   <forward name="success" path="/ajaxResponse"/>
+  </action>
+  <action path="/unassignTaskletFromCorrector" type="de.thorstenberger.taskmodel.view.correction.UnassignTaskletAction">
+   <forward name="success" path="/doCorrection.do"/>
+   <forward name="tutorListSuccess" path="/tutorCorrectionOverview.do"/>
+   <forward name="successToAllTaskletsList" path="/viewAllTasklets.do"/>
+  </action>
+  <action path="/correctionSettings" name="correctorsForm" validate="false" type="de.thorstenberger.taskmodel.view.correction.CorrectionSettingsAction">
+   <forward name="success" path="/correction/correctionSettings.jsp"/>
+  </action>
+  <action path="/ajaxAutoReCorrection" type="de.thorstenberger.taskmodel.view.correction.AutoReCorrectionAjaxAction">
+   <forward name="success" path="/ajaxResponse"/>
+  </action>
+ </action-mappings>
+ <controller nocache="true"/>
+ <message-resources parameter="de.thorstenberger.taskmodel.view.resources.Messages"/>
+</struts-config>

@@ -1,0 +1,1 @@
+xjc -extension -d ..\src -p de.thorstenberger.taskmodel.complex.jaxb complexTaskModel.xsd

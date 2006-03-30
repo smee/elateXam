@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <extend>${basedir}/../project-info.xml</extend>
+    <pomVersion>3</pomVersion>
+    <artifactId>taskmodel-core</artifactId>
+    <organization />
+    <groupId>elate</groupId>
+    <name>The taskmodel core implementation for eTesting</name>
+    <package>de.thorstenberger.taskmodel</package>
+    <currentVersion>${elatePortal.version}</currentVersion>
+    <repository />
+    <dependencies>
+    
+   	    <dependency>
+	      <groupId>elate</groupId>
+	      <artifactId>taskmodel-api</artifactId>
+	      <version>${elatePortal.version}</version>
+	      <type>jar</type>
+	    </dependency>
+	    <dependency>
+	      <groupId>commons-logging</groupId>
+	      <artifactId>commons-logging</artifactId>
+	      <version>1.0.4</version>
+	      <type>jar</type>
+	    </dependency>
+	    <dependency>
+	      <groupId>springframework</groupId>
+	      <artifactId>spring</artifactId>
+	      <version>1.2.5</version>
+	      <type>jar</type>
+	    </dependency>
+	    <dependency>
+	      <groupId>springframework</groupId>
+	      <artifactId>spring-core</artifactId>
+	      <version>1.2.5</version>
+	      <type>jar</type>
+	    </dependency>
+
+
+<!-- property "war.bundle" is irrelevant in this case -->
+	    <dependency>
+	      <groupId>jaxb</groupId>
+	      <artifactId>jaxb-api</artifactId>
+	      <type>jar</type>
+	      <properties>
+	        <war.bundle>true</war.bundle>
+	      </properties>
+	    </dependency>
+	    <dependency>
+	      <groupId>jaxb</groupId>
+	      <artifactId>jaxb-impl</artifactId>
+	      <type>jar</type>
+	      <properties>
+	        <war.bundle>true</war.bundle>
+	      </properties>
+	    </dependency>
+	    <dependency>
+	      <groupId>jaxb</groupId>
+	      <artifactId>jaxb-libs</artifactId>
+	      <type>jar</type>
+	      <properties>
+	        <war.bundle>true</war.bundle>
+	      </properties>
+	    </dependency>
+	    <dependency>
+	      <groupId>jaxb</groupId>
+	      <artifactId>namespace</artifactId>
+	      <type>jar</type>
+	      <properties>
+	        <war.bundle>true</war.bundle>
+	      </properties>
+	    </dependency>
+	    <dependency>
+	      <groupId>jaxb</groupId>
+	      <artifactId>relaxng-datatype</artifactId>
+	      <type>jar</type>
+	      <properties>
+	        <war.bundle>true</war.bundle>
+	      </properties>
+	    </dependency>
+	    <dependency>
+	      <groupId>jaxb</groupId>
+	      <artifactId>xsdlib</artifactId>
+	      <type>jar</type>
+	      <properties>
+	        <war.bundle>true</war.bundle>
+	      </properties>
+	    </dependency>
+
+	    <dependency>
+	      <groupId>commons-lang</groupId>
+	      <artifactId>commons-lang</artifactId>
+	      <version>2.0</version>
+	      <type>jar</type>
+	      <properties>
+	        <war.bundle>true</war.bundle>
+	      </properties>
+	    </dependency>
+	    <dependency>
+	      <groupId>jcs</groupId>
+	      <artifactId>jcs</artifactId>
+	      <version>20030822.182132</version>
+	      <type>jar</type>
+	      <properties>
+	        <war.bundle>true</war.bundle>
+	      </properties>
+	    </dependency>
+
+
+	</dependencies>    
+    <build>
+        <sourceDirectory>src</sourceDirectory>
+        <resources>
+      <resource>
+        <directory>${basedir}/src</directory>
+        <includes>
+          <include>**/*.properties</include>
+          <include>**/*.ser</include>
+          <include>**/*.dtd</include>
+          <include>**/*.xml</include>
+          <include>**/*.ccf</include>
+        </includes>
+        <filtering>false</filtering>
+      </resource>
+
+        </resources>
+        <unitTestSourceDirectory>src</unitTestSourceDirectory>
+        <unitTest>
+            <includes>
+                <include>**/Test*.java</include>
+            </includes>
+            <resources>
+                <resource>
+                    <directory>${basedir}/src/test</directory>
+                    <excludes>
+                        <exclude>**/*.java</exclude>
+                    </excludes>
+                    <filtering>false</filtering>
+                </resource>
+            </resources>
+        </unitTest>
+    </build>
+    <reports>
+        <report>maven-javadoc-plugin</report>
+    </reports>
+</project>
+

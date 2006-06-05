@@ -63,7 +63,7 @@ public class ComplexTaskHandlingHelperImpl implements ComplexTaskHandlingHelper 
 			// create it for the first time
 			if( xmlComplexTaskHandlingFile == null || !xmlComplexTaskHandlingFile.exists() || xmlComplexTaskHandlingFile.length() == 0 ){
 				complexTaskHandlingElem = objectFactory.createComplexTaskHandling();
-				save();
+				marshallXML();
 				return;
 			}
 			
@@ -100,7 +100,7 @@ public class ComplexTaskHandlingHelperImpl implements ComplexTaskHandlingHelper 
 		
 	}
 	
-	public void save(){
+	public void marshallXML(){
 		
 		BufferedOutputStream bos;
 		try {

@@ -55,7 +55,6 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 
 	
 	private TaskDef_Complex complexTaskDef;
-//	private ComplexTaskDefHelper ctDefHelper;
 	private ComplexTaskHandlingHelper ctHandlingHelper;
 	private SubTaskFactory subtaskFactory;
 	
@@ -139,7 +138,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 
 		// Ok, falls ein schon vorgefertigter Aufgaben-Master vorliegt, dann den verwenden,
 		// sonst neu erstellen
-		// not implemented any more
+		// not implemented any more!
 //		MasterFactory.Master master = MasterFactory.getInstance().getClonedMaster( task.getId() );
 		ComplexTaskHandlingType.TryType.PageType[] newPages;
 		
@@ -266,7 +265,6 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 		
 		if( allCorrected ){
 			getTaskletCorrection().setPoints( points );
-//			setPoints( points );
 			setStatus( CORRECTED );
 		}else
 			setStatus( SOLVED );
@@ -275,7 +273,6 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 		try {
 			save();
 		} catch (TaskApiException e) {
-			// TODO Auto-generated catch block
 			throw new TaskModelPersistenceException( e );
 		}
 
@@ -324,7 +321,6 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
         try {
 			save();
 		} catch (TaskApiException e) {
-			// TODO Auto-generated catch block
 			throw new TaskModelPersistenceException( e );
 		}
 
@@ -338,7 +334,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 		super.save();
 		
 		// save the JAXB-DOM
-		ctHandlingHelper.save();
+		ctHandlingHelper.marshallXML();
 	}
 
 	/* (non-Javadoc)
@@ -424,8 +420,6 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 		List ret = new ArrayList();
 		ObjectFactory objectFactory = new ObjectFactory();
 		// mit Aufgaben füllen
-		
-//		SubTaskFactory subTaskFactory = getSubTaskFactory();
 		
 		List cats = ctDefHandler.getComplexTask().getCategory();
 		Iterator catIt = cats.iterator();

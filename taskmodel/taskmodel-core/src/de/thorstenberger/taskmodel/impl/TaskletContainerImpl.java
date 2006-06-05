@@ -96,5 +96,18 @@ public class TaskletContainerImpl implements TaskletContainer {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.TaskletContainer#reset()
+	 */
+	public synchronized void reset() {
+		try {
+			userObjectCache.destroy();
+		} catch (CacheException e) {
+			throw new TaskModelPersistenceException( e );
+		}
+		
+	}
+
+	
 
 }

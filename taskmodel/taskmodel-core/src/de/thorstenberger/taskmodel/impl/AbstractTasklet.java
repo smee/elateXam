@@ -86,6 +86,10 @@ public abstract class AbstractTasklet implements Tasklet {
 		}
 	}
 	
+	/**
+	 * saves the Tasklet in the persistent store
+	 * @throws TaskApiException
+	 */
 	protected synchronized void save() throws TaskApiException{
 		taskFactory.storeTasklet( this );
 	}

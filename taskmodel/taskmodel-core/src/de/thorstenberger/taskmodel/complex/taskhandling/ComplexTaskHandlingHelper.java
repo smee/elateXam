@@ -29,7 +29,7 @@ import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType;
  */
 public interface ComplexTaskHandlingHelper {
 
-	public void save();
+	public void marshallXML();
 	
 	/**
 	 * Gibt Anzahl verbrauchter Versuche zurück.

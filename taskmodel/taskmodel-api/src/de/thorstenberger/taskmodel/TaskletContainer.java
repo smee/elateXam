@@ -33,4 +33,8 @@ public interface TaskletContainer {
 	
 	public void removeTasklet( long taskId, String userId ) throws TaskApiException;
 	
+    /**
+     * force subsequent refresh from the persistent store, that means the TaskFactory implementation 
+     */
+    public void reset();
 }

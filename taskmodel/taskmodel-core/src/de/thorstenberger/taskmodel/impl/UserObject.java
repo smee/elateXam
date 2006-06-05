@@ -49,7 +49,7 @@ class UserObject implements Serializable{
 		tasklets = new HashMap<Long, Tasklet>();
 	}
 	
-	public synchronized Tasklet getTasklet( long id, boolean create ) throws TaskApiException, TaskModelPersistenceException{
+	synchronized Tasklet getTasklet( long id, boolean create ) throws TaskApiException, TaskModelPersistenceException{
 		if( tasklets.containsKey( id ) ){
 			return tasklets.get( id );
 		}else{

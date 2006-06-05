@@ -23,7 +23,6 @@ package de.thorstenberger.taskmodel;
 
 /**
  * 
- * just a marker interface
  * 
  * @author Thorsten Berger
  *

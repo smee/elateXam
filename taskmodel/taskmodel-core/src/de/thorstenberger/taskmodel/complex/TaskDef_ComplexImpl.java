@@ -23,9 +23,11 @@ package de.thorstenberger.taskmodel.complex;
 
 import java.io.File;
 
+import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskContants;
-import de.thorstenberger.taskmodel.complex.taskdef.ComplexTaskDefHelper;
-import de.thorstenberger.taskmodel.complex.taskdef.impl.ComplexTaskDefHelperImpl;
+import de.thorstenberger.taskmodel.TaskModelPersistenceException;
+import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefDAO;
+import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
 import de.thorstenberger.taskmodel.impl.AbstractTaskDef;
 
 /**
@@ -36,7 +38,9 @@ public class TaskDef_ComplexImpl extends AbstractTaskDef implements TaskDef_Comp
 
 	private File xmlTaskDefFile;
 	private boolean showCorrectionToUsers;
-	private ComplexTaskDefHelper complexTaskDefHelper;
+	
+	private ComplexTaskDefDAO complexTaskDefDAO;
+	private ComplexTaskDefRoot complexTaskDefRoot;
 	
 	/**
 	 * @param id
@@ -46,9 +50,10 @@ public class TaskDef_ComplexImpl extends AbstractTaskDef implements TaskDef_Comp
 	 * @param deadline
 	 * @param stopped
 	 */
-	public TaskDef_ComplexImpl(long id, String title, String shortDescription, Long deadline, boolean stopped) {
+	public TaskDef_ComplexImpl(long id, String title, String shortDescription, Long deadline, boolean stopped, ComplexTaskDefDAO complexTaskDefDAO ) {
 		super(id, title, shortDescription, deadline, stopped);
-		// TODO Auto-generated constructor stub
+
+		this.complexTaskDefDAO = complexTaskDefDAO;
 	}
 
 	/* (non-Javadoc)
@@ -86,16 +91,21 @@ public class TaskDef_ComplexImpl extends AbstractTaskDef implements TaskDef_Comp
 		this.xmlTaskDefFile = xmlTaskDefFile;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.complex.TaskDef_Complex#getComplexTaskDefHelper()
+	/**
+	 * @return Returns the complexTaskDefRoot.
 	 */
-	public ComplexTaskDefHelper getComplexTaskDefHelper() {
-		if( complexTaskDefHelper == null )
-			complexTaskDefHelper = new ComplexTaskDefHelperImpl( getXmlTaskDefFile() );
-		return complexTaskDefHelper;
+	public ComplexTaskDefRoot getComplexTaskDefRoot() {
+		try {
+			if( complexTaskDefRoot == null )
+				complexTaskDefRoot = complexTaskDefDAO.getComplexTaskDefRoot( xmlTaskDefFile );
+		} catch (TaskApiException e) {
+			throw new TaskModelPersistenceException( e );
+		}
+		return complexTaskDefRoot;
 	}
+
 	
-	
-	
+
+
 
 }

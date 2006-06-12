@@ -22,28 +22,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 package de.thorstenberger.taskmodel.complex;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
-import javax.xml.bind.JAXBException;
 
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskFactory;
 import de.thorstenberger.taskmodel.TaskModelPersistenceException;
 import de.thorstenberger.taskmodel.TaskletCorrection;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType;
-import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
-import de.thorstenberger.taskmodel.complex.taskdef.ComplexTaskDefHelper;
-import de.thorstenberger.taskmodel.complex.taskhandling.ComplexTaskHandlingHelper;
-import de.thorstenberger.taskmodel.complex.taskhandling.CorrectionSubmitData;
-import de.thorstenberger.taskmodel.complex.taskhandling.Page;
-import de.thorstenberger.taskmodel.complex.taskhandling.SubTask;
-import de.thorstenberger.taskmodel.complex.taskhandling.SubTaskFactory;
-import de.thorstenberger.taskmodel.complex.taskhandling.SubmitData;
-import de.thorstenberger.taskmodel.complex.taskhandling.Try;
-import de.thorstenberger.taskmodel.complex.taskhandling.impl.ComplexTaskHandlingHelperImpl;
+import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.ComplexTaskHandlingDAO;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.ComplexTaskHandlingRoot;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.Try;
 import de.thorstenberger.taskmodel.impl.AbstractTasklet;
 
 /**
@@ -55,8 +46,11 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 
 	
 	private TaskDef_Complex complexTaskDef;
-	private ComplexTaskHandlingHelper ctHandlingHelper;
-	private SubTaskFactory subtaskFactory;
+	private ComplexTaskDefRoot complexTaskDefRoot;
+	private ComplexTaskHandlingRoot complexTaskHandlingRoot;
+	private ComplexTaskHandlingDAO complexTaskHandlingDAO;
+	private File xmlComplexTaskHandlingFile;
+	private ComplexTaskBuilder complexTaskBuilder;
 	
 	/**
 	 * @param taskFactory
@@ -65,13 +59,17 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 	 * @param status
 	 * @param taskletCorrection
 	 */
-	public ComplexTaskletImpl(TaskFactory taskFactory, String userId,
-			long taskId, String status, TaskletCorrection taskletCorrection, TaskDef_Complex complexTaskDef, File xmlTaskHandlingFile ) {
+	public ComplexTaskletImpl(TaskFactory taskFactory, ComplexTaskBuilder complexTaskBuilder, String userId,
+			long taskId, String status, TaskletCorrection taskletCorrection, TaskDef_Complex complexTaskDef, ComplexTaskHandlingDAO complexTaskHandlingDAO, File xmlComplexTaskHandlingFile ) {
 		
 		super(taskFactory, userId, taskId, status, taskletCorrection);
 		
 		this.complexTaskDef = complexTaskDef;
-		ctHandlingHelper = new ComplexTaskHandlingHelperImpl( xmlTaskHandlingFile );
+		this.complexTaskDefRoot = complexTaskDef.getComplexTaskDefRoot();
+		this.complexTaskHandlingDAO = complexTaskHandlingDAO;
+		this.xmlComplexTaskHandlingFile = xmlComplexTaskHandlingFile;
+		this.complexTaskHandlingRoot = complexTaskHandlingDAO.getComplexTaskHandlingRoot( xmlComplexTaskHandlingFile, complexTaskDefRoot );
+		this.complexTaskBuilder = complexTaskBuilder;
 		
 		update();
 		
@@ -84,8 +82,8 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 			
 		if( getStatus().equals( INPROGRESS ) ){
 			
-			if( complexTaskDef.getComplexTaskDefHelper().hasTimeRestriction() ){
-				long deadline = getActiveTry().getStartTime() + complexTaskDef.getComplexTaskDefHelper().getTimeInMinutesWithKindnessExtensionTime() * 60 * 1000;
+			if( complexTaskDefRoot.hasTimeRestriction() ){
+				long deadline = getActiveTry().getStartTime() + complexTaskDefRoot.getTimeInMinutesWithKindnessExtensionTime() * 60 * 1000;
 				if( System.currentTimeMillis() > deadline ){
 					submit();
 					return;
@@ -108,7 +106,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 		if( canContinueTry() )
 			return false;
 		
-		return ( ctHandlingHelper.getNumberOfTries() < complexTaskDef.getComplexTaskDefHelper().getTries() ) &&
+		return ( complexTaskHandlingRoot.getNumberOfTries() < complexTaskDefRoot.getTries() ) &&
 																			complexTaskDef.isActive();
 	}
 
@@ -127,32 +125,18 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 		if( !complexTaskDef.isActive() )
 			throw new IllegalStateException( TaskHandlingConstants.NOT_ACTIVE );
 		// Anzahl bereits abgesendeter Versuche:
-		if( ctHandlingHelper.getNumberOfTries() >= complexTaskDef.getComplexTaskDefHelper().getTries() )
+		if( complexTaskHandlingRoot.getNumberOfTries() >= complexTaskDefRoot.getTries() )
 			throw new IllegalStateException( TaskHandlingConstants.TRIES_SPENT );
 		// Sicherheitsabfrage, dass auch wirklich ein neuer Versuch gestartet werden soll
-		if( tryNo <= ctHandlingHelper.getNumberOfTries() )
+		if( tryNo <= complexTaskHandlingRoot.getNumberOfTries() )
 			throw new IllegalStateException( TaskHandlingConstants.CANNOT_RESTART_SPENT_TRY );
 		
-		ComplexTaskHandlingType.TryType newTry =
-				ctHandlingHelper.addTry( System.currentTimeMillis() );
+		Try newTry = 
+			complexTaskBuilder.generateTry( complexTaskDefRoot, System.currentTimeMillis() );
 
-		// Ok, falls ein schon vorgefertigter Aufgaben-Master vorliegt, dann den verwenden,
-		// sonst neu erstellen
-		// not implemented any more!
-//		MasterFactory.Master master = MasterFactory.getInstance().getClonedMaster( task.getId() );
-		ComplexTaskHandlingType.TryType.PageType[] newPages;
+		complexTaskHandlingRoot.addTry( newTry );
 		
-//		if( master != null)
-//			newPages =
-//				master.getPages();
-//		else
-			newPages = generateNewTry( getSubTaskFactory(), complexTaskDef.getComplexTaskDefHelper() );
-		
-		
-		for( int i=0; i<newPages.length; i++ )
-			newTry.getPage().add( newPages[i] );
-		
-		// ans Ende, sonst wird auch bei Exceptions, die beim Zusammenstellen der Aufgaben autreten,
+		// ans Ende, sonst wird auch bei Exceptions, die beim Zusammenstellen der Aufgaben auftreten,
 		// ein inkonsistenter Zustand gespeichert
 		setStatus( INPROGRESS );
 		
@@ -199,33 +183,34 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 		
 		if( !canContinueTry() )
 			throw new IllegalStateException( TaskHandlingConstants.CANNOT_SAVE_TIME_EXCEEDED );
-		if( hashcode != getHash( pageNo ) )
+		Try activeTry = getActiveTry();
+		if( hashcode != activeTry.getPage( pageNo ).getHash() )
 			throw new IllegalStateException( TaskHandlingConstants.SUBMIT_DATA_CORRUPTED );
 		
 	}
 
 	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#savePage(int, de.thorstenberger.taskmodel.complex.taskhandling.SubmitData[], long)
+	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#savePage(int, de.thorstenberger.taskmodel.complex.oldtaskhandling.SubmitData[], long)
 	 */
-	public synchronized void savePage(int pageNo, SubmitData[] submitData, long hashcode)
+	public synchronized void savePage(int pageNo, List<SubmitData> submitData, long hashcode)
 			throws IllegalStateException {
 		
 		if( !canContinueTry() )
 			throw new IllegalStateException( TaskHandlingConstants.CANNOT_SAVE_TIME_EXCEEDED );
-		if( hashcode != getHash( pageNo ) )
+		Try activeTry = getActiveTry();
+		if( hashcode != activeTry.getPage( pageNo ).getHash() )
 			throw new IllegalStateException( TaskHandlingConstants.SUBMIT_DATA_CORRUPTED );
 		
-		SubTask[] subtasks = getSubTasks( pageNo );
+//		SubTask[] subtasks = getSubTasks( pageNo );
+		List<SubTasklet> subTasklets = activeTry.getPage( pageNo ).getSubTasklets();
 		
-		for( int i=0; i<subtasks.length; i++ )
-			subtasks[i].doSave( submitData[i] );
+		int i = 0;
+		for( SubTasklet subTasklet : subTasklets )
+			subTasklet.doSave( submitData.get( i++ ) );
 		
-		
-		// gaaaaanz wichtig ;)
 		try {
 			save();
 		} catch (TaskApiException e) {
-			// TODO
 			throw new TaskModelPersistenceException( e );
 		}
 
@@ -246,19 +231,19 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 		boolean allCorrected = true;
 		float points = 0;
 		
-		Page[] pages = getActiveTry().getPages();
+		List<de.thorstenberger.taskmodel.complex.complextaskhandling.Page> pages = getActiveTry().getPages();
 		
-		for( int i=0; i<pages.length; i++ ){
+		for( de.thorstenberger.taskmodel.complex.complextaskhandling.Page page : pages ){
 			
-			SubTask[] subtasks = pages[i].getSubTasks();
+			List<SubTasklet> subTasklets = page.getSubTasklets();
 			
-			for( int j=0; j<subtasks.length; j++ ){
+			for( SubTasklet subTasklet : subTasklets ){
 		
-				subtasks[j].doAutoCorrection();
-				if( !subtasks[j].isCorrected() )
+				subTasklet.doAutoCorrection();
+				if( !subTasklet.isCorrected() )
 					allCorrected = false;
 				else
-					points += subtasks[j].getPoints();
+					points += subTasklet.getPoints();
 				
 			}
 		}
@@ -279,9 +264,9 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 	}
 
 	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#doManualCorrection(de.thorstenberger.taskmodel.complex.taskhandling.SubTask, de.thorstenberger.taskmodel.complex.taskhandling.CorrectionSubmitData)
+	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#doManualCorrection(de.thorstenberger.taskmodel.complex.oldtaskhandling.SubTask, de.thorstenberger.taskmodel.complex.oldtaskhandling.CorrectionSubmitData)
 	 */
-	public synchronized void doManualCorrection(SubTask actualSubtask,
+	public synchronized void doManualCorrection(SubTasklet actualSubtasklet,
 			CorrectionSubmitData csd) throws IllegalStateException {
 
 		if( canContinueTry() )
@@ -289,31 +274,30 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
         if( getStatus().equals( INITIALIZED ) )
             throw new IllegalStateException( TaskHandlingConstants.CANNOT_CORRECT_TASK_NOT_SOLVED );
         
-        actualSubtask.doManualCorrection( csd );
+        actualSubtasklet.doManualCorrection( csd );
 
         
 		boolean allCorrected = true;
 		float points = 0;
 		
-		Page[] pages = getSolutionOfLatestTry().getPages();
+		List<de.thorstenberger.taskmodel.complex.complextaskhandling.Page> pages = getSolutionOfLatestTry().getPages();
 		
-		for( int i=0; i<pages.length; i++ ){
+		for( de.thorstenberger.taskmodel.complex.complextaskhandling.Page page : pages ){
 			
-			SubTask[] subtasks = pages[i].getSubTasks();
+			List<SubTasklet> subTasklets = page.getSubTasklets();
 			
-			for( int j=0; j<subtasks.length; j++ ){
+			for( SubTasklet subTasklet : subTasklets ){
 		
-				if( !subtasks[j].isCorrected() )
+				if( !subTasklet.isCorrected() )
 					allCorrected = false;
 				else
-					points += subtasks[j].getPoints();
+					points += subTasklet.getPoints();
 				
 			}
 		}
 		
 		if( allCorrected ){
 			getTaskletCorrection().setPoints( points );
-//			setPoints( points );
 			setStatus( CORRECTED );
 		}
 		
@@ -331,171 +315,88 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#save()
 	 */
 	protected synchronized void save() throws TaskApiException{
+		// save the tasklet itself
 		super.save();
 		
-		// save the JAXB-DOM
-		ctHandlingHelper.marshallXML();
+		// make the DOM persistent
+		complexTaskHandlingDAO.save( complexTaskHandlingRoot, xmlComplexTaskHandlingFile );
 	}
 
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#getComplexTaskHandlingHelper()
-	 */
-	public ComplexTaskHandlingHelper getComplexTaskHandlingHelper() {
-		return ctHandlingHelper;
-	}
-	
 	
 
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#getComplexTaskDefHelper()
-	 */
-	public ComplexTaskDefHelper getComplexTaskDefHelper() {
-		return complexTaskDef.getComplexTaskDefHelper();
-	}
+//	/* (non-Javadoc)
+//	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#getComplexTaskDefHelper()
+//	 */
+//	public ComplexTaskDefHelper getComplexTaskDefHelper() {
+//		return complexTaskDef.getComplexTaskDefHelper();
+//	}
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#getActiveTry()
 	 */
-	public synchronized Try getActiveTry() throws IllegalStateException {
+	public synchronized de.thorstenberger.taskmodel.complex.complextaskhandling.Try getActiveTry() throws IllegalStateException {
 		
 		if( !getStatus().equals( INPROGRESS ) )
 			throw new IllegalStateException( TaskHandlingConstants.NOT_IN_PROGRESS );
 		
-		// TODO dirty hack
-		// entkoppeln von JAXB
-		return new Try( ctHandlingHelper.getRecentTry(), ctHandlingHelper.getNumberOfTries(), getSubTaskFactory() );
+		return complexTaskHandlingRoot.getRecentTry();
 	}
 
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#getHash(int)
-	 */
-	public synchronized long getHash(int page) {
-		long hash = 0;
-		SubTask[] subtasks = getSubTasks( page );
-		for( int i=0; i<subtasks.length; i++ )
-			hash += subtasks[i].getHash();
-		
-		return hash;
-	}
+//	/* (non-Javadoc)
+//	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#getHash(int)
+//	 */
+//	public synchronized long getHash( int page ) {
+//		long hash = 0;
+//		SubTask[] subtasks = getSubTasks( page );
+//		for( int i=0; i<subtasks.length; i++ )
+//			hash += subtasks[i].getHash();
+//		
+//		return hash;
+//	}
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#getSolutionOfLatestTry()
 	 */
-	public synchronized Try getSolutionOfLatestTry() throws IllegalStateException {
+	public synchronized de.thorstenberger.taskmodel.complex.complextaskhandling.Try getSolutionOfLatestTry() throws IllegalStateException {
 		// TODO
 //		if( !getStatus().equals( CORRECTED ) && !getStatus().equals( SOLVED ) )
 //			throw new IllegalStateException( TaskHandlingConstants.SHOW_CORRECTION_NOT_POSSIBLE );
 	    
-	    ComplexTaskHandlingType.TryType recentTry = ctHandlingHelper.getRecentTry();
-	    
-	    if( recentTry == null )
-	        return null;
-	    
-		return new Try( recentTry, ctHandlingHelper.getNumberOfTries(), getSubTaskFactory() );
+	    return complexTaskHandlingRoot.getRecentTry();
 
 	}
 
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#getSubTasks(int)
+	/**
+	 * @return Returns the complexTaskDefRoot.
 	 */
-	public synchronized SubTask[] getSubTasks(int page) {
-		
-		if( !getStatus().equals( INPROGRESS ) )
-			throw new IllegalStateException( TaskHandlingConstants.NOT_IN_PROGRESS );
-		
-		SubTask[] ret = getSubTaskFactory().getSubTasks( ctHandlingHelper.getRecentTry(), page );
-		
-		if( ret == null )
-			throw new IllegalStateException( TaskHandlingConstants.PAGE_UNKNOWN );
-		
-		return ret;
-		
-	}
-	
-
-	
-	public static ComplexTaskHandlingType.TryType.PageType[] generateNewTry( SubTaskFactory subTaskFactory,
-			ComplexTaskDefHelper ctDefHandler ){
-		
-		List ret = new ArrayList();
-		ObjectFactory objectFactory = new ObjectFactory();
-		// mit Aufgaben füllen
-		
-		List cats = ctDefHandler.getComplexTask().getCategory();
-		Iterator catIt = cats.iterator();
-		
-		int globalTasksPerPage = ctDefHandler.getComplexTask().getConfig().getTasksPerPage();
-		int pageNo = 1;
-		int taskEnum = 1;
-		
-		while( catIt.hasNext() ){
-			
-			ComplexTaskDefType.CategoryType cat =
-					(ComplexTaskDefType.CategoryType) catIt.next();
-			
-			// alle Aufgaben der Kategorie zusammenstellen,
-			// der wohl umfangreichste Teil hier...
-			SubTask[] subtasks = subTaskFactory.constructSubTasks( cat );
-			
-			// Anzahl Seiten, die der Kategorie zugeordnet werden
-			int tasksPerPageForCategory;
-			if( cat.isSetTasksPerPage() )
-				tasksPerPageForCategory = cat.getTasksPerPage();
-			else
-				tasksPerPageForCategory = globalTasksPerPage;
-			
-			int pages = (int) Math.ceil( (double)subtasks.length / (double)tasksPerPageForCategory );
-			ComplexTaskHandlingType.TryType.PageType page;
-			int j = 0;
-			
-			// Einfüge-Reihenfolge
-			int[] insertOrder;
-			if( cat.isMixAllSubTasks() )	// alle Aufgaben zufällig mischen
-				insertOrder = RandomUtil.getPermutation( subtasks.length );
-			else							// sonst natürliche Reihenfolge beibehalten
-				insertOrder = SubTaskFactory.getStandardOrder( subtasks.length );
-			
-			
-			for( int i=0; i<pages; i++ ){
-				
-//				page = ctHandlingHandler.addPage( newTry, pageNo, cat.getId() );
-				
-				try {
-					page = objectFactory.createComplexTaskHandlingTypeTryTypePageType();
-				} catch (JAXBException e) {
-					throw new TaskModelPersistenceException( e );
-				}
-				
-				page.setNo( pageNo );
-				page.setCategoryRefID( cat.getId() );
-				
-				for( int k=0; k<tasksPerPageForCategory; k++ ){
-					subtasks[ insertOrder[ j ] ].setVirtualNum( "" + (taskEnum++) );
-					subtasks[ insertOrder[j++] ].addToPage( page );
-					if( j >= subtasks.length )
-						break;
-				}
-				pageNo++;
-				
-				ret.add( page );
-			}
-			
-		}
-		
-		ComplexTaskHandlingType.TryType.PageType[] pages = new ComplexTaskHandlingType.TryType.PageType[ ret.size() ];
-		for( int i=0; i<pages.length; i++ )
-			pages[ i ] = (ComplexTaskHandlingType.TryType.PageType) ret.get( i );
-		
-		return pages;
-		
+	public ComplexTaskDefRoot getComplexTaskDefRoot() {
+		return complexTaskDefRoot;
 	}
 
-	
-	private SubTaskFactory getSubTaskFactory(){
-		if( subtaskFactory == null )
-			subtaskFactory = new SubTaskFactory( complexTaskDef.getComplexTaskDefHelper() );
-		return subtaskFactory;
+	/**
+	 * @return Returns the complexTaskHandlingRoot.
+	 */
+	public ComplexTaskHandlingRoot getComplexTaskHandlingRoot() {
+		return complexTaskHandlingRoot;
 	}
+	
+	
 
+//	/* (non-Javadoc)
+//	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#getSubTasks(int)
+//	 */
+//	public synchronized SubTask[] getSubTasks(int page) {
+//		
+//		if( !getStatus().equals( INPROGRESS ) )
+//			throw new IllegalStateException( TaskHandlingConstants.NOT_IN_PROGRESS );
+//		
+//		SubTask[] ret = getSubTaskFactory().getSubTasks( ctHandlingHelper.getRecentTry(), page );
+//		
+//		if( ret == null )
+//			throw new IllegalStateException( TaskHandlingConstants.PAGE_UNKNOWN );
+//		
+//		return ret;
+//		
+//	}
 
 }

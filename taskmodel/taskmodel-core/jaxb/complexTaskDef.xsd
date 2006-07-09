@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSPY v5 U (http://www.xmlspy.com) by tb (ul) -->
-<xs:schema targetNamespace="http://complex.taskmodel.thorstenberger.de/complexTaskDef" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://complex.taskmodel.thorstenberger.de/complexTaskDef" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" elementFormDefault="qualified" attributeFormDefault="unqualified" jaxb:version="1.0">
+<xs:schema targetNamespace="http://complex.taskmodel.thorstenberger.de/complexTaskDef" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns="http://complex.taskmodel.thorstenberger.de/complexTaskDef" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" jaxb:version="1.0">
 	<!--
 Change Log:
 
@@ -9,6 +9,7 @@ Change Log:
 - 05.01.06: config global, da bei allen taskblocks vorhanden
 - 05.01.06: Lueckentext nicht mehr mixed content, funzt nich in JAXFront
 - 24.01.06 annotation für JAXB: generateIsSetMethod entfernt
+- 12.06.06 neuer Aufgabentyp: paintSubTaskDef hinzugefügt
 -->
 	<xs:element name="complexTaskDef">
 		<xs:annotation>
@@ -207,6 +208,23 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 									</xs:sequence>
 								</xs:complexType>
 							</xs:element>
+							<xs:element name="paintTaskBlock">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element ref="config"/>
+										<xs:choice maxOccurs="unbounded">
+											<xs:element ref="paintSubTaskDef"/>
+											<xs:element name="choice">
+												<xs:complexType>
+													<xs:sequence>
+														<xs:element ref="paintSubTaskDef" maxOccurs="unbounded"/>
+													</xs:sequence>
+												</xs:complexType>
+											</xs:element>
+										</xs:choice>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
 						</xs:choice>
 						<xs:attribute name="title" type="xs:string" use="optional"/>
 						<xs:attribute name="preserveOrderOfBlocks" type="xs:boolean" use="required"/>
@@ -395,6 +413,47 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 				</xs:simpleType>
 			</xs:attribute>
 			<xs:attribute name="preserveOrder" type="xs:boolean" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="paintSubTaskDef">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="problem" type="xs:string"/>
+				<xs:element name="images" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="mutableTemplateImage" type="xs:base64Binary" minOccurs="0"/>
+							<xs:element name="immutableBackgroundImage" type="xs:base64Binary" minOccurs="0"/>
+							<xs:element name="correctionTemplateImage" type="xs:base64Binary" minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="textualAnswer" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="textFieldWidth" minOccurs="0">
+								<xs:simpleType>
+									<xs:restriction base="xs:int">
+										<xs:minInclusive value="1"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="textFieldHeight" minOccurs="0">
+								<xs:simpleType>
+									<xs:restriction base="xs:int">
+										<xs:minInclusive value="1"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="hint" type="xs:string" minOccurs="0"/>
+				<xs:element name="colorChangeable" type="xs:boolean" minOccurs="0"/>
+				<xs:element name="strokewidthChangeable" type="xs:boolean" minOccurs="0"/>
+				<xs:element name="correctionHint" type="xs:string" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:string" use="required"/>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

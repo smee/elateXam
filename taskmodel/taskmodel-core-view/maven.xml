@@ -15,10 +15,11 @@
 		<attainGoal name= "war:install"/>
 	</preGoal>
 	
+	<!-- copy the drawtask jar to webapps/drawTask -->
 	<postGoal name="war:webapp">
 
 	    <j:forEach var="lib" items="${pom.artifacts}">
-	      <j:set var="dep" value="${lib.dependency}"/>     
+	      <j:set var="dep" value="${lib.dependency}"/>
 	      <j:if test="${dep.artifactId=='drawtask'}">
 	          
 	         <j:if test="${dep.type =='jar'}"> 

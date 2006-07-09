@@ -25,8 +25,8 @@ import java.util.List;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDefOrChoice;
 import de.thorstenberger.taskmodel.complex.complextaskdef.choices.impl.PaintChoiceImpl;
-import de.thorstenberger.taskmodel.complex.complextaskdef.subtaskdefs.impl.ClozeSubTaskDefImpl;
-import de.thorstenberger.taskmodel.complex.jaxb.ClozeSubTaskDef;
+import de.thorstenberger.taskmodel.complex.complextaskdef.subtaskdefs.impl.PaintSubTaskDefImpl;
+import de.thorstenberger.taskmodel.complex.jaxb.PaintSubTaskDef;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.PaintTaskBlock;
 
 /**
@@ -55,8 +55,8 @@ public class PaintBlockImpl implements Block {
 			Iterator it = subTaskDefOrChoice.iterator();
 			while( it.hasNext() ){
 				Object next = it.next();
-				if( next instanceof ClozeSubTaskDef )
-					ret.add( new ClozeSubTaskDefImpl( (ClozeSubTaskDef) next ) );
+				if( next instanceof PaintSubTaskDef )
+					ret.add( new PaintSubTaskDefImpl( (PaintSubTaskDef) next ) );
 				else if( next instanceof de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.PaintTaskBlockType.Choice )
 					ret.add( new PaintChoiceImpl(
 							(de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.PaintTaskBlockType.Choice) next ) );

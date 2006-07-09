@@ -23,6 +23,7 @@
 	      <j:if test="${dep.artifactId=='drawtask'}">
 	          
 	         <j:if test="${dep.type =='jar'}"> 
+	           <mkdir dir="${maven.war.webapp.dir}/drawTask" /> 
 	           <copy todir="${maven.war.webapp.dir}/drawTask" file="${lib.path}"/>  
 	         </j:if> 
 	          

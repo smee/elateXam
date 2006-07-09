@@ -28,6 +28,7 @@ package de.thorstenberger.taskmodel.view;
 public class ComplexTaskInfoVO {
 
 	private String title;
+	private long taskId;
 	
 	private String login;
 	private String userName;
@@ -225,6 +226,18 @@ public class ComplexTaskInfoVO {
 	 */
 	public void setHashCode(String hashCode) {
 		this.hashCode = hashCode;
+	}
+	/**
+	 * @return Returns the taskId.
+	 */
+	public long getTaskId() {
+		return taskId;
+	}
+	/**
+	 * @param taskId The taskId to set.
+	 */
+	public void setTaskId(long taskId) {
+		this.taskId = taskId;
 	}
 	
 	

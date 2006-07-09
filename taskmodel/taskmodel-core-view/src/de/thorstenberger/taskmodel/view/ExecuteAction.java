@@ -191,6 +191,7 @@ public class ExecuteAction extends org.apache.struts.action.Action {
     private void populateVO( ComplexTaskInfoVO ctivo, TaskDef_Complex ctd, ComplexTasklet ct, int page ){
     	
     	ctivo.setTitle( ctd.getTitle() );
+    	ctivo.setTaskId( ctd.getId() );
     	
 		if( ct.getComplexTaskDefRoot().hasTimeRestriction() ){
 			long deadline = ct.getActiveTry().getStartTime() +

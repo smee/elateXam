@@ -24,6 +24,7 @@ package de.thorstenberger.taskmodel.view;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
 import de.thorstenberger.taskmodel.view.tree.DataNode;
 import de.thorstenberger.taskmodel.view.tree.DataNodeFormatter;
 
@@ -85,7 +86,16 @@ public class NavigationNodeFormatter implements DataNodeFormatter {
 	 * @see de.thorstenberger.taskmodel.view.tree.DataNodeFormatter#getLeafIcon(de.thorstenberger.taskmodel.view.tree.DataNode)
 	 */
 	public String getLeafIcon(DataNode node) {
-		// TODO Auto-generated method stub
+		
+		if( node instanceof PageNode ){
+			PageNode pn = (PageNode)node;
+			switch( pn.getProcessStatus() ){
+				case Page.NOT_PROCESSED : return "page.gif";
+				case Page.PARTLY_PROCESSED : return "partlyProcessed.gif";
+				case Page.COMPLETELY_PROCESSED : return "processed.gif";
+			}
+		}
+		
 		return null;
 	}
 

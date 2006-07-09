@@ -228,8 +228,11 @@ function fenster(file,breite,hoehe) {
       <br><!--<div id="Warnung" style="color: red;">&nbsp;</div>-->
       <br>
       <br>
-      <form method="post" action="$ServletURLBase?action=ComplexTaskExecute&id=$TaskID">
-        <input type="hidden" name="hashCode" value="${Task.hashCode}">
+      <form method="post" action="<html:rewrite action="/savePage"/>">
+	    <input type="hidden" name="hashCode" value="${Task.hashCode}">
+	    <input type="hidden" name="id" value="${Task.taskId}">
+	    <!-- continue after saving -->
+	    <input type="hidden" name="todo" value="continue">
 
 		<c:forEach items="${SubTasklets}" var="SubTasklet">
 			<fieldset class="complexTask"><legend>Aufgabe ${SubTasklet.virtualSubTaskletNumber}</legend>
@@ -259,7 +262,7 @@ function fenster(file,breite,hoehe) {
             <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
             <td valign="top"> 
               <p align="right"> 
-			  	<input type="hidden" name="page" value="$ComplexPage">
+			  	<input type="hidden" name="page" value="${Task.page}">
                 <input type="submit" name="save" value="Speichern">
                 <br>
                 <br>
@@ -268,7 +271,7 @@ function fenster(file,breite,hoehe) {
               </td>
           </tr>
         </table>
-      </form>
+       </form>
     </td>
   </tr>
 </table>

@@ -21,6 +21,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.view;
 
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -37,7 +44,10 @@ import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskModelViewDelegate;
 import de.thorstenberger.taskmodel.TaskModelViewDelegateObject;
 import de.thorstenberger.taskmodel.complex.ComplexTasklet;
+import de.thorstenberger.taskmodel.complex.ParsingException;
 import de.thorstenberger.taskmodel.complex.TaskDef_Complex;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 
 /**
  * @author Thorsten Berger
@@ -113,48 +123,107 @@ public class SavePageAction extends Action {
 		
 		
 		
+		logPostData( request );
 		
-		
-		
-//		logPostData();
-//		
-//		try{
-//			
-//			long hashCode = Long.parseLong( request.getParameter("hashCode") );
-//			// dirty hack
-//			ct.canSavePage( page, hashCode );
-//			// ...and the following too:
-//			List<SubTasklet> subtasklets = ct.getComplexTaskHandlingRoot().getRecentTry().getPage( page ).getSubTasklets();
-//
-//			ct.savePage( page, getSubmitData( subtasklets ), hashCode );
-//				
-//			return mapping.findForward( "success" );
-//				
-//
-//			
-//		} catch (IllegalStateException e){
-//			errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( e.getMessage() ) );
-//			saveErrors( request, errors );
-//			log.info( e );
-//			return mapping.findForward( "error" );
-//		} catch (ParsingException e1) {
-//			errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "parsing.error" ) );
-//			saveErrors( request, errors );
-//			log.error( "Parsing error!", e1 );
-//			return mapping.findForward( "error" );
-//		} catch (NumberFormatException e2) {
-//			errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "invalid.parameter" ) );
-//			saveErrors( request, errors );
-//			return mapping.findForward( "error" );
-//		}
-//		
+		try{
+			
+			long hashCode = Long.parseLong( request.getParameter("hashCode") );
+			// dirty hack
+			ct.canSavePage( page, hashCode );
+			// ...and the following too:
+			List<SubTasklet> subtasklets = ct.getComplexTaskHandlingRoot().getRecentTry().getPage( page ).getSubTasklets();
 
+			ct.savePage( page, getSubmitData( request, subtasklets ), hashCode );
+				
+			return mapping.findForward( "success" );
+				
 
-		return mapping.findForward( "success" );
+			
+		} catch (IllegalStateException e){
+			errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( e.getMessage() ) );
+			saveErrors( request, errors );
+			log.info( e );
+			return mapping.findForward( "error" );
+		} catch (ParsingException e1) {
+			errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "parsing.error" ) );
+			saveErrors( request, errors );
+			log.error( "Parsing error!", e1 );
+			return mapping.findForward( "error" );
+		} catch (NumberFormatException e2) {
+			errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "invalid.parameter" ) );
+			saveErrors( request, errors );
+			return mapping.findForward( "error" );
+		}
+		
 		
 		
 	}
 
 
+	private List<SubmitData> getSubmitData( HttpServletRequest request, List<SubTasklet> subtasklets ) throws ParsingException{
+		try {
+			
+			Enumeration varNames = request.getParameterNames();
+			
+			// wir erwarten Variablen zu den entsprechenden Tasks
+			// wenn das nicht übereinstimmt, dann ArrayIndexOutOfBoundsException
+			Map[] taskVarMaps = new Map[ subtasklets.size() ];
+			for( int i=0; i<taskVarMaps.length; i++ )
+				taskVarMaps[ i ] = new HashMap();
+			
+			while( varNames.hasMoreElements() ){
+				String varName = (String)varNames.nextElement();
+				
+				if( varName.startsWith( "task[" ) ){
+					
+					int relativeTaskNo = getRelativeTaskNo( varName );
+					
+					taskVarMaps[ relativeTaskNo ].
+						put( varName, request.getParameter( varName ) );
+					
+				}
+			}
+			
+			List<SubmitData> ret = new ArrayList<SubmitData>( subtasklets.size() );
+//			SubmitData[] ret = new SubmitData[ subtasklets.size() ];
+			
+			for( int i=0; i<subtasklets.size(); i++ ){
+				ret.add( i,	SubTaskViewFactory.getSubTaskView( subtasklets.get( i ) ).getSubmitData( taskVarMaps[i] ) );
+			}
+			
+			return ret;
+			
+		} catch (ArrayIndexOutOfBoundsException e) {
+			throw new ParsingException( e );
+		}
+		
+	}
+	
+	/**
+	 * task[111]
+	 * @param varName
+	 * @return
+	 */
+	private int getRelativeTaskNo( String varName ) throws ParsingException{
+		try {
+			return Integer.parseInt(
+					varName.substring( 5, varName.indexOf( ']' ) )	);
+		} catch (NumberFormatException e) {
+			throw new ParsingException( e );
+		}
+	}
+	
+	
+	private void logPostData( HttpServletRequest request ){
+		Map vars = request.getParameterMap();
+		StringBuffer parameters = new StringBuffer();
+		Iterator keys = vars.keySet().iterator();
+		while( keys.hasNext() ){
+			String key = (String) keys.next();
+			parameters.append( key + "=" + ((String[])vars.get( key ))[0] + "\n" );
+		}
+		Log taskLog = LogFactory.getLog( "de.thorstenberger.uebman.TaskLogger" );
+		taskLog.debug( "posted parameters:\n" + parameters.toString() );
+	}
 
 }

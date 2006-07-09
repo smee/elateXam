@@ -205,7 +205,8 @@ function fenster(file,breite,hoehe) {
       </table>
       <br>
       <br>
-      <form method="post" action="$ServletURLBase?action=ComplexTaskExecute&id=$TaskID" onSubmit=" return send() ">
+      <form method="post" action="<html:rewrite action="/commit"/>" onSubmit=" return send() ">
+   	    <input type="hidden" name="id" value="${Task.taskId}">
         <div align="center"> 
           <input type="submit" name="submit" value="Abgeben">
         </div>

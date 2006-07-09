@@ -214,7 +214,7 @@ public class SavePageAction extends Action {
 	}
 	
 	
-	private void logPostData( HttpServletRequest request ){
+	public static void logPostData( HttpServletRequest request ){
 		Map vars = request.getParameterMap();
 		StringBuffer parameters = new StringBuffer();
 		Iterator keys = vars.keySet().iterator();

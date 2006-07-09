@@ -16,8 +16,9 @@
    <forward name="success" path="/execute.do" redirect="false"/>
    <forward name="error" path="/error.jsp"/>
   </action>
-  <action path="/commit">
+  <action path="/commit" type="de.thorstenberger.taskmodel.view.CommitAction">
    <forward name="success" path="/committed.jsp"/>
+   <forward name="error" path="/error.jsp"/>
   </action>
  </action-mappings>
  <controller/>

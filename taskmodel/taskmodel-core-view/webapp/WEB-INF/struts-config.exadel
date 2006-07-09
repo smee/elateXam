@@ -24,6 +24,8 @@
   <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="success"
    NAME="forward0" PATH="/committed.jsp" SHAPE="-1,16" TARGET="page1"
    TITLE="success" TYPE="forward"/>
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="error"
+   NAME="forward1" PATH="/error.jsp" TARGET="page3" TITLE="error" TYPE="forward"/>
  </PROCESS-ITEM>
  <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page1"
   PATH="/committed.jsp" SHAPE="688,34,0,0" SUBTYPE="jsp"
@@ -33,9 +35,6 @@
   TITLE="execute.jsp" TYPE="page">
   <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" NAME="link0"
    PATH="/commit.do" SHAPE="-1,16" TARGET="action2" TITLE="commit.do" TYPE="link"/>
-  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" NAME="link1"
-   PATH="/savePage.do" SHAPE="-1,24" TARGET="action1"
-   TITLE="savePage.do" TYPE="link"/>
  </PROCESS-ITEM>
  <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page2"
   PATH="/header.jsp" SHAPE="32,274,0,0" SUBTYPE="jsp" TITLE="header.jsp" TYPE="page"/>

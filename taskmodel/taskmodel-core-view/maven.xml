@@ -15,6 +15,44 @@
 		<attainGoal name= "war:install"/>
 	</preGoal>
 	
+	<postGoal name="war:webapp">
+
+    <j:forEach var="lib" items="${pom.artifacts}">
+      <j:set var="dep" value="${lib.dependency}"/>     
+      <j:if test="${lib.artifactId==''}">
+          
+         <j:if test="${dep.type =='jar'}"> 
+           <ant:copy todir="${webapp.build.lib}" file="${lib.path}"/>  
+         </j:if> 
+         
+         <j:if test="${dep.type =='tld'}"> 
+           <ant:copy todir="${webapp.build.tlds}" file="${lib.path}"/>  
+         </j:if> 
+          
+      </j:if>  
+      <!-- TO BE REMOVED -->
+      <j:if test="${dep.getProperty('war.bundle.jar')=='true'}">
+         <ant:echo> 
+            DEPRECATION WARNING:            
+            Use : war.bundle instead of war.bundle.jar
+          </ant:echo>
+        <ant:copy todir="${webapp.build.lib}" file="${lib.path}"/>
+      </j:if>  
+      <!-- END OF TO BE REMOVED -->
+
+      <j:set var="targetPath" value="${dep.getProperty('war.target.path')}"/> 
+      <j:if test="${!empty(targetPath)}">
+        <ant:copy todir="${maven.war.webapp.dir}/${targetPath}" file="${lib.path}"/>
+      </j:if>
+    </j:forEach>             
+	
+		<copy file="${basedir}/webapp/META-INF/context.xml"
+            tofile="${maven.war.webapp.dir}/META-INF/context.xml"
+            overwrite="true"
+            failonerror="true">
+      </copy>
+	</postGoal>
+	
 	<goal name="undeploy">
 		<echo message="Undeploy ${org.apache.jetspeed.deploy.war.dir}/${pom.artifactId}.war"/>
 		<delete file="${org.apache.jetspeed.deploy.war.dir}/${pom.artifactId}.war"/>

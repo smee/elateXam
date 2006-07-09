@@ -55,7 +55,7 @@ public class SubTaskView_CLOZE extends SubTaskView {
 	/**
 	 * @see de.thorstenberger.uebman.services.student.task.complex.SubTaskView#getRenderedHTML(int)
 	 */
-	public String getRenderedHTML(int relativeTaskNumber) {
+	public String getRenderedHTML(HttpServletRequest request, int relativeTaskNumber) {
 		StringBuffer ret = new StringBuffer();
 		
 		List content = clozeSubTasklet.getContent();

@@ -53,7 +53,7 @@ public class SubTaskView_TEXT extends SubTaskView {
 	/**
 	 * @see de.thorstenberger.uebman.services.student.task.complex.SubTaskView#getRenderedHTML(int)
 	 */
-	public String getRenderedHTML(int relativeTaskNumber) {
+	public String getRenderedHTML( HttpServletRequest request, int relativeTaskNumber) {
 		return getRenderedHTML( relativeTaskNumber, false );
 	}
 	

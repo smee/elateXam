@@ -177,7 +177,7 @@ public class ExecuteAction extends org.apache.struts.action.Action {
 			stivo.setProblem( subTasklet.getProblem() );
 			stivo.setReachablePoints( subTasklet.getReachablePoints() );
 			stivo.setVirtualSubTaskletNumber( subTasklet.getVirtualSubtaskNumber() );
-			stivo.setRenderedHTML( SubTaskViewFactory.getSubTaskView( subTasklet ).getRenderedHTML( i++ ) );
+			stivo.setRenderedHTML( SubTaskViewFactory.getSubTaskView( subTasklet ).getRenderedHTML( request, i++ ) );
 			stivos.add( stivo );
 		}
 		request.setAttribute( "SubTasklets", stivos );

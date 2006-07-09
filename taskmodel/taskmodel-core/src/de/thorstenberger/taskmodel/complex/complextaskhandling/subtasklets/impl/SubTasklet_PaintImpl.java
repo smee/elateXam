@@ -121,7 +121,9 @@ public class SubTasklet_PaintImpl implements SubTasklet_Paint {
 	    return paintSubTaskDef.getCorrectionHint();
 	}
 
-	public void build() throws TaskApiException {}
+	public void build() throws TaskApiException{
+		paintSubTask.setTextAnswer( "" );
+	}
 
 	public String getPictureString() {
 		return paintSubTask.getPictureString();

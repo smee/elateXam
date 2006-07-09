@@ -52,7 +52,7 @@ public class SubTaskView_Paint extends SubTaskView {
 		
 		ret.append("<div align=\"center\">\n");
 		ret.append("<applet codebase=\"");
-		ret.append(request.getContextPath()).append("/drawtask\" code=\"drawing/DrawingApplet.class\" archive=\"drawtask-1.0.jar\" width=600 height=350 mayscript>");
+		ret.append(request.getContextPath()).append("/drawTask\" code=\"drawing/DrawingApplet.class\" archive=\"drawtask-1.0.jar\" width=600 height=400 mayscript>");
 		ret.append("<param name=\"pictureString\" value=").append( paintSubTasklet.getPictureString()).append(">");
 		ret.append("</applet>");
 		ret.append("<textarea name=\"task[" + relativeTaskNumber + "].text\" cols=\"" +

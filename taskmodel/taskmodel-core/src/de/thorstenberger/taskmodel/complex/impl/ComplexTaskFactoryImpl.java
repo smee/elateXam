@@ -36,27 +36,32 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDefOrChoice;
 import de.thorstenberger.taskmodel.complex.complextaskdef.blocks.impl.ClozeBlockImpl;
 import de.thorstenberger.taskmodel.complex.complextaskdef.blocks.impl.MappingBlockImpl;
 import de.thorstenberger.taskmodel.complex.complextaskdef.blocks.impl.McBlockImpl;
+import de.thorstenberger.taskmodel.complex.complextaskdef.blocks.impl.PaintBlockImpl;
 import de.thorstenberger.taskmodel.complex.complextaskdef.blocks.impl.TextBlockImpl;
 import de.thorstenberger.taskmodel.complex.complextaskdef.subtaskdefs.impl.ClozeSubTaskDefImpl;
 import de.thorstenberger.taskmodel.complex.complextaskdef.subtaskdefs.impl.MappingSubTaskDefImpl;
 import de.thorstenberger.taskmodel.complex.complextaskdef.subtaskdefs.impl.McSubTaskDefImpl;
 import de.thorstenberger.taskmodel.complex.complextaskdef.subtaskdefs.impl.TextSubTaskDefImpl;
+import de.thorstenberger.taskmodel.complex.complextaskdef.subtaskdefs.impl.PaintSubTaskDefImpl;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Try;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.impl.TryImpl;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl.SubTasklet_ClozeImpl;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl.SubTasklet_MCImpl;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl.SubTasklet_MappingImpl;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl.SubTasklet_PaintImpl;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl.SubTasklet_TextImpl;
 import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.ClozeTaskBlock;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.MappingTaskBlock;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.McTaskBlock;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.PaintTaskBlock;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.TextTaskBlock;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.ClozeSubTask;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.MappingSubTask;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.McSubTask;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.PaintSubTask;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.TextSubTask;
 
 /**
@@ -77,6 +82,8 @@ public class ComplexTaskFactoryImpl implements ComplexTaskFactory {
 			return new ClozeBlockImpl( (ClozeTaskBlock)jaxbBlock );
 		else if( jaxbBlock instanceof TextTaskBlock )
 			return new TextBlockImpl( (TextTaskBlock)jaxbBlock );
+		else if ( jaxbBlock instanceof PaintTaskBlock)
+			return new PaintBlockImpl ((PaintTaskBlock)jaxbBlock);
 		
 		return null;
 		
@@ -107,6 +114,10 @@ public class ComplexTaskFactoryImpl implements ComplexTaskFactory {
 				TextSubTask textSubTask = objectFactory.createComplexTaskHandlingTypeTryTypePageTypeTextSubTask();
 				textSubTask.setRefId( subTaskDef.getId() );
 				return instantiateSubTasklet( textSubTask, complexTaskDefRoot, categoryId );
+			}else if( subTaskDef instanceof PaintSubTaskDefImpl ){
+				PaintSubTask paintSubTask = objectFactory.createComplexTaskHandlingTypeTryTypePageTypePaintSubTask();
+				paintSubTask.setRefId( subTaskDef.getId() );
+				return instantiateSubTasklet( paintSubTask, complexTaskDefRoot, categoryId );
 			}
 			
 		} catch (JAXBException e) {
@@ -142,6 +153,12 @@ public class ComplexTaskFactoryImpl implements ComplexTaskFactory {
 			TextSubTask textSubTask = (TextSubTask)jaxbSubTask;
 			BlockAndSubTaskDef blockAndSubTaskDef = lookupTaskBlockAndSubTaskDef( complexTaskDefRoot, categoryId, textSubTask.getRefId() );
 			return new SubTasklet_TextImpl( blockAndSubTaskDef.getBlock(), (TextSubTaskDefImpl)blockAndSubTaskDef.getSubTaskDef(), textSubTask );
+			
+		}else if( jaxbSubTask instanceof PaintSubTask ){
+			
+			PaintSubTask paintSubTask = (PaintSubTask)jaxbSubTask;
+			BlockAndSubTaskDef blockAndSubTaskDef = lookupTaskBlockAndSubTaskDef( complexTaskDefRoot, categoryId, paintSubTask.getRefId() );
+			return new SubTasklet_PaintImpl( blockAndSubTaskDef.getBlock(), (PaintSubTaskDefImpl)blockAndSubTaskDef.getSubTaskDef(), paintSubTask );
 			
 		}
 		

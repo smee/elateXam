@@ -41,6 +41,10 @@ public abstract class SubTaskView {
 	public SubTaskView() {
 	}
 	
+	/**
+	 * @param relativeTaskNumber number of the task on the current html page
+	 * @return
+	 */
 	public abstract String getRenderedHTML( HttpServletRequest request, int relativeTaskNumber );
 	
 	public abstract String getCorrectedHTML( HttpServletRequest request );

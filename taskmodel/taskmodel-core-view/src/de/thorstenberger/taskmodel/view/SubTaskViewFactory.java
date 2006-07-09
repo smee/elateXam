@@ -22,6 +22,7 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Cloze;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_MC;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Mapping;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Paint;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Text;
 
 /**
@@ -42,6 +43,8 @@ public class SubTaskViewFactory {
 			return new SubTaskView_TEXT( (SubTasklet_Text) subTasklet );
 		else if( subTasklet instanceof SubTasklet_Mapping )
 			return new SubTaskView_Mapping( (SubTasklet_Mapping) subTasklet );
+		else if( subTasklet instanceof SubTasklet_Paint)
+			return new SubTaskView_Paint((SubTasklet_Paint) subTasklet);
 		// TODO erweitern
 		
 		return null;

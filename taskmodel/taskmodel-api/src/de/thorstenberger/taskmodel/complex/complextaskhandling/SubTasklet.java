@@ -58,7 +58,10 @@ public interface SubTasklet {
 	public String getVirtualSubtaskNumber();
 	
 	public int getHash();
-	
+	/**
+	 * Returns whether or not this task has been processed by the user.
+	 * @return
+	 */
 	public boolean isProcessed();
 	
 	public String getCorrectionHint();

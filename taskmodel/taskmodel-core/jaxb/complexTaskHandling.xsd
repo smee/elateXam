@@ -88,13 +88,14 @@
 										<xs:element name="paintSubTask">
 											<xs:complexType>
 												<xs:sequence>
-													<xs:element name="answer" type="xs:string" minOccurs="0"/>
+													<xs:element name="pictureString" type="xs:string" minOccurs="0"/>
 													<xs:element name="correction" minOccurs="0">
 														<xs:complexType>
 															<xs:attribute name="points" type="xs:float" use="required"/>
 															<xs:attribute name="autoCorrected" type="xs:boolean" use="optional"/>
 														</xs:complexType>
 													</xs:element>
+													<xs:element name="textAnswer" type="xs:string" minOccurs="0"/>
 												</xs:sequence>
 												<xs:attribute name="refId" type="xs:string" use="required"/>
 												<xs:attribute name="virtualNum" type="xs:string" use="optional"/>

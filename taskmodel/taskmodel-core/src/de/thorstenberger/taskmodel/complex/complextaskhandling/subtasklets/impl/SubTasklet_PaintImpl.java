@@ -132,12 +132,12 @@ public class SubTasklet_PaintImpl implements SubTasklet_Paint {
 	}
 
 	public int getTextFieldWidth(){
-		return paintSubTaskDef.getTextualAnswer().isSetTextFieldWidth() ?
+		return paintSubTaskDef.getTextualAnswer()!=null && paintSubTaskDef.getTextualAnswer().isSetTextFieldWidth() ?
 					paintSubTaskDef.getTextualAnswer().getTextFieldWidth() : 60;
 	}
 	
 	public int getTextFieldHeight(){
-		return paintSubTaskDef.getTextualAnswer().isSetTextFieldHeight() ?
+		return paintSubTaskDef.getTextualAnswer()!=null && paintSubTaskDef.getTextualAnswer().isSetTextFieldHeight() ?
 				paintSubTaskDef.getTextualAnswer().getTextFieldHeight() : 15;
 	}
 

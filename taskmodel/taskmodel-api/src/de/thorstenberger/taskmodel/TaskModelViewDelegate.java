@@ -1,6 +1,6 @@
 /*
 
-Copyright (C) 2005 Thorsten Berger
+Copyright (C) 2006 Thorsten Berger
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,28 +21,38 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * 
- * This interface has the intent of delegating information about the execution of a task
- * to the view.
- * 
  * @author Thorsten Berger
  *
  */
-public interface TaskModelViewDelegate {
+public class TaskModelViewDelegate {
 
-
-	public String getLogin();
+	private static Map<String, Map<Long, TaskModelViewDelegateObject>> sessions = 
+			Collections.synchronizedMap( new HashMap<String, Map<Long, TaskModelViewDelegateObject>>() );
 	
-	public String getUserName();
+	public static void storeDelegateObject( String sessionId, long taskId, TaskModelViewDelegateObject delegateObject ){
+		Map<Long, TaskModelViewDelegateObject> session = sessions.get( sessionId );
+		if( session == null ){
+			session = new HashMap<Long, TaskModelViewDelegateObject>();
+			sessions.put( sessionId, session );
+		}
+		session.put( taskId, delegateObject );
+	}
 	
-	public TaskDef getTaskDef() throws TaskApiException;
-
-	public long getTaskId();
-
-	public Tasklet getTasklet() throws TaskApiException;
+	public static TaskModelViewDelegateObject getDelegateObject( String sessionId, long taskId ){
+		Map<Long, TaskModelViewDelegateObject> session = sessions.get( sessionId );
+		if( session == null )
+			return null;
+		else
+			return session.get( taskId );
+	}
 	
-	public String getReturnURL();
-	
+	public static void removeSession( String sessionId ){
+		sessions.remove( sessionId );
+	}
 
 }

@@ -59,7 +59,7 @@ public class ComplexTaskDefDAOImpl implements ComplexTaskDefDAO {
 		JAXBContext jc;
 		ComplexTaskDef complexTask;
 		try {
-			jc = JAXBContext.newInstance( "de.thorstenberger.taskmodel.complex.jaxb" );
+			jc = JAXBContext.newInstance( "de.thorstenberger.taskmodel.complex.jaxb", this.getClass().getClassLoader() );
 		} catch (IllegalArgumentException e) {
 			throw new TaskApiException( e );
 		} catch (JAXBException e) {

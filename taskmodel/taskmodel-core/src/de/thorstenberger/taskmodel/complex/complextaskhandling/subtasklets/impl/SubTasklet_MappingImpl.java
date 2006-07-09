@@ -35,7 +35,7 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitD
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.impl.PageImpl;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.impl.MappingSubmitData;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.MappingSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Mapping;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType;
 import de.thorstenberger.taskmodel.complex.jaxb.MappingSubTaskDef;

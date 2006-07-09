@@ -35,9 +35,9 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.subtaskdefs.impl.Cloze
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.correctionsubmitdata.impl.ClozeCorrectionSubmitData;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.correctionsubmitdata.ClozeCorrectionSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.impl.PageImpl;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.impl.ClozeSubmitData;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.ClozeSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Cloze;
 import de.thorstenberger.taskmodel.complex.jaxb.ClozeSubTaskDef;
 import de.thorstenberger.taskmodel.complex.jaxb.ClozeSubTaskDefType;

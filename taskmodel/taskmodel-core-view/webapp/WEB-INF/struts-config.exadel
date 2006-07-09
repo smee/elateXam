@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROCESS ENTITY="StrutsProcess">
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#execute" NAME="action0"
+  PATH="/execute" SHAPE="32,17,0,0" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="success"
+   NAME="forward0" PATH="/execute.jsp" SHAPE="-1,16" TARGET="page0"
+   TITLE="success" TYPE="forward"/>
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="error"
+   NAME="forward1" PATH="/error.jsp" SHAPE="-1,24" TARGET="page3"
+   TITLE="error" TYPE="forward"/>
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="execute"
+   NAME="forward2" PATH="/execute.do" TARGET="action0" TITLE="execute" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#savePage" NAME="action1"
+  PATH="/savePage" SHAPE="456,160,100,57" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="success"
+   NAME="forward0" PATH="/execute.do" SHAPE="-1,24" TARGET="action0"
+   TITLE="success" TYPE="forward"/>
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="error"
+   NAME="forward1" PATH="/error.jsp" TARGET="page3" TITLE="error" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#commit" NAME="action2"
+  PATH="/commit" SHAPE="480,17,0,0" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="success"
+   NAME="forward0" PATH="/committed.jsp" SHAPE="-1,16" TARGET="page1"
+   TITLE="success" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page1"
+  PATH="/committed.jsp" SHAPE="688,34,0,0" SUBTYPE="jsp"
+  TITLE="committed.jsp" TYPE="page"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page0"
+  PATH="/execute.jsp" SHAPE="256,34,0,0" SUBTYPE="jsp"
+  TITLE="execute.jsp" TYPE="page">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" NAME="link0"
+   PATH="/commit.do" SHAPE="-1,16" TARGET="action2" TITLE="commit.do" TYPE="link"/>
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" NAME="link1"
+   PATH="/savePage.do" SHAPE="-1,24" TARGET="action1"
+   TITLE="savePage.do" TYPE="link"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page2"
+  PATH="/header.jsp" SHAPE="32,274,0,0" SUBTYPE="jsp" TITLE="header.jsp" TYPE="page"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page3" PATH="/error.jsp"
+  SHAPE="256,178,0,0" SUBTYPE="jsp" TITLE="error.jsp" TYPE="page"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page4"
+  PATH="/footer.jsp" SHAPE="145,284,0,0" SUBTYPE="jsp"
+  TITLE="footer.jsp" TYPE="page"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page5"
+  PATH="/NavigationHelp.jsp" SHAPE="342,286,0,0" SUBTYPE="jsp"
+  TITLE="NavigationHelp.jsp" TYPE="page"/>
+</PROCESS>

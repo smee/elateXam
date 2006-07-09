@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+                               "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+<struts-config>
+ <data-sources/>
+ <form-beans/>
+ <global-exceptions/>
+ <global-forwards/>
+ <action-mappings>
+  <action path="/execute" type="de.thorstenberger.taskmodel.view.ExecuteAction">
+   <forward name="success" path="/execute.jsp"/>
+   <forward name="error" path="/error.jsp"/>
+   <forward name="execute" path="/execute.do"/>
+  </action>
+  <action path="/savePage" type="de.thorstenberger.taskmodel.view.SavePageAction">
+   <forward name="success" path="/execute.do" redirect="false"/>
+   <forward name="error" path="/error.jsp"/>
+  </action>
+  <action path="/commit">
+   <forward name="success" path="/committed.jsp"/>
+  </action>
+ </action-mappings>
+ <controller/>
+ <message-resources parameter="de.thorstenberger.taskmodel.view.resources.Messages"/>
+</struts-config>

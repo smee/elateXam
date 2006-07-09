@@ -58,7 +58,7 @@ public class ComplexTaskHandlingDAOImpl implements ComplexTaskHandlingDAO {
 	public ComplexTaskHandlingDAOImpl( ComplexTaskFactory complexTaskFactory ) {
 		this.complexTaskFactory = complexTaskFactory;
 		try {
-			jc = JAXBContext.newInstance( "de.thorstenberger.taskmodel.complex.jaxb" );
+			jc = JAXBContext.newInstance( "de.thorstenberger.taskmodel.complex.jaxb", this.getClass().getClassLoader() );
 		} catch (JAXBException e) {
 			throw new TaskModelPersistenceException( e );
 		}

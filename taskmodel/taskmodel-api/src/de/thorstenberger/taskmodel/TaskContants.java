@@ -31,6 +31,6 @@ public class TaskContants {
 	public static final String TYPE_UPLOAD = "upload";
 	public static final String TYPE_COMPLEX = "complex";
 	
-	public static final String TASK_MODEL_VIEW_DELEGATE_OBJECT_KEY_PREFIX = TaskModelViewDelegate.class.toString() + "_";
+	public static final String TASK_MODEL_VIEW_DELEGATE_OBJECT_KEY_PREFIX = TaskModelViewDelegateObject.class.toString() + "_";
 
 }

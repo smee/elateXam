@@ -32,9 +32,9 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.subtaskdefs.impl.TextS
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.correctionsubmitdata.impl.TextCorrectionSubmitData;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.correctionsubmitdata.TextCorrectionSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.impl.PageImpl;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.impl.TextSubmitData;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.TextSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Text;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType;
 import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;

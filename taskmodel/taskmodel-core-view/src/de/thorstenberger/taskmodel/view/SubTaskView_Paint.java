@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 package de.thorstenberger.taskmodel.view;
 
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -66,6 +67,7 @@ public class SubTaskView_Paint extends SubTaskView {
 		ret.append( "<input type=\"hidden\" id=\"task_" + relativeTaskNumber + ".image\" name=\"task[" + relativeTaskNumber + "].image\">\n" );
 		ret.append( "<script type=\"text/javascript\">\n" );
 		ret.append( " var preSave_task_" + relativeTaskNumber + " = function(){\n" );
+		ret.append( "alert( document.applets[\"drawTask_" + relativeTaskNumber + "\"].getForegroundPicture() );" );
 		ret.append( " document.getElementById(\"task_" + relativeTaskNumber + ".image\").value = document.applets[\"drawTask_" + relativeTaskNumber + "\"].getForegroundPicture();\n" );
 		ret.append( "};\n" );
 		ret.append( "preSaveManager.registerCallback( preSave_task_" + relativeTaskNumber + " );\n" );
@@ -90,10 +92,19 @@ public class SubTaskView_Paint extends SubTaskView {
 	public SubmitData getSubmitData(Map postedVarsForTask)
 			throws ParsingException {
 
+		Iterator keyIt = postedVarsForTask.keySet().iterator();
+		String pictureString = null;
+		String textString = null;
 		
-		String pictureString=(String) postedVarsForTask.get("pictureString");
-		String textString=(String) postedVarsForTask.get("text");
-
+		while( keyIt.hasNext() ){
+			String key = (String)keyIt.next();
+			if( getMyPart( key ).equals( "image" ) ){
+				pictureString = (String)postedVarsForTask.get( key );
+			}else if( getMyPart( key ).equals( "text" ) ){
+				textString = (String)postedVarsForTask.get( key );
+			}
+		}
+		
 		return new PaintSubmitData(pictureString,textString);
 	}
 

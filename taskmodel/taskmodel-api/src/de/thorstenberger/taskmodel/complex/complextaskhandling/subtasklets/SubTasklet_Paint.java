@@ -22,7 +22,9 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 
 public interface SubTasklet_Paint extends SubTasklet {
 
-	public String getPictureString();
+	public String getBackgroundPictureString();
+	
+	public String getMutablePictureString();
 	
 	public String getTextualAnswer();
 	

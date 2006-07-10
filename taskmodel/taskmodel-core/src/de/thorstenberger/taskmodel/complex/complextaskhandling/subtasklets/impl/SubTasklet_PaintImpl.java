@@ -125,9 +125,6 @@ public class SubTasklet_PaintImpl implements SubTasklet_Paint {
 		paintSubTask.setTextAnswer( "" );
 	}
 
-	public String getPictureString() {
-		return paintSubTask.getPictureString();
-	}
 
 	public String getTextualAnswer() {
 		return paintSubTask.getTextAnswer();
@@ -141,6 +138,14 @@ public class SubTasklet_PaintImpl implements SubTasklet_Paint {
 	public int getTextFieldHeight(){
 		return paintSubTaskDef.getTextualAnswer()!=null && paintSubTaskDef.getTextualAnswer().isSetTextFieldHeight() ?
 				paintSubTaskDef.getTextualAnswer().getTextFieldHeight() : 15;
+	}
+
+	public String getBackgroundPictureString() {
+		return paintSubTaskDef.getImages().getImmutableBackgroundImage();
+	}
+
+	public String getMutablePictureString() {
+		return paintSubTaskDef.getImages().getMutableTemplateImage();
 	}
 
 }

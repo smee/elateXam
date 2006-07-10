@@ -109,6 +109,15 @@ function fenster(file,breite,hoehe) {
                 window.open(auf,"help",wf);
 }
 
+function PreSaveManager(){
+	this.callback = function() {};
+	this.registerCallback = function(callbackFunction) {
+		this.callback = (this.callback).andThen(callbackFunction);
+	}
+}
+
+var preSaveManager = new PreSaveManager();
+
 //-->
 </script>
 
@@ -264,7 +273,7 @@ function fenster(file,breite,hoehe) {
             <td valign="top"> 
               <p align="right"> 
 			  	<input type="hidden" name="page" value="${Task.page}">
-                <input type="submit" name="save" value="Speichern">
+                <input type="submit" name="save" value="Speichern" onmousedown="preSaveManager.callback();">
                 <br>
                 <br>
                 Diese Seite abspeichern.<br>

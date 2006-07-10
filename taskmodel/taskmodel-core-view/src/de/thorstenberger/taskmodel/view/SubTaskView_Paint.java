@@ -56,7 +56,7 @@ public class SubTaskView_Paint extends SubTaskView {
 		ret.append(request.getContextPath()).append("/drawTask\" code=\"drawing/DrawingApplet.class\" archive=\"drawtask-1.0.jar\" width=600 height=370 mayscript>\n");
 		ret.append("<param name=\"foregroundString\" value=\"").append( paintSubTasklet.getMutablePictureString()).append("\">\n");
 		ret.append("<param name=\"backgroundString\" value=\"").append( paintSubTasklet.getBackgroundPictureString()).append("\">\n");
-		ret.append("</applet>\n");
+		ret.append("</applet>\n<br/><br/>\n");
 		ret.append("<textarea name=\"task[" + relativeTaskNumber + "].text\" cols=\"" +
 						paintSubTasklet.getTextFieldWidth() + "\" rows=\"" + paintSubTasklet.getTextFieldHeight() + "\" onChange=\"setModified()\"" +
 						( corrected ? "disabled=\"disabled\"" : "" ) + ">\n");
@@ -67,7 +67,6 @@ public class SubTaskView_Paint extends SubTaskView {
 		ret.append( "<input type=\"hidden\" id=\"task_" + relativeTaskNumber + ".image\" name=\"task[" + relativeTaskNumber + "].image\">\n" );
 		ret.append( "<script type=\"text/javascript\">\n" );
 		ret.append( " var preSave_task_" + relativeTaskNumber + " = function(){\n" );
-		ret.append( "alert( document.applets[\"drawTask_" + relativeTaskNumber + "\"].getForegroundPicture() );" );
 		ret.append( " document.getElementById(\"task_" + relativeTaskNumber + ".image\").value = document.applets[\"drawTask_" + relativeTaskNumber + "\"].getForegroundPicture();\n" );
 		ret.append( "};\n" );
 		ret.append( "preSaveManager.registerCallback( preSave_task_" + relativeTaskNumber + " );\n" );

@@ -20,6 +20,9 @@
    <forward name="success" path="/committed.jsp"/>
    <forward name="error" path="/error.jsp"/>
   </action>
+  <action path="/showSolution" type="de.thorstenberger.taskmodel.view.ShowSolutionAction">
+   <forward name="success" path="/showCorrection.jsp"/>
+  </action>
  </action-mappings>
  <controller/>
  <message-resources parameter="de.thorstenberger.taskmodel.view.resources.Messages"/>

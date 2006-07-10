@@ -138,6 +138,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 		
 		// ans Ende, sonst wird auch bei Exceptions, die beim Zusammenstellen der Aufgaben auftreten,
 		// ein inkonsistenter Zustand gespeichert
+		super.getTaskletCorrection().setPoints( null );
 		setStatus( INPROGRESS );
 		
 		// und schlieﬂlich speichern

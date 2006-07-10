@@ -12,7 +12,7 @@
    NAME="forward2" PATH="/execute.do" TARGET="action0" TITLE="execute" TYPE="forward"/>
  </PROCESS-ITEM>
  <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#savePage" NAME="action1"
-  PATH="/savePage" SHAPE="456,160,100,57" TYPE="action">
+  PATH="/savePage" SHAPE="56,208,100,57" TYPE="action">
   <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="success"
    NAME="forward0" PATH="/execute.do" SHAPE="-1,24" TARGET="action0"
    TITLE="success" TYPE="forward"/>
@@ -20,7 +20,7 @@
    NAME="forward1" PATH="/error.jsp" TARGET="page3" TITLE="error" TYPE="forward"/>
  </PROCESS-ITEM>
  <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#commit" NAME="action2"
-  PATH="/commit" SHAPE="480,17,0,0" TYPE="action">
+  PATH="/commit" SHAPE="360,240,100,57" TYPE="action">
   <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="success"
    NAME="forward0" PATH="/committed.jsp" SHAPE="-1,16" TARGET="page1"
    TITLE="success" TYPE="forward"/>
@@ -35,15 +35,27 @@
   TITLE="execute.jsp" TYPE="page">
   <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" NAME="link0"
    PATH="/commit.do" SHAPE="-1,16" TARGET="action2" TITLE="commit.do" TYPE="link"/>
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" NAME="link1"
+   PATH="/savePage.do" TARGET="action1" TITLE="savePage.do" TYPE="link"/>
  </PROCESS-ITEM>
  <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page2"
-  PATH="/header.jsp" SHAPE="32,274,0,0" SUBTYPE="jsp" TITLE="header.jsp" TYPE="page"/>
+  PATH="/header.jsp" SHAPE="40,424,50,25" SUBTYPE="jsp"
+  TITLE="header.jsp" TYPE="page"/>
  <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page3" PATH="/error.jsp"
-  SHAPE="256,178,0,0" SUBTYPE="jsp" TITLE="error.jsp" TYPE="page"/>
+  SHAPE="728,144,50,25" SUBTYPE="jsp" TITLE="error.jsp" TYPE="page"/>
  <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page4"
-  PATH="/footer.jsp" SHAPE="145,284,0,0" SUBTYPE="jsp"
+  PATH="/footer.jsp" SHAPE="152,424,50,25" SUBTYPE="jsp"
   TITLE="footer.jsp" TYPE="page"/>
  <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page5"
-  PATH="/NavigationHelp.jsp" SHAPE="342,286,0,0" SUBTYPE="jsp"
+  PATH="/NavigationHelp.jsp" SHAPE="400,48,50,25" SUBTYPE="jsp"
   TITLE="NavigationHelp.jsp" TYPE="page"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#showSolution"
+  NAME="action3" PATH="/showSolution" SHAPE="56,320,100,25" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="success"
+   NAME="forward0" PATH="/showCorrection.jsp" TARGET="page6"
+   TITLE="success" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page6"
+  PATH="/showCorrection.jsp" SHAPE="232,336,50,25" SUBTYPE="jsp"
+  TITLE="showCorrection.jsp" TYPE="page"/>
 </PROCESS>

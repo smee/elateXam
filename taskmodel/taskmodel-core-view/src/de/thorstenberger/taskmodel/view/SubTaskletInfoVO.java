@@ -32,6 +32,8 @@ public class SubTaskletInfoVO {
 	private float reachablePoints;
 	private String problem;
 	private String renderedHTML;
+	private boolean corrected;
+	private String points;
 	
 	
 	/**
@@ -93,6 +95,30 @@ public class SubTaskletInfoVO {
 	 */
 	public void setVirtualSubTaskletNumber(String virtualSubTaskletNumber) {
 		this.virtualSubTaskletNumber = virtualSubTaskletNumber;
+	}
+	/**
+	 * @return Returns the corrected.
+	 */
+	public boolean isCorrected() {
+		return corrected;
+	}
+	/**
+	 * @param corrected The corrected to set.
+	 */
+	public void setCorrected(boolean corrected) {
+		this.corrected = corrected;
+	}
+	/**
+	 * @return Returns the points.
+	 */
+	public String getPoints() {
+		return points;
+	}
+	/**
+	 * @param points The points to set.
+	 */
+	public void setPoints(String points) {
+		this.points = points;
 	}
 	
 	

@@ -103,8 +103,10 @@ public class TaskletCorrectionImpl implements TaskletCorrection {
 	 * @see de.thorstenberger.taskmodel.TaskletCorrection#setPoints(java.lang.Float)
 	 */
 	public void setPoints(Float points) throws IllegalArgumentException {
-		if( points == null )
-			points = null;
+		if( points == null ){
+			this.points = null;
+			return;
+		}
 		
 		if( points < 0 )
 			throw new IllegalArgumentException( "Invalid points value (<0)." );

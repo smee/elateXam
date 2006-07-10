@@ -109,6 +109,13 @@ function fenster(file,breite,hoehe) {
                 window.open(auf,"help",wf);
 }
 
+Function.prototype.andThen=function(g){
+	var f = this;
+	return function(){
+		f();g();
+	}
+}
+
 function PreSaveManager(){
 	this.callback = function() {};
 	this.registerCallback = function(callbackFunction) {

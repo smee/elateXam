@@ -113,8 +113,10 @@ public class SubTasklet_PaintImpl implements SubTasklet_Paint {
 	}
 
 	public boolean isProcessed() {
-		//TODO
-		return false;
+		if( paintSubTask.getPictureString() == null || paintSubTask.getPictureString().trim().length() == 0 )
+			return false;
+		else
+			return !paintSubTask.getPictureString().equals( paintSubTaskDef.getImages() == null ? null : paintSubTaskDef.getImages().getMutableTemplateImage() );
 	}
 
 	public String getCorrectionHint() {

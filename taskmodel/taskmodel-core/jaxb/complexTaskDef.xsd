@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSPY v5 U (http://www.xmlspy.com) by tb (ul) -->
-<xs:schema targetNamespace="http://complex.taskmodel.thorstenberger.de/complexTaskDef" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns="http://complex.taskmodel.thorstenberger.de/complexTaskDef" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" jaxb:version="1.0">
+<xs:schema targetNamespace="http://complex.taskmodel.thorstenberger.de/complexTaskDef" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://complex.taskmodel.thorstenberger.de/complexTaskDef" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" elementFormDefault="qualified" attributeFormDefault="unqualified" jaxb:version="1.0">
 	<!--
 Change Log:
 
@@ -422,9 +422,9 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 				<xs:element name="images" minOccurs="0">
 					<xs:complexType>
 						<xs:sequence>
-							<xs:element name="mutableTemplateImage" type="xs:base64Binary" minOccurs="0"/>
-							<xs:element name="immutableBackgroundImage" type="xs:base64Binary" minOccurs="0"/>
-							<xs:element name="correctionTemplateImage" type="xs:base64Binary" minOccurs="0"/>
+							<xs:element name="mutableTemplateImage" type="xs:string" minOccurs="0"/>
+							<xs:element name="immutableBackgroundImage" type="xs:string" minOccurs="0"/>
+							<xs:element name="correctionTemplateImage" type="xs:string" minOccurs="0"/>
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>

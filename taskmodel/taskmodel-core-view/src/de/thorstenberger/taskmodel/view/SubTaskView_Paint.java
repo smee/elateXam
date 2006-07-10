@@ -53,7 +53,7 @@ public class SubTaskView_Paint extends SubTaskView {
 		
 		ret.append("<div align=\"center\">\n");
 		ret.append("<applet name=\"drawTask_" + relativeTaskNumber + "\" codebase=\"");
-		ret.append(request.getContextPath()).append("/drawTask\" code=\"drawing/DrawingApplet.class\" archive=\"drawtask-1.0.jar\" width=600 height=400 mayscript>\n");
+		ret.append(request.getContextPath()).append("/drawTask\" code=\"drawing/DrawingApplet.class\" archive=\"drawtask-1.0.jar\" width=600 height=370 mayscript>\n");
 		ret.append("<param name=\"foregroundString\" value=\"").append( paintSubTasklet.getMutablePictureString()).append("\">\n");
 		ret.append("<param name=\"backgroundString\" value=\"").append( paintSubTasklet.getBackgroundPictureString()).append("\">\n");
 		ret.append("</applet>\n");
@@ -104,7 +104,7 @@ public class SubTaskView_Paint extends SubTaskView {
 				textString = (String)postedVarsForTask.get( key );
 			}
 		}
-		
+
 		return new PaintSubmitData(pictureString,textString);
 	}
 

@@ -145,7 +145,10 @@ public class SubTasklet_PaintImpl implements SubTasklet_Paint {
 	}
 
 	public String getMutablePictureString() {
-		return paintSubTaskDef.getImages().getMutableTemplateImage();
+		String pic=paintSubTask.getPictureString();
+		if(pic==null || pic.trim().length()==0)
+			pic=paintSubTaskDef.getImages().getMutableTemplateImage();
+		return pic;
 	}
 
 }

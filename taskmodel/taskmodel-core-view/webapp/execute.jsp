@@ -245,7 +245,7 @@ var preSaveManager = new PreSaveManager();
       <br><!--<div id="Warnung" style="color: red;">&nbsp;</div>-->
       <br>
       <br>
-      <form method="post" action="<html:rewrite action="/savePage"/>">
+      <form method="post" action="<html:rewrite action="/savePage"/>" onSubmit="return preSaveManager.callback();">
 	    <input type="hidden" name="hashCode" value="${Task.hashCode}">
 	    <input type="hidden" name="id" value="${Task.taskId}">
 	    <!-- continue after saving -->
@@ -280,7 +280,7 @@ var preSaveManager = new PreSaveManager();
             <td valign="top"> 
               <p align="right"> 
 			  	<input type="hidden" name="page" value="${Task.page}">
-                <input type="submit" name="save" value="Speichern" onmousedown="preSaveManager.callback();">
+                <input type="submit" name="save" value="Speichern">
                 <br>
                 <br>
                 Diese Seite abspeichern.<br>

@@ -54,8 +54,10 @@ public class SubTaskView_Paint extends SubTaskView {
 		ret.append("<div align=\"center\">\n");
 		ret.append("<applet name=\"drawTask_" + relativeTaskNumber + "\" codebase=\"");
 		ret.append(request.getContextPath()).append("/drawTask\" code=\"drawing/DrawingApplet.class\" archive=\"drawtask-1.0.jar\" width=\"600\" height=\"395\" mayscript>\n");
-		ret.append("<param name=\"foregroundString\" value=\"").append( paintSubTasklet.getMutablePictureString()).append("\">\n");
-		ret.append("<param name=\"backgroundString\" value=\"").append( paintSubTasklet.getBackgroundPictureString()).append("\">\n");
+		ret.append("<param name=\"mutableForeground\" value=\"").append( paintSubTasklet.getMutablePictureString()).append("\">\n");
+		ret.append("<param name=\"foreground\" value=\"").append( paintSubTasklet.getUserForegroundString()).append("\">\n");
+		ret.append("<param name=\"background\" value=\"").append( paintSubTasklet.getBackgroundPictureString()).append("\">\n");
+		ret.append("<param name=\"undoData\" value=\"").append( paintSubTasklet.getUndoData()).append("\">\n");
 		ret.append("</applet>\n<br/><br/>\n");
 		ret.append("<textarea name=\"task[" + relativeTaskNumber + "].text\" cols=\"" +
 						paintSubTasklet.getTextFieldWidth() + "\" rows=\"" + paintSubTasklet.getTextFieldHeight() + "\" onChange=\"setModified()\"" +
@@ -67,7 +69,7 @@ public class SubTaskView_Paint extends SubTaskView {
 		ret.append( "<input type=\"hidden\" id=\"task_" + relativeTaskNumber + ".image\" name=\"task[" + relativeTaskNumber + "].image\">\n" );
 		ret.append( "<script type=\"text/javascript\">\n" );
 		ret.append( " var preSave_task_" + relativeTaskNumber + " = function(){\n" );
-		ret.append( " document.getElementById(\"task_" + relativeTaskNumber + ".image\").value = document.applets[\"drawTask_" + relativeTaskNumber + "\"].getForegroundPicture();\n" );
+		ret.append( " document.getElementById(\"task_" + relativeTaskNumber + ".image\").value = document.applets[\"drawTask_" + relativeTaskNumber + "\"].getForegroundPictureWithUndoData(5);\n" );
 		ret.append( "};\n" );
 		ret.append( "preSaveManager.registerCallback( preSave_task_" + relativeTaskNumber + " );\n" );
 		ret.append( "</script>\n" );
@@ -94,6 +96,7 @@ public class SubTaskView_Paint extends SubTaskView {
 		Iterator keyIt = postedVarsForTask.keySet().iterator();
 		String pictureString = null;
 		String textString = null;
+		String undoData= null;
 		
 		while( keyIt.hasNext() ){
 			String key = (String)keyIt.next();
@@ -103,8 +106,14 @@ public class SubTaskView_Paint extends SubTaskView {
 				textString = (String)postedVarsForTask.get( key );
 			}
 		}
-
-		return new PaintSubmitData(pictureString,textString);
+		if(pictureString!=null) {
+			int pos = pictureString.indexOf("%%%");
+			if(pos != -1) {
+				undoData = pictureString.substring(pos+3);
+				pictureString=pictureString.substring(0,pos);
+			}
+		}			
+		return new PaintSubmitData(pictureString,undoData,textString);
 	}
 
 	@Override

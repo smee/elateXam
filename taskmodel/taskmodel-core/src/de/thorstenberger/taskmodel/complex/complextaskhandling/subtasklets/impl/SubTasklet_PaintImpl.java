@@ -67,6 +67,7 @@ public class SubTasklet_PaintImpl implements SubTasklet_Paint {
 		PaintSubmitData psd=(PaintSubmitData) submitData;
 		paintSubTask.setTextAnswer(psd.getTextualAnswer());
 		paintSubTask.setPictureString(psd.getImageString());
+		paintSubTask.setUndoData(psd.getUndoData());
 	}
 
 	public boolean isCorrected() {
@@ -129,7 +130,8 @@ public class SubTasklet_PaintImpl implements SubTasklet_Paint {
 
 
 	public String getTextualAnswer() {
-		return paintSubTask.getTextAnswer();
+		String answer = paintSubTask.getTextAnswer();
+		return answer == null? "":answer;
 	}
 
 	public int getTextFieldWidth(){
@@ -143,13 +145,22 @@ public class SubTasklet_PaintImpl implements SubTasklet_Paint {
 	}
 
 	public String getBackgroundPictureString() {
-		return paintSubTaskDef.getImages().getImmutableBackgroundImage();
+		String pic=paintSubTaskDef.getImages().getImmutableBackgroundImage();
+		return pic == null ? "" : pic;
 	}
 
 	public String getMutablePictureString() {
+		String pic=paintSubTaskDef.getImages().getMutableTemplateImage();
+		return pic == null ? "" : pic;
+	}
+
+	public String getUserForegroundString() {
 		String pic=paintSubTask.getPictureString();
-		if(pic==null || pic.trim().length()==0)
-			pic=paintSubTaskDef.getImages().getMutableTemplateImage();
+		return pic == null ? "" : pic;
+	}
+
+	public String getUndoData() {
+		String pic=paintSubTask.getUndoData();
 		return pic == null ? "" : pic;
 	}
 

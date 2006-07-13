@@ -26,6 +26,10 @@ public interface SubTasklet_Paint extends SubTasklet {
 	
 	public String getMutablePictureString();
 	
+	public String getUserForegroundString();
+	
+	public String getUndoData();
+	
 	public String getTextualAnswer();
 	
 	public int getTextFieldWidth();

@@ -24,11 +24,13 @@ public class PaintSubmitData implements SubmitData {
 
 	private String imageString;
 	private String textualAnswer;
+	private String undoData;
 
 
-	public PaintSubmitData(String imageString, String textualAnswer) {
+	public PaintSubmitData(String imageString, String undoData, String textualAnswer) {
 		this.imageString=imageString;
 		this.textualAnswer=textualAnswer;
+		this.undoData=undoData;
 	}
 
 	public String getTextualAnswer() {
@@ -37,5 +39,8 @@ public class PaintSubmitData implements SubmitData {
 
 	public String getImageString() {
 		return imageString;
+	}
+	public String getUndoData() {
+		return undoData;
 	}
 }

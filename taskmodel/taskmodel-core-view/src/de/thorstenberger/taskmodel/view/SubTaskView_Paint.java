@@ -51,14 +51,31 @@ public class SubTaskView_Paint extends SubTaskView {
 		// workaround: textarea nicht disabled
 		corrected = false;
 		
+		String userAgent = request.getHeader( "User-Agent" );
+		boolean mozilla = userAgent != null && userAgent.startsWith( "Mozilla" ) && userAgent.indexOf( "MSIE" ) == -1;
+		
+		
 		ret.append("<div align=\"center\">\n");
-		ret.append("<applet name=\"drawTask_" + relativeTaskNumber + "\" codebase=\"");
-		ret.append(request.getContextPath()).append("/drawTask\" code=\"drawing/DrawingApplet.class\" archive=\"drawtask-1.0.jar\" width=\"600\" height=\"395\" mayscript>\n");
+		ret.append("<object\r\n" + 
+				( mozilla ? "    classid = \"java:drawing/DrawingApplet.class\"\r\n" : "    classid = \"clsid:8AD9C840-044E-11D1-B3E9-00805F499D93\"\r\n" )  + 
+				"    codebase = \"http://java.sun.com/update/1.5.0/jinstall-1_5-windows-i586.cab#Version=5,0,0,7\"\r\n" + 
+				"    WIDTH = \"600\" HEIGHT = \"395\" NAME = \"drawTask_" + relativeTaskNumber + "\" >\r\n" + 
+				"    <param name=\"code\" value=\"drawing/DrawingApplet.class\" >\r\n" + 
+				"    <param name=\"codebase\" value=\"" + request.getContextPath() + "/drawTask\" >\r\n" + 
+				"    <param name=\"archive\" value=\"drawtask-1.0.jar\" >\r\n" + 
+				"    <param name=\"name\" value=\"drawTask_" + relativeTaskNumber + "\" >\r\n" + 
+				"    <param name=\"mayscript\" value=\"true\" >\r\n" + 
+				"    <param name=\"type\" value=\"application/x-java-applet;version=1.5\">\r\n" + 
+				"    <param name=\"scriptable\" value=\"true\"> ");
+		
+//		ret.append("<applet name=\"drawTask_" + relativeTaskNumber + "\" codebase=\"");
+//		ret.append(request.getContextPath()).append("/drawTask\" code=\"drawing/DrawingApplet.class\" archive=\"drawtask-1.0.jar\" width=\"600\" height=\"395\" mayscript>\n");
 		ret.append("<param name=\"mutableForeground\" value=\"").append( paintSubTasklet.getMutablePictureString()).append("\">\n");
 		ret.append("<param name=\"foreground\" value=\"").append( paintSubTasklet.getUserForegroundString()).append("\">\n");
 		ret.append("<param name=\"background\" value=\"").append( paintSubTasklet.getBackgroundPictureString()).append("\">\n");
 		ret.append("<param name=\"undoData\" value=\"").append( paintSubTasklet.getUndoData()).append("\">\n");
-		ret.append("</applet>\n<br/><br/>\n");
+//		ret.append("</applet>\n<br/><br/>\n");
+		ret.append("</object>\n<br/><br/>\n");
 		ret.append("<textarea name=\"task[" + relativeTaskNumber + "].text\" cols=\"" +
 						paintSubTasklet.getTextFieldWidth() + "\" rows=\"" + paintSubTasklet.getTextFieldHeight() + "\" onChange=\"setModified()\"" +
 						( corrected ? "disabled=\"disabled\"" : "" ) + ">\n");
@@ -69,7 +86,8 @@ public class SubTaskView_Paint extends SubTaskView {
 		ret.append( "<input type=\"hidden\" id=\"task_" + relativeTaskNumber + ".image\" name=\"task[" + relativeTaskNumber + "].image\">\n" );
 		ret.append( "<script type=\"text/javascript\">\n" );
 		ret.append( " var preSave_task_" + relativeTaskNumber + " = function(){\n" );
-		ret.append( " document.getElementById(\"task_" + relativeTaskNumber + ".image\").value = document.applets[\"drawTask_" + relativeTaskNumber + "\"].getForegroundPictureWithUndoData(5);\n" );
+//		ret.append( " document.getElementById(\"task_" + relativeTaskNumber + ".image\").value = document.applets[\"drawTask_" + relativeTaskNumber + "\"].getForegroundPictureWithUndoData(5);\n" );
+		ret.append( " document.getElementById(\"task_" + relativeTaskNumber + ".image\").value = document.drawTask_" + relativeTaskNumber + ".getForegroundPictureWithUndoData(5);\n" );
 		ret.append( "};\n" );
 		ret.append( "preSaveManager.registerCallback( preSave_task_" + relativeTaskNumber + " );\n" );
 		ret.append( "</script>\n" );

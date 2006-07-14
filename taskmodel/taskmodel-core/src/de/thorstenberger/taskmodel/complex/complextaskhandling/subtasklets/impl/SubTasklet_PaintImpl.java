@@ -156,6 +156,8 @@ public class SubTasklet_PaintImpl implements SubTasklet_Paint {
 
 	public String getUserForegroundString() {
 		String pic=paintSubTask.getPictureString();
+		if(pic==null || pic.length()==0)
+			pic=getMutablePictureString();
 		return pic == null ? "" : pic;
 	}
 

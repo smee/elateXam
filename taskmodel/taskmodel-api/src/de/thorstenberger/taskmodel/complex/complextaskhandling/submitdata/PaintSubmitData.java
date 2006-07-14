@@ -25,12 +25,14 @@ public class PaintSubmitData implements SubmitData {
 	private String imageString;
 	private String textualAnswer;
 	private String undoData;
+	private boolean isResetted;
 
 
-	public PaintSubmitData(String imageString, String undoData, String textualAnswer) {
+	public PaintSubmitData(String imageString, String undoData, boolean isResetted,String textualAnswer) {
 		this.imageString=imageString;
 		this.textualAnswer=textualAnswer;
 		this.undoData=undoData;
+		this.isResetted=isResetted;
 	}
 
 	public String getTextualAnswer() {
@@ -42,5 +44,8 @@ public class PaintSubmitData implements SubmitData {
 	}
 	public String getUndoData() {
 		return undoData;
+	}
+	public boolean isResetted() {
+		return isResetted;
 	}
 }

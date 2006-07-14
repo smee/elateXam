@@ -84,10 +84,11 @@ public class SubTaskView_Paint extends SubTaskView {
 		ret.append("</div>\n");
 		
 		ret.append( "<input type=\"hidden\" id=\"task_" + relativeTaskNumber + ".image\" name=\"task[" + relativeTaskNumber + "].image\">\n" );
+		ret.append( "<input type=\"hidden\" id=\"task_" + relativeTaskNumber + ".resetted\" name=\"task[" + relativeTaskNumber + "].resetted\">\n" );
 		ret.append( "<script type=\"text/javascript\">\n" );
 		ret.append( " var preSave_task_" + relativeTaskNumber + " = function(){\n" );
-//		ret.append( " document.getElementById(\"task_" + relativeTaskNumber + ".image\").value = document.applets[\"drawTask_" + relativeTaskNumber + "\"].getForegroundPictureWithUndoData(5);\n" );
 		ret.append( " document.getElementById(\"task_" + relativeTaskNumber + ".image\").value = document.drawTask_" + relativeTaskNumber + ".getForegroundPictureWithUndoData(5);\n" );
+		ret.append( " document.getElementById(\"task_" + relativeTaskNumber + ".resetted\").value = document.drawTask_" + relativeTaskNumber + ".isResetted();\n" );
 		ret.append( "};\n" );
 		ret.append( "preSaveManager.registerCallback( preSave_task_" + relativeTaskNumber + " );\n" );
 		ret.append( "</script>\n" );
@@ -115,6 +116,7 @@ public class SubTaskView_Paint extends SubTaskView {
 		String pictureString = null;
 		String textString = null;
 		String undoData= null;
+		boolean isResetted=false;
 		
 		while( keyIt.hasNext() ){
 			String key = (String)keyIt.next();
@@ -122,7 +124,8 @@ public class SubTaskView_Paint extends SubTaskView {
 				pictureString = (String)postedVarsForTask.get( key );
 			}else if( getMyPart( key ).equals( "text" ) ){
 				textString = (String)postedVarsForTask.get( key );
-			}
+			}else if( getMyPart( key ).equals( "resetted" ))
+				isResetted=Boolean.valueOf((String)postedVarsForTask.get( key ));
 		}
 		if(pictureString!=null) {
 			int pos = pictureString.indexOf("%%%");
@@ -131,7 +134,7 @@ public class SubTaskView_Paint extends SubTaskView {
 				pictureString=pictureString.substring(0,pos);
 			}
 		}			
-		return new PaintSubmitData(pictureString,undoData,textString);
+		return new PaintSubmitData(pictureString,undoData,isResetted,textString);
 	}
 
 	@Override

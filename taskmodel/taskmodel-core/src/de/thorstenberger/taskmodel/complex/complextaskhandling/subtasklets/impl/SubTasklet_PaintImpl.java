@@ -68,6 +68,7 @@ public class SubTasklet_PaintImpl implements SubTasklet_Paint {
 		paintSubTask.setTextAnswer(psd.getTextualAnswer());
 		paintSubTask.setPictureString(psd.getImageString());
 		paintSubTask.setUndoData(psd.getUndoData());
+		paintSubTask.setResetted(psd.isResetted());
 	}
 
 	public boolean isCorrected() {
@@ -117,7 +118,8 @@ public class SubTasklet_PaintImpl implements SubTasklet_Paint {
 		if( paintSubTask.getPictureString() == null || paintSubTask.getPictureString().trim().length() == 0 )
 			return false;
 		else
-			return !paintSubTask.getPictureString().equals( paintSubTaskDef.getImages() == null ? null : paintSubTaskDef.getImages().getMutableTemplateImage() );
+//			return !paintSubTask.getPictureString().equals( paintSubTaskDef.getImages() == null ? null : paintSubTaskDef.getImages().getMutableTemplateImage() );
+			return !paintSubTask.isResetted();
 	}
 
 	public String getCorrectionHint() {
@@ -126,6 +128,7 @@ public class SubTasklet_PaintImpl implements SubTasklet_Paint {
 
 	public void build() throws TaskApiException{
 		paintSubTask.setTextAnswer( "" );
+		paintSubTask.setResetted(false);
 	}
 
 

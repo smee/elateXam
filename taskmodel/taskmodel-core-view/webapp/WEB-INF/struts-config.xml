@@ -24,6 +24,6 @@
    <forward name="success" path="/showCorrection.jsp"/>
   </action>
  </action-mappings>
- <controller/>
+ <controller nocache="true"/>
  <message-resources parameter="de.thorstenberger.taskmodel.view.resources.Messages"/>
 </struts-config>

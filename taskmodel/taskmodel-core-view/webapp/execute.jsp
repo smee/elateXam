@@ -1,9 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <html:html>
 <head>
+	<meta http-equiv="expires" content="0">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="pragma" content="no-cache">
 	<link rel="stylesheet" href="<%= request.getContextPath() %>/format.css" type="text/css">
 	<title>Bearbeitung: ${Task.title}</title>
 </head>

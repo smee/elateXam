@@ -3,6 +3,23 @@
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
  <description>The presentation layer webapp for complex Tasks of the TaskModel.</description>
  <display-name>taskmodel-core-view</display-name>
+ <filter>
+  <display-name>Set Character Encoding Filter</display-name>
+  <filter-name>SetCharacterEncodingFilter</filter-name>
+  <filter-class>de.thorstenberger.taskmodel.view.SetCharacterEncodingFilter</filter-class>
+  <init-param>
+   <param-name>encoding</param-name>
+   <param-value>UTF-8</param-value>
+  </init-param>
+  <init-param>
+   <param-name>ignore</param-name>
+   <param-value>false</param-value>
+  </init-param>
+ </filter>
+ <filter-mapping>
+  <filter-name>SetCharacterEncodingFilter</filter-name>
+  <servlet-name>action</servlet-name>
+ </filter-mapping>
  <listener>
   <listener-class>de.thorstenberger.taskmodel.view.SessionListener</listener-class>
  </listener>

@@ -90,7 +90,14 @@ public class SubTaskView_Paint extends SubTaskView {
 		ret.append( " document.getElementById(\"task_" + relativeTaskNumber + ".image\").value = document.drawTask_" + relativeTaskNumber + ".getForegroundPictureWithUndoData(5);\n" );
 		ret.append( " document.getElementById(\"task_" + relativeTaskNumber + ".resetted\").value = document.drawTask_" + relativeTaskNumber + ".isResetted();\n" );
 		ret.append( "};\n" );
+		ret.append( " var leavePage_task_" + relativeTaskNumber + " = function(){\n" );
+//		ret.append( " alert( document.drawTask_" + relativeTaskNumber + ".hasChanged() );\n" );
+		ret.append( " 	if( document.drawTask_" + relativeTaskNumber + ".hasChanged() ){\n" );
+		ret.append( " 		setModified();\n" );
+		ret.append( " 	};\n" );
+		ret.append( " };\n" );
 		ret.append( "preSaveManager.registerCallback( preSave_task_" + relativeTaskNumber + " );\n" );
+		ret.append( "leavePageManager.registerCallback( leavePage_task_" + relativeTaskNumber + " );\n" );
 		ret.append( "</script>\n" );
 		
 		return ret.toString();

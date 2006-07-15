@@ -30,8 +30,33 @@ var mseconds = ${Task.remainingTimeMillis}; //Zeit uebergeben in Millisekunden
 var useTime = ${Task.timeRestricted}; //ist Aufgabe zeitbeschraenkt?
 var everythingDone = ${Task.everythingProcessed}; //Sind alle Aufgaben bearbeitet worden --> Abschicken-Button!
 
-function setModified(b)
-{
+Function.prototype.andThen=function(g){
+	var f = this;
+	return function(){
+		f();g();
+	}
+}
+
+function PreSaveManager(){
+	this.callback = function() {};
+	this.registerCallback = function(callbackFunction) {
+		this.callback = (this.callback).andThen(callbackFunction);
+	}
+}
+
+var preSaveManager = new PreSaveManager();
+
+function LeavePageManager(){
+	this.callback = function() {};
+	this.registerCallback = function(callbackFunction) {
+		this.callback = (this.callback).andThen(callbackFunction);
+	}
+}
+
+var leavePageManager = new LeavePageManager();
+
+
+function setModified(b){
 	modified = b;
 }
 
@@ -39,8 +64,10 @@ function setModified(){
 	modified = true;
 }
 
-function leave(ziel)
-{
+function leave(ziel){
+
+	leavePageManager.callback();
+
 	if (this.modified)
 	{
 		if ( confirm("Sie haben Ihre Änderungen an dieser Seite noch nicht gespeichert.\n\nOK - Änderungen verwerfen und Seite verlassen\nAbbrechen - Seite noch nicht verlassen") )
@@ -52,8 +79,9 @@ function leave(ziel)
 		window.location.href = ziel;
 }
 
-function send()
-{
+function send(){
+
+	leavePageManager.callback();
 
 	if (this.modified){
 		if( !confirm("Sie haben Ihre Änderungen an dieser Seite noch nicht gespeichert.\n\nOK - Änderungen verwerfen und abgeben\nAbbrechen - zurück zur Bearbeitung") )
@@ -112,21 +140,6 @@ function fenster(file,breite,hoehe) {
                 window.open(auf,"help",wf);
 }
 
-Function.prototype.andThen=function(g){
-	var f = this;
-	return function(){
-		f();g();
-	}
-}
-
-function PreSaveManager(){
-	this.callback = function() {};
-	this.registerCallback = function(callbackFunction) {
-		this.callback = (this.callback).andThen(callbackFunction);
-	}
-}
-
-var preSaveManager = new PreSaveManager();
 
 //-->
 </script>

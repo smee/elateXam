@@ -116,10 +116,10 @@ public class SubTasklet_PaintImpl implements SubTasklet_Paint {
 
 	public boolean isProcessed() {
 		if( paintSubTask.getPictureString() == null || paintSubTask.getPictureString().trim().length() == 0 )
-			return false;
+			return isTextuallyAnswerdByStudent();
 		else
 //			return !paintSubTask.getPictureString().equals( paintSubTaskDef.getImages() == null ? null : paintSubTaskDef.getImages().getMutableTemplateImage() );
-			return !paintSubTask.isResetted();
+			return !paintSubTask.isResetted() || isTextuallyAnswerdByStudent();
 	}
 
 	public String getCorrectionHint() {
@@ -135,6 +135,10 @@ public class SubTasklet_PaintImpl implements SubTasklet_Paint {
 	public String getTextualAnswer() {
 		String answer = paintSubTask.getTextAnswer();
 		return answer == null? "":answer;
+	}
+	
+	private boolean isTextuallyAnswerdByStudent(){
+		return paintSubTask.getTextAnswer() != null && paintSubTask.getTextAnswer().trim().length() != 0;
 	}
 
 	public int getTextFieldWidth(){

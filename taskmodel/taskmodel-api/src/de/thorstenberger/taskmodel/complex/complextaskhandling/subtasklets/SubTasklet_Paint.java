@@ -35,4 +35,6 @@ public interface SubTasklet_Paint extends SubTasklet {
 	public int getTextFieldWidth();
 	
 	public int getTextFieldHeight();
+	
+	public boolean isResetted();
 }

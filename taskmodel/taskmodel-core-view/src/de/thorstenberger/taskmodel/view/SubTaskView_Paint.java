@@ -74,6 +74,7 @@ public class SubTaskView_Paint extends SubTaskView {
 		ret.append("<param name=\"foreground\" value=\"").append( paintSubTasklet.getUserForegroundString()).append("\">\n");
 		ret.append("<param name=\"background\" value=\"").append( paintSubTasklet.getBackgroundPictureString()).append("\">\n");
 		ret.append("<param name=\"undoData\" value=\"").append( paintSubTasklet.getUndoData()).append("\">\n");
+		ret.append("<param name=\"resetted\" value=\"").append( paintSubTasklet.isResetted()).append("\">\n");
 //		ret.append("</applet>\n<br/><br/>\n");
 		ret.append("</object>\n<br/><br/>\n");
 		ret.append("<textarea name=\"task[" + relativeTaskNumber + "].text\" cols=\"" +

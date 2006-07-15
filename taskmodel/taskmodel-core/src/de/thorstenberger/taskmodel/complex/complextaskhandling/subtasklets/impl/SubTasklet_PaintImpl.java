@@ -173,4 +173,8 @@ public class SubTasklet_PaintImpl implements SubTasklet_Paint {
 		return pic == null ? "" : pic;
 	}
 
+	public boolean isResetted() {
+		return paintSubTask.isResetted();
+	}
+
 }

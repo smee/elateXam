@@ -148,7 +148,7 @@ public class SubTasklet_PaintImpl implements SubTasklet_Paint {
 	
 	public int getTextFieldHeight(){
 		return paintSubTaskDef.getTextualAnswer()!=null && paintSubTaskDef.getTextualAnswer().isSetTextFieldHeight() ?
-				paintSubTaskDef.getTextualAnswer().getTextFieldHeight() : 15;
+				paintSubTaskDef.getTextualAnswer().getTextFieldHeight() : 10;
 	}
 
 	public String getBackgroundPictureString() {

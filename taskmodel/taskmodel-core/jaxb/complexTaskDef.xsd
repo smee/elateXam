@@ -226,10 +226,10 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 								</xs:complexType>
 							</xs:element>
 						</xs:choice>
-						<xs:attribute name="title" type="xs:string" use="optional"/>
-						<xs:attribute name="preserveOrderOfBlocks" type="xs:boolean" use="required"/>
+						<xs:attribute name="title" type="xs:string" use="required"/>
+						<xs:attribute name="ignoreOrderOfBlocks" type="xs:boolean" use="optional"/>
 						<xs:attribute name="id" type="xs:string" use="required"/>
-						<xs:attribute name="mixAllSubTasks" type="xs:boolean" use="required"/>
+						<xs:attribute name="mixAllSubTasks" type="xs:boolean" use="optional"/>
 						<xs:attribute name="tasksPerPage" use="optional">
 							<xs:simpleType>
 								<xs:restriction base="xs:int">

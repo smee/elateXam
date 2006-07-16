@@ -82,7 +82,7 @@ public class CategoryImpl implements Category {
 	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.Category#isPreserveOrderOfBlocks()
 	 */
 	public boolean isIgnoreOrderOfBlocks() {
-		return !categoryType.isPreserveOrderOfBlocks();
+		return categoryType.isIgnoreOrderOfBlocks();
 	}
 
 	/**

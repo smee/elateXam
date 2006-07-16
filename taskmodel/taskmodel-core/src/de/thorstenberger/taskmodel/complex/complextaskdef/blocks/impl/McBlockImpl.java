@@ -78,7 +78,7 @@ public class McBlockImpl implements Block {
 	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.Block#isPreserveOrder()
 	 */
 	public boolean isPreserveOrder() {
-		return mcTaskBlock.getConfig().isSetPreserveOrder();
+		return mcTaskBlock.getConfig().isPreserveOrder();
 	}
 
 	/* (non-Javadoc)

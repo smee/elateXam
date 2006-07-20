@@ -64,6 +64,7 @@ public class SavePageAction extends Action {
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+		
 	   ActionMessages msgs = new ActionMessages();
 	   ActionMessages errors = new ActionMessages();
 
@@ -85,11 +86,12 @@ public class SavePageAction extends Action {
 			return mapping.findForward( "error" );
 		}
 		request.setAttribute( "ReturnURL", delegateObject.getReturnURL() );
+
+		ComplexTasklet ct;
 		
-		TaskDef_Complex taskDef;		
 		try {
-			taskDef = (TaskDef_Complex) delegateObject.getTaskDef();
-		} catch (ClassCastException e2) {
+			ct = (ComplexTasklet) delegateObject.getTasklet();
+		} catch (ClassCastException e1) {
 			errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "only.complexTasks.supported" ) );
 			saveErrors( request, errors );
 			return mapping.findForward( "error" );
@@ -100,11 +102,13 @@ public class SavePageAction extends Action {
 			return mapping.findForward( "error" );
 		}
 		
-		ComplexTasklet ct;
+		logPostData( request, ct );
+
 		
+		TaskDef_Complex taskDef;		
 		try {
-			ct = (ComplexTasklet) delegateObject.getTasklet();
-		} catch (ClassCastException e1) {
+			taskDef = (TaskDef_Complex) delegateObject.getTaskDef();
+		} catch (ClassCastException e2) {
 			errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "only.complexTasks.supported" ) );
 			saveErrors( request, errors );
 			return mapping.findForward( "error" );
@@ -124,7 +128,6 @@ public class SavePageAction extends Action {
 		
 		
 		
-		logPostData( request, ct );
 		
 		try{
 			

@@ -75,10 +75,11 @@ public class CommitAction extends Action {
 			}
 			request.setAttribute( "ReturnURL", delegateObject.getReturnURL() );
 			
-			TaskDef_Complex taskDef;		
+			ComplexTasklet ct;
+			
 			try {
-				taskDef = (TaskDef_Complex) delegateObject.getTaskDef();
-			} catch (ClassCastException e2) {
+				ct = (ComplexTasklet) delegateObject.getTasklet();
+			} catch (ClassCastException e1) {
 				errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "only.complexTasks.supported" ) );
 				saveErrors( request, errors );
 				return mapping.findForward( "error" );
@@ -89,11 +90,12 @@ public class CommitAction extends Action {
 				return mapping.findForward( "error" );
 			}
 			
-			ComplexTasklet ct;
+			SavePageAction.logPostData( request, ct );
 			
+			TaskDef_Complex taskDef;		
 			try {
-				ct = (ComplexTasklet) delegateObject.getTasklet();
-			} catch (ClassCastException e1) {
+				taskDef = (TaskDef_Complex) delegateObject.getTaskDef();
+			} catch (ClassCastException e2) {
 				errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "only.complexTasks.supported" ) );
 				saveErrors( request, errors );
 				return mapping.findForward( "error" );
@@ -112,7 +114,6 @@ public class CommitAction extends Action {
 
 			
 			
-			SavePageAction.logPostData( request, ct );
 			
 			// finally, commit the whole Task
 			try {

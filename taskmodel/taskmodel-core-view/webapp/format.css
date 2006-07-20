@@ -9,6 +9,8 @@ body {
 p,ul,ol,li,div,td,th,address,blockquote,nobr,i,b
      { font-size: 12px; font-family: Arial, Helvetica, Geneva, Verdana, sans-serif }
 
+.problem td{ text-align: center; }
+
 small
      { font-size: 11px; font-family: Arial, Helvetica, Geneva, Verdana, sans-serif }
 a:link

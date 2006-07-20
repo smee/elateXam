@@ -275,8 +275,9 @@ function fenster(file,breite,hoehe) {
 			</c:if>
 			</td><td valign="top" align="right" class="ComplexTaskHint">
 				${SubTasklet.reachablePoints} Punkt<c:if test="${SubTasklet.reachablePoints != 1}">e</c:if>
-			</td></tr></table><br><br>
+			</td></tr></table><br><br><div class="problem">
 				${SubTasklet.problem}
+			</div>
 			<br><br>
 				${SubTasklet.renderedHTML}			
 			<br></fieldset><br>

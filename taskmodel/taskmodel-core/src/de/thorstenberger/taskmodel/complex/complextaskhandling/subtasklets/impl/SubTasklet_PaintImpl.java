@@ -18,7 +18,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 package de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl;
 
+import javax.xml.bind.JAXBException;
+
 import de.thorstenberger.taskmodel.TaskApiException;
+import de.thorstenberger.taskmodel.TaskModelPersistenceException;
 import de.thorstenberger.taskmodel.complex.TaskHandlingConstants;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.blocks.impl.PaintBlockImpl;
@@ -29,6 +32,8 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.impl.PageImpl;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.PaintSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Paint;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType;
+import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
 import de.thorstenberger.taskmodel.complex.jaxb.PaintSubTaskDef;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.PaintTaskBlock;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.PaintSubTask;
@@ -83,10 +88,24 @@ public class SubTasklet_PaintImpl implements SubTasklet_Paint {
 	}
 
 	public void doAutoCorrection() {
-		// TODO Auto-generated method stub
-
+		if(isProcessed()==false)
+			setCorrection(0,true);
 	}
-
+	
+	private void setCorrection( float points, boolean auto ){
+		ComplexTaskHandlingType.TryType.PageType.PaintSubTaskType.CorrectionType corr = paintSubTask.getCorrection();
+		if( corr == null ){
+			ObjectFactory of = new ObjectFactory();
+			try {
+				corr = of.createComplexTaskHandlingTypeTryTypePageTypePaintSubTaskTypeCorrectionType();
+				paintSubTask.setCorrection( corr );
+			} catch (JAXBException e) {
+				throw new TaskModelPersistenceException( e );
+			}
+		}
+		corr.setPoints( points );
+		corr.setAutoCorrected( auto );
+	}
 	public void doManualCorrection(CorrectionSubmitData csd) {
 		// TODO Auto-generated method stub
 

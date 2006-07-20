@@ -49,4 +49,8 @@ public interface Tasklet {
 	
 	public TaskletCorrection getTaskletCorrection();
 	
+	public void logPostData(String msg, String ip);
+
+	public void logPostData(String msg, Throwable throwable, String ip);
+	
 }

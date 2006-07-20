@@ -43,6 +43,7 @@ import org.apache.struts.action.ActionMessages;
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskModelViewDelegate;
 import de.thorstenberger.taskmodel.TaskModelViewDelegateObject;
+import de.thorstenberger.taskmodel.Tasklet;
 import de.thorstenberger.taskmodel.complex.ComplexTasklet;
 import de.thorstenberger.taskmodel.complex.ParsingException;
 import de.thorstenberger.taskmodel.complex.TaskDef_Complex;
@@ -123,7 +124,7 @@ public class SavePageAction extends Action {
 		
 		
 		
-		logPostData( request );
+		logPostData( request, ct );
 		
 		try{
 			
@@ -214,7 +215,7 @@ public class SavePageAction extends Action {
 	}
 	
 	
-	public static void logPostData( HttpServletRequest request ){
+	public static void logPostData( HttpServletRequest request, Tasklet tasklet ){
 		Map vars = request.getParameterMap();
 		StringBuffer parameters = new StringBuffer();
 		Iterator keys = vars.keySet().iterator();
@@ -222,8 +223,7 @@ public class SavePageAction extends Action {
 			String key = (String) keys.next();
 			parameters.append( key + "=" + ((String[])vars.get( key ))[0] + "\n" );
 		}
-		Log taskLog = LogFactory.getLog( "de.thorstenberger.uebman.TaskLogger" );
-		taskLog.debug( "posted parameters:\n" + parameters.toString() );
+		tasklet.logPostData( "posted parameters:\n" + parameters.toString(), request.getRemoteAddr() );
 	}
 
 }

@@ -101,4 +101,20 @@ public abstract class AbstractTasklet implements Tasklet {
 		return taskletCorrection;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.Tasklet#logPostData(java.lang.String, java.lang.String)
+	 */
+	public void logPostData(String msg, String ip) {
+		taskFactory.logPostData( msg, this, ip );		
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.Tasklet#logPostData(java.lang.String, java.lang.Throwable, java.lang.String)
+	 */
+	public void logPostData(String msg, Throwable throwable, String ip) {
+		taskFactory.logPostData( msg, throwable, this, ip );		
+	}
+	
+	
+
 }

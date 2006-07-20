@@ -65,4 +65,8 @@ public interface TaskFactory {
 	
 	public void removeTasklet( String userId, long taskId ) throws TaskApiException;
 	
+	public void logPostData( String msg, Tasklet tasklet, String ip );
+	
+	public void logPostData( String msg, Throwable throwable, Tasklet tasklet, String ip );
+	
 }

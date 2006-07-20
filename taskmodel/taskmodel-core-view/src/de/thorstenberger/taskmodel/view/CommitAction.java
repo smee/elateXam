@@ -112,7 +112,7 @@ public class CommitAction extends Action {
 
 			
 			
-			SavePageAction.logPostData( request );
+			SavePageAction.logPostData( request, ct );
 			
 			// finally, commit the whole Task
 			try {

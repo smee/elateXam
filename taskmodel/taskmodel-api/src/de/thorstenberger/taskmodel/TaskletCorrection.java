@@ -43,6 +43,4 @@ public interface TaskletCorrection {
 	
 	public void setCorrector( String value );
 	
-	public void addCorrectorToHistory( String value );
-	
 }

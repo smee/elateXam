@@ -50,59 +50,51 @@ public class TaskletCorrectionImpl implements TaskletCorrection {
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.TaskletCorrection#getPoints()
 	 */
-	public Float getPoints() {
+	public synchronized Float getPoints() {
 		return points;
 	}
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.TaskletCorrection#getAnnotation()
 	 */
-	public String getAnnotation() {
+	public synchronized String getAnnotation() {
 		return annotation;
 	}
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.TaskletCorrection#getCorrector()
 	 */
-	public String getCorrector() {
+	public synchronized String getCorrector() {
 		return corrector;
 	}
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.TaskletCorrection#getCorrectorHistory()
 	 */
-	public List<String> getCorrectorHistory() {
+	public synchronized List<String> getCorrectorHistory() {
+		if( correctorHistory == null )
+			correctorHistory = new ArrayList<String>();
 		return correctorHistory;
 	}
 
 	/**
 	 * @param annotation The annotation to set.
 	 */
-	public void setAnnotation(String annotation) {
+	public synchronized void setAnnotation(String annotation) {
 		this.annotation = annotation;
 	}
 
 	/**
 	 * @param corrector The corrector to set.
 	 */
-	public void setCorrector(String corrector) {
+	public synchronized void setCorrector(String corrector) {
 		this.corrector = corrector;
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.TaskletCorrection#addCorrectorToHistory(java.lang.String)
-	 */
-	public void addCorrectorToHistory(String value) {
-		if( correctorHistory == null )
-			correctorHistory = new ArrayList<String>();
-		
-		correctorHistory.add( value );
 	}
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.TaskletCorrection#setPoints(java.lang.Float)
 	 */
-	public void setPoints(Float points) throws IllegalArgumentException {
+	public synchronized void setPoints(Float points) throws IllegalArgumentException {
 		if( points == null ){
 			this.points = null;
 			return;

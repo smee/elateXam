@@ -70,6 +70,25 @@ public abstract class AbstractTasklet implements Tasklet {
 		return status;
 	}
 	
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.Tasklet#assignToCorrector(java.lang.String)
+	 */
+	public synchronized void assignToCorrector(String correctorId) throws TaskApiException {
+		
+		if( correctorId == null )
+			throw new NullPointerException();
+		
+		if( getTaskletCorrection().getCorrector() != null ){
+			getTaskletCorrection().getCorrectorHistory().add( getTaskletCorrection().getCorrector() );
+		}
+			
+		getTaskletCorrection().setCorrector( correctorId );
+		if( getStatus().equals( SOLVED ) )
+			setStatus( CORRECTING );
+		
+		save();
+	}
+
 	protected synchronized void setStatus( String status ){
 		if( INITIALIZED.equals( status ) ||
 				INPROGRESS.equals( status ) ||

@@ -67,7 +67,7 @@ public class CommitAction extends Action {
 				return mapping.findForward( "error" );
 			}
 			
-			TaskModelViewDelegateObject delegateObject = TaskModelViewDelegate.getDelegateObject( request.getSession().getId(), id );
+			TaskModelViewDelegateObject delegateObject = (TaskModelViewDelegateObject)TaskModelViewDelegate.getDelegateObject( request.getSession().getId(), id );
 				if( delegateObject == null ){
 				errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "no.session" ) );
 				saveErrors( request, errors );

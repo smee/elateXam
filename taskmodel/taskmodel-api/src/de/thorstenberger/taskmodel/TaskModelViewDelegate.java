@@ -31,20 +31,20 @@ import java.util.Map;
  */
 public class TaskModelViewDelegate {
 
-	private static Map<String, Map<Long, TaskModelViewDelegateObject>> sessions = 
-			Collections.synchronizedMap( new HashMap<String, Map<Long, TaskModelViewDelegateObject>>() );
+	private static Map<String, Map<Long, DelegateObject>> sessions = 
+			Collections.synchronizedMap( new HashMap<String, Map<Long, DelegateObject>>() );
 	
-	public static void storeDelegateObject( String sessionId, long taskId, TaskModelViewDelegateObject delegateObject ){
-		Map<Long, TaskModelViewDelegateObject> session = sessions.get( sessionId );
+	public static void storeDelegateObject( String sessionId, long taskId, DelegateObject delegateObject ){
+		Map<Long, DelegateObject> session = sessions.get( sessionId );
 		if( session == null ){
-			session = new HashMap<Long, TaskModelViewDelegateObject>();
+			session = new HashMap<Long, DelegateObject>();
 			sessions.put( sessionId, session );
 		}
 		session.put( taskId, delegateObject );
 	}
 	
-	public static TaskModelViewDelegateObject getDelegateObject( String sessionId, long taskId ){
-		Map<Long, TaskModelViewDelegateObject> session = sessions.get( sessionId );
+	public static DelegateObject getDelegateObject( String sessionId, long taskId ){
+		Map<Long, DelegateObject> session = sessions.get( sessionId );
 		if( session == null )
 			return null;
 		else

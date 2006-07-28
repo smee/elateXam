@@ -41,20 +41,20 @@ function dTree(objName) {
 		inOrder					: false
 	}
 	this.icon = {
-		root				: '/elatePA/icons/base.gif',
-		folder			: '/elatePA/icons/folder.gif',
-		folderOpen	: '/elatePA/icons/folderopen.gif',
-		node				: '/elatePA/icons/page.gif',
-		empty				: '/elatePA/icons/empty.gif',
-		line				: '/elatePA/icons/line.gif',
-		join				: '/elatePA/icons/join.gif',
-		joinBottom	: '/elatePA/icons/joinbottom.gif',
-		plus				: '/elatePA/icons/plus.gif',
-		plusBottom	: '/elatePA/icons/plusbottom.gif',
-		minus				: '/elatePA/icons/minus.gif',
-		minusBottom	: '/elatePA/icons/minusbottom.gif',
-		nlPlus			: '/elatePA/icons/nolines_plus.gif',
-		nlMinus			: '/elatePA/icons/nolines_minus.gif'
+		root				: '/taskmodel-core-view/icons/base.gif',
+		folder			: '/taskmodel-core-view/icons/folder.gif',
+		folderOpen	: '/taskmodel-core-view/icons/folderopen.gif',
+		node				: '/taskmodel-core-view/icons/page.gif',
+		empty				: '/taskmodel-core-view/icons/empty.gif',
+		line				: '/taskmodel-core-view/icons/line.gif',
+		join				: '/taskmodel-core-view/icons/join.gif',
+		joinBottom	: '/taskmodel-core-view/icons/joinbottom.gif',
+		plus				: '/taskmodel-core-view/icons/plus.gif',
+		plusBottom	: '/taskmodel-core-view/icons/plusbottom.gif',
+		minus				: '/taskmodel-core-view/icons/minus.gif',
+		minusBottom	: '/taskmodel-core-view/icons/minusbottom.gif',
+		nlPlus			: '/taskmodel-core-view/icons/nolines_plus.gif',
+		nlMinus			: '/taskmodel-core-view/icons/nolines_minus.gif'
 	};
 	this.obj = objName;
 	this.aNodes = [];

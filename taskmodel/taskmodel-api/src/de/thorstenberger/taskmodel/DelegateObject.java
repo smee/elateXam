@@ -1,6 +1,6 @@
 /*
 
-Copyright (C) 2005 Thorsten Berger
+Copyright (C) 2006 Thorsten Berger
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,22 +21,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel;
 
+import java.io.Serializable;
 
 /**
- * 
- * This interface has the intent of delegating information about the execution of a task
- * to the view.
- * 
  * @author Thorsten Berger
  *
  */
-public interface TaskModelViewDelegateObject extends DelegateObject {
+public interface DelegateObject extends Serializable{
+	
+	public TaskDef getTaskDef() throws TaskApiException;
 
-	public String getLogin();
+	public long getTaskId();
 	
-	public String getUserName();
-	
-	public Tasklet getTasklet() throws TaskApiException;
-	
+	public String getReturnURL();
 
 }

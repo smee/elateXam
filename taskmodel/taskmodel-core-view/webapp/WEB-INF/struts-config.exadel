@@ -54,8 +54,32 @@
   <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="success"
    NAME="forward0" PATH="/showCorrection.jsp" TARGET="page6"
    TITLE="success" TYPE="forward"/>
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="error"
+   NAME="forward1" PATH="/error.jsp"
+   SHAPE="155,360,672,360,672,152,727,152" TARGET="page3" TITLE="error" TYPE="forward"/>
  </PROCESS-ITEM>
  <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page6"
-  PATH="/showCorrection.jsp" SHAPE="232,336,50,25" SUBTYPE="jsp"
+  PATH="/showCorrection.jsp" SHAPE="232,312,50,25" SUBTYPE="jsp"
   TITLE="showCorrection.jsp" TYPE="page"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#tutorCorrectionOverview"
+  NAME="action4" PATH="/tutorCorrectionOverview" SHAPE="56,512,100,25" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="error"
+   NAME="forward1" PATH="/error.jsp"
+   SHAPE="155,536,696,536,696,152,727,152" TARGET="page3" TITLE="error" TYPE="forward"/>
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="success"
+   NAME="forward0" PATH="/correction/tutorCorrectionOverview.jsp"
+   TARGET="page7" TITLE="success" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page7"
+  PATH="/correction/tutorCorrectionOverview.jsp" SHAPE="424,544,50,25"
+  SUBTYPE="jsp" TITLE="tutorCorrectionOverview.jsp" TYPE="page"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#assignTasklet"
+  NAME="action6" PATH="/assignTasklet" SHAPE="64,632,100,41" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="success"
+   NAME="forward0" PATH="/tutorCorrectionOverview.do" TARGET="action4"
+   TITLE="success" TYPE="forward"/>
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="error"
+   NAME="forward1" PATH="/error.jsp"
+   SHAPE="163,672,720,672,720,152,727,152" TARGET="page3" TITLE="error" TYPE="forward"/>
+ </PROCESS-ITEM>
 </PROCESS>

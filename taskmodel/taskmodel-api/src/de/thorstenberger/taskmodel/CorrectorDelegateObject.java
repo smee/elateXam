@@ -1,6 +1,6 @@
 /*
 
-Copyright (C) 2005 Thorsten Berger
+Copyright (C) 2006 Thorsten Berger
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,22 +27,20 @@ import java.util.List;
  * @author Thorsten Berger
  *
  */
-public interface TaskletContainer {
+public interface CorrectorDelegateObject extends DelegateObject{
 
-	public Tasklet createTasklet( long taskId, String userId ) throws TaskApiException;
+	public String getCorrectorLogin();
 	
-	public Tasklet getTasklet( long taskId, String userId ) throws TaskApiException;
+	public String getCorrectorUserName();
 	
-	public void removeTasklet( long taskId, String userId ) throws TaskApiException;
+	// do we need this?
+	public TaskManager getTaskManager();
+	
+	public TaskDef getTaskDef() throws TaskApiException;
 
-	public TaskStatistics calculateStatistics( long taskId ) throws TaskApiException;
+	// redundant
+//	public long getTaskId();
 	
-	public void assignRandomTaskletToCorrector( long taskId, String correctorId ) throws TaskApiException;
+	public List<Tasklet> getTasklets();
 	
-	public List<Tasklet> getTaskletsAssignedToCorrector( long taskId, String correctorId, boolean corrected ) throws TaskApiException;
-	
-    /**
-     * force subsequent refresh from the persistent store, that means the TaskFactory implementation 
-     */
-    public void reset();
 }

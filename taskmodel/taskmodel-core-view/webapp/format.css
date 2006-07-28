@@ -116,3 +116,140 @@ legend.complexTask {  font-family: "Times New Roman", Times, serif; font-size: 1
 select {  font-family: Arial, Helvetica, sans-serif; font-size: 12px}
 .Cloze_Gap {  background-color: #FFFF66}
 .annotation {  font-size: 12px; border-style: dashed; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; font-family: Arial, Helvetica, sans-serif}
+
+
+/* DisplayTag */
+
+.displaytag table {
+	border: 1px solid #666;
+	width: 80%;
+	margin: 20px 0 20px 0;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #636363;
+	padding: 2.5em;
+}
+
+.displaytag th, .displaytag td {
+	padding: 2px 4px 2px 4px;
+	text-align: left;
+	vertical-align: top;
+	font-size: 8pt;
+}
+
+.displaytag thead tr {
+	background-color: #fc0;
+}
+
+.displaytag.forum thead tr {
+	background-color: #CAD5E3;
+}
+
+.displaytag th.sorted {
+	background-color: orange;
+}
+
+.displaytag.forum th.sorted {
+	background-color: orange;
+}
+
+.displaytag th a, .displaytag th a:visited {
+	color: black;
+}
+
+.displaytag th a:hover {
+	text-decoration: underline;
+	color: black;
+}
+
+.displaytag th.sorted a, .displaytag th.sortable a {
+	background-position: right;
+	background-repeat: no-repeat;
+	display: block;
+	width: 100%;
+}
+
+.displaytag th.sortable a {
+	background-image: url(dt/arrow_off.png);
+}
+
+.displaytag th.order1 a {
+	background-image: url(dt/arrow_down.png);
+}
+
+.displaytag th.order2 a {
+	background-image: url(dt/arrow_up.png);
+}
+
+.displaytag tr.odd {
+	background-color: #fff;
+}
+
+.displaytag tr.tableRowEven, .displaytag tr.even {
+	background-color: #fea;
+}
+
+.displaytag.forum tr.tableRowEven, .displaytag.forum tr.even {
+	background-color: #EBF2FA;
+}
+
+.displaytag div.exportlinks {
+	background-color: #eee;
+	border: 1px dotted #999;
+	padding: 2px 4px 2px 4px;
+	margin: 2px 0 10px 0;
+	width: 79%;
+}
+
+.displaytag span.export {
+	padding: 0 4px 1px 20px;
+	display: inline;
+	display: inline-block;
+	cursor: pointer;
+}
+
+.displaytag span.excel {
+	background-image: url(dt/ico_file_excel.png);
+}
+
+.displaytag span.csv {
+	background-image: url(dt/ico_file_csv.png);
+}
+
+.displaytag span.xml {
+	background-image: url(dt/ico_file_xml.png);
+}
+
+.displaytag span.pdf {
+	background-image: url(dt/ico_file_pdf.png);
+}
+
+.displaytag span.rtf {
+	background-image: url(dt/ico_file_rtf.png);
+}
+
+span.pagebanner {
+	font-size: 8pt;
+	background-color: #eee;
+	border: 1px dotted #999;
+	padding: 2px 4px 2px 4px;
+/*	width: 79%;*/
+	width: 375px;
+	margin-top: 10px;
+	display: block;
+	border-bottom: none;
+}
+
+span.pagelinks {
+	font-size: 8pt;
+	background-color: #eee;
+	border: 1px dotted #999;
+	padding: 2px 4px 2px 4px;
+/*	width: 79%;*/
+	width: 375px;
+	display: block;
+	border-top: none;
+/*	margin-bottom: -5px;*/
+}
+
+

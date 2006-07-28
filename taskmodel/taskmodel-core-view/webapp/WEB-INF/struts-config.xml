@@ -22,6 +22,15 @@
   </action>
   <action path="/showSolution" type="de.thorstenberger.taskmodel.view.ShowSolutionAction">
    <forward name="success" path="/showCorrection.jsp"/>
+   <forward name="error" path="/error.jsp"/>
+  </action>
+  <action path="/tutorCorrectionOverview" type="de.thorstenberger.taskmodel.view.correction.TutorCorrectionOverviewAction">
+   <forward name="success" path="/correction/tutorCorrectionOverview.jsp"/>
+   <forward name="error" path="/error.jsp"/>
+  </action>
+  <action path="/assignTasklet" type="de.thorstenberger.taskmodel.view.correction.AssignTaskletAction">
+   <forward name="success" path="/tutorCorrectionOverview.do"/>
+   <forward name="error" path="/error.jsp"/>
   </action>
  </action-mappings>
  <controller nocache="true"/>

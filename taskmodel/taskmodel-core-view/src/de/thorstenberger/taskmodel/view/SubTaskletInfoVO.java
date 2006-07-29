@@ -35,6 +35,10 @@ public class SubTaskletInfoVO {
 	private boolean corrected;
 	private String points;
 	
+	private String correctionHint;
+	private String correctedHTML;
+	private String correctionHTML;
+	
 	
 	/**
 	 * @return Returns the hint.
@@ -119,6 +123,42 @@ public class SubTaskletInfoVO {
 	 */
 	public void setPoints(String points) {
 		this.points = points;
+	}
+	/**
+	 * @return Returns the correctedHTML.
+	 */
+	public String getCorrectedHTML() {
+		return correctedHTML;
+	}
+	/**
+	 * @param correctedHTML The correctedHTML to set.
+	 */
+	public void setCorrectedHTML(String correctedHTML) {
+		this.correctedHTML = correctedHTML;
+	}
+	/**
+	 * @return Returns the correctionHTML.
+	 */
+	public String getCorrectionHTML() {
+		return correctionHTML;
+	}
+	/**
+	 * @param correctionHTML The correctionHTML to set.
+	 */
+	public void setCorrectionHTML(String correctionHTML) {
+		this.correctionHTML = correctionHTML;
+	}
+	/**
+	 * @return Returns the correctionHint.
+	 */
+	public String getCorrectionHint() {
+		return correctionHint;
+	}
+	/**
+	 * @param correctionHint The correctionHint to set.
+	 */
+	public void setCorrectionHint(String correctionHint) {
+		this.correctionHint = correctionHint;
 	}
 	
 	

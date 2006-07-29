@@ -39,6 +39,7 @@ public class CorrectorDelegateObjectImpl implements CorrectorDelegateObject {
 	private String correctorUserName;
 	private TaskManager taskManager;
 	private TaskDef taskDef;
+	private boolean privileged;
 	private String returnURL;
 
 	/**
@@ -48,13 +49,12 @@ public class CorrectorDelegateObjectImpl implements CorrectorDelegateObject {
 	 * @param taskDef
 	 * @param returnURL
 	 */
-	public CorrectorDelegateObjectImpl(String correctorLogin, String correctorUserName, TaskManager taskManager, TaskDef taskDef, String returnURL) {
-		super();
-		// TODO Auto-generated constructor stub
+	public CorrectorDelegateObjectImpl(String correctorLogin, String correctorUserName, TaskManager taskManager, TaskDef taskDef, boolean privileged, String returnURL) {
 		this.correctorLogin = correctorLogin;
 		this.correctorUserName = correctorUserName;
 		this.taskManager = taskManager;
 		this.taskDef = taskDef;
+		this.privileged = privileged;
 		this.returnURL = returnURL;
 	}
 
@@ -99,6 +99,13 @@ public class CorrectorDelegateObjectImpl implements CorrectorDelegateObject {
 	 */
 	public long getTaskId() {
 		return taskDef.getId();
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.CorrectorDelegateObject#isPrivileged()
+	 */
+	public boolean isPrivileged() {
+		return privileged;
 	}
 
 	/* (non-Javadoc)

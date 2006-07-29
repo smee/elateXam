@@ -43,4 +43,11 @@ public interface CorrectorDelegateObject extends DelegateObject{
 	
 	public List<Tasklet> getTasklets();
 	
+	/**
+	 * Determines wether the corrector is allowed to correct and see the Tasklets of all users.
+	 * If not, the corrector may only correct assigned Tasklets.
+	 * @return 
+	 */
+	public boolean isPrivileged();
+	
 }

@@ -60,7 +60,9 @@ public class CorrectionNodeFormatter implements DataNodeFormatter {
 		}else if( node instanceof SubtaskletNode ){
 			SubtaskletNode stn = (SubtaskletNode)node;
 			String url = response.encodeURL( path + "?taskId=" + taskId + "&userId=" + userId + "&selectedSubTaskletNum=" + stn.getVirtualSubtaskNum() );
-			return "<a class=\"node\" href=\"" + url + "\">Aufgabe " + stn.getVirtualSubtaskNum() + "</a>";
+			
+			return "<a class=\"node\" href=\"" + url + "\">Aufgabe " + stn.getVirtualSubtaskNum() + "</a>" +
+					( stn.isCurrentlySelected() ? "<img src=\"" + request.getContextPath() + "/pics/sparkle001bu.gif\">" : "");
 			
 		}else
 			return node.getName();

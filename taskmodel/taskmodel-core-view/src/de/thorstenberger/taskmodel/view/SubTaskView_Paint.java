@@ -18,6 +18,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 package de.thorstenberger.taskmodel.view;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -27,6 +29,7 @@ import de.thorstenberger.taskmodel.MethodNotSupportedException;
 import de.thorstenberger.taskmodel.complex.ParsingException;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.correctionsubmitdata.PaintCorrectionSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.PaintSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Paint;
 
@@ -112,8 +115,17 @@ public class SubTaskView_Paint extends SubTaskView {
 
 	@Override
 	public String getCorrectionHTML(HttpServletRequest request) {
-		// TODO Auto-generated method stub
-		return null;
+	    StringBuilder ret = new StringBuilder();
+	    ret.append( getRenderedHTML( request, -1, true ) );
+	    
+	    NumberFormat nF = NumberFormat.getNumberInstance();
+	    
+	    String points = paintSubTasklet.isCorrected() ? ( nF.format( paintSubTasklet.getPoints() ) ) : "";
+	    
+	    ret.append("<br><div align=\"right\">Punkte: " +
+	    		"<input type=\"text\" name=\"task[0].text_points\" size=\"4\" value=\"" + points + "\"></div><br>");
+	    
+	    return ret.toString();
 	}
 
 	@Override
@@ -146,10 +158,18 @@ public class SubTaskView_Paint extends SubTaskView {
 	}
 
 	@Override
-	public CorrectionSubmitData getCorrectionSubmitData(Map postedVars)
-			throws ParsingException, MethodNotSupportedException {
-		// TODO Auto-generated method stub
-		return null;
+	public CorrectionSubmitData getCorrectionSubmitData( Map postedVars ) throws ParsingException, MethodNotSupportedException{
+	    Iterator it = postedVars.values().iterator();
+	    if( it.hasNext() ){
+	        float points;
+            try {
+                points = NumberFormat.getInstance().parse( (String) it.next() ).floatValue();
+            } catch (ParseException e) {
+                throw new ParsingException( e );
+            }
+            return new PaintCorrectionSubmitData( points );
+	    }else
+	        throw new ParsingException();
 	}
 
 }

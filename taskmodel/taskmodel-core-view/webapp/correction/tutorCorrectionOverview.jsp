@@ -86,7 +86,7 @@
 	</display:table>
 
 </fieldset><br>
-<fieldset><legend>Dozent</legend>
+<!--fieldset><legend>Dozent</legend>
 <ul>
   <li><a href="/UebManager/manager.UebManager?action=ListTaskHandlingData&id=5">Gesamt&uuml;bersicht</a><br><br> 
   <li><a href="/UebManager/manager.UebManager/taskCorrection/overview_task_5.csv">Excel-Tabelle 
@@ -94,7 +94,7 @@ zur &Uuml;bersicht</a><br>
 
 </ul>
 
-</fieldset> 
+</fieldset--> 
 
 <jsp:include page="../footer.jsp" />
 

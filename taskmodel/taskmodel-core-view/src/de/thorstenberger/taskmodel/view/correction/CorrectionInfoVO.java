@@ -21,7 +21,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.view.correction;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.thorstenberger.taskmodel.view.SubTaskletInfoVO;
 
@@ -125,7 +127,13 @@ public class CorrectionInfoVO {
 		this.subTasklet = subTasklet;
 	}
 	
-	
+//	public Map getFormMap(){
+//		Map ret = new HashMap();
+//		ret.put( "userId", userId );
+//		ret.put( "taskId", taskId + "" );
+//		ret.put( "selectedSubTaskletNum", getSubTasklet().getVirtualSubTaskletNumber() );
+//		return ret;
+//	}
 	
 
 }

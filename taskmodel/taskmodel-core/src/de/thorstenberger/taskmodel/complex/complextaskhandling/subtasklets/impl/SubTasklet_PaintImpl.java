@@ -29,6 +29,8 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.subtaskdefs.impl.Paint
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.correctionsubmitdata.PaintCorrectionSubmitData;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.correctionsubmitdata.TextCorrectionSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.impl.PageImpl;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.PaintSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Paint;
@@ -107,8 +109,10 @@ public class SubTasklet_PaintImpl implements SubTasklet_Paint {
 		corr.setAutoCorrected( auto );
 	}
 	public void doManualCorrection(CorrectionSubmitData csd) {
-		// TODO Auto-generated method stub
-
+	    PaintCorrectionSubmitData pcsd = (PaintCorrectionSubmitData) csd;
+	    float points = pcsd.getPoints();
+	    if( points>=0 && points <= paintTaskBlock.getConfig().getPointsPerTask() )
+	        setCorrection( points, false );
 	}
 
 	public float getReachablePoints() {

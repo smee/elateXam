@@ -54,8 +54,10 @@
 
 				<c:choose>
 					<c:when test="${Correction.subTasklet.correctionHTML != null}">
-						<form method="post" action="" + ri.getVM().expandAllVars("ServletURLBase") +
-					        	"?action=TaskCorrection&id=" + id + "&login=" + login + "&todo=saveCorrection&virtualSubTaskNum=" + virtualSubtaskNum + "\">
+						<form method="post" action="<html:rewrite action="/saveCorrection"/>">
+							<input type="hidden" name="userId" value="${Correction.userId}"/>
+							<input type="hidden" name="taskId" value="${Correction.taskId}"/>
+							<input type="hidden" name="selectedSubTaskletNum" value="${Correction.subTasklet.virtualSubTaskletNumber}"/>
 					        	
 							${Correction.subTasklet.correctionHTML}
 							

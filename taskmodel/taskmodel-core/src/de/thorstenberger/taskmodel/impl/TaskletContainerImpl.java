@@ -102,13 +102,25 @@ public class TaskletContainerImpl implements TaskletContainer {
 		return uo;
 		
 	}
+	
+	private List<Tasklet> getTasklets( long taskId ) throws TaskApiException{
+		
+		List<String> userIds = taskFactory.getUserIdsOfAvailableTasklets( taskId );
+		List<Tasklet> ret = new ArrayList<Tasklet>();
+		for( String userId : userIds )
+			ret.add( getTasklet( taskId, userId ) );
+		
+		return ret;
+	}
+	
+//	private List<Tasklet> getTaskletsAssignedToCorrector( long taskId, String correctorLogin)
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.TaskletContainer#calculateStatistics(long)
 	 */
 	public TaskStatistics calculateStatistics(long taskId) throws TaskApiException {
 		
-		List<Tasklet> tasklets = taskFactory.getTasklets( taskId );
+		List<Tasklet> tasklets = getTasklets( taskId );
 		
 		int numOfSolutions = 0;
 		int numOfCorrectedSolutions = 0;
@@ -133,8 +145,7 @@ public class TaskletContainerImpl implements TaskletContainer {
 	 */
 	public synchronized void assignRandomTaskletToCorrector(long taskId, String correctorId) throws TaskApiException {
 
-		List<Tasklet> tasklets = taskFactory.getTasklets( taskId );
-		
+		List<Tasklet> tasklets = getTasklets( taskId );
 		List<Tasklet> assignableTasklets = new ArrayList<Tasklet>();
 		
 		for( Tasklet tasklet : tasklets ){
@@ -154,8 +165,15 @@ public class TaskletContainerImpl implements TaskletContainer {
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.TaskletContainer#getTaskletsAssignedToCorrector(long, java.lang.String)
 	 */
-	public synchronized List<Tasklet> getTaskletsAssignedToCorrector(long taskId, String correctorId, boolean corrected ) throws TaskApiException {
-		return taskFactory.getTaskletsAssignedToCorrector( taskId, correctorId, corrected );
+	public synchronized List<Tasklet> getTaskletsAssignedToCorrector(long taskId, String correctorId ) throws TaskApiException {
+		
+		List<String> userIds = taskFactory.getUserIdsOfTaskletsAssignedToCorrector( taskId, correctorId );
+		List<Tasklet> ret = new ArrayList<Tasklet>();
+		for( String userId : userIds )
+			ret.add( getTasklet( taskId, userId ) );
+		
+		return ret;
+
 	}
 
 	/* (non-Javadoc)

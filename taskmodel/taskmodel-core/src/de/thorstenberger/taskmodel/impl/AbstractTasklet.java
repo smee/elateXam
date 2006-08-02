@@ -78,6 +78,9 @@ public abstract class AbstractTasklet implements Tasklet {
 		if( correctorId == null )
 			throw new NullPointerException();
 		
+		if( getStatus().equals( INITIALIZED ) || getStatus().equals( INPROGRESS ) )
+			throw new TaskApiException( "Cannot assign Tasklet with status \"initialized\" or \"in progress\" to corrector." );
+		
 		if( getTaskletCorrection().getCorrector() != null ){
 			getTaskletCorrection().getCorrectorHistory().add( getTaskletCorrection().getCorrector() );
 		}

@@ -37,22 +37,16 @@ public abstract class AbstractTaskFactory implements TaskFactory {
 	/**
 	 * generic implementation, overwrite to improve performance
 	 */
-	public List<Tasklet> getTaskletsAssignedToCorrector(long taskId,
-			String correctorId, boolean corrected ) {
+	public List<String> getUserIdsOfTaskletsAssignedToCorrector(long taskId,
+			String correctorId ) {
 		
 		List<Tasklet> tasklets = getTasklets( taskId );
-		List<Tasklet> ret = new ArrayList<Tasklet>();
+		List<String> ret = new ArrayList<String>();
 		
 		for( Tasklet tasklet : tasklets ){
 			
 			if( !tasklet.getStatus().equals( Tasklet.INITIALIZED ) && correctorId.equals( tasklet.getTaskletCorrection().getCorrector() ) ){
-				
-				if( !corrected && !tasklet.getStatus().equals( Tasklet.CORRECTED ) ){
-					ret.add( tasklet );
-				}else if( corrected && tasklet.getStatus().equals( Tasklet.CORRECTED ) ){
-					ret.add( tasklet );
-				}
-				
+				ret.add( tasklet.getUserId() );				
 			}
 			
 		}
@@ -60,5 +54,18 @@ public abstract class AbstractTaskFactory implements TaskFactory {
 		return ret;
 		
 	}
+
+	/**
+	 * generic implementation, overwrite to improve performance
+	 */
+	public List<String> getUserIdsOfAvailableTasklets(long taskId) {
+		List<Tasklet> tasklets = getTasklets( taskId );
+		List<String> ret = new ArrayList<String>();
+		for( Tasklet tasklet : tasklets )
+			ret.add( tasklet.getUserId() );
+		return ret;
+	}
+	
+	
 
 }

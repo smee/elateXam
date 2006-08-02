@@ -61,6 +61,8 @@ public interface TaskFactory {
 	
 	public List<Tasklet> getTasklets( long taskId );
 	
+	public List<String> getUserIdsOfAvailableTasklets( long taskId );
+	
 	public Tasklet createTasklet( String userId, long taskId ) throws TaskApiException;
 	
 	public void storeTasklet( Tasklet tasklet ) throws TaskApiException;
@@ -71,6 +73,7 @@ public interface TaskFactory {
 	
 	public void logPostData( String msg, Throwable throwable, Tasklet tasklet, String ip );
 	
-	public List<Tasklet> getTaskletsAssignedToCorrector( long taskId, String correctorId, boolean corrected );
+//	public List<Tasklet> getTaskletsAssignedToCorrector( long taskId, String correctorId, boolean corrected );
+	public List<String> getUserIdsOfTaskletsAssignedToCorrector( long taskId, String correctorId );
 
 }

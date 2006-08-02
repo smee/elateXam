@@ -324,14 +324,6 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 	}
 
 	
-
-//	/* (non-Javadoc)
-//	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#getComplexTaskDefHelper()
-//	 */
-//	public ComplexTaskDefHelper getComplexTaskDefHelper() {
-//		return complexTaskDef.getComplexTaskDefHelper();
-//	}
-
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#getActiveTry()
 	 */
@@ -343,17 +335,6 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 		return complexTaskHandlingRoot.getRecentTry();
 	}
 
-//	/* (non-Javadoc)
-//	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#getHash(int)
-//	 */
-//	public synchronized long getHash( int page ) {
-//		long hash = 0;
-//		SubTask[] subtasks = getSubTasks( page );
-//		for( int i=0; i<subtasks.length; i++ )
-//			hash += subtasks[i].getHash();
-//		
-//		return hash;
-//	}
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#getSolutionOfLatestTry()
@@ -382,22 +363,5 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 	}
 	
 	
-
-//	/* (non-Javadoc)
-//	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#getSubTasks(int)
-//	 */
-//	public synchronized SubTask[] getSubTasks(int page) {
-//		
-//		if( !getStatus().equals( INPROGRESS ) )
-//			throw new IllegalStateException( TaskHandlingConstants.NOT_IN_PROGRESS );
-//		
-//		SubTask[] ret = getSubTaskFactory().getSubTasks( ctHandlingHelper.getRecentTry(), page );
-//		
-//		if( ret == null )
-//			throw new IllegalStateException( TaskHandlingConstants.PAGE_UNKNOWN );
-//		
-//		return ret;
-//		
-//	}
 
 }

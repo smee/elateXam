@@ -36,6 +36,8 @@ import de.thorstenberger.taskmodel.Tasklet;
  */
 class UserObject implements Serializable{
 
+	private static final long serialVersionUID = 89234759269256921l;
+	
 	private String userId;
 	private Map<Long, Tasklet> tasklets;
 	private TaskFactory taskFactory;

@@ -32,18 +32,21 @@ public class TaskStatisticsImpl implements TaskStatistics {
 	private long taskId;
 	private int numOfSolutions;
 	private int numOfCorrectedSolutions;
+	private int numOfAssignedSolutions;
 
 	
 	
 	/**
 	 * @param taskId
 	 * @param numOfSolutions
-	 * @param solutions2
+	 * @param numOfCorrectedSolutions
+	 * @param numOfAssignedSolutions
 	 */
-	public TaskStatisticsImpl(long taskId, int numOfSolutions, int numOfCorrectedSolutions) {
+	public TaskStatisticsImpl(long taskId, int numOfSolutions, int numOfCorrectedSolutions, int numOfAssignedSolutions) {
 		this.taskId = taskId;
 		this.numOfSolutions = numOfSolutions;
 		this.numOfCorrectedSolutions = numOfCorrectedSolutions;
+		this.numOfAssignedSolutions = numOfAssignedSolutions;
 	}
 
 	/* (non-Javadoc)
@@ -58,6 +61,14 @@ public class TaskStatisticsImpl implements TaskStatistics {
 	 */
 	public int getNumOfSolutions() {
 		return numOfSolutions;
+	}
+	
+
+	/**
+	 * @return Returns the numOfAssignedSolutions.
+	 */
+	public int getNumOfAssignedSolutions() {
+		return numOfAssignedSolutions;
 	}
 
 	/* (non-Javadoc)

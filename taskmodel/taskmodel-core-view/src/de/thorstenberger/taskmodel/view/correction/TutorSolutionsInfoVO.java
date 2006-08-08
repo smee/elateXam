@@ -35,7 +35,7 @@ public class TutorSolutionsInfoVO {
 	private String correctedCountPercent;
 	private List<TaskletInfoVO> assignedUncorrectedTasklets;
 	private List<TaskletInfoVO> assignedCorrectedTasklets;
-	
+	private int assignedCount;
 	
 	/**
 	 * @return Returns the taskId.
@@ -110,6 +110,18 @@ public class TutorSolutionsInfoVO {
 	public void setAssignedCorrectedTasklets(
 			List<TaskletInfoVO> assignedCorrectedTasklets) {
 		this.assignedCorrectedTasklets = assignedCorrectedTasklets;
+	}
+	/**
+	 * @return Returns the assignedCount.
+	 */
+	public int getAssignedCount() {
+		return assignedCount;
+	}
+	/**
+	 * @param assignedCount The assignedCount to set.
+	 */
+	public void setAssignedCount(int assignedCount) {
+		this.assignedCount = assignedCount;
 	}
 	
 	

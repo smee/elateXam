@@ -96,8 +96,11 @@
 
   <tr>
           <td valign="top"><fieldset><legend>Korrektur-Bemerkungen</legend> 
-            <form name="annotationform" method="post"
-	  	action="/UebManager/manager.UebManager?action=TaskCorrection&login=a&id=5&todo=saveAnnotation&virtualSubTaskNum=1">
+          
+            <form method="post" action="<html:rewrite action="/saveAnnotation"/>">
+				<input type="hidden" name="userId" value="${Correction.userId}"/>
+				<input type="hidden" name="taskId" value="${Correction.taskId}"/>
+				
         <div align="right">
                 <textarea name="annotation" cols="50" rows="7" class="annotation"></textarea>
           <br>

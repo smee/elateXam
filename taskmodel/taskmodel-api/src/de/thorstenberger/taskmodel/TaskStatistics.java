@@ -31,6 +31,8 @@ public interface TaskStatistics {
 	
 	public int getNumOfSolutions();
 	
+	public int getNumOfAssignedSolutions();
+	
 	public long getTaskId();
 	
 }

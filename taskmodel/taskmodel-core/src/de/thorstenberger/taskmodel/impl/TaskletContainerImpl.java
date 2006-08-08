@@ -124,18 +124,25 @@ public class TaskletContainerImpl implements TaskletContainer {
 		
 		int numOfSolutions = 0;
 		int numOfCorrectedSolutions = 0;
+		int numOfAssignedSolutions = 0;
 		
 		for( Tasklet tasklet : tasklets ){
 			
-			if( !tasklet.getStatus().equals( Tasklet.INITIALIZED ) && !tasklet.getStatus().equals( Tasklet.INPROGRESS ) ){
-				numOfSolutions++;
-				
-				if( tasklet.getStatus().equals( Tasklet.CORRECTED ) )
-					numOfCorrectedSolutions++;
+			synchronized (tasklet) {
+
+				if( !tasklet.getStatus().equals( Tasklet.INITIALIZED ) && !tasklet.getStatus().equals( Tasklet.INPROGRESS ) ){
+					numOfSolutions++;
+					
+					if( tasklet.getStatus().equals( Tasklet.CORRECTED ) )
+						numOfCorrectedSolutions++;
+				}
+				if( tasklet.getTaskletCorrection().getCorrector() != null )
+					numOfAssignedSolutions++;
+			
 			}
 		}
 		
-		return new TaskStatisticsImpl( taskId, numOfSolutions, numOfCorrectedSolutions );
+		return new TaskStatisticsImpl( taskId, numOfSolutions, numOfCorrectedSolutions, numOfAssignedSolutions );
 
 		
 	}

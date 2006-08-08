@@ -33,6 +33,10 @@
 
   </tr>
   <tr> 
+    <td>Anzahl Korrektoren zugeordnete L&ouml;sungen:</td>
+    <td>${Solutions.assignedCount}</td>
+  </tr>
+  <tr> 
     <td>Anzahl korrigierter L&ouml;sungen:</td>
     <td>${Solutions.correctedCount} (${Solutions.correctedCountPercent})</td>
   </tr>

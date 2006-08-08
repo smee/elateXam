@@ -41,6 +41,10 @@
    <forward name="error" path="/error.jsp"/>
    <forward name="success" path="/doCorrection.do"/>
   </action>
+  <action path="/saveAnnotation" type="de.thorstenberger.taskmodel.view.correction.SaveAnnotationAction">
+   <forward name="success" path="/doCorrection.do"/>
+   <forward name="error" path="/error.jsp"/>
+  </action>
  </action-mappings>
  <controller nocache="true"/>
  <message-resources parameter="de.thorstenberger.taskmodel.view.resources.Messages"/>

@@ -27,4 +27,12 @@ package de.thorstenberger.taskmodel.complex.complextaskhandling;
  */
 public interface CorrectionSubmitData {
 
+	/**
+	 * Annotations are used to save corrector's comments for the whole ComplexTasklet.
+	 * @return the corrector's annotation for the ComplexTasklet
+	 */
+	public String getAnnotation();
+	
+	public void setAnnotation( String annotation );
+	
 }

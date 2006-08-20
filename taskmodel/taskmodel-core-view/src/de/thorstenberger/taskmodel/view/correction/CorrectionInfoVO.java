@@ -21,9 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.view.correction;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.thorstenberger.taskmodel.view.SubTaskletInfoVO;
 
@@ -39,6 +37,7 @@ public class CorrectionInfoVO {
 	private String points;
 	private String correctorLogin;
 	private List<String> correctorHistory;
+	private String annotation;
 	
 	private SubTaskletInfoVO subTasklet;
 	
@@ -125,6 +124,18 @@ public class CorrectionInfoVO {
 	 */
 	public void setSubTasklet(SubTaskletInfoVO subTasklet) {
 		this.subTasklet = subTasklet;
+	}
+	/**
+	 * @return Returns the annotation.
+	 */
+	public String getAnnotation() {
+		return annotation;
+	}
+	/**
+	 * @param annotation The annotation to set.
+	 */
+	public void setAnnotation(String annotation) {
+		this.annotation = annotation;
 	}
 	
 //	public Map getFormMap(){

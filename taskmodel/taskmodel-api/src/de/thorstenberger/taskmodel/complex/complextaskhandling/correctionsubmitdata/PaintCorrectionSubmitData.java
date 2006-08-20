@@ -21,13 +21,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.complex.complextaskhandling.correctionsubmitdata;
 
-import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
 
 /**
  * @author Thorsten Berger
  *
  */
-public class PaintCorrectionSubmitData implements CorrectionSubmitData {
+public class PaintCorrectionSubmitData extends CorrectionSubmitDataImpl {
 
     private float points;
     

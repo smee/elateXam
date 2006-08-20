@@ -50,7 +50,7 @@ public class SaveAnnotationAction extends Action {
 		   ActionMessages errors = new ActionMessages();
 
 			long id;
-			String userId = request.getParameter( "userId" );;
+			String userId = request.getParameter( "userId" );
 			
 			try {
 				id = Long.parseLong( request.getParameter( "taskId" ) );

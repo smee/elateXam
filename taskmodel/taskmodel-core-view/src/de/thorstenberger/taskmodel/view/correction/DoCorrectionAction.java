@@ -115,6 +115,7 @@ public class DoCorrectionAction extends Action {
 			civo.setStatus( tasklet.getStatus() );
 			civo.setCorrectorLogin( tasklet.getTaskletCorrection().getCorrector() );
 			civo.setCorrectorHistory( tasklet.getTaskletCorrection().getCorrectorHistory() );
+			civo.setAnnotation( tasklet.getTaskletCorrection().getAnnotation() );
 			
 			
 			request.setAttribute( "Correction", civo );

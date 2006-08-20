@@ -13,6 +13,12 @@
 <jsp:include page="../header.jsp" />
 
 <p class="header">L&ouml;sung von ${Correction.userId}</p>
+
+<form method="post" action="<html:rewrite action="/saveCorrection"/>">
+							<input type="hidden" name="userId" value="${Correction.userId}"/>
+							<input type="hidden" name="taskId" value="${Correction.taskId}"/>
+							<input type="hidden" name="selectedSubTaskletNum" value="${Correction.subTasklet.virtualSubTaskletNumber}"/>
+
 <table border="0" cellspacing="2" cellpadding="2" width="790">
   <tr bgcolor="#F2F9FF"> 
     <td colspan="2" valign="top"><img src="<%= request.getContextPath() %>/pics/exit.gif" width="20" height="16"> 
@@ -54,17 +60,13 @@
 
 				<c:choose>
 					<c:when test="${Correction.subTasklet.correctionHTML != null}">
-						<form method="post" action="<html:rewrite action="/saveCorrection"/>">
-							<input type="hidden" name="userId" value="${Correction.userId}"/>
-							<input type="hidden" name="taskId" value="${Correction.taskId}"/>
-							<input type="hidden" name="selectedSubTaskletNum" value="${Correction.subTasklet.virtualSubTaskletNumber}"/>
 					        	
 							${Correction.subTasklet.correctionHTML}
 							
 							<br><hr size="1" noshade><div align="right">
-							<br><input type="submit" name="submit" value="Korrektur speichern">
+							<br>
 							</div>
-						</form>						
+							
 					</c:when>
 					<c:otherwise>			
 							${Correction.subTasklet.correctedHTML}
@@ -97,18 +99,12 @@
   <tr>
           <td valign="top"><fieldset><legend>Korrektur-Bemerkungen</legend> 
           
-            <form method="post" action="<html:rewrite action="/saveAnnotation"/>">
-				<input type="hidden" name="userId" value="${Correction.userId}"/>
-				<input type="hidden" name="taskId" value="${Correction.taskId}"/>
-				
         <div align="right">
-                <textarea name="annotation" cols="50" rows="7" class="annotation"></textarea>
+                <textarea name="annotation" cols="50" rows="7" class="annotation">${Correction.annotation}</textarea>
           <br>
           <br>
-          <input type="submit" name="saveAnnotation" value="Speichern">
 
         </div>
-      </form>
       </fieldset></td>
           <td valign="top"> <fieldset><legend>Daten</legend> 
             <table border="0" cellspacing="2" cellpadding="2">
@@ -132,26 +128,22 @@
               </tr>
             </table>
 			</fieldset><br>
-            <fieldset><legend>Hilfe</legend> Falls Sie Probleme mit der Korrektur 
-            haben, k&ouml;nnen Sie hier diese L&ouml;sung an den Dozenten weiterleiten. 
-            Vergessen Sie bitte nicht, eine Erkl&auml;rung im linken Feld zu hinterlassen.<br>
-            Dozent: - <br>
-
+            <fieldset><legend>Speichern</legend>
+            <div align="center">
+	            <input type="submit" name="submit" value="Korrektur speichern">
+            </div>
             <br>
-            <form name="forwardform" method="post"
-				action="/UebManager/manager.UebManager?action=TaskCorrection&login=a&id=5&todo=forwardToLecturer&virtualSubTaskNum=1">
-              <input type="submit" name="sendToLecturer" value="weiterleiten">
-            </form>
             </fieldset> <br>
 
           </td>
   </tr>
 </table>
-
 	 
 	  </td>
   </tr>
 </table>
+
+</form>
 
 <jsp:include page="../footer.jsp" />
 

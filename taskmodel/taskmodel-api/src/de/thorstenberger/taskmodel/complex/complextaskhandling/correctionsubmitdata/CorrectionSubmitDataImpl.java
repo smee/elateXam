@@ -21,24 +21,29 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.complex.complextaskhandling.correctionsubmitdata;
 
-import java.util.ArrayList;
-import java.util.List;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
 
 /**
  * @author Thorsten Berger
  *
  */
-public class ClozeCorrectionSubmitData extends CorrectionSubmitDataImpl {
+public class CorrectionSubmitDataImpl implements
+		CorrectionSubmitData {
 
-    private List correctGaps = new ArrayList();
-    
-	public void setCorrect( int gapIndex ){
-	    correctGaps.add( new Integer( gapIndex ) );
-	}
+	private String annotation;
 	
-	public boolean isCorrect( int gapIndex ){
-		// contains verwendet equals...
-		return correctGaps.contains( new Integer(gapIndex) );
+	/**
+	 * @param annotation The annotation to set.
+	 */
+	public void setAnnotation(String annotation) {
+		this.annotation = annotation;
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData#getAnnotation()
+	 */
+	public String getAnnotation() {
+		return annotation;
 	}
 
 }

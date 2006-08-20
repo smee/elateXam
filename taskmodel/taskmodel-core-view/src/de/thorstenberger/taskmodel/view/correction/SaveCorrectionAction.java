@@ -45,6 +45,7 @@ import de.thorstenberger.taskmodel.complex.ParsingException;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.correctionsubmitdata.CorrectionSubmitDataImpl;
 import de.thorstenberger.taskmodel.view.SubTaskViewFactory;
 
 /**
@@ -62,7 +63,7 @@ public class SaveCorrectionAction extends Action {
 		   ActionMessages errors = new ActionMessages();
 
 			long id;
-			String userId = request.getParameter( "userId" );;
+			String userId = request.getParameter( "userId" );
 			String selectedSubTaskletNum = request.getParameter( "selectedSubTaskletNum" );
 			SubTasklet selectedSubTasklet = null;
 			
@@ -104,24 +105,39 @@ public class SaveCorrectionAction extends Action {
 				
 			}
 			
-		
+			CorrectionSubmitData csd;
+
+			// save correctionData
+			if( selectedSubTasklet != null ){
+				
+				try {
+					csd = getCorrectionSubmitData( request, selectedSubTasklet );
+				} catch (ParsingException e) {
+					errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "parsing.error" ) );
+					saveErrors( request, errors );
+					return mapping.findForward( "error" );
+				}
+				
+			}else{
+				csd = new CorrectionSubmitDataImpl();
+			}
+
+			csd.setAnnotation( request.getParameter( "annotation" ) );
+				
 			try {
-				CorrectionSubmitData csd = getCorrectionSubmitData( request, selectedSubTasklet );
 				tasklet.doManualCorrection( selectedSubTasklet, csd );
-			} catch (ParsingException e) {
-				errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "parsing.error" ) );
-				saveErrors( request, errors );
-				return mapping.findForward( "error" );
 			} catch (IllegalStateException e) {
 				errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( e.getMessage() ) );
 				saveErrors( request, errors );
 				return mapping.findForward( "error" );
 			}
+				
 			
 			return mapping.findForward( "success" );
 		
 	}
 
+	
 	private CorrectionSubmitData getCorrectionSubmitData( HttpServletRequest request, SubTasklet subtasklet ) throws ParsingException{
 			
 			Enumeration varNames = request.getParameterNames();

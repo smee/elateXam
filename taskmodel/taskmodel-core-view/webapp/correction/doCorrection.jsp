@@ -1,3 +1,4 @@
+<%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://displaytag.sf.net" prefix="display"%>
@@ -22,7 +23,7 @@
 <table border="0" cellspacing="2" cellpadding="2" width="790">
   <tr bgcolor="#F2F9FF"> 
     <td colspan="2" valign="top"><img src="<%= request.getContextPath() %>/pics/exit.gif" width="20" height="16"> 
-    	<html:link action="/tutorCorrectionOverview" paramId="taskId" paramName="Correction" paramProperty="taskId">Korrektur-Übersicht</html:link>
+    	<html:link action="/tutorCorrectionOverview" paramId="taskId" paramName="Correction" paramProperty="taskId">Korrektur-Ãœbersicht</html:link>
 	</td>
   </tr>
   <tr> 
@@ -80,7 +81,7 @@
 				</c:if>
 				
 				<c:if test="${Correction.subTasklet.correctionHint != null}">
-					<br><br><b>Lösungserwartung:</b><br>
+					<br><br><b>LÃ¶sungserwartung:</b><br>
 				    ${Correction.subTasklet.correctionHint}
 				    <br>				
 				</c:if>				

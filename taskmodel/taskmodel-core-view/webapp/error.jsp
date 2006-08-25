@@ -1,3 +1,4 @@
+<%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
@@ -17,7 +18,7 @@
     <td><html:errors />
     	<c:if test="${ReturnURL != null}">
    		    <br/><br/>
-    		Zurück zur <a href="${ReturnURL}">Übersicht</a>.
+    		ZurÃ¼ck zur <a href="${ReturnURL}">Ãœbersicht</a>.
     	</c:if>
     </td>
   </tr>

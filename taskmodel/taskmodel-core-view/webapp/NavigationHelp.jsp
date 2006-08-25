@@ -1,3 +1,4 @@
+<%@ page contentType="text/html; charset=UTF-8"%>
 <html>
 <head>
 <title>Symbol-Legende</title>
@@ -30,7 +31,7 @@
     </td>
 </tr>
 <tr>
-    <td height=21 align="right" valign="middle" bgcolor="#009933"><a href="javascript:window.close();"><b><font color="#FFFFFF">schlieﬂen</font></b></a>&nbsp;&nbsp;</td>
+    <td height=21 align="right" valign="middle" bgcolor="#009933"><a href="javascript:window.close();"><b><font color="#FFFFFF">schlie√üen</font></b></a>&nbsp;&nbsp;</td>
 </tr>
 </table>
 </body>

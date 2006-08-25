@@ -44,7 +44,7 @@ import de.thorstenberger.taskmodel.Tasklet;
  * @author Thorsten Berger
  *
  */
-public class TutorCorrectionOverviewAction extends Action {
+public class ViewAllTaskletsAction extends Action {
 
 	/* (non-Javadoc)
 	 * @see org.apache.struts.action.Action#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
@@ -72,6 +72,12 @@ public class TutorCorrectionOverviewAction extends Action {
 			}
 			request.setAttribute( "ReturnURL", delegateObject.getReturnURL() );
 
+			if( !delegateObject.isPrivileged() ){
+				errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "not.privileged" ) );
+				saveErrors( request, errors );
+				return mapping.findForward( "error" );
+			}
+			
 			TaskStatistics taskStatistics = delegateObject.getTaskManager().getTaskletContainer().calculateStatistics( id );
 			TutorSolutionsInfoVO tsivo = new TutorSolutionsInfoVO();
 			
@@ -85,39 +91,18 @@ public class TutorCorrectionOverviewAction extends Action {
 					(double) taskStatistics.getNumOfCorrectedSolutions() / 
 					(double) taskStatistics.getNumOfSolutions() ) );
 			
-			List<Tasklet> assignedTasklets = delegateObject.getTaskManager().getTaskletContainer().getTaskletsAssignedToCorrector( id, delegateObject.getCorrectorLogin() );
-			List<TaskletInfoVO> assignedUncorrectedTasklets = new ArrayList<TaskletInfoVO>();
-			List<TaskletInfoVO> assignedCorrectedTasklets = new ArrayList<TaskletInfoVO>();
-			for( Tasklet tasklet : assignedTasklets ){
-				if( tasklet.getStatus().equals( Tasklet.CORRECTED ) )
-					assignedCorrectedTasklets.add( getTIVO( tasklet ) );
-				else
-					assignedUncorrectedTasklets.add( getTIVO( tasklet ) );
-			}
+			List<Tasklet> tasklets = delegateObject.getTaskManager().getTaskletContainer().getTasklets( id );
+			List<TaskletInfoVO> tivos = new ArrayList<TaskletInfoVO>();
+			for( Tasklet tasklet : tasklets )
+					tivos.add( TutorCorrectionOverviewAction.getTIVO( tasklet ) );
 			
-			tsivo.setAssignedCorrectedTasklets( assignedCorrectedTasklets );
-			tsivo.setAssignedUncorrectedTasklets( assignedUncorrectedTasklets );
-			tsivo.setPrivileged( delegateObject.isPrivileged() );
+			tsivo.setAllTasklets( tivos );
 			
 			request.setAttribute( "Solutions", tsivo );
-			
-			return mapping.findForward( "success" );
+
 		
+		return mapping.findForward( "success" );
 	}
 
-	public static TaskletInfoVO getTIVO( Tasklet tasklet ){
-		
-		TaskletInfoVO tivo = new TaskletInfoVO();
-		tivo.setTaskId( tasklet.getTaskId() );
-		tivo.setLogin( tasklet.getUserId() );
-		tivo.setPoints( tasklet.getTaskletCorrection().getPoints() != null ? "" + tasklet.getTaskletCorrection().getPoints() : "-" );
-		tivo.setStatus( tasklet.getStatus() );
-		tivo.setCorrectorLogin( tasklet.getTaskletCorrection().getCorrector() );
-		tivo.setCorrectorHistory( tasklet.getTaskletCorrection().getCorrectorHistory() );
 
-		return tivo;
-		
-	}
-	
-	
 }

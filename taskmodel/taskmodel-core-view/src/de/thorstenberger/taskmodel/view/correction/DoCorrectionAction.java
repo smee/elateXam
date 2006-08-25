@@ -59,7 +59,7 @@ public class DoCorrectionAction extends Action {
 		   ActionMessages errors = new ActionMessages();
 
 			long id;
-			String userId = request.getParameter( "userId" );;
+			String userId = request.getParameter( "userId" );
 			String selectedSubTaskletNum = request.getParameter( "selectedSubTaskletNum" );
 			SubTasklet selectedSubTasklet = null;
 			

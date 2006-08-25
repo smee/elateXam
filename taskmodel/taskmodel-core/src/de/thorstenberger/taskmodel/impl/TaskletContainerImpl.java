@@ -103,7 +103,7 @@ public class TaskletContainerImpl implements TaskletContainer {
 		
 	}
 	
-	private List<Tasklet> getTasklets( long taskId ) throws TaskApiException{
+	private List<Tasklet> getTaskletsHelper( long taskId ) throws TaskApiException{
 		
 		List<String> userIds = taskFactory.getUserIdsOfAvailableTasklets( taskId );
 		List<Tasklet> ret = new ArrayList<Tasklet>();
@@ -113,14 +113,22 @@ public class TaskletContainerImpl implements TaskletContainer {
 		return ret;
 	}
 	
-//	private List<Tasklet> getTaskletsAssignedToCorrector( long taskId, String correctorLogin)
+	
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.TaskletContainer#getTasklets(long)
+	 */
+	public synchronized List<Tasklet> getTasklets(long taskId) throws TaskApiException {
+		return getTaskletsHelper( taskId );
+	}
+
+	//	private List<Tasklet> getTaskletsAssignedToCorrector( long taskId, String correctorLogin)
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.TaskletContainer#calculateStatistics(long)
 	 */
 	public TaskStatistics calculateStatistics(long taskId) throws TaskApiException {
 		
-		List<Tasklet> tasklets = getTasklets( taskId );
+		List<Tasklet> tasklets = getTaskletsHelper( taskId );
 		
 		int numOfSolutions = 0;
 		int numOfCorrectedSolutions = 0;
@@ -152,7 +160,7 @@ public class TaskletContainerImpl implements TaskletContainer {
 	 */
 	public synchronized void assignRandomTaskletToCorrector(long taskId, String correctorId) throws TaskApiException {
 
-		List<Tasklet> tasklets = getTasklets( taskId );
+		List<Tasklet> tasklets = getTaskletsHelper( taskId );
 		List<Tasklet> assignableTasklets = new ArrayList<Tasklet>();
 		
 		for( Tasklet tasklet : tasklets ){

@@ -75,5 +75,12 @@ public interface TaskFactory {
 	
 //	public List<Tasklet> getTaskletsAssignedToCorrector( long taskId, String correctorId, boolean corrected );
 	public List<String> getUserIdsOfTaskletsAssignedToCorrector( long taskId, String correctorId );
+	
+	/**
+	 * 
+	 * @param login
+	 * @return the UserInfo instance or null if no such user exists
+	 */
+	public UserInfo getUserInfo( String login );
 
 }

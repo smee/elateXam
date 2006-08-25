@@ -35,7 +35,9 @@ public class TutorSolutionsInfoVO {
 	private String correctedCountPercent;
 	private List<TaskletInfoVO> assignedUncorrectedTasklets;
 	private List<TaskletInfoVO> assignedCorrectedTasklets;
+	private List<TaskletInfoVO> allTasklets;
 	private int assignedCount;
+	private boolean privileged;
 	
 	/**
 	 * @return Returns the taskId.
@@ -122,6 +124,30 @@ public class TutorSolutionsInfoVO {
 	 */
 	public void setAssignedCount(int assignedCount) {
 		this.assignedCount = assignedCount;
+	}
+	/**
+	 * @return Returns the allTasklets.
+	 */
+	public List<TaskletInfoVO> getAllTasklets() {
+		return allTasklets;
+	}
+	/**
+	 * @param allTasklets The allTasklets to set.
+	 */
+	public void setAllTasklets(List<TaskletInfoVO> allTasklets) {
+		this.allTasklets = allTasklets;
+	}
+	/**
+	 * @return Returns the privileged.
+	 */
+	public boolean isPrivileged() {
+		return privileged;
+	}
+	/**
+	 * @param privileged The privileged to set.
+	 */
+	public void setPrivileged(boolean privileged) {
+		this.privileged = privileged;
 	}
 	
 	

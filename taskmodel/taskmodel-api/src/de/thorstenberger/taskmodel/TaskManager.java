@@ -43,4 +43,6 @@ public interface TaskManager {
 	
 	public TaskletContainer getTaskletContainer();
 	
+	public ReportBuilder getReportBuilder();
+	
 }

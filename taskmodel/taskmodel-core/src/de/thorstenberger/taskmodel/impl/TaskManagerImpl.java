@@ -24,6 +24,7 @@ package de.thorstenberger.taskmodel.impl;
 import java.util.List;
 
 import de.thorstenberger.taskmodel.CategoryFilter;
+import de.thorstenberger.taskmodel.ReportBuilder;
 import de.thorstenberger.taskmodel.TaskCategory;
 import de.thorstenberger.taskmodel.TaskDef;
 import de.thorstenberger.taskmodel.TaskFactory;
@@ -40,6 +41,7 @@ public class TaskManagerImpl implements TaskManager {
 
 	private TaskFactory taskFactory;
 	private TaskletContainer taskletContainer;
+	private ReportBuilder reportBuilder;
 	
 	/**
 	 * 
@@ -48,7 +50,6 @@ public class TaskManagerImpl implements TaskManager {
 //		this.typeMapping = typeMapping;		
 		this.taskFactory = taskFactory;
 		this.taskletContainer = taskletContainer;
-		
 	}
 
 	/**
@@ -108,6 +109,15 @@ public class TaskManagerImpl implements TaskManager {
 	 */
 	public List<TaskCategory> getCategories(CategoryFilter categoryFilter) {
 		return taskFactory.getCategories( categoryFilter );
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.TaskManager#getReportBuilder()
+	 */
+	public ReportBuilder getReportBuilder() {
+		if( reportBuilder == null )
+			reportBuilder = new ReportBuilderImpl( this, taskFactory );
+		return reportBuilder;
 	}
 
 

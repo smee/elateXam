@@ -33,6 +33,8 @@ public interface TaskletContainer {
 	
 	public Tasklet getTasklet( long taskId, String userId ) throws TaskApiException;
 	
+	public List<Tasklet> getTasklets( long taskId ) throws TaskApiException;
+
 	public void removeTasklet( long taskId, String userId ) throws TaskApiException;
 
 	public TaskStatistics calculateStatistics( long taskId ) throws TaskApiException;

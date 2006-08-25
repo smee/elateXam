@@ -31,9 +31,17 @@
    <param-value>/WEB-INF/struts-config.xml</param-value>
   </init-param>
  </servlet>
+ <servlet>
+  <servlet-name>ExcelReport</servlet-name>
+  <servlet-class>de.thorstenberger.taskmodel.view.correction.ExcelReportServlet</servlet-class>
+ </servlet>
  <servlet-mapping>
   <servlet-name>action</servlet-name>
   <url-pattern>*.do</url-pattern>
+ </servlet-mapping>
+ <servlet-mapping>
+  <servlet-name>ExcelReport</servlet-name>
+  <url-pattern>/excelReport/*</url-pattern>
  </servlet-mapping>
  <session-config>
   <session-timeout>240</session-timeout>

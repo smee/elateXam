@@ -1,10 +1,11 @@
+<%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://displaytag.sf.net" prefix="display"%>
 
 <html:html>
 <head>
-	<title>Korrektur-Übersicht</title>
+	<title>Korrektur-Ãœbersicht</title>
 	<link rel="stylesheet" href="<%= request.getContextPath() %>/format.css" type="text/css">
 </head>
 
@@ -48,7 +49,7 @@
 </table>
 </fieldset> 
 <br>
-<fieldset><legend>Ihnen zugeordnete, noch nicht korrigierte Lösungen</legend> 
+<fieldset><legend>Ihnen zugeordnete, noch nicht korrigierte LÃ¶sungen</legend> 
 
 	<display:table requestURI="/tutorCorrectionOverview.do" name="Solutions.assignedUncorrectedTasklets" uid="row" pagesize="30" sort="list" class="displaytag">
 		<display:column property="login" title="Login&nbsp;&nbsp;&nbsp;" sortable="true"/>
@@ -59,6 +60,7 @@
 			${row.correctorHistory}
 		</display:column>
 		<display:column title="Korrigieren&nbsp;&nbsp;&nbsp;" sortable="false">
+<!--			<a href="doCorrection.do?taskId=${Solutions.taskId}&userId=${row.login}"><small>korrigieren</small></a>-->
 			<html:link action="/doCorrection" name="row" property="loginAndTaskId"><small>korrigieren</small></html:link>
 		</display:column>
 	</display:table>
@@ -85,20 +87,21 @@
 			${row.correctorHistory}
 		</display:column>
 		<display:column title="Korrigieren&nbsp;&nbsp;&nbsp;" sortable="false">
+<!--			<a href="doCorrection.do?taskId=${Solutions.taskId}&userId=${row.login}"><small>korrigieren</small></a>-->
 			<html:link action="/doCorrection" name="row" property="loginAndTaskId"><small>korrigieren</small></html:link>
 		</display:column>
 	</display:table>
 
 </fieldset><br>
-<!--fieldset><legend>Dozent</legend>
-<ul>
-  <li><a href="/UebManager/manager.UebManager?action=ListTaskHandlingData&id=5">Gesamt&uuml;bersicht</a><br><br> 
-  <li><a href="/UebManager/manager.UebManager/taskCorrection/overview_task_5.csv">Excel-Tabelle 
-zur &Uuml;bersicht</a><br>
-
-</ul>
-
-</fieldset--> 
+<c:if test="${Solutions.privileged}">
+	<fieldset><legend>Administrationsfunktionen</legend>
+	<ul>
+	  <li><html:link action="/viewAllTasklets" paramId="taskId" paramName="Solutions" paramProperty="taskId">Gesamtliste</html:link><br><br>
+	  <li><html:link href="excelReport/report_${Solutions.taskId}.xls">Gesamtliste als Excel-Datei</html:link>
+	</ul>
+	
+	</fieldset>
+</c:if>
 
 <jsp:include page="../footer.jsp" />
 

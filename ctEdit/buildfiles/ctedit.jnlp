@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jnlp spec="1.0+"
-  codebase="http://pcai054.informatik.uni-leipzig.de/~dienst/"
+  codebase="http://pcai054.informatik.uni-leipzig.de:5000/~dienst/"
   href="ctedit.jnlp">
 <information>
   <title>ComplexTask-Editor</title>

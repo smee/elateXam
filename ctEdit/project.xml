@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <pomVersion>3</pomVersion>
+    <artifactId>ctedit</artifactId>
+    <name>ctEdit</name>
+    <groupId>elate</groupId>
+    <currentVersion>1.0</currentVersion>
+    <organization />
+    <inceptionYear>2006</inceptionYear>
+    <logo>/images/logo.gif</logo>
+    <repository />
+    <developers>
+        <developer>
+            <name>Steffen Dienst</name>
+            <id>0</id>
+        </developer>
+        <developer>
+            <name>Thorsten Berger</name>
+            <id>1</id>
+        </developer>
+        <developer>
+            <name>Daniel Zimmermann</name>
+            <id>2</id>
+        </developer>
+    </developers>
+    <dependencies>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.7.0</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>elate</groupId>
+            <artifactId>drawtask</artifactId>
+            <version>${drawtask.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>jaxfront</groupId>
+            <artifactId>jaxfront-core</artifactId>
+            <version>???</version>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
+    <build>
+        <sourceDirectory>src/</sourceDirectory>
+        <unitTest>
+            <includes>
+                <include>**/*Test.java</include>
+            </includes>
+        </unitTest>
+    </build>
+</project>
+

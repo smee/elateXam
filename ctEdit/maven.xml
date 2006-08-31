@@ -1,0 +1,7 @@
+<project default="jar:install" xmlns:j="jelly:core" xmlns:define="jelly:define">
+	
+	<preGoal name="build:start">
+		<attainGoal name="clean"/>
+	</preGoal>
+
+</project>

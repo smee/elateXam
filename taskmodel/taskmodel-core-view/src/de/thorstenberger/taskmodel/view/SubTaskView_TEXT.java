@@ -74,7 +74,7 @@ public class SubTaskView_TEXT extends SubTaskView {
 		
 	}
 	
-	public String getCorrectedHTML( HttpServletRequest request ){
+	public String getCorrectedHTML( HttpServletRequest request, int relativeTaskNumber ){
 		return getRenderedHTML( -1, true );
 	}
 	

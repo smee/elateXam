@@ -101,7 +101,7 @@ public class SubTaskView_Mapping extends SubTaskView {
 		return ret.toString();
 	}
 	
-	public String getCorrectedHTML( HttpServletRequest request ){
+	public String getCorrectedHTML( HttpServletRequest request, int relativeTaskNumber ){
 		return getRenderedHTML( request, -1, true );
 	}
 

@@ -85,8 +85,8 @@ public class SubTaskView_MC extends SubTaskView {
 		return ret.toString();
 	}
 	
-	public String getCorrectedHTML( HttpServletRequest request ){
-		return getRenderedHTML( request, -1, true );
+	public String getCorrectedHTML( HttpServletRequest request, int relativeTaskNumber ){
+		return getRenderedHTML( request, relativeTaskNumber, true );
 	}
 	
 	private String checked( SubTasklet_MC.Answer answer ){

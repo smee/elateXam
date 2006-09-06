@@ -109,7 +109,7 @@ public class SubTaskView_Paint extends SubTaskView {
 	}
 
 	@Override
-	public String getCorrectedHTML(HttpServletRequest request) {
+	public String getCorrectedHTML(HttpServletRequest request, int relativeTaskNumber ) {
 		return getRenderedHTML( request, -1, true );
 	}
 

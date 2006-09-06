@@ -137,7 +137,7 @@ public class DoCorrectionAction extends Action {
 				
 				stivo.setCorrectionHTML( SubTaskViewFactory.getSubTaskView( selectedSubTasklet ).getCorrectionHTML( request ) );
 				if( stivo.getCorrectionHTML() == null )
-					stivo.setCorrectedHTML( SubTaskViewFactory.getSubTaskView( selectedSubTasklet ).getCorrectedHTML( request ) );
+					stivo.setCorrectedHTML( SubTaskViewFactory.getSubTaskView( selectedSubTasklet ).getCorrectedHTML( request, -1 ) );
 				
 				civo.setSubTasklet( stivo );				
 				

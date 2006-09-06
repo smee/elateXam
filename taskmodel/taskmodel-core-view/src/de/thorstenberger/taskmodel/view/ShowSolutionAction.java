@@ -134,6 +134,9 @@ public class ShowSolutionAction extends Action {
 		// add the subtasklets
 		List<SubTaskletInfoVO> stivos = new ArrayList<SubTaskletInfoVO>();
 		List<Page> pages = latestTry.getPages();
+		
+		int i = 0;
+		
 		for( Page page : pages ){
 			
 			List<SubTasklet> subtasklets = page.getSubTasklets();
@@ -144,7 +147,7 @@ public class ShowSolutionAction extends Action {
 				stivo.setProblem( subTasklet.getProblem() );
 				stivo.setReachablePoints( subTasklet.getReachablePoints() );
 				stivo.setVirtualSubTaskletNumber( subTasklet.getVirtualSubtaskNumber() );
-				stivo.setRenderedHTML( SubTaskViewFactory.getSubTaskView( subTasklet ).getCorrectedHTML( request ) );
+				stivo.setRenderedHTML( SubTaskViewFactory.getSubTaskView( subTasklet ).getCorrectedHTML( request, i++ ) );
 				stivo.setCorrected( subTasklet.isCorrected() );
 				if( subTasklet.isCorrected() )
 					stivo.setPoints( "" + subTasklet.getPoints() );

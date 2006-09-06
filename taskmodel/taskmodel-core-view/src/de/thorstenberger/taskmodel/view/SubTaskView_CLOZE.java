@@ -78,7 +78,7 @@ public class SubTaskView_CLOZE extends SubTaskView {
 		return ret.toString();
 	}
 	
-	public String getCorrectedHTML( HttpServletRequest request ){
+	public String getCorrectedHTML( HttpServletRequest request, int relativeTaskNumber ){
 		StringBuffer ret = new StringBuffer();
 		
 		List content = clozeSubTasklet.getContent();

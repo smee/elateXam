@@ -110,7 +110,7 @@ public class SubTaskView_MC extends SubTaskView {
 			String varName = (String) it.next();
 			String myPart = getMyPart( varName );
 			
-			if( myPart.startsWith("ss_") ){
+			if( myPart.startsWith("ss") ){
 				
 				// bei ss sollte das die einzige Variable sein, die vorkommt
 				if( mcSubmitData != null )

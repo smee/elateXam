@@ -71,12 +71,12 @@ public class SubTaskView_MC extends SubTaskView {
 				ret.append("<tr><td nowrap valing=top><input type=\"radio\" name=\"task[" + relativeTaskNumber +
 						"].ss\" value=\"" + j + "\"" + checked( answers.get( j ) ) + 
 						( corrected ? " disabled=\"disabled\"" : "" ) +  " onChange=\"setModified()\">&nbsp;" +
-					/*	( corrected ? getSymbolForCorrectedAnswer_SS( tasks[i], answers[j] ) : "" ) + */ "</td>\n");
+						( corrected && answers.get( j ).isCorrect() ? getSymbolForCorrectedAnswer( request, answers.get( j ) ) : "" ) + "</td>\n");
 			else
 				ret.append("<tr><td nowrap valign=top><input type=\"checkbox\" name=\"task[" + relativeTaskNumber + "].ms_answer_" + j +
 						"\" value=\"selected\"" + checked( answers.get( j ) ) +
 						( corrected ? " disabled=\"disabled\"" : "" ) + " onChange=\"setModified()\">&nbsp;" +
-						( corrected ? getSymbolForCorrectedAnswer_MS( request, answers.get( j ) ) : "" ) +  "</td>\n");
+						( corrected ? getSymbolForCorrectedAnswer( request, answers.get( j ) ) : "" ) +  "</td>\n");
 			
 			ret.append("<td>" + answers.get( j ) + "</td></tr>\n" );
 		}
@@ -181,7 +181,7 @@ public class SubTaskView_MC extends SubTaskView {
 //		return "";
 //	}
 	
-	private String getSymbolForCorrectedAnswer_MS( HttpServletRequest request , SubTasklet_MC.Answer answer ){
+	private String getSymbolForCorrectedAnswer( HttpServletRequest request , SubTasklet_MC.Answer answer ){
 		
 		if( answer.isCorrectlySolvedAnswer() )
 			return "<img src=\"" + request.getContextPath() + "/pics/true.gif\">";

@@ -1,0 +1,38 @@
+<project default="java:jar" xmlns:j="jelly:core" xmlns:define="jelly:define">
+	<!-- ================================================================  -->
+	<!-- Deploy                                                                                        -->
+	<!-- ================================================================ -->
+	<goal name="deploy">
+		<echo message="Deploy portal war into ${tomcat.deploy.war.dir}"/>
+		
+		<copy todir="${tomcat.deploy.war.dir}" file="${maven.build.dir}/${maven.war.final.name}" overwrite="true"/>		
+	</goal>	
+	
+	<preGoal name="deploy">
+		<attainGoal name= "war:install"/>
+	</preGoal>
+		
+	<goal name="undeploy">
+		<echo message="Undeploy ${tomcat.deploy.war.dir}/${maven.war.final.name}.war"/>
+		<delete file="${tomcat.deploy.war.dir}/${maven.war.final.name}.war"/>
+	</goal>
+	
+	<!-- ================================================================ -->
+	<!-- Hot Deploy for mundane everyday development under Catalina       -->
+	<!-- ================================================================ -->
+	<!-- TODO -->
+	<goal name="hotdeploy">
+		<echo message="Hot Deploying ${org.apache.jetspeed.portlet.app.name} to ${org.apache.jetspeed.deploy.war.dir}"/>
+		<copy todir="${org.apache.jetspeed.deploy.war.dir}/${org.apache.jetspeed.portlet.app.name}/WEB-INF/classes">
+			<fileset dir="${maven.build.dir}/classes">
+			</fileset>
+		</copy>
+		<copy todir="${org.apache.jetspeed.deploy.war.dir}/${org.apache.jetspeed.portlet.app.name}/">
+			<fileset dir="./src/webapp">
+			</fileset>
+		</copy>
+	</goal>
+	<preGoal name="hotdeploy">
+		<attainGoal name= "java:compile"/>
+	</preGoal>
+</project>

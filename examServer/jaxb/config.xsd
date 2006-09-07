@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v5 U (http://www.xmlspy.com) by tb (ul) -->
+<xs:schema targetNamespace="http://examServer.thorstenberger.de/config" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://examServer.thorstenberger.de/config" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="config">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="title" type="xs:string" minOccurs="0"/>
+				<xs:element name="RemoteUserManagerURL" type="xs:string" minOccurs="0"/>
+				<xs:element name="studentsLoginEnabled" type="xs:boolean"/>
+				<xs:element name="loadJVMOnStartup" type="xs:boolean"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

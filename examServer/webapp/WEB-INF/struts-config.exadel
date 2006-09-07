@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROCESS ENTITY="StrutsProcess">
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="cancelUser"
+  NAME="forward0" PATH="/editUser.html?method=Cancel" SHAPE="32,17,0,0"
+  TARGET="action10" TITLE="cancelUser" TYPE="forward"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="viewUsers" NAME="forward1"
+  PATH="/users.html" SHAPE="32,465,0,0" TARGET="action7"
+  TITLE="viewUsers" TYPE="forward"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="addUser" NAME="forward2"
+  PATH="/editUser.html?method=Add&amp;amp;from=list" SHAPE="32,129,0,0"
+  TARGET="action10" TITLE="addUser" TYPE="forward"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="editUser" NAME="forward3"
+  PATH="/editUser.html" SHAPE="32,241,0,0" TARGET="action10"
+  TITLE="editUser" TYPE="forward"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="editProfile"
+  NAME="forward4" PATH="/editProfile.html" SHAPE="32,577,0,0"
+  TARGET="action6" TITLE="editProfile" TYPE="forward"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="selectFile"
+  NAME="forward5" PATH="/selectFile.html" SHAPE="32,689,0,0"
+  TARGET="action4" TITLE="selectFile" TYPE="forward"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="deleteUser"
+  NAME="forward6" PATH="/editUser.html?method=Delete" SHAPE="32,353,0,0"
+  TARGET="action10" TITLE="deleteUser" TYPE="forward"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="mainMenu" NAME="forward7"
+  PATH="/mainMenu.html" SHAPE="32,801,0,0" TARGET="action9"
+  TITLE="mainMenu" TYPE="forward"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="logout" NAME="forward8"
+  PATH="/logout.jsp" SHAPE="32,1057,0,0" TARGET="page5" TITLE="logout" TYPE="forward"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="updateUser"
+  NAME="forward9" PATH="/userProfile.html" SHAPE="32,1169,0,0"
+  TARGET="action20" TITLE="updateUser" TYPE="forward"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="java.lang.Exception"
+  NAME="exception0" SHAPE="32,2561,0,0" TITLE="Exception" TYPE="exception"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#flush" NAME="action0"
+  PATH="/flush" SHAPE="32,1281,0,0" SUBTYPE="parameter" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" NAME="action0"
+   PATH="/WEB-INF/pages/flushCache.jsp" TARGET="page7" TITLE="parameter" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#passwordHint"
+  NAME="action1" PATH="/passwordHint" SHAPE="32,1393,0,0" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput"
+   ID="previousPage" NAME="forward0" PATH="/" TARGET="action13"
+   TITLE="previousPage" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#uploadFile"
+  NAME="action2" PATH="/uploadFile" SHAPE="32,1505,0,0"
+  TITLE="uploadForm" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="success"
+   NAME="forward0" PATH="/WEB-INF/pages/uploadDisplay.jsp"
+   TARGET="page8" TITLE="success" TYPE="forward"/>
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="failure"
+   NAME="forward1" PATH="/WEB-INF/pages/uploadForm.jsp" TARGET="page9"
+   TITLE="failure" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#reload" NAME="action3"
+  PATH="/reload" SHAPE="240,2577,0,0" TYPE="action"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#selectFile"
+  NAME="action4" PATH="/selectFile" SHAPE="32,1649,0,0"
+  SUBTYPE="parameter" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" NAME="action4"
+   PATH="/WEB-INF/pages/uploadForm.jsp" TARGET="page9" TITLE="parameter" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#saveUser" NAME="action5"
+  PATH="/saveUser" SHAPE="32,1761,0,0" TITLE="userForm" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="list"
+   NAME="forward0" PATH="/WEB-INF/pages/userList.jsp" TARGET="page10"
+   TITLE="list" TYPE="forward"/>
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="edit"
+   NAME="forward1" PATH="/WEB-INF/pages/userForm.jsp" TARGET="page11"
+   TITLE="edit" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#editProfile"
+  NAME="action6" PATH="/editProfile" SHAPE="32,1905,0,0"
+  TITLE="userForm" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="list"
+   NAME="forward0" PATH="/WEB-INF/pages/userList.jsp" TARGET="page10"
+   TITLE="list" TYPE="forward"/>
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="edit"
+   NAME="forward1" PATH="/WEB-INF/pages/userForm.jsp" TARGET="page11"
+   TITLE="edit" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#users" NAME="action7"
+  PATH="/users" SHAPE="32,2049,0,0" TITLE="userForm" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="list"
+   NAME="forward0" PATH="/WEB-INF/pages/userList.jsp" TARGET="page10"
+   TITLE="list" TYPE="forward"/>
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="edit"
+   NAME="forward1" PATH="/WEB-INF/pages/userForm.jsp" TARGET="page11"
+   TITLE="edit" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#activeUsers"
+  NAME="action8" PATH="/activeUsers" SHAPE="32,2337,0,0"
+  SUBTYPE="parameter" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" NAME="action8"
+   PATH="/WEB-INF/pages/activeUsers.jsp" TARGET="page12"
+   TITLE="parameter" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#mainMenu" NAME="action9"
+  PATH="/mainMenu" SHAPE="24,2464,100,25" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="mainMenu"
+   NAME="forward0" PATH="/WEB-INF/pages/mainMenu.jsp" TARGET="page13"
+   TITLE="mainMenu" TYPE="forward"/>
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput"
+   ID="studentMainMenu" NAME="forward1" PATH="/studentMainMenu.html"
+   TARGET="action12" TITLE="studentMainMenu" TYPE="forward"/>
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput"
+   ID="tutorMainMenu" NAME="forward2" PATH="/tutorMainMenu.html"
+   TARGET="action18" TITLE="tutorMainMenu" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#editUser" NAME="action10"
+  PATH="/editUser" SHAPE="32,2193,0,0" TITLE="userForm" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="list"
+   NAME="forward0" PATH="/WEB-INF/pages/userList.jsp" TARGET="page10"
+   TITLE="list" TYPE="forward"/>
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="edit"
+   NAME="forward1" PATH="/WEB-INF/pages/userForm.jsp" TARGET="page11"
+   TITLE="edit" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#signup" NAME="action11"
+  PATH="/signup" SHAPE="32,913,0,0" TITLE="userForm" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="success"
+   NAME="forward0" PATH="/mainMenu.html" TARGET="action9"
+   TITLE="success" TYPE="forward"/>
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="failure"
+   NAME="forward1" PATH="/WEB-INF/pages/signup.jsp" TARGET="page14"
+   TITLE="failure" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page5"
+  PATH="/logout.jsp" SHAPE="240,1074,0,0" SUBTYPE="jsp"
+  TITLE="logout.jsp" TYPE="page"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page7"
+  PATH="/WEB-INF/pages/flushCache.jsp" SHAPE="240,1298,0,0"
+  SUBTYPE="jsp" TITLE="flushCache.jsp" TYPE="page"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#" NAME="action13"
+  PATH="/" SHAPE="240,1409,0,0" SUBTYPE="unknown" TYPE="action"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page8"
+  PATH="/WEB-INF/pages/uploadDisplay.jsp" SHAPE="256,1522,0,0"
+  SUBTYPE="jsp" TITLE="uploadDisplay.jsp" TYPE="page"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page9"
+  PATH="/WEB-INF/pages/uploadForm.jsp" SHAPE="256,1666,0,0"
+  SUBTYPE="jsp" TITLE="uploadForm.jsp" TYPE="page">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" NAME="link0"
+   PATH="/uploadFile.html" SUBTYPE="confirmed" TARGET="action2"
+   TITLE="/uploadFile.html" TYPE="link"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page10"
+  PATH="/WEB-INF/pages/userList.jsp" SHAPE="288,1778,0,0" SUBTYPE="jsp"
+  TITLE="userList.jsp" TYPE="page"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page11"
+  PATH="/WEB-INF/pages/userForm.jsp" SHAPE="288,1922,0,0" SUBTYPE="jsp"
+  TITLE="userForm.jsp" TYPE="page">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" NAME="link0"
+   PATH="/saveUser.html" SUBTYPE="confirmed" TARGET="action5"
+   TITLE="/saveUser.html" TYPE="link"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page12"
+  PATH="/WEB-INF/pages/activeUsers.jsp" SHAPE="240,2354,0,0"
+  SUBTYPE="jsp" TITLE="activeUsers.jsp" TYPE="page"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page13"
+  PATH="/WEB-INF/pages/mainMenu.jsp" SHAPE="240,2466,0,0" SUBTYPE="jsp"
+  TITLE="mainMenu.jsp" TYPE="page"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page14"
+  PATH="/WEB-INF/pages/signup.jsp" SHAPE="256,930,0,0" SUBTYPE="jsp"
+  TITLE="signup.jsp" TYPE="page">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" NAME="link0"
+   PATH="/signup.html" SUBTYPE="confirmed" TARGET="action11"
+   TITLE="/signup.html" TYPE="link"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page15"
+  PATH="/WEB-INF/pages/studentMainMenu.jsp" SHAPE="848,2464,50,25"
+  SUBTYPE="jsp" TITLE="studentMainMenu.jsp" TYPE="page">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" NAME="link0"
+   PATH="/TaskViewFactory.html" SUBTYPE="confirmed" TARGET="action14"
+   TITLE="/TaskViewFactory.html" TYPE="link"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#studentMainMenu"
+  NAME="action12" PATH="/studentMainMenu" SHAPE="560,2504,100,41" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="success"
+   NAME="forward0" PATH="/WEB-INF/pages/studentMainMenu.jsp"
+   TARGET="page15" TITLE="success" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#TaskViewFactory"
+  NAME="action14" PATH="/TaskViewFactory" SHAPE="1056,2464,0,0" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="complex"
+   NAME="forward0" PATH="/ComplexTaskOverview.html" TARGET="action16"
+   TITLE="complex" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#ComplexTaskOverview"
+  NAME="action16" PATH="/ComplexTaskOverview" SHAPE="1264,2576,0,0" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="success"
+   NAME="forward0" PATH="/WEB-INF/pages/complexTask/index.jsp"
+   TARGET="page20" TITLE="success" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page20"
+  PATH="/WEB-INF/pages/complexTask/index.jsp" SHAPE="1680,2576,0,0"
+  SUBTYPE="jsp" TITLE="index.jsp" TYPE="page"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#LoginConfig"
+  NAME="action15" PATH="/LoginConfig" SHAPE="32,2929,0,0"
+  TITLE="loginConfigForm" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="loginConfig"
+   NAME="forward0" PATH="/WEB-INF/pages/loginConfig.jsp" TARGET="page17"
+   TITLE="loginConfig" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page17"
+  PATH="/WEB-INF/pages/loginConfig.jsp" SHAPE="240,2946,0,0"
+  SUBTYPE="jsp" TITLE="loginConfig.jsp" TYPE="page">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" NAME="link0"
+   PATH="/saveLoginConfig.html" SUBTYPE="confirmed" TARGET="action17"
+   TITLE="/saveLoginConfig.html" TYPE="link"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#saveLoginConfig"
+  NAME="action17" PATH="/saveLoginConfig" SHAPE="448,2946,0,0"
+  TITLE="loginConfigForm" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="success"
+   NAME="forward0" PATH="/LoginConfig.html" TARGET="action15"
+   TITLE="success" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#tutorMainMenu"
+  NAME="action18" PATH="/tutorMainMenu" SHAPE="32,3265,0,0" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="success"
+   NAME="forward0" PATH="/WEB-INF/pages/tutorMainMenu.jsp"
+   TARGET="page21" TITLE="success" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page21"
+  PATH="/WEB-INF/pages/tutorMainMenu.jsp" SHAPE="240,3282,0,0"
+  SUBTYPE="jsp" TITLE="tutorMainMenu.jsp" TYPE="page">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" NAME="link0"
+   PATH="/CorrectorFactory.html" SUBTYPE="confirmed" TARGET="action19"
+   TITLE="/CorrectorFactory.html" TYPE="link"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#CorrectorFactory"
+  NAME="action19" PATH="/CorrectorFactory" SHAPE="32,3297,0,0" TYPE="action"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#userProfile"
+  NAME="action20" PATH="/userProfile" SHAPE="448,1169,0,0"
+  SUBTYPE="unknown" TYPE="action"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#SystemConfig"
+  NAME="action21" PATH="/SystemConfig" SHAPE="32,3297,0,0"
+  TITLE="systemConfigForm" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput"
+   ID="systemConfig" NAME="forward0"
+   PATH="/WEB-INF/pages/systemConfig.jsp" TARGET="page0"
+   TITLE="systemConfig" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page0"
+  PATH="/WEB-INF/pages/systemConfig.jsp" SHAPE="240,3314,0,0"
+  SUBTYPE="jsp" TITLE="systemConfig.jsp" TYPE="page">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" NAME="link0"
+   PATH="/saveSystemConfig.html" SUBTYPE="confirmed" TARGET="action22"
+   TITLE="/saveSystemConfig.html" TYPE="link"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#saveSystemConfig"
+  NAME="action22" PATH="/saveSystemConfig" SHAPE="448,3314,0,0"
+  TITLE="systemConfigForm" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="success"
+   NAME="forward0" PATH="/SystemConfig.html" TARGET="action21"
+   TITLE="success" TYPE="forward"/>
+ </PROCESS-ITEM>
+</PROCESS>

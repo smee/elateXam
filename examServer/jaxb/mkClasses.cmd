@@ -1,0 +1,1 @@
+xjc -d ..\src -p de.thorstenberger.examServer.dao.xml.jaxb examServer.xsd

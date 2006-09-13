@@ -93,5 +93,19 @@ public class ParserUtil {
 		return ret.toString();
 
 	}
+	
+	/**
+	 * TODO deprecate this, add a flag to the problem tag of the ComplexTaskDef file
+	 * @param problem
+	 * @return
+	 */
+	public static String getProblem( String problem ){
+		
+		if( problem.indexOf( "<br") != -1 )
+			return problem;
+		else
+			return escapeCR( problem );
+		
+	}
 
 }

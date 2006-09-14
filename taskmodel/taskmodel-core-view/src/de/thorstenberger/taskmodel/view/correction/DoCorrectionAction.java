@@ -39,6 +39,7 @@ import de.thorstenberger.taskmodel.TaskModelViewDelegate;
 import de.thorstenberger.taskmodel.complex.ComplexTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
+import de.thorstenberger.taskmodel.view.ParserUtil;
 import de.thorstenberger.taskmodel.view.SubTaskViewFactory;
 import de.thorstenberger.taskmodel.view.SubTaskletInfoVO;
 import de.thorstenberger.taskmodel.view.correction.tree.CorrectionNodeFormatter;
@@ -131,7 +132,7 @@ public class DoCorrectionAction extends Action {
 					
 				stivo.setHint( selectedSubTasklet.getHint() );
 				stivo.setCorrectionHint( selectedSubTasklet.getCorrectionHint() );
-				stivo.setProblem( selectedSubTasklet.getProblem() );
+				stivo.setProblem( ParserUtil.getProblem( selectedSubTasklet.getProblem() ) );
 				stivo.setReachablePoints( selectedSubTasklet.getReachablePoints() );
 				stivo.setVirtualSubTaskletNumber( selectedSubTasklet.getVirtualSubtaskNumber() );
 				

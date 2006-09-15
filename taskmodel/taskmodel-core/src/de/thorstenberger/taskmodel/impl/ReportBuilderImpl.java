@@ -31,9 +31,13 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
 
 import de.thorstenberger.taskmodel.ReportBuilder;
 import de.thorstenberger.taskmodel.TaskApiException;
@@ -110,9 +114,38 @@ public class ReportBuilderImpl implements ReportBuilder {
 			c = 0;
 			
 			UserInfo userInfo = taskFactory.getUserInfo( tasklet.getUserId() );
-			row.createCell( c++ ).setCellValue( userInfo.getLogin() );
-			row.createCell( c++ ).setCellValue( userInfo.getFirstName() );
-			row.createCell( c++ ).setCellValue( userInfo.getName() );
+						
+			String login;
+			String firstName;
+			String name;
+			boolean notfound;
+			
+			if( userInfo != null ){
+				login = userInfo.getLogin();
+				firstName = userInfo.getFirstName();
+				name = userInfo.getName();
+				notfound = false;				
+			}else{
+				login = tasklet.getUserId();
+				firstName = "?";
+				name = "?";
+				notfound = true;
+			}
+			
+			
+			if( notfound ){
+				HSSFCellStyle cs2 = wb.createCellStyle();
+				HSSFFont font2 = wb.createFont(); font2.setColor( HSSFColor.RED.index );
+				cs2.setFont( font2 );		
+				HSSFCell cell2 = row.createCell( c++ );
+				cell2.setCellStyle( cs2 );
+				cell2.setCellValue( login );
+			}else{
+				row.createCell( c++ ).setCellValue( login );
+			}		
+			
+			row.createCell( c++ ).setCellValue( firstName );
+			row.createCell( c++ ).setCellValue( name );
 			row.createCell( c++ ).setCellValue( tasklet.getStatus() );
 			row.createCell( c++ ).setCellValue( tasklet.getTaskletCorrection().getPoints() != null ? "" + tasklet.getTaskletCorrection().getPoints() : "-" );
 			row.createCell( c++ ).setCellValue( tasklet.getTaskletCorrection().getCorrector() != null ? tasklet.getTaskletCorrection().getCorrector() : "-" );

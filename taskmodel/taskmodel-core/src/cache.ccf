@@ -2,9 +2,9 @@
 
 jcs.default=
 jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.default.cacheattributes.MaxObjects=1500
+jcs.default.cacheattributes.MaxObjects=3000
 jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
-jcs.default.cacheattributes.UseMemoryShrinker=true
+jcs.default.cacheattributes.UseMemoryShrinker=false
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
 jcs.default.elementattributes=org.apache.jcs.engine.ElementAttributes

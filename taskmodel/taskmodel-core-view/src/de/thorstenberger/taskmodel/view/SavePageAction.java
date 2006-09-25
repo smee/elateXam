@@ -85,7 +85,6 @@ public class SavePageAction extends Action {
 			saveErrors( request, errors );
 			return mapping.findForward( "error" );
 		}
-		request.setAttribute( "ReturnURL", delegateObject.getReturnURL() );
 
 		ComplexTasklet ct;
 		

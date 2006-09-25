@@ -32,10 +32,12 @@ import org.apache.commons.logging.LogFactory;
 import de.thorstenberger.examServer.dao.TaskDefDao;
 import de.thorstenberger.examServer.dao.TaskHandlingDao;
 import de.thorstenberger.examServer.model.TaskDefVO;
+import de.thorstenberger.examServer.model.TaskletAnnotationVO;
 import de.thorstenberger.examServer.model.TaskletVO;
 import de.thorstenberger.examServer.model.User;
 import de.thorstenberger.examServer.service.ExamServerManager;
 import de.thorstenberger.examServer.service.UserManager;
+import de.thorstenberger.taskmodel.Annotation;
 import de.thorstenberger.taskmodel.CategoryFilter;
 import de.thorstenberger.taskmodel.MethodNotSupportedException;
 import de.thorstenberger.taskmodel.TaskApiException;
@@ -47,6 +49,7 @@ import de.thorstenberger.taskmodel.TaskFilter;
 import de.thorstenberger.taskmodel.TaskFilterException;
 import de.thorstenberger.taskmodel.Tasklet;
 import de.thorstenberger.taskmodel.TaskletCorrection;
+import de.thorstenberger.taskmodel.TaskmodelUtil;
 import de.thorstenberger.taskmodel.UserInfo;
 import de.thorstenberger.taskmodel.complex.ComplexTaskBuilder;
 import de.thorstenberger.taskmodel.complex.ComplexTasklet;
@@ -56,6 +59,7 @@ import de.thorstenberger.taskmodel.complex.TaskDef_ComplexImpl;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefDAO;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.ComplexTaskHandlingDAO;
 import de.thorstenberger.taskmodel.impl.AbstractTaskFactory;
+import de.thorstenberger.taskmodel.impl.AnnotationImpl;
 import de.thorstenberger.taskmodel.impl.TaskletCorrectionImpl;
 import de.thorstenberger.taskmodel.impl.UserInfoImpl;
 
@@ -187,16 +191,25 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 	
 	
 	private Tasklet instantiateTasklet( TaskletVO taskletVO, TaskDefVO taskDefVO, File complexTaskHandlingFile ){
+		
+		// for now, we just support one corrector annotation
+		String correctorAnnotation = null;
+		if( taskletVO.getCorrectorAnnotations().size() > 0 )
+			correctorAnnotation = taskletVO.getCorrectorAnnotations().get( 0 ).getText();
+		
+		List<Annotation> studentAnnotations = new ArrayList<Annotation>();
+		for( TaskletAnnotationVO tavo : taskletVO.getStudentAnnotations() )
+			studentAnnotations.add( new AnnotationImpl( tavo.getText(), tavo.getDate() ) );
+		
+		TaskletCorrection correction =
+			new TaskletCorrectionImpl( taskletVO.getPoints(), correctorAnnotation,
+										taskletVO.getCorrectorLogin(), taskletVO.getCorrectorHistory(), studentAnnotations );			
 			
-			TaskletCorrection correction =
-				new TaskletCorrectionImpl( taskletVO.getPoints(), taskletVO.getAnnotation(),
-										taskletVO.getCorrectorLogin(), taskletVO.getCorrectorHistory()  );			
-			
-			ComplexTasklet tasklet =
-				new ComplexTaskletImpl( this, complexTaskBuilder, taskletVO.getLogin(), taskDefVO.getId(), 
-						taskletVO.getStatus(), correction, (TaskDef_Complex)getTaskDef( taskDefVO.getId() ), complexTaskHandlingDAO, complexTaskHandlingFile );
-			
-			return tasklet;
+		ComplexTasklet tasklet =
+			new ComplexTaskletImpl( this, complexTaskBuilder, taskletVO.getLogin(), taskDefVO.getId(), 
+					TaskmodelUtil.getStatus( taskletVO.getStatus() ), taskletVO.getFlags() , correction, (TaskDef_Complex)getTaskDef( taskDefVO.getId() ), complexTaskHandlingDAO, complexTaskHandlingFile );
+		
+		return tasklet;
 			
 		
 	}
@@ -219,8 +232,11 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 		taskletVO = new TaskletVO();
 		taskletVO.setLogin( userId );
 		taskletVO.setTaskDefId( taskId );
-		taskletVO.setStatus( Tasklet.INITIALIZED );
+		taskletVO.setStatus( Tasklet.Status.INITIALIZED.getValue() );
 		taskletVO.setPoints( null );
+		taskletVO.setFlags( new ArrayList<String>() );
+		taskletVO.setStudentAnnotations( new ArrayList<TaskletAnnotationVO>() );
+		taskletVO.setCorrectorAnnotations( new ArrayList<TaskletAnnotationVO>() );
 		
 		File homeDir = new File( examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.HOME + File.separatorChar + userId );
 		if( !homeDir.exists() )
@@ -294,8 +310,8 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 			changed = true;
 		}
 		
-		if( objectsDiffer( taskletVO.getStatus(), tasklet.getStatus() ) ){
-			taskletVO.setStatus( tasklet.getStatus() );
+		if( objectsDiffer( taskletVO.getStatus(), tasklet.getStatus().getValue() ) ){
+			taskletVO.setStatus( tasklet.getStatus().getValue() );
 			changed = true;
 		}
 		
@@ -304,8 +320,14 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 			changed = true;
 		}
 		
-		if( objectsDiffer( taskletVO.getAnnotation(), tasklet.getTaskletCorrection().getAnnotation() ) ){
-			taskletVO.setAnnotation( tasklet.getTaskletCorrection().getAnnotation() );
+		try {
+			if( objectsDiffer( taskletVO.getCorrectorAnnotations().get( 0 ).getText(), tasklet.getTaskletCorrection().getCorrectorAnnotation() ) ){
+				taskletVO.getCorrectorAnnotations().get(0).setText( tasklet.getTaskletCorrection().getCorrectorAnnotation() );
+				changed = true;
+			}
+		} catch (IndexOutOfBoundsException e) {
+			if( tasklet.getTaskletCorrection().getCorrectorAnnotation() != null )
+				taskletVO.getCorrectorAnnotations().add( 0, new TaskletAnnotationVO( tasklet.getTaskletCorrection().getCorrectorAnnotation(), null ) );
 			changed = true;
 		}
 		
@@ -319,9 +341,41 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 			changed = true;
 		}
 		
+		if( objectsDiffer( taskletVO.getFlags(), tasklet.getFlags() ) ){
+			taskletVO.setFlags( tasklet.getFlags() );
+			changed = true;
+		}
+		
+		
+		if( taskletVO.getStudentAnnotations().size() != tasklet.getTaskletCorrection().getStudentAnnotations().size() ){
+		
+			taskletVO.setStudentAnnotations( copyAnnotations( tasklet.getTaskletCorrection().getStudentAnnotations() ) );
+			changed = true;
+
+		}else{
+
+			for( int i = 0; i < tasklet.getTaskletCorrection().getStudentAnnotations().size(); i++ ){
+				Annotation a = tasklet.getTaskletCorrection().getStudentAnnotations().get( i );
+				TaskletAnnotationVO tavo = taskletVO.getStudentAnnotations().get( i );
+				if( objectsDiffer( a.getText(), tavo.getText() ) || objectsDiffer( a.getDate(), tavo.getDate() ) ){
+					taskletVO.setStudentAnnotations( copyAnnotations( tasklet.getTaskletCorrection().getStudentAnnotations() ) );
+					changed = true;
+					break;
+				}
+			}		
+		}
+			
+		
 		if( changed )
 			taskHandlingDao.saveTasklet( taskletVO );
 
+	}
+	
+	private List<TaskletAnnotationVO> copyAnnotations( List<Annotation> annotations ){
+		List<TaskletAnnotationVO> ret = new ArrayList<TaskletAnnotationVO>();
+		for( Annotation a : annotations )
+			ret.add( new TaskletAnnotationVO( a.getText(), a.getDate() ) );
+		return ret;
 	}
 
 	/* (non-Javadoc)

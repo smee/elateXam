@@ -44,7 +44,10 @@ import de.thorstenberger.examServer.dao.TaskHandlingDao;
 import de.thorstenberger.examServer.dao.xml.jaxb.ObjectFactory;
 import de.thorstenberger.examServer.dao.xml.jaxb.TaskHandling;
 import de.thorstenberger.examServer.dao.xml.jaxb.TaskHandlingType.TaskletType;
+import de.thorstenberger.examServer.dao.xml.jaxb.TaskHandlingType.TaskletType.CorrectorAnnotationType;
 import de.thorstenberger.examServer.dao.xml.jaxb.TaskHandlingType.TaskletType.CorrectorHistoryType;
+import de.thorstenberger.examServer.dao.xml.jaxb.TaskHandlingType.TaskletType.StudentAnnotationType;
+import de.thorstenberger.examServer.model.TaskletAnnotationVO;
 import de.thorstenberger.examServer.model.TaskletVO;
 import de.thorstenberger.examServer.service.ExamServerManager;
 
@@ -143,25 +146,59 @@ public class TaskHandlingDaoImpl implements TaskHandlingDao {
 		}
 		
 		if( tt != null ){
-			TaskletVO ret = new TaskletVO();
-			ret.setTaskDefId( tt.getTaskDefId() );
-			ret.setStatus( tt.getStatus() );
-			ret.setPoints( tt.getPoints() == -1 ? null : tt.getPoints() );
-			ret.setLogin( tt.getLogin() );
-			ret.setId( tt.getId() );
-			ret.setCorrectorLogin( tt.getCorrectorLogin() );
-			ret.setAnnotation( tt.getAnnotation() );
-							
-			List<String> correctors = new ArrayList<String>();
-			Iterator it2 = tt.getCorrectorHistory().iterator();
-			while( it2.hasNext() )
-				correctors.add( ((CorrectorHistoryType)it2.next()).getCorrectorLogin() );
-			ret.setCorrectorHistory( correctors );
-			
-			return ret;
+			return instantiateTaskletVO( tt );
 		}
 		
 		return null;
+		
+	}
+	
+	
+	private TaskletVO instantiateTaskletVO( TaskletType tt ){
+		TaskletVO ret = new TaskletVO();
+		ret.setTaskDefId( tt.getTaskDefId() );
+		ret.setStatus( tt.getStatus() );
+		ret.setPoints( tt.getPoints() == -1 ? null : tt.getPoints() );
+		ret.setLogin( tt.getLogin() );
+		ret.setId( tt.getId() );
+		ret.setCorrectorLogin( tt.getCorrectorLogin() );
+				
+		// annotations
+		Iterator it = tt.getCorrectorAnnotation().iterator();
+		List<TaskletAnnotationVO> correctorAnnotationVOs = new ArrayList<TaskletAnnotationVO>();
+		while( it.hasNext() ){
+			CorrectorAnnotationType cat = (CorrectorAnnotationType)it.next();
+			correctorAnnotationVOs.add( new TaskletAnnotationVO( cat.getValue(), cat.getDate() == 0 ? null : cat.getDate() ) );
+		}
+		// TODO the attribute "annotation" is deprecated
+		if( tt.getAnnotation() != null )
+			correctorAnnotationVOs.add( 0, new TaskletAnnotationVO( tt.getAnnotation(), null ) );
+		
+		ret.setCorrectorAnnotations( correctorAnnotationVOs );
+		
+		it = tt.getStudentAnnotation().iterator();
+		List<TaskletAnnotationVO> studentAnnotationVOs = new ArrayList<TaskletAnnotationVO>();
+		while( it.hasNext() ){
+			StudentAnnotationType cat = (StudentAnnotationType)it.next();
+			studentAnnotationVOs.add( new TaskletAnnotationVO( cat.getValue(), cat.getDate() ) );
+		}
+		ret.setStudentAnnotations( studentAnnotationVOs );
+		
+		// flags
+		it = tt.getFlag().iterator();
+		List<String> flags = new ArrayList<String>();
+		while( it.hasNext() )
+			flags.add( (String)it.next() );
+		ret.setFlags( flags );
+		
+		// correctors history
+		List<String> correctors = new ArrayList<String>();
+		it = tt.getCorrectorHistory().iterator();
+		while( it.hasNext() )
+			correctors.add( ((CorrectorHistoryType)it.next()).getCorrectorLogin() );
+		ret.setCorrectorHistory( correctors );
+		
+		return ret;
 		
 	}
 	
@@ -213,8 +250,40 @@ public class TaskHandlingDaoImpl implements TaskHandlingDao {
 			taskletType.setStatus( taskletVO.getStatus() );
 			taskletType.setPoints( taskletVO.getPoints() == null ? -1 : taskletVO.getPoints() );
 			taskletType.setCorrectorLogin( taskletVO.getCorrectorLogin() );
-			taskletType.setAnnotation( taskletVO.getAnnotation() );
 			
+			// the annotations
+			// TODO attribute "annotation" deprecated
+			taskletType.setAnnotation( null );
+			taskletType.getCorrectorAnnotation().clear();
+			for( TaskletAnnotationVO tavo : taskletVO.getCorrectorAnnotations() ){
+				CorrectorAnnotationType cat;
+				try {
+					cat = objectFactory.createTaskHandlingTypeTaskletTypeCorrectorAnnotationType();
+				} catch (JAXBException e) {
+					throw new RuntimeException( e );
+				}
+				cat.setDate( tavo.getDate() == null ? 0 : tavo.getDate() );
+				cat.setValue( tavo.getText() == null ? "" : tavo.getText() );
+				taskletType.getCorrectorAnnotation().add( cat );
+			}
+			taskletType.getStudentAnnotation().clear();
+			for( TaskletAnnotationVO tavo : taskletVO.getStudentAnnotations() ){
+				StudentAnnotationType sat;
+				try {
+					sat = objectFactory.createTaskHandlingTypeTaskletTypeStudentAnnotationType();
+				} catch (JAXBException e) {
+					throw new RuntimeException( e );
+				}
+				sat.setDate( tavo.getDate() );
+				sat.setValue( tavo.getText() );
+				taskletType.getStudentAnnotation().add( sat );
+			}
+			
+			// flags
+			taskletType.getFlag().clear();
+			taskletType.getFlag().addAll( taskletVO.getFlags() );
+			
+			// correctors history
 			taskletType.getCorrectorHistory().clear();
 			
 			if( taskletVO.getCorrectorHistory() != null && taskletVO.getCorrectorHistory().size() > 0 ){
@@ -267,26 +336,9 @@ public class TaskHandlingDaoImpl implements TaskHandlingDao {
 
 		List<TaskletVO> ret = new ArrayList<TaskletVO>();
 
-		for( TaskletType taskletType : matchingTaskletTypes ){
-			TaskletVO tvo = new TaskletVO();
-			tvo.setTaskDefId( taskletType.getTaskDefId() );
-			tvo.setStatus( taskletType.getStatus() );
-			tvo.setPoints( taskletType.getPoints() == -1 ? null : taskletType.getPoints() );
-			tvo.setLogin( taskletType.getLogin() );
-			tvo.setId( taskletType.getId() );
-			tvo.setCorrectorLogin( taskletType.getCorrectorLogin() );
-			tvo.setAnnotation( taskletType.getAnnotation() );
-			
-			List<String> correctors = new ArrayList<String>();
-			Iterator it2 = taskletType.getCorrectorHistory().iterator();
-			while( it2.hasNext() )
-				correctors.add( ((CorrectorHistoryType)it2.next()).getCorrectorLogin() );
-			tvo.setCorrectorHistory( correctors );
-			
-			ret.add( tvo );
-
-		}
-
+		for( TaskletType taskletType : matchingTaskletTypes )
+			ret.add( instantiateTaskletVO( taskletType ) );
+		
 		return ret;
 	}
 

@@ -34,21 +34,53 @@ public class TaskletVO {
 	private long taskDefId;
 	private String status;
 	private Float points;
-	private String annotation;
+
+	private List<TaskletAnnotationVO> correctorAnnotations;
+	private List<TaskletAnnotationVO> studentAnnotations;
+	
 	private String correctorLogin;
 	private List<String> correctorHistory;
+	private List<String> flags;
+	
+	
+	
 	
 	/**
-	 * @return Returns the annotation.
+	 * @return Returns the flags.
 	 */
-	public String getAnnotation() {
-		return annotation;
+	public List<String> getFlags() {
+		return flags;
 	}
 	/**
-	 * @param annotation The annotation to set.
+	 * @param flags The flags to set.
 	 */
-	public void setAnnotation(String annotation) {
-		this.annotation = annotation;
+	public void setFlags(List<String> flags) {
+		this.flags = flags;
+	}
+	/**
+	 * @return Returns the correctorAnnotations.
+	 */
+	public List<TaskletAnnotationVO> getCorrectorAnnotations() {
+		return correctorAnnotations;
+	}
+	/**
+	 * @param correctorAnnotations The correctorAnnotations to set.
+	 */
+	public void setCorrectorAnnotations(
+			List<TaskletAnnotationVO> correctorAnnotations) {
+		this.correctorAnnotations = correctorAnnotations;
+	}
+	/**
+	 * @return Returns the studentAnnotations.
+	 */
+	public List<TaskletAnnotationVO> getStudentAnnotations() {
+		return studentAnnotations;
+	}
+	/**
+	 * @param studentAnnotations The studentAnnotations to set.
+	 */
+	public void setStudentAnnotations(List<TaskletAnnotationVO> studentAnnotations) {
+		this.studentAnnotations = studentAnnotations;
 	}
 	/**
 	 * @return Returns the correctorHistory.

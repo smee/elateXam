@@ -110,8 +110,7 @@ public class ComplexTaskOverviewAction extends BaseAction {
 						tasklet.getActiveTry().getStartTime() + ctd.getComplexTaskDefRoot().getTimeInMinutesWithoutKindnessExtensionTime() * 60 * 1000 ) );	
 		}
 		
-		if( ctd.isShowCorrectionToUsers() &&
-				( tasklet.getStatus().equals( Tasklet.CORRECTED ) || tasklet.getStatus().equals( Tasklet.SOLVED ) ) ){
+		if( ctd.isShowCorrectionToUsers() && tasklet.hasOrPassedStatus (Tasklet.Status.SOLVED ) ){
 			tivo.setCorrectionVisible( true);
 		}
 		

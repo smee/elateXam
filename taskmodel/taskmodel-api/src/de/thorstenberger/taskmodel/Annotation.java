@@ -1,6 +1,6 @@
 /*
 
-Copyright (C) 2005 Thorsten Berger
+Copyright (C) 2006 Thorsten Berger
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,38 +21,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel;
 
-import java.util.List;
-
 /**
  * @author Thorsten Berger
  *
  */
-public interface TaskletCorrection {
+public interface Annotation {
+	
+	public long getDate();
+	
+	public String getText();
 
-	public Float getPoints();
-	
-	public String getCorrectorAnnotation();
-	
-	/**
-	 * If allowed, students can comment the corrector's marking.
-	 * @return the student's annotation
-	 */
-	public List<Annotation> getStudentAnnotations();
-	
-	public String getCorrector();
-	
-	public List<String> getCorrectorHistory();
-	
-	public void setPoints( Float points ) throws IllegalArgumentException;
-	
-	public void setCorrectorAnnotation( String value );
-	
-	/**
-	 * If allowed, students can comment the corrector's marking.
-	 * @param value the student's annotation
-	 */
-	public void addStudentAnnotation( String annotation );
-	
-	public void setCorrector( String value );
-	
 }

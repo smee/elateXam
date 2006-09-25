@@ -21,6 +21,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.impl;
 
+import java.util.List;
+
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskFactory;
 import de.thorstenberger.taskmodel.Tasklet;
@@ -35,17 +37,19 @@ public abstract class AbstractTasklet implements Tasklet {
 	private TaskFactory taskFactory;
 	private String userId;
 	private long taskId;
-	protected String status;
+	private Status status;
+	private List<String> flags;
 	protected TaskletCorrection taskletCorrection;
 	
 	/**
 	 * 
 	 */
-	public AbstractTasklet( TaskFactory taskFactory, String userId, long taskId, String status, TaskletCorrection taskletCorrection ) {
+	public AbstractTasklet( TaskFactory taskFactory, String userId, long taskId, Status status, List<String> flags, TaskletCorrection taskletCorrection ) {
 		this.taskFactory = taskFactory;
 		this.userId = userId;
 		this.taskId = taskId;
 		this.status = status;
+		this.flags = flags;
 		this.taskletCorrection = taskletCorrection;
 	}
 
@@ -66,10 +70,40 @@ public abstract class AbstractTasklet implements Tasklet {
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.Tasklet#getStatus()
 	 */
-	public synchronized String getStatus() {
+	public synchronized Status getStatus() {
 		return status;
 	}
 	
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.Tasklet#hasOrPassedStatus(java.lang.String)
+	 */
+	public boolean hasOrPassedStatus(Status status) {		
+		return this.status.getOrder() >= status.getOrder();
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.Tasklet#getFlags()
+	 */
+	public List<String> getFlags() {
+		return flags;
+	}
+	
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.Tasklet#addFlag(java.lang.String)
+	 */
+	public void addFlag(String flag) {
+		if( !flags.contains( flag ) )
+			flags.add( flag );
+	}
+	
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.Tasklet#removeFlag(java.lang.String)
+	 */
+	public void removeFlag(String flag) {
+		while( flags.contains( flag ) )
+			flags.remove( flag );
+	}
+
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.Tasklet#assignToCorrector(java.lang.String)
 	 */
@@ -78,34 +112,22 @@ public abstract class AbstractTasklet implements Tasklet {
 		if( correctorId == null )
 			throw new NullPointerException();
 		
-		if( getStatus().equals( INITIALIZED ) || getStatus().equals( INPROGRESS ) )
-			throw new TaskApiException( "Cannot assign Tasklet with status \"initialized\" or \"in progress\" to corrector." );
+		if( !hasOrPassedStatus( Status.SOLVED ) )
+			throw new TaskApiException( "Cannot assign Tasklet without at least status \"solved\" to corrector." );
 		
 		if( getTaskletCorrection().getCorrector() != null ){
 			getTaskletCorrection().getCorrectorHistory().add( getTaskletCorrection().getCorrector() );
 		}
 			
 		getTaskletCorrection().setCorrector( correctorId );
-		if( getStatus().equals( SOLVED ) )
-			setStatus( CORRECTING );
+		if( getStatus() == Status.SOLVED )
+			setStatus( Status.CORRECTING );
 		
 		save();
 	}
 
-	protected synchronized void setStatus( String status ){
-		if( INITIALIZED.equals( status ) ||
-				INPROGRESS.equals( status ) ||
-				SOLVED.equals( status ) ||
-				CORRECTING.equals( status ) ||
-				CORRECTED.equals( status ) ){
-			
-			this.status = status;
-			
-		}else{
-			
-			throw new IllegalArgumentException( "invalid status" );
-			
-		}
+	protected synchronized void setStatus( Status status ){
+		this.status = status;
 	}
 	
 	/**

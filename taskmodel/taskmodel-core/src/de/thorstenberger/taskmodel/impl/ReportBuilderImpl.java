@@ -107,7 +107,7 @@ public class ReportBuilderImpl implements ReportBuilder {
 		
 		for( Tasklet tasklet : tasklets ){
 
-			if( tasklet.getStatus().equals( Tasklet.INITIALIZED ) )
+			if( tasklet.getStatus() == Tasklet.Status.INITIALIZED )
 				continue;
 			
 			row = sheet.createRow( r++ );
@@ -146,7 +146,7 @@ public class ReportBuilderImpl implements ReportBuilder {
 			
 			row.createCell( c++ ).setCellValue( firstName );
 			row.createCell( c++ ).setCellValue( name );
-			row.createCell( c++ ).setCellValue( tasklet.getStatus() );
+			row.createCell( c++ ).setCellValue( tasklet.getStatus().toString() );
 			row.createCell( c++ ).setCellValue( tasklet.getTaskletCorrection().getPoints() != null ? "" + tasklet.getTaskletCorrection().getPoints() : "-" );
 			row.createCell( c++ ).setCellValue( tasklet.getTaskletCorrection().getCorrector() != null ? tasklet.getTaskletCorrection().getCorrector() : "-" );
 			row.createCell( c++ ).setCellValue( tasklet.getTaskletCorrection().getCorrectorHistory().toString() );

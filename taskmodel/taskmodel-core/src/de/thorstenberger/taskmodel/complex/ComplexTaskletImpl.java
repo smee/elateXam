@@ -27,6 +27,7 @@ import java.util.List;
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskFactory;
 import de.thorstenberger.taskmodel.TaskModelPersistenceException;
+import de.thorstenberger.taskmodel.Tasklet;
 import de.thorstenberger.taskmodel.TaskletCorrection;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.ComplexTaskHandlingDAO;
@@ -60,9 +61,9 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 	 * @param taskletCorrection
 	 */
 	public ComplexTaskletImpl(TaskFactory taskFactory, ComplexTaskBuilder complexTaskBuilder, String userId,
-			long taskId, String status, TaskletCorrection taskletCorrection, TaskDef_Complex complexTaskDef, ComplexTaskHandlingDAO complexTaskHandlingDAO, File xmlComplexTaskHandlingFile ) {
+			long taskId, Tasklet.Status status, List<String> flags, TaskletCorrection taskletCorrection, TaskDef_Complex complexTaskDef, ComplexTaskHandlingDAO complexTaskHandlingDAO, File xmlComplexTaskHandlingFile ) {
 		
-		super(taskFactory, userId, taskId, status, taskletCorrection);
+		super(taskFactory, userId, taskId, status, flags, taskletCorrection );
 		
 		this.complexTaskDef = complexTaskDef;
 		this.complexTaskDefRoot = complexTaskDef.getComplexTaskDefRoot();
@@ -80,7 +81,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 	 */
 	public synchronized void update() {
 			
-		if( getStatus().equals( INPROGRESS ) ){
+		if( getStatus() == Status.INPROGRESS ){
 			
 			if( complexTaskDefRoot.hasTimeRestriction() ){
 				long deadline = getActiveTry().getStartTime() + complexTaskDefRoot.getTimeInMinutesWithKindnessExtensionTime() * 60 * 1000;
@@ -93,7 +94,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 			if( !complexTaskDef.isActive() )
 				submit();
 			
-		}				
+		}
 			    
 			
 
@@ -139,7 +140,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 		// ans Ende, sonst wird auch bei Exceptions, die beim Zusammenstellen der Aufgaben auftreten,
 		// ein inkonsistenter Zustand gespeichert
 		super.getTaskletCorrection().setPoints( null );
-		setStatus( INPROGRESS );
+		setStatus( Status.INPROGRESS );
 		
 		// und schließlich speichern
 		try {
@@ -158,7 +159,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#canContinueTry()
 	 */
 	public synchronized boolean canContinueTry() {
-		if( getStatus().equals( INPROGRESS ) )
+		if( getStatus() == Status.INPROGRESS )
 			return true;
 		else
 			return false;
@@ -251,9 +252,9 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 		
 		if( allCorrected ){
 			getTaskletCorrection().setPoints( points );
-			setStatus( CORRECTED );
+			setStatus( Status.CORRECTED );
 		}else
-			setStatus( SOLVED );
+			setStatus( Status.SOLVED );
 		
 		
 		try {
@@ -272,7 +273,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 
 		if( canContinueTry() )
             throw new IllegalStateException( TaskHandlingConstants.CANNOT_CORRECT_TASK_IN_PROGRESS );
-        if( getStatus().equals( INITIALIZED ) )
+        if( getStatus().equals( Status.INITIALIZED ) )
             throw new IllegalStateException( TaskHandlingConstants.CANNOT_CORRECT_TASK_NOT_SOLVED );
         
         if( actualSubtasklet != null && csd != null ){
@@ -301,13 +302,18 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 			
 			if( allCorrected ){
 				getTaskletCorrection().setPoints( points );
-				setStatus( CORRECTED );
+				setStatus( Status.CORRECTED );
 			}
 			
         }
         
-        if( csd != null )
-        	getTaskletCorrection().setAnnotation( csd.getAnnotation() );
+        if( csd != null ){
+        	getTaskletCorrection().setCorrectorAnnotation( csd.getAnnotation() );
+        	if( csd.getAnnotation() != null && csd.getAnnotation().trim().length() > 0 )
+        		addFlag( Tasklet.FLAG_HAS_CORRECTOR_ANNOTATION );
+        	else
+        		removeFlag( Tasklet.FLAG_HAS_CORRECTOR_ANNOTATION );
+        }
 		
         try {
 			save();
@@ -335,7 +341,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 	 */
 	public synchronized de.thorstenberger.taskmodel.complex.complextaskhandling.Try getActiveTry() throws IllegalStateException {
 		
-		if( !getStatus().equals( INPROGRESS ) )
+		if( getStatus() != Status.INPROGRESS )
 			throw new IllegalStateException( TaskHandlingConstants.NOT_IN_PROGRESS );
 		
 		return complexTaskHandlingRoot.getRecentTry();

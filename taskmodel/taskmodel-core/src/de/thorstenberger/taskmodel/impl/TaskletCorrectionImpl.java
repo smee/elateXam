@@ -24,6 +24,7 @@ package de.thorstenberger.taskmodel.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.thorstenberger.taskmodel.Annotation;
 import de.thorstenberger.taskmodel.TaskletCorrection;
 
 /**
@@ -36,15 +37,17 @@ public class TaskletCorrectionImpl implements TaskletCorrection {
 	private String annotation;
 	private String corrector;
 	private List<String> correctorHistory;
+	private List<Annotation> studentAnnotations;
 	
 	/**
 	 * 
 	 */
-	public TaskletCorrectionImpl( Float points, String annotation, String corrector, List<String> correctorHistory ) {
+	public TaskletCorrectionImpl( Float points, String annotation, String corrector, List<String> correctorHistory, List<Annotation> studentAnnotations ) {
 		this.points = points;
 		this.annotation = annotation;
 		this.corrector = corrector;
 		this.correctorHistory = correctorHistory;
+		this.studentAnnotations = studentAnnotations;
 	}
 
 	/* (non-Javadoc)
@@ -57,7 +60,7 @@ public class TaskletCorrectionImpl implements TaskletCorrection {
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.TaskletCorrection#getAnnotation()
 	 */
-	public synchronized String getAnnotation() {
+	public synchronized String getCorrectorAnnotation() {
 		return annotation;
 	}
 
@@ -80,7 +83,7 @@ public class TaskletCorrectionImpl implements TaskletCorrection {
 	/**
 	 * @param annotation The annotation to set.
 	 */
-	public synchronized void setAnnotation(String annotation) {
+	public synchronized void setCorrectorAnnotation(String annotation) {
 		this.annotation = annotation;
 	}
 
@@ -107,4 +110,20 @@ public class TaskletCorrectionImpl implements TaskletCorrection {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.TaskletCorrection#addStudentAnnotation(java.lang.String)
+	 */
+	public void addStudentAnnotation( String annotation ) {
+		Annotation a = new AnnotationImpl( annotation, System.currentTimeMillis() );
+		studentAnnotations.add( a );
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.TaskletCorrection#getStudentAnnotations()
+	 */
+	public List<Annotation> getStudentAnnotations() {
+		return studentAnnotations;
+	}
+
+	
 }

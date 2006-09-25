@@ -45,9 +45,8 @@ public abstract class AbstractTaskFactory implements TaskFactory {
 		
 		for( Tasklet tasklet : tasklets ){
 			
-			if( !tasklet.getStatus().equals( Tasklet.INITIALIZED ) && correctorId.equals( tasklet.getTaskletCorrection().getCorrector() ) ){
+			if( tasklet.getStatus() != Tasklet.Status.INITIALIZED && correctorId.equals( tasklet.getTaskletCorrection().getCorrector() ) )
 				ret.add( tasklet.getUserId() );				
-			}
 			
 		}
 		

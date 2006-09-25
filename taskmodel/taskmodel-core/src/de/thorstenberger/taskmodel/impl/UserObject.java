@@ -75,10 +75,10 @@ class UserObject implements Serializable{
 			throw new TaskModelPersistenceException(
 					new NullPointerException( "TaskFactory created a null Tasklet reference!" ) );
 		
-		if( !tasklet.getStatus().equals( Tasklet.INITIALIZED ) )
+		if( tasklet.getStatus() != Tasklet.Status.INITIALIZED )
 			throw new TaskModelPersistenceException(
 					new IllegalStateException( "TaskFactory created a Tasklet with status \"" + tasklet.getStatus() +
-							"\" instead of \"" + Tasklet.INITIALIZED + "\"!" ) );
+							"\" instead of \"" + Tasklet.Status.INITIALIZED + "\"!" ) );
 		
 		if( tasklet.getTaskletCorrection() == null )
 			throw new TaskModelPersistenceException(

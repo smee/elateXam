@@ -138,10 +138,10 @@ public class TaskletContainerImpl implements TaskletContainer {
 			
 			synchronized (tasklet) {
 
-				if( !tasklet.getStatus().equals( Tasklet.INITIALIZED ) && !tasklet.getStatus().equals( Tasklet.INPROGRESS ) ){
+				if( tasklet.hasOrPassedStatus( Tasklet.Status.SOLVED ) ){
 					numOfSolutions++;
 					
-					if( tasklet.getStatus().equals( Tasklet.CORRECTED ) )
+					if( tasklet.hasOrPassedStatus( Tasklet.Status.CORRECTED ) )
 						numOfCorrectedSolutions++;
 				}
 				if( tasklet.getTaskletCorrection().getCorrector() != null )
@@ -165,7 +165,8 @@ public class TaskletContainerImpl implements TaskletContainer {
 		
 		for( Tasklet tasklet : tasklets ){
 			
-			if( tasklet.getStatus().equals( Tasklet.SOLVED ) && tasklet.getTaskletCorrection().getCorrector() == null )
+			if( ( tasklet.getStatus() == Tasklet.Status.SOLVED || tasklet.getStatus() == Tasklet.Status.CORRECTING ) && 
+					tasklet.getTaskletCorrection().getCorrector() == null )
 				assignableTasklets.add( tasklet );
 			
 		}

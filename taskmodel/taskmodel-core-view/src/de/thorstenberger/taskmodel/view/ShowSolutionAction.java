@@ -174,7 +174,7 @@ public class ShowSolutionAction extends Action {
     		sivo.setPoints( "-" );
 		
 		
-		sivo.setStatus( ct.getStatus() );
+		sivo.setStatus( ct.getStatus().getValue() );
 		try {
 			sivo.setTryStartTime( DateUtil.getStringFromMillis( ct.getSolutionOfLatestTry().getStartTime() ) );
 		} catch (IllegalStateException e) {

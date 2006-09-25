@@ -113,10 +113,10 @@ public class DoCorrectionAction extends Action {
 			civo.setTaskId( id );
 			civo.setUserId( userId );
 			civo.setPoints( tasklet.getTaskletCorrection().getPoints() != null ? "" + tasklet.getTaskletCorrection().getPoints() : "-" );
-			civo.setStatus( tasklet.getStatus() );
+			civo.setStatus( tasklet.getStatus().getValue() );
 			civo.setCorrectorLogin( tasklet.getTaskletCorrection().getCorrector() );
 			civo.setCorrectorHistory( tasklet.getTaskletCorrection().getCorrectorHistory() );
-			civo.setAnnotation( tasklet.getTaskletCorrection().getAnnotation() );
+			civo.setAnnotation( tasklet.getTaskletCorrection().getCorrectorAnnotation() );
 			
 			
 			request.setAttribute( "Correction", civo );

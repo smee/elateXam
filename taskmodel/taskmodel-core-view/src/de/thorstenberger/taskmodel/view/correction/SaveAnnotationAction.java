@@ -78,7 +78,7 @@ public class SaveAnnotationAction extends Action {
 				}
 			}
 			
-			tasklet.getTaskletCorrection().setAnnotation( request.getParameter( "annotation" ) );
+			tasklet.getTaskletCorrection().setCorrectorAnnotation( request.getParameter( "annotation" ) );
 			// FIXME save
 			
 			return mapping.findForward( "success" );

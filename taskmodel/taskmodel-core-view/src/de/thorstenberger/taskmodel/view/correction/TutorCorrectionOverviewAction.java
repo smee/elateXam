@@ -89,7 +89,7 @@ public class TutorCorrectionOverviewAction extends Action {
 			List<TaskletInfoVO> assignedUncorrectedTasklets = new ArrayList<TaskletInfoVO>();
 			List<TaskletInfoVO> assignedCorrectedTasklets = new ArrayList<TaskletInfoVO>();
 			for( Tasklet tasklet : assignedTasklets ){
-				if( tasklet.getStatus().equals( Tasklet.CORRECTED ) )
+				if( tasklet.hasOrPassedStatus( Tasklet.Status.CORRECTED ) )
 					assignedCorrectedTasklets.add( getTIVO( tasklet ) );
 				else
 					assignedUncorrectedTasklets.add( getTIVO( tasklet ) );
@@ -111,7 +111,7 @@ public class TutorCorrectionOverviewAction extends Action {
 		tivo.setTaskId( tasklet.getTaskId() );
 		tivo.setLogin( tasklet.getUserId() );
 		tivo.setPoints( tasklet.getTaskletCorrection().getPoints() != null ? "" + tasklet.getTaskletCorrection().getPoints() : "-" );
-		tivo.setStatus( tasklet.getStatus() );
+		tivo.setStatus( tasklet.getStatus().getValue() );
 		tivo.setCorrectorLogin( tasklet.getTaskletCorrection().getCorrector() );
 		tivo.setCorrectorHistory( tasklet.getTaskletCorrection().getCorrectorHistory() );
 

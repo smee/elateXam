@@ -52,7 +52,7 @@ public class SubTaskView_Paint extends SubTaskView {
 		StringBuffer ret = new StringBuffer();
 		
 		// workaround: textarea nicht disabled
-		corrected = false;
+//		corrected = false;
 		
 		String userAgent = request.getHeader( "User-Agent" );
 		boolean mozilla = userAgent != null && userAgent.startsWith( "Mozilla" ) && userAgent.indexOf( "MSIE" ) == -1;
@@ -62,7 +62,7 @@ public class SubTaskView_Paint extends SubTaskView {
 		ret.append("<object\r\n" + 
 				( mozilla ? "    classid = \"java:drawing/DrawingApplet.class\"\r\n" : "    classid = \"clsid:8AD9C840-044E-11D1-B3E9-00805F499D93\"\r\n" )  + 
 				"    codebase = \"http://java.sun.com/update/1.5.0/jinstall-1_5-windows-i586.cab#Version=5,0,0,7\"\r\n" + 
-				"    WIDTH = \"600\" HEIGHT = \"395\" NAME = \"drawTask_" + relativeTaskNumber + "\" >\r\n" + 
+				"    WIDTH = \"600\" HEIGHT = \"" + (corrected ? 355 : 395 ) + "\" NAME = \"drawTask_" + relativeTaskNumber + "\" >\r\n" + 
 				"    <param name=\"code\" value=\"drawing/DrawingApplet.class\" >\r\n" + 
 				"    <param name=\"codebase\" value=\"" + request.getContextPath() + "/drawTask\" >\r\n" + 
 				"    <param name=\"archive\" value=\"drawtask-1.0.jar\" >\r\n" + 
@@ -78,11 +78,12 @@ public class SubTaskView_Paint extends SubTaskView {
 		ret.append("<param name=\"background\" value=\"").append( paintSubTasklet.getBackgroundPictureString()).append("\">\n");
 		ret.append("<param name=\"undoData\" value=\"").append( paintSubTasklet.getUndoData()).append("\">\n");
 		ret.append("<param name=\"resetted\" value=\"").append( paintSubTasklet.isResetted()).append("\">\n");
-//		ret.append("</applet>\n<br/><br/>\n");
+		if( corrected )
+			ret.append("<param name=\"viewonly\" value=\"true\">\n");
+		
 		ret.append("</object>\n<br/><br/>\n");
 		ret.append("<textarea name=\"task[" + relativeTaskNumber + "].text\" cols=\"" +
-						paintSubTasklet.getTextFieldWidth() + "\" rows=\"" + paintSubTasklet.getTextFieldHeight() + "\" onChange=\"setModified()\"" +
-						( corrected ? "disabled=\"disabled\"" : "" ) + ">\n");
+						paintSubTasklet.getTextFieldWidth() + "\" rows=\"" + paintSubTasklet.getTextFieldHeight() + "\" onChange=\"setModified()\">\n");
 		ret.append( paintSubTasklet.getTextualAnswer() );
 		ret.append("</textarea>\n");
 		ret.append("</div>\n");

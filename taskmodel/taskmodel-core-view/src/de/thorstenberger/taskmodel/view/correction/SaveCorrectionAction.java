@@ -152,7 +152,7 @@ public class SaveCorrectionAction extends Action {
 			try {
 				return SubTaskViewFactory.getSubTaskView( subtasklet ).getCorrectionSubmitData( subTaskVarMap );
 			} catch (MethodNotSupportedException e) {
-				throw new RuntimeException( e );
+				return new CorrectionSubmitDataImpl();
 			}
 		
 	}

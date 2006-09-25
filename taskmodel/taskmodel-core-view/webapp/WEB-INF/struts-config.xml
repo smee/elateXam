@@ -41,9 +41,9 @@
    <forward name="error" path="/error.jsp"/>
    <forward name="success" path="/doCorrection.do"/>
   </action>
-  <action path="/saveAnnotation" type="de.thorstenberger.taskmodel.view.correction.SaveAnnotationAction">
-   <forward name="success" path="/doCorrection.do"/>
+  <action path="/saveStudentAnnotation" type="de.thorstenberger.taskmodel.view.correction.SaveStudentAnnotationAction">
    <forward name="error" path="/error.jsp"/>
+   <forward name="success" path="/showSolution.do"/>
   </action>
   <action path="/viewAllTasklets" type="de.thorstenberger.taskmodel.view.correction.ViewAllTaskletsAction">
    <forward name="error" path="/error.jsp"/>

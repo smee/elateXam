@@ -21,9 +21,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.view.correction;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -31,61 +36,93 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 
-import de.thorstenberger.taskmodel.CorrectorDelegateObject;
+import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskModelViewDelegate;
+import de.thorstenberger.taskmodel.TaskModelViewDelegateObject;
+import de.thorstenberger.taskmodel.Tasklet;
 import de.thorstenberger.taskmodel.complex.ComplexTasklet;
 
 /**
  * @author Thorsten Berger
  *
  */
-public class SaveAnnotationAction extends Action {
+public class SaveStudentAnnotationAction extends Action {
 
+	Log log = LogFactory.getLog( SaveStudentAnnotationAction.class );
+	
 	/* (non-Javadoc)
 	 * @see org.apache.struts.action.Action#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+		   ActionMessages msgs = new ActionMessages();
 		   ActionMessages errors = new ActionMessages();
 
 			long id;
-			String userId = request.getParameter( "userId" );
-			
 			try {
-				id = Long.parseLong( request.getParameter( "taskId" ) );
+				id = Long.parseLong( request.getParameter( "id" ) );
 			} catch (NumberFormatException e) {
 				errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "invalid.parameter" ) );
 				saveErrors( request, errors );
 				return mapping.findForward( "error" );
 			}
 			
-			CorrectorDelegateObject delegateObject = (CorrectorDelegateObject)TaskModelViewDelegate.getDelegateObject( request.getSession().getId(), id );
-
+			TaskModelViewDelegateObject delegateObject = (TaskModelViewDelegateObject)TaskModelViewDelegate.getDelegateObject( request.getSession().getId(), id );
 			if( delegateObject == null ){
 				errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "no.session" ) );
 				saveErrors( request, errors );
 				return mapping.findForward( "error" );
 			}
 
-			ComplexTasklet tasklet = (ComplexTasklet)delegateObject.getTaskManager().getTaskletContainer().getTasklet( id, userId );
+			ComplexTasklet ct;
 			
-			if( !delegateObject.isPrivileged() ){
-				if( !delegateObject.getCorrectorLogin().equals( tasklet.getTaskletCorrection().getCorrector() ) ){
-					errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "may.only.correct.assigned.tasklets" ) );
-					saveErrors( request, errors );
-					return mapping.findForward( "error" );
-				}
+			try {
+				ct = (ComplexTasklet) delegateObject.getTasklet();
+			} catch (ClassCastException e1) {
+				errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "only.complexTasks.supported" ) );
+				saveErrors( request, errors );
+				return mapping.findForward( "error" );
+			} catch (TaskApiException e3) {
+				errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "misc.error", e3.getMessage() ) );
+				saveErrors( request, errors );
+				log.error( e3 );
+				return mapping.findForward( "error" );
 			}
 			
-			tasklet.getTaskletCorrection().setCorrectorAnnotation( request.getParameter( "annotation" ) );
-			// FIXME save
+			logPostData( request, ct );
+			
+			
+			try {
+				
+				ct.studentAnnotatesCorrection( request.getParameter( "studentAnnotation") );
+				
+			} catch (IllegalStateException e) {
+				errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( e.getMessage() ) );
+				saveErrors( request, errors );
+				log.info( e );
+				return mapping.findForward( "error" );
+			}
+			
+			msgs.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage("studentAnnotation.successful" ) );
+			saveMessages( request, msgs );
 			
 			return mapping.findForward( "success" );
 
 		
 	}
 
+	
+	public static void logPostData( HttpServletRequest request, Tasklet tasklet ){
+		Map vars = request.getParameterMap();
+		StringBuffer parameters = new StringBuffer();
+		Iterator keys = vars.keySet().iterator();
+		while( keys.hasNext() ){
+			String key = (String) keys.next();
+			parameters.append( key + "=" + ((String[])vars.get( key ))[0] + "\n" );
+		}
+		tasklet.logPostData( "StudentAnnotation: posted parameters:\n" + parameters.toString(), request.getRemoteAddr() );
+	}
 	
 
 }

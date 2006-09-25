@@ -52,12 +52,6 @@ public interface ComplexTasklet extends Tasklet {
 	
 	public void doManualCorrection( SubTasklet actualSubtasklet, CorrectionSubmitData csd ) throws IllegalStateException;
 	
-//	void save();
-	
-//	public ComplexTaskDefHelper getComplexTaskDefHelper();
-	
-//	public ComplexTaskHandlingHelper getComplexTaskHandlingHelper();
-	
 	public ComplexTaskDefRoot getComplexTaskDefRoot();
 	
 	public ComplexTaskHandlingRoot getComplexTaskHandlingRoot();
@@ -75,22 +69,7 @@ public interface ComplexTasklet extends Tasklet {
 	 */
 	public de.thorstenberger.taskmodel.complex.complextaskhandling.Try getSolutionOfLatestTry() throws IllegalStateException;
 	
-//	/**
-//	 * @deprecated
-//	 * @param page
-//	 * @return
-//	 */
-//	public SubTask[] getSubTasks( int page );
-//
-//	/**
-//	 * @deprecated
-//	 * @param page
-//	 * @return
-//	 */
-//	public long getHash( int page );
+	public void studentAnnotatesCorrection( String annotation ) throws IllegalStateException;
 
-	
-	
-//	public void serialize( File xmlTaskHandlingFile );
 	
 }

@@ -39,6 +39,7 @@ import org.apache.struts.action.ActionMessages;
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskModelViewDelegate;
 import de.thorstenberger.taskmodel.TaskModelViewDelegateObject;
+import de.thorstenberger.taskmodel.Tasklet;
 import de.thorstenberger.taskmodel.complex.ComplexTasklet;
 import de.thorstenberger.taskmodel.complex.TaskDef_Complex;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
@@ -161,12 +162,20 @@ public class ShowSolutionAction extends Action {
 		request.setAttribute( "SubTasklets", stivos );
 		request.setAttribute( "Solution", sivo );
 		
+		if( ct.hasOrPassedStatus( Tasklet.Status.CORRECTED ) ){
+			request.setAttribute( "canAnnotate", true );
+			if( ct.getTaskletCorrection().getStudentAnnotations().size() > 0 )
+				request.setAttribute( "actualAnnotation", ct.getTaskletCorrection().getStudentAnnotations().get( 0 ).getText() );
+		}
+		
     	return mapping.findForward( "success" );
     	
     }
     
     
     private void populateVO( SolutionInfoVO sivo, TaskDef_Complex ctd, ComplexTasklet ct ){
+    	
+    	sivo.setTaskId( ctd.getId() );
     	
     	if( ct.getTaskletCorrection().getPoints() != null )
     		sivo.setPoints( "" + ct.getTaskletCorrection().getPoints() );

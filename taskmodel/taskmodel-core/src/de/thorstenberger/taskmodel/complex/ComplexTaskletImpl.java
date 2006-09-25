@@ -273,7 +273,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 
 		if( canContinueTry() )
             throw new IllegalStateException( TaskHandlingConstants.CANNOT_CORRECT_TASK_IN_PROGRESS );
-        if( getStatus().equals( Status.INITIALIZED ) )
+        if( getStatus() == Status.INITIALIZED )
             throw new IllegalStateException( TaskHandlingConstants.CANNOT_CORRECT_TASK_NOT_SOLVED );
         
         if( actualSubtasklet != null && csd != null ){
@@ -308,11 +308,13 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
         }
         
         if( csd != null ){
-        	getTaskletCorrection().setCorrectorAnnotation( csd.getAnnotation() );
-        	if( csd.getAnnotation() != null && csd.getAnnotation().trim().length() > 0 )
+        	if( csd.getAnnotation() != null && csd.getAnnotation().trim().length() > 0 ){
+        		getTaskletCorrection().setCorrectorAnnotation( csd.getAnnotation() );
         		addFlag( Tasklet.FLAG_HAS_CORRECTOR_ANNOTATION );
-        	else
+        	}else{
+        		getTaskletCorrection().setCorrectorAnnotation( null );        		
         		removeFlag( Tasklet.FLAG_HAS_CORRECTOR_ANNOTATION );
+        	}
         }
 		
         try {
@@ -355,6 +357,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 		// TODO
 //		if( !getStatus().equals( CORRECTED ) && !getStatus().equals( SOLVED ) )
 //			throw new IllegalStateException( TaskHandlingConstants.SHOW_CORRECTION_NOT_POSSIBLE );
+		
 	    
 	    return complexTaskHandlingRoot.getRecentTry();
 
@@ -373,7 +376,33 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 	public ComplexTaskHandlingRoot getComplexTaskHandlingRoot() {
 		return complexTaskHandlingRoot;
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#studentAnnotatesCorrection(java.lang.String)
+	 */
+	public void studentAnnotatesCorrection(String annotation) throws IllegalStateException {
+		
+		if( !hasOrPassedStatus( Status.CORRECTED ) )
+			throw new IllegalStateException( TaskHandlingConstants.STUDENT_MAY_ONLY_ANNOTATE_CORRECTED_TRY );
+		
+		// TODO history
+		
+		if( getTaskletCorrection().getStudentAnnotations().size() > 0 )
+			getTaskletCorrection().getStudentAnnotations().remove( 0 );
+		
+		if( annotation != null ){
+			getTaskletCorrection().addStudentAnnotation( annotation );
+			setStatus( Status.ANNOTATED );
+			addFlag( Tasklet.FLAG_HAS_STUDENT_ANNOTATION );
+		}
+
+		try {
+			save();
+		} catch (TaskApiException e) {
+			throw new TaskModelPersistenceException( e );
+		}
+		
+	}
 	
 
 }

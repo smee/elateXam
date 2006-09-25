@@ -61,55 +61,8 @@ public class TaskHandlingConstants {
 	public static final String CANNOT_CORRECT_TASK_IN_PROGRESS = "task.complex.cannot_correct_task_in_progress";
 	
 	public static final String CANNOT_CORRECT_TASK_NOT_SOLVED = "task.cannot_correct_task_not_solved";
-	
-	/**
-	 * @deprecated as this should be in the presentation layer
-	 * @param key
-	 * @return
-	 */
-	public static String getText( String key ){
-		
-		ResourceBundle bundle = ResourceBundle.getBundle( "de.thorstenberger.taskmodel.view.resources.TaskHandling" );
-		return bundle.getString( key );
-		
-//		if( NOT_ACTIVE.endsWith(key) )
-//			return "Diese Aufgaben sind zur Zeit nicht aktiv.";
-//		if( TRIES_SPENT.equals(key) )
-//			return "Sie haben die Anzahl der maximalen Versuche bereits verbraucht.";
-//		if( CANNOT_RESTART_SPENT_TRY.equals(key) )
-//			return "Sie können keinen bereits verbrauchten Versuch erneut starten.";
-//		if( NOT_IN_PROGRESS.equals(key) )
-//			return "Es befindet sich zur Zeit kein Versuch in Bearbeitung.";
-//		if( PAGE_UNKNOWN.equals(key) )
-//			return "Die angeforderte Seite existiert nicht.";
-//		if( CANNOT_CONTINUE_TIME_EXCEEDED.equals(key) )
-//			return "Die Bearbeitung kann nicht fortgesetzt werden, da die Bearbeitungszeit bereits abgelaufen ist." +
-//			"Die bis zu diesem Zeitpunkt gespeicherten Bearbeitungen " +
-//			"wurden automatisch zum Bearbeitungsende abgegeben";
-//		if( CANNOT_SAVE_TIME_EXCEEDED.equals(key) )
-//			return "Die Seite kann nicht gespeichert werden, da die Bearbeitungszeit bereits abgelaufen ist. " +
-//					"Die bis zu diesem Zeitpunkt gespeicherten Bearbeitungen " +
-//					"wurden automatisch zum Bearbeitungsende abgegeben";
-//		if( SUBMIT_DATA_CORRUPTED.equals(key) )
-//			return "Die übermittelten Daten sind inkonsistent.";
-//		if( SUBTASK_NOT_CORRECTED.equals(key) )
-//			return "Aufgabe noch nicht korrigiert.";
-//		if( TIME_EXCEEDED_AUTO_SUBMIT_MADE.equals(key) )
-//			return "Die maximale Bearbeitungszeit ist abgelaufen. Die bis zu diesem Zeitpunkt gespeicherten Bearbeitungen " +
-//					"wurden automatisch zum Bearbeitungsende abgegeben";
-//		if( TASK_NOT_CORRECTED.equals(key) )
-//			return "Die Aufgabe wurde noch nicht korrigiert.";
-//		if( SHOW_CORRECTION_NOT_POSSIBLE.equals(key) )
-//			return "Die Anzeige der Korrekturinformationen ist zur Zeit nicht möglich.";
-//		if( NO_UNCORRECTED_AND_UNASSIGNED_SOLUTIONS_AVAILABLE.equals(key) )
-//			return "Keine Lösungen verfügbar.";
-//		if( CANNOT_CORRECT_TASK_IN_PROGRESS.equals(key) )
-//		    return "Lösung kann nicht korrigiert werden, da sie sich noch in Bearbeitung befindet.";
-//		if( CANNOT_CORRECT_TASK_NOT_SOLVED.equals(key) )
-//		    return "Eine nicht gelöste Aufgabe kann nicht korrigiert werden";
-//		
-//		return null;
-	}
+
+	public static final String STUDENT_MAY_ONLY_ANNOTATE_CORRECTED_TRY = "student.may.only.annotate.corrected.try";
 	
 	
 }

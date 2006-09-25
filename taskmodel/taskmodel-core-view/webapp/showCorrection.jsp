@@ -12,6 +12,10 @@
 
 <jsp:include page="header.jsp" />
 
+<html:messages message="true" id="msg" header="messages.header" footer="messages.footer">
+	<%=pageContext.getAttribute("msg")%>
+</html:messages>
+
 <p class="header">L&ouml;sung von ${Solution.login}</p>
 
 <table border="0" cellspacing="2" cellpadding="2" width="790">
@@ -81,6 +85,29 @@
 
 	</td>
   </tr>
+  
+  <tr bgcolor="#F2F9FF"> 
+	<td><br>
+	<fieldset><legend>Kommentierung</legend>
+		<c:choose>
+			<c:when test="${canAnnotate}">
+				Sie haben hier die Möglichkeit, die Korrektur Ihrer Aufgaben zu kommentieren. Bitte geben Sie zu jedem Kommentar die Nummer der betreffenden Aufgabe an.
+				<br><br>
+				<form method="post" action="<html:rewrite action="/saveStudentAnnotation"/>">
+					<input type="hidden" name="id" value="${Solution.taskId}"/>
+					<div align="center">
+					<textarea name="studentAnnotation" cols="80" rows="15" !onChange="setModified()" style="background-color: #FFFFDD;">${actualAnnotation}</textarea>
+					<input type="submit" name="save" value="Speichern"/>
+					</div>
+				</form>
+			</c:when>
+			<c:otherwise>Sie können erst kommentieren, wenn alle Aufgaben korrigiert wurden.</c:otherwise>
+		</c:choose>
+	</fieldset><br>
+	</td>
+  </tr>
+  
+  
 </table>
 
 

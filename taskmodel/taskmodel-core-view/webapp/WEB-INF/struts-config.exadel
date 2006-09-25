@@ -77,6 +77,9 @@
    PATH="/doCorrection.do"
    SHAPE="473,584,480,584,480,720,56,720,56,776,63,776"
    SUBTYPE="confirmed" TARGET="action5" TITLE="/doCorrection.do" TYPE="link"/>
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" NAME="link1"
+   PATH="/viewAllTasklets.do" SUBTYPE="confirmed" TARGET="action9"
+   TITLE="/viewAllTasklets.do" TYPE="link"/>
  </PROCESS-ITEM>
  <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#assignTasklet"
   NAME="action6" PATH="/assignTasklet" SHAPE="64,632,100,41" TYPE="action">
@@ -117,16 +120,16 @@
    NAME="forward1" PATH="/doCorrection.do" TARGET="action5"
    TITLE="success" TYPE="forward"/>
  </PROCESS-ITEM>
- <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#saveAnnotation"
-  NAME="action8" PATH="/saveAnnotation" SHAPE="64,992,100,25" TYPE="action">
-  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="success"
-   NAME="forward0" PATH="/doCorrection.do"
-   SHAPE="163,1016,192,1016,192,856,48,856,48,776,63,776"
-   TARGET="action5" TITLE="success" TYPE="forward"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#saveStudentAnnotation"
+  NAME="action8" PATH="/saveStudentAnnotation" SHAPE="64,992,100,25" TYPE="action">
   <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="error"
    NAME="forward1" PATH="/error.jsp"
-   SHAPE="163,1032,768,1032,768,152,815,152" TARGET="page3"
+   SHAPE="163,1016,768,1016,768,152,815,152" TARGET="page3"
    TITLE="error" TYPE="forward"/>
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="success"
+   NAME="forward0" PATH="/showSolution.do"
+   SHAPE="163,1032,256,1032,256,704,16,704,16,328,55,328"
+   TARGET="action3" TITLE="success" TYPE="forward"/>
  </PROCESS-ITEM>
  <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#viewAllTasklets"
   NAME="action9" PATH="/viewAllTasklets" SHAPE="928,544,100,25" TYPE="action">

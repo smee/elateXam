@@ -97,7 +97,7 @@
 	<fieldset><legend>Administrationsfunktionen</legend>
 	<ul>
 	  <li><html:link action="/viewAllTasklets" paramId="taskId" paramName="Solutions" paramProperty="taskId">Gesamtliste</html:link><br><br>
-	  <li><html:link href="excelReport/report_${Solutions.taskId}.xls">Gesamtliste als Excel-Datei</html:link>
+	  <li><img src="<%= request.getContextPath() %>/pics/excel.gif" align="bottom"> <html:link href="excelReport/report_${Solutions.taskId}.xls">Gesamtliste als Excel-Datei</html:link>
 	</ul>
 	
 	</fieldset>

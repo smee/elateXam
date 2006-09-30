@@ -40,6 +40,21 @@ public class TaskletInfoVO {
 	
 	private Map<String, String> loginAndTaskId;
 	
+	private boolean corrigible;
+	
+	
+	/**
+	 * @return Returns the corrigible.
+	 */
+	public boolean isCorrigible() {
+		return corrigible;
+	}
+	/**
+	 * @param corrigible The corrigible to set.
+	 */
+	public void setCorrigible(boolean corrigible) {
+		this.corrigible = corrigible;
+	}
 	/**
 	 * @return Returns the taskId.
 	 */

@@ -114,6 +114,7 @@ public class TutorCorrectionOverviewAction extends Action {
 		tivo.setStatus( tasklet.getStatus().getValue() );
 		tivo.setCorrectorLogin( tasklet.getTaskletCorrection().getCorrector() );
 		tivo.setCorrectorHistory( tasklet.getTaskletCorrection().getCorrectorHistory() );
+		tivo.setCorrigible( tasklet.hasOrPassedStatus( Tasklet.Status.SOLVED ) );
 
 		return tivo;
 		

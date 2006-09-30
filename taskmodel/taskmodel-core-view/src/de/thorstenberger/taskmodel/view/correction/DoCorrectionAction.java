@@ -36,6 +36,7 @@ import org.apache.struts.action.ActionMessages;
 
 import de.thorstenberger.taskmodel.CorrectorDelegateObject;
 import de.thorstenberger.taskmodel.TaskModelViewDelegate;
+import de.thorstenberger.taskmodel.Tasklet;
 import de.thorstenberger.taskmodel.complex.ComplexTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
@@ -91,60 +92,71 @@ public class DoCorrectionAction extends Action {
 				}
 			}
 			
-			List<Page> pages = tasklet.getSolutionOfLatestTry().getPages();
-			List<SubTasklet> subTasklets = new ArrayList<SubTasklet>();
-			for( Page page : pages ){
-				List<SubTasklet> sts = page.getSubTasklets();
-				for( SubTasklet subTasklet : sts ){
-					subTasklets.add( subTasklet );
-					if( subTasklet.getVirtualSubtaskNumber().equals( selectedSubTaskletNum ) )
-						selectedSubTasklet = subTasklet;
+			// check the status
+			if( tasklet.hasOrPassedStatus( Tasklet.Status.SOLVED ) ){
+			
+				List<Page> pages = tasklet.getSolutionOfLatestTry().getPages();
+				List<SubTasklet> subTasklets = new ArrayList<SubTasklet>();
+				for( Page page : pages ){
+					List<SubTasklet> sts = page.getSubTasklets();
+					for( SubTasklet subTasklet : sts ){
+						subTasklets.add( subTasklet );
+						if( subTasklet.getVirtualSubtaskNumber().equals( selectedSubTaskletNum ) )
+							selectedSubTasklet = subTasklet;
+					}
+					
 				}
 				
-			}
-			
-			SubTaskletRootNode rn = new SubTaskletRootNode( subTasklets, userId, id, selectedSubTaskletNum );
-			CorrectionNodeFormatter cnf = new CorrectionNodeFormatter( id, userId, request.getContextPath() + mapping.findForward( "doCorrection" ).getPath(), request, response );
-			request.setAttribute( "rootNode", rn );
-			request.setAttribute( "nodeFormatter", cnf );
-			request.setAttribute( "expanded", true );
-			
-			CorrectionInfoVO civo = new CorrectionInfoVO();
-			civo.setTaskId( id );
-			civo.setUserId( userId );
-			civo.setPoints( tasklet.getTaskletCorrection().getPoints() != null ? "" + tasklet.getTaskletCorrection().getPoints() : "-" );
-			civo.setStatus( tasklet.getStatus().getValue() );
-			civo.setCorrectorLogin( tasklet.getTaskletCorrection().getCorrector() );
-			civo.setCorrectorHistory( tasklet.getTaskletCorrection().getCorrectorHistory() );
-			civo.setAnnotation( tasklet.getTaskletCorrection().getCorrectorAnnotation() );
-			
-			
-			request.setAttribute( "Correction", civo );
-			
-			
-			// SubTasklet selected -> show it
-			if( selectedSubTasklet != null ){
+				SubTaskletRootNode rn = new SubTaskletRootNode( subTasklets, userId, id, selectedSubTaskletNum );
+				CorrectionNodeFormatter cnf = new CorrectionNodeFormatter( id, userId, request.getContextPath() + mapping.findForward( "doCorrection" ).getPath(), request, response );
+				request.setAttribute( "rootNode", rn );
+				request.setAttribute( "nodeFormatter", cnf );
+				request.setAttribute( "expanded", true );
 				
-				SubTaskletInfoVO stivo = new SubTaskletInfoVO();
-				stivo.setCorrected( selectedSubTasklet.isCorrected() );
-				if( selectedSubTasklet.isCorrected() )
-					stivo.setPoints( selectedSubTasklet.getPoints() + "" );
+				CorrectionInfoVO civo = new CorrectionInfoVO();
+				civo.setTaskId( id );
+				civo.setUserId( userId );
+				civo.setPoints( tasklet.getTaskletCorrection().getPoints() != null ? "" + tasklet.getTaskletCorrection().getPoints() : "-" );
+				civo.setStatus( tasklet.getStatus().getValue() );
+				civo.setCorrectorLogin( tasklet.getTaskletCorrection().getCorrector() );
+				civo.setCorrectorHistory( tasklet.getTaskletCorrection().getCorrectorHistory() );
+				civo.setAnnotation( tasklet.getTaskletCorrection().getCorrectorAnnotation() );
+				
+				
+				request.setAttribute( "Correction", civo );
+				
+				
+				// SubTasklet selected -> show it
+				if( selectedSubTasklet != null ){
 					
-				stivo.setHint( selectedSubTasklet.getHint() );
-				stivo.setCorrectionHint( selectedSubTasklet.getCorrectionHint() );
-				stivo.setProblem( ParserUtil.getProblem( selectedSubTasklet.getProblem() ) );
-				stivo.setReachablePoints( selectedSubTasklet.getReachablePoints() );
-				stivo.setVirtualSubTaskletNumber( selectedSubTasklet.getVirtualSubtaskNumber() );
+					SubTaskletInfoVO stivo = new SubTaskletInfoVO();
+					stivo.setCorrected( selectedSubTasklet.isCorrected() );
+					if( selectedSubTasklet.isCorrected() )
+						stivo.setPoints( selectedSubTasklet.getPoints() + "" );
+						
+					stivo.setHint( selectedSubTasklet.getHint() );
+					stivo.setCorrectionHint( selectedSubTasklet.getCorrectionHint() );
+					stivo.setProblem( ParserUtil.getProblem( selectedSubTasklet.getProblem() ) );
+					stivo.setReachablePoints( selectedSubTasklet.getReachablePoints() );
+					stivo.setVirtualSubTaskletNumber( selectedSubTasklet.getVirtualSubtaskNumber() );
+					
+					stivo.setCorrectionHTML( SubTaskViewFactory.getSubTaskView( selectedSubTasklet ).getCorrectionHTML( request ) );
+					if( stivo.getCorrectionHTML() == null )
+						stivo.setCorrectedHTML( SubTaskViewFactory.getSubTaskView( selectedSubTasklet ).getCorrectedHTML( request, -1 ) );
+					
+					civo.setSubTasklet( stivo );				
+					
+				}
+			
+				return mapping.findForward( "success" );
+			
+			}else{
 				
-				stivo.setCorrectionHTML( SubTaskViewFactory.getSubTaskView( selectedSubTasklet ).getCorrectionHTML( request ) );
-				if( stivo.getCorrectionHTML() == null )
-					stivo.setCorrectedHTML( SubTaskViewFactory.getSubTaskView( selectedSubTasklet ).getCorrectedHTML( request, -1 ) );
-				
-				civo.setSubTasklet( stivo );				
+				errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "task.cannot_correct_task_not_solved" ) );
+				saveErrors( request, errors );
+				return mapping.findForward( "error" );				
 				
 			}
-		
-		return mapping.findForward( "success" );
 	}
 
 	

@@ -60,7 +60,12 @@
 			${row.correctorHistory}
 		</display:column>
 		<display:column title="Korrigieren&nbsp;&nbsp;&nbsp;" sortable="false">
-			<html:link action="/doCorrection" name="row" property="loginAndTaskId"><small>korrigieren</small></html:link>
+			<c:choose>
+				<c:when test="${row.corrigible}">
+					<html:link action="/doCorrection" name="row" property="loginAndTaskId"><small>korrigieren</small></html:link>
+				</c:when>
+				<c:otherwise>&nbsp;-&nbsp;</c:otherwise>
+			</c:choose>
 		</display:column>
 	</display:table>
 

@@ -118,6 +118,10 @@
                 <td>Punkte:</td>
                 <td>${Correction.points}</td>
               </tr>
+              <tr> 
+                <td>Versuch:</td>
+                <td>${Correction.numOfTry}</td>
+              </tr>
               <tr>
                 <td>Aktuell zugeordneter Korrektor:</td>
                 <td>${Correction.correctorLogin}</td>

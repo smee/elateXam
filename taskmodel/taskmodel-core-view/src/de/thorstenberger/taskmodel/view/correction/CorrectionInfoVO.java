@@ -38,9 +38,22 @@ public class CorrectionInfoVO {
 	private String correctorLogin;
 	private List<String> correctorHistory;
 	private String annotation;
+	private int numOfTry;
 	
 	private SubTaskletInfoVO subTasklet;
 	
+	/**
+	 * @return Returns the numOfTry.
+	 */
+	public int getNumOfTry() {
+		return numOfTry;
+	}
+	/**
+	 * @param numOfTry The numOfTry to set.
+	 */
+	public void setNumOfTry(int numOfTry) {
+		this.numOfTry = numOfTry;
+	}
 	/**
 	 * @return Returns the taskId.
 	 */

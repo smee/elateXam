@@ -51,6 +51,8 @@ a.MenuLink:hover {  font-family: Arial, Helvetica, sans-serif; font-size: 12px; 
 .newsbody {  font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #000000; background-color: #FAFBFC; border-color: #BFB8BF black black; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; border-style: dotted; border-top-width: 1px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px}
 .newsheader {  font-family: Arial, Helvetica, sans-serif; font-size: 9px; color: #718EA5; padding-top: 5px}
 .fortune {  font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: #718EA5; border-color: black black orange; border-style: solid; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 1px; border-left-width: 0px}
+.annotationsbody {  font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #000000; background-color: #FAFBFC; border-color: #BFB8BF black black; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; border-style: dotted; border-top-width: 1px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px}
+.annotationsheader {  font-family: Arial, Helvetica, sans-serif; font-size: 9px; color: #718EA5; padding-top: 5px}
 
 
 

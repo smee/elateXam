@@ -54,5 +54,11 @@ public interface TaskletCorrection {
 	public void addStudentAnnotation( String annotation );
 	
 	public void setCorrector( String value );
-	
+
+	/**
+	 * resets all values to their default, be careful with this method
+	 *
+	 */
+	public void reset();
+
 }

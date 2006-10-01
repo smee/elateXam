@@ -31,13 +31,15 @@ public class AnnotationImpl implements Annotation {
 
 	private long date;
 	private String text;
+	private boolean acknowledged;
 	
 	/**
 	 * 
 	 */
-	public AnnotationImpl( String text, long date ) {
+	public AnnotationImpl( String text, long date, boolean acknowledged ) {
 		this.date = date;
 		this.text = text;
+		this.acknowledged = acknowledged;
 	}
 
 	/* (non-Javadoc)
@@ -54,4 +56,33 @@ public class AnnotationImpl implements Annotation {
 		return this.text;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.Annotation#isAcknowledged()
+	 */
+	public boolean isAcknowledged() {
+		return acknowledged;
+	}
+
+	/**
+	 * @param acknowledged The acknowledged to set.
+	 */
+	public void setAcknowledged(boolean acknowledged) {
+		this.acknowledged = acknowledged;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(T)
+	 */
+	public int compareTo(Object o) {
+		Annotation anno = (Annotation)o;
+		if( date > anno.getDate() )
+			return -1;
+		else if( date < anno.getDate() )
+			return 1;
+		else
+			return 0;
+	}
+	
+	
+	
 }

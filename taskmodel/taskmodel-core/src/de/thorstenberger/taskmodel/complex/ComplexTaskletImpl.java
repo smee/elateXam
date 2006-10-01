@@ -24,6 +24,7 @@ package de.thorstenberger.taskmodel.complex;
 import java.io.File;
 import java.util.List;
 
+import de.thorstenberger.taskmodel.Annotation;
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskFactory;
 import de.thorstenberger.taskmodel.TaskModelPersistenceException;
@@ -41,6 +42,7 @@ import de.thorstenberger.taskmodel.impl.AbstractTasklet;
 /**
  * @author Thorsten Berger
  *
+ * TODO / FIXME : all lifecycle method should move to the container for thread safety reasons
  */
 public class ComplexTaskletImpl extends AbstractTasklet implements
 		ComplexTasklet {
@@ -139,8 +141,8 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 		
 		// ans Ende, sonst wird auch bei Exceptions, die beim Zusammenstellen der Aufgaben auftreten,
 		// ein inkonsistenter Zustand gespeichert
-		super.getTaskletCorrection().setPoints( null );
-		setStatus( Status.INPROGRESS );
+		super.getTaskletCorrection().reset();
+		setStatus( Status.INPROGRESS );		
 		
 		// und schließlich speichern
 		try {
@@ -149,7 +151,6 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 			// TODO change interface to be able to throw TaskApiExceptions from this method
 			throw new TaskModelPersistenceException( e );
 		}
-		
 		
 		// TODO TRY zurückgeben
 
@@ -380,20 +381,23 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#studentAnnotatesCorrection(java.lang.String)
 	 */
-	public void studentAnnotatesCorrection(String annotation) throws IllegalStateException {
+	public boolean studentAnnotatesCorrection(String annotation) throws IllegalStateException {
+		
+		boolean change = false;
 		
 		if( !hasOrPassedStatus( Status.CORRECTED ) )
-			throw new IllegalStateException( TaskHandlingConstants.STUDENT_MAY_ONLY_ANNOTATE_CORRECTED_TRY );
+			throw new IllegalStateException( TaskHandlingConstants.STUDENT_CAN_ONLY_ANNOTATE_CORRECTED_TRY );
 		
-		// TODO history
-		
-		if( getTaskletCorrection().getStudentAnnotations().size() > 0 )
+		if( getTaskletCorrection().getStudentAnnotations().size() > 0 && !getTaskletCorrection().getStudentAnnotations().get( 0 ).isAcknowledged() ){
 			getTaskletCorrection().getStudentAnnotations().remove( 0 );
+			change = true;
+		}
 		
-		if( annotation != null ){
+		if( annotation != null && annotation.trim().length() > 0 ){
 			getTaskletCorrection().addStudentAnnotation( annotation );
 			setStatus( Status.ANNOTATED );
 			addFlag( Tasklet.FLAG_HAS_STUDENT_ANNOTATION );
+			change = true;
 		}
 
 		try {
@@ -402,7 +406,33 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 			throw new TaskModelPersistenceException( e );
 		}
 		
+		return change;
+		
 	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#acknowledgeStudentAnnotation()
+	 */
+	public void acknowledgeStudentAnnotation() throws IllegalStateException {
+		
+		if( !hasOrPassedStatus( Status.ANNOTATED ) )
+			throw new IllegalStateException( TaskHandlingConstants.CORRECTOR_CAN_ONLY_ACKNOWLEDGE_IF_ANNOTATED );
+		
+		for( Annotation anno : getTaskletCorrection().getStudentAnnotations() ){
+			if( !anno.isAcknowledged() )
+				anno.setAcknowledged( true );
+		}
+		
+		setStatus( Status.ANNOTATION_ACKNOWLEDGED );
+		
+		try {
+			save();
+		} catch (TaskApiException e) {
+			throw new TaskModelPersistenceException( e );
+		}
+		
+	}
+	
 	
 
 }

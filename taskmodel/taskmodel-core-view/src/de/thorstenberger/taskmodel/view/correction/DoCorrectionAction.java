@@ -34,12 +34,14 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 
+import de.thorstenberger.taskmodel.Annotation;
 import de.thorstenberger.taskmodel.CorrectorDelegateObject;
 import de.thorstenberger.taskmodel.TaskModelViewDelegate;
 import de.thorstenberger.taskmodel.Tasklet;
 import de.thorstenberger.taskmodel.complex.ComplexTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
+import de.thorstenberger.taskmodel.view.DateUtil;
 import de.thorstenberger.taskmodel.view.ParserUtil;
 import de.thorstenberger.taskmodel.view.SubTaskViewFactory;
 import de.thorstenberger.taskmodel.view.SubTaskletInfoVO;
@@ -123,6 +125,16 @@ public class DoCorrectionAction extends Action {
 				civo.setAnnotation( tasklet.getTaskletCorrection().getCorrectorAnnotation() );
 				civo.setNumOfTry( tasklet.getComplexTaskHandlingRoot().getNumberOfTries() );
 				
+				List<CorrectionInfoVO.AnnotationInfoVO> acknowledgedAnnotations = new ArrayList<CorrectionInfoVO.AnnotationInfoVO>();
+				List<CorrectionInfoVO.AnnotationInfoVO> nonAcknowledgedAnnotations = new ArrayList<CorrectionInfoVO.AnnotationInfoVO>();
+				for( Annotation anno : tasklet.getTaskletCorrection().getStudentAnnotations() )
+					if( anno.isAcknowledged() )
+						acknowledgedAnnotations.add( civo.new AnnotationInfoVO( DateUtil.getStringFromMillis( anno.getDate() ), ParserUtil.escapeCR( anno.getText() ) ) );
+					else
+						nonAcknowledgedAnnotations.add( civo.new AnnotationInfoVO( DateUtil.getStringFromMillis( anno.getDate() ), ParserUtil.escapeCR( anno.getText() ) ) );
+				civo.setAcknowledgedAnnotations( acknowledgedAnnotations );
+				civo.setNonAcknowledgedAnnotations( nonAcknowledgedAnnotations );
+				civo.setCanAcknowledge( tasklet.getStatus() == Tasklet.Status.ANNOTATED );
 				
 				request.setAttribute( "Correction", civo );
 				

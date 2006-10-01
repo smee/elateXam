@@ -69,7 +69,9 @@ public interface ComplexTasklet extends Tasklet {
 	 */
 	public de.thorstenberger.taskmodel.complex.complextaskhandling.Try getSolutionOfLatestTry() throws IllegalStateException;
 	
-	public void studentAnnotatesCorrection( String annotation ) throws IllegalStateException;
+	public boolean studentAnnotatesCorrection( String annotation ) throws IllegalStateException;
+	
+	public void acknowledgeStudentAnnotation() throws IllegalStateException;
 
 	
 }

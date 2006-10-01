@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /**
  * 
  */
-package de.thorstenberger.taskmodel.view.correction;
+package de.thorstenberger.taskmodel.view;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -92,10 +93,11 @@ public class SaveStudentAnnotationAction extends Action {
 			
 			logPostData( request, ct );
 			
+			boolean saved;
 			
 			try {
 				
-				ct.studentAnnotatesCorrection( request.getParameter( "studentAnnotation") );
+				saved = ct.studentAnnotatesCorrection( request.getParameter( "studentAnnotation") );
 				
 			} catch (IllegalStateException e) {
 				errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( e.getMessage() ) );
@@ -104,8 +106,13 @@ public class SaveStudentAnnotationAction extends Action {
 				return mapping.findForward( "error" );
 			}
 			
-			msgs.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage("studentAnnotation.successful" ) );
-			saveMessages( request, msgs );
+			if( saved ){
+				msgs.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage("studentAnnotation.successful" ) );
+				saveMessages( request, msgs );
+			}else{
+				errors.add( ActionErrors.GLOBAL_MESSAGE, new ActionMessage("studentAnnotation.no_comment" ) );
+				saveErrors( request, errors );				
+			}
 			
 			return mapping.findForward( "success" );
 

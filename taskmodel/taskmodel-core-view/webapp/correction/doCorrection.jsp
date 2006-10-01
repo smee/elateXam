@@ -15,12 +15,14 @@
 
 <p class="header">L&ouml;sung von ${Correction.userId}</p>
 
+
+<table border="0" cellspacing="2" cellpadding="2" width="790">
+
 <form method="post" action="<html:rewrite action="/saveCorrection"/>">
 							<input type="hidden" name="userId" value="${Correction.userId}"/>
 							<input type="hidden" name="taskId" value="${Correction.taskId}"/>
 							<input type="hidden" name="selectedSubTaskletNum" value="${Correction.subTasklet.virtualSubTaskletNumber}"/>
 
-<table border="0" cellspacing="2" cellpadding="2" width="790">
   <tr bgcolor="#F2F9FF"> 
     <td colspan="2" valign="top"><img src="<%= request.getContextPath() %>/pics/exit.gif" width="20" height="16"> 
     	<html:link action="/tutorCorrectionOverview" paramId="taskId" paramName="Correction" paramProperty="taskId">Korrektur-Übersicht</html:link>
@@ -106,7 +108,9 @@
           <br>
 
         </div>
-      </fieldset></td>
+      </fieldset>
+          
+      </td>
           <td valign="top"> <fieldset><legend>Daten</legend> 
             <table border="0" cellspacing="2" cellpadding="2">
               <tr> 
@@ -146,9 +150,51 @@
 	 
 	  </td>
   </tr>
+  
+</form>
+
+  <tr bgcolor="#F2F9FF"> 
+    <td colspan="2" valign="top">
+
+      <fieldset><legend>Kommentare des Bearbeiters</legend>
+
+		<b>Unbestätigt:</b><br/>
+			<c:forEach items="${Correction.nonAcknowledgedAnnotations}" var="annotation">
+				<div class="newsheader">${annotation.date}</div>
+				<div class="newsbody">${annotation.text}</div>
+				<br/>
+			</c:forEach>
+		<c:if test="${Correction.canAcknowledge}">
+			<div align="right">
+				<form method="post" action="<html:rewrite action="/acknowledge"/>">
+					<input type="hidden" name="userId" value="${Correction.userId}"/>
+					<input type="hidden" name="taskId" value="${Correction.taskId}"/>
+					<input type="hidden" name="selectedSubTaskletNum" value="${Correction.subTasklet.virtualSubTaskletNumber}"/>
+					<input type="submit" name="acknowledged" value="Lesebestätigung setzen"/>
+				</form>
+			</div>
+		</c:if>
+
+		<br/><br/><b>Bestätigt:</b><br/>
+			<c:forEach items="${Correction.acknowledgedAnnotations}" var="annotation">
+				<div class="newsheader">${annotation.date}</div>
+				<div class="newsbody">${annotation.text}</div>
+				<br/>
+			</c:forEach>          
+
+          <br/><br/>
+
+        </div>
+      </fieldset>
+      <br/>
+    
+    </td>
+  </tr>
+
 </table>
 
-</form>
+
+
 
 <jsp:include page="../footer.jsp" />
 

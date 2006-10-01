@@ -18,7 +18,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 package de.thorstenberger.taskmodel.complex;
 
-import java.util.ResourceBundle;
 
 /**
  * @author Thorsten Berger
@@ -62,7 +61,9 @@ public class TaskHandlingConstants {
 	
 	public static final String CANNOT_CORRECT_TASK_NOT_SOLVED = "task.cannot_correct_task_not_solved";
 
-	public static final String STUDENT_MAY_ONLY_ANNOTATE_CORRECTED_TRY = "student.may.only.annotate.corrected.try";
+	public static final String STUDENT_CAN_ONLY_ANNOTATE_CORRECTED_TRY = "task.student_can_only_annotate_corrected_try";
+	
+	public static final String CORRECTOR_CAN_ONLY_ACKNOWLEDGE_IF_ANNOTATED = "task.corrector_can_only_acknowledge_if_annotated";
 	
 	
 }

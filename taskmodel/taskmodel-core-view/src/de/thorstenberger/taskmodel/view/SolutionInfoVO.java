@@ -21,6 +21,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.view;
 
+import java.util.List;
+
 /**
  * @author Thorsten Berger
  *
@@ -35,6 +37,48 @@ public class SolutionInfoVO {
 	
 	private long taskId;
 	
+	private boolean canAnnotate;
+	private String actualAnnotation;
+	private List<AnnotationInfoVO> annotations;
+	
+	
+	
+	/**
+	 * @return Returns the actualAnnotation.
+	 */
+	public String getActualAnnotation() {
+		return actualAnnotation;
+	}
+	/**
+	 * @param actualAnnotation The actualAnnotation to set.
+	 */
+	public void setActualAnnotation(String actualAnnotation) {
+		this.actualAnnotation = actualAnnotation;
+	}
+	/**
+	 * @return Returns the annotations.
+	 */
+	public List<AnnotationInfoVO> getAnnotations() {
+		return annotations;
+	}
+	/**
+	 * @param annotations The annotations to set.
+	 */
+	public void setAnnotations(List<AnnotationInfoVO> annotations) {
+		this.annotations = annotations;
+	}
+	/**
+	 * @return Returns the canAnnotate.
+	 */
+	public boolean isCanAnnotate() {
+		return canAnnotate;
+	}
+	/**
+	 * @param canAnnotate The canAnnotate to set.
+	 */
+	public void setCanAnnotate(boolean canAnnotate) {
+		this.canAnnotate = canAnnotate;
+	}
 	/**
 	 * @return Returns the login.
 	 */
@@ -106,6 +150,52 @@ public class SolutionInfoVO {
 	 */
 	public void setTaskId(long taskId) {
 		this.taskId = taskId;
+	}
+	
+	public boolean isHaveAnnotations(){
+		return annotations != null && annotations.size() > 0;
+	}
+	
+	public class AnnotationInfoVO{
+		
+		private String date;
+		private String text;
+		
+		/**
+		 * @param date
+		 * @param text
+		 */
+		public AnnotationInfoVO(String date, String text) {
+			super();
+			// TODO Auto-generated constructor stub
+			this.date = date;
+			this.text = text;
+		}
+		/**
+		 * @return Returns the date.
+		 */
+		public String getDate() {
+			return date;
+		}
+		/**
+		 * @param date The date to set.
+		 */
+		public void setDate(String date) {
+			this.date = date;
+		}
+		/**
+		 * @return Returns the text.
+		 */
+		public String getText() {
+			return text;
+		}
+		/**
+		 * @param text The text to set.
+		 */
+		public void setText(String text) {
+			this.text = text;
+		}
+		
 	}
 	
 }

@@ -40,8 +40,51 @@ public class CorrectionInfoVO {
 	private String annotation;
 	private int numOfTry;
 	
-	private SubTaskletInfoVO subTasklet;
+	private List<AnnotationInfoVO> acknowledgedAnnotations;
+	private List<AnnotationInfoVO> nonAcknowledgedAnnotations;
+	private boolean canAcknowledge;
 	
+	private SubTaskletInfoVO subTasklet;
+
+	
+	/**
+	 * @return Returns the canAcknowledge.
+	 */
+	public boolean isCanAcknowledge() {
+		return canAcknowledge;
+	}
+	/**
+	 * @param canAcknowledge The canAcknowledge to set.
+	 */
+	public void setCanAcknowledge(boolean canAcknowledge) {
+		this.canAcknowledge = canAcknowledge;
+	}
+	/**
+	 * @return Returns the acknowledgedAnnotations.
+	 */
+	public List<AnnotationInfoVO> getAcknowledgedAnnotations() {
+		return acknowledgedAnnotations;
+	}
+	/**
+	 * @param acknowledgedAnnotations The acknowledgedAnnotations to set.
+	 */
+	public void setAcknowledgedAnnotations(
+			List<AnnotationInfoVO> acknowledgedAnnotations) {
+		this.acknowledgedAnnotations = acknowledgedAnnotations;
+	}
+	/**
+	 * @return Returns the nonAcknowledgedAnnotations.
+	 */
+	public List<AnnotationInfoVO> getNonAcknowledgedAnnotations() {
+		return nonAcknowledgedAnnotations;
+	}
+	/**
+	 * @param nonAcknowledgedAnnotations The nonAcknowledgedAnnotations to set.
+	 */
+	public void setNonAcknowledgedAnnotations(
+			List<AnnotationInfoVO> nonAcknowledgedAnnotations) {
+		this.nonAcknowledgedAnnotations = nonAcknowledgedAnnotations;
+	}
 	/**
 	 * @return Returns the numOfTry.
 	 */
@@ -149,6 +192,48 @@ public class CorrectionInfoVO {
 	 */
 	public void setAnnotation(String annotation) {
 		this.annotation = annotation;
+	}
+	
+	public class AnnotationInfoVO{
+		
+		private String date;
+		private String text;
+		
+	/**
+	 * @param date
+	 * @param text
+	 */
+	public AnnotationInfoVO(String date, String text) {
+			super();
+			// TODO Auto-generated constructor stub
+			this.date = date;
+			this.text = text;
+		}
+		/**
+		 * @return Returns the date.
+		 */
+		public String getDate() {
+			return date;
+		}
+		/**
+		 * @param date The date to set.
+		 */
+		public void setDate(String date) {
+			this.date = date;
+		}
+		/**
+		 * @return Returns the text.
+		 */
+		public String getText() {
+			return text;
+		}
+		/**
+		 * @param text The text to set.
+		 */
+		public void setText(String text) {
+			this.text = text;
+		}
+		
 	}
 	
 //	public Map getFormMap(){

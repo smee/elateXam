@@ -41,13 +41,17 @@
    <forward name="error" path="/error.jsp"/>
    <forward name="success" path="/doCorrection.do"/>
   </action>
-  <action path="/saveStudentAnnotation" type="de.thorstenberger.taskmodel.view.correction.SaveStudentAnnotationAction">
+  <action path="/saveStudentAnnotation" type="de.thorstenberger.taskmodel.view.SaveStudentAnnotationAction">
    <forward name="error" path="/error.jsp"/>
    <forward name="success" path="/showSolution.do"/>
   </action>
   <action path="/viewAllTasklets" type="de.thorstenberger.taskmodel.view.correction.ViewAllTaskletsAction">
    <forward name="error" path="/error.jsp"/>
    <forward name="success" path="/correction/viewAllTasklets.jsp"/>
+  </action>
+  <action path="/acknowledge" type="de.thorstenberger.taskmodel.view.correction.AcknowledgeAction">
+   <forward name="success" path="/doCorrection.do"/>
+   <forward name="error" path="/error.jsp"/>
   </action>
  </action-mappings>
  <controller nocache="true"/>

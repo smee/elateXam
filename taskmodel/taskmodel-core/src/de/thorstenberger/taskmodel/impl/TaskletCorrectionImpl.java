@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 package de.thorstenberger.taskmodel.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.thorstenberger.taskmodel.Annotation;
@@ -48,6 +49,7 @@ public class TaskletCorrectionImpl implements TaskletCorrection {
 		this.corrector = corrector;
 		this.correctorHistory = correctorHistory;
 		this.studentAnnotations = studentAnnotations;
+		Collections.sort( studentAnnotations );
 	}
 
 	/* (non-Javadoc)
@@ -114,8 +116,8 @@ public class TaskletCorrectionImpl implements TaskletCorrection {
 	 * @see de.thorstenberger.taskmodel.TaskletCorrection#addStudentAnnotation(java.lang.String)
 	 */
 	public void addStudentAnnotation( String annotation ) {
-		Annotation a = new AnnotationImpl( annotation, System.currentTimeMillis() );
-		studentAnnotations.add( a );
+		Annotation a = new AnnotationImpl( annotation, System.currentTimeMillis(), false );
+		studentAnnotations.add( 0, a );
 	}
 
 	/* (non-Javadoc)
@@ -125,5 +127,17 @@ public class TaskletCorrectionImpl implements TaskletCorrection {
 		return studentAnnotations;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.TaskletCorrection#reset()
+	 */
+	public void reset() {
+		points = null;
+		annotation = null;
+		corrector = null;
+		correctorHistory = new ArrayList<String>();
+		studentAnnotations = new ArrayList<Annotation>();		
+	}
+
+	
 	
 }

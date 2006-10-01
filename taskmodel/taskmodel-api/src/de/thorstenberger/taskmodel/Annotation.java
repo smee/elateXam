@@ -25,10 +25,14 @@ package de.thorstenberger.taskmodel;
  * @author Thorsten Berger
  *
  */
-public interface Annotation {
+public interface Annotation extends Comparable{
 	
 	public long getDate();
 	
 	public String getText();
+	
+	public boolean isAcknowledged();
+	
+	public void setAcknowledged( boolean acknowledged );
 
 }

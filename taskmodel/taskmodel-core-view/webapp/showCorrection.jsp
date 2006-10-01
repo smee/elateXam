@@ -16,6 +16,8 @@
 	<%=pageContext.getAttribute("msg")%>
 </html:messages>
 
+<html:errors />
+
 <p class="header">L&ouml;sung von ${Solution.login}</p>
 
 <table border="0" cellspacing="2" cellpadding="2" width="790">
@@ -90,19 +92,29 @@
 	<td><br>
 	<fieldset><legend>Kommentierung</legend>
 		<c:choose>
-			<c:when test="${canAnnotate}">
+			<c:when test="${Solution.canAnnotate}">
 				Sie haben hier die Möglichkeit, die Korrektur Ihrer Aufgaben zu kommentieren. Bitte geben Sie zu jedem Kommentar die Nummer der betreffenden Aufgabe an.
 				<br><br>
 				<form method="post" action="<html:rewrite action="/saveStudentAnnotation"/>">
 					<input type="hidden" name="id" value="${Solution.taskId}"/>
 					<div align="center">
-					<textarea name="studentAnnotation" cols="80" rows="15" !onChange="setModified()" style="background-color: #FFFFDD;">${actualAnnotation}</textarea>
+					<textarea name="studentAnnotation" cols="80" rows="15" !onChange="setModified()" style="background-color: #FFFFDD;">${Solution.actualAnnotation}</textarea>
 					<input type="submit" name="save" value="Speichern"/>
 					</div>
 				</form>
 			</c:when>
 			<c:otherwise>Sie können erst kommentieren, wenn alle Aufgaben korrigiert wurden.</c:otherwise>
 		</c:choose>
+		<br/>
+		<c:if test="${Solution.haveAnnotations}">
+			<br/>
+			<b>Bestätigte frühere Kommentare:</b><br/><br/>
+			<c:forEach items="${Solution.annotations}" var="annotation">
+				<div class="newsheader">${annotation.date}</div>
+				<div class="newsbody">${annotation.text}</div>
+				<br/>
+			</c:forEach>
+		</c:if>
 	</fieldset><br>
 	</td>
   </tr>

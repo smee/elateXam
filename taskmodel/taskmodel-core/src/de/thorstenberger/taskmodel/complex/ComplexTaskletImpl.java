@@ -42,7 +42,7 @@ import de.thorstenberger.taskmodel.impl.AbstractTasklet;
 /**
  * @author Thorsten Berger
  *
- * TODO / FIXME : all lifecycle method should move to the container for thread safety reasons
+ * TODO / FIXME : all lifecycle methods should move to the container for thread safety reasons
  */
 public class ComplexTaskletImpl extends AbstractTasklet implements
 		ComplexTasklet {

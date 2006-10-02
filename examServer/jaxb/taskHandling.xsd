@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSPY v5 U (http://www.xmlspy.com) by tb (ul) -->
-<xs:schema targetNamespace="http://examServer.thorstenberger.de/taskHandling" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://examServer.thorstenberger.de/taskDefs" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema targetNamespace="http://examServer.thorstenberger.de/taskHandling" xmlns="http://examServer.thorstenberger.de/taskDefs" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:element name="taskHandling">
 		<xs:complexType>
 			<xs:sequence>
@@ -30,6 +30,7 @@
 									<xs:simpleContent>
 										<xs:extension base="xs:string">
 											<xs:attribute name="date" type="xs:long" use="required"/>
+											<xs:attribute name="acknowledged" type="xs:boolean" use="optional" default="false"/>
 										</xs:extension>
 									</xs:simpleContent>
 								</xs:complexType>

@@ -168,19 +168,19 @@ public class TaskHandlingDaoImpl implements TaskHandlingDao {
 		List<TaskletAnnotationVO> correctorAnnotationVOs = new ArrayList<TaskletAnnotationVO>();
 		while( it.hasNext() ){
 			CorrectorAnnotationType cat = (CorrectorAnnotationType)it.next();
-			correctorAnnotationVOs.add( new TaskletAnnotationVO( cat.getValue(), cat.getDate() == 0 ? null : cat.getDate() ) );
+			correctorAnnotationVOs.add( new TaskletAnnotationVO( cat.getValue(), cat.getDate() == 0 ? null : cat.getDate(), false ) );
 		}
 		// TODO the attribute "annotation" is deprecated
 		if( tt.getAnnotation() != null )
-			correctorAnnotationVOs.add( 0, new TaskletAnnotationVO( tt.getAnnotation(), null ) );
+			correctorAnnotationVOs.add( 0, new TaskletAnnotationVO( tt.getAnnotation(), null, false ) );
 		
 		ret.setCorrectorAnnotations( correctorAnnotationVOs );
 		
 		it = tt.getStudentAnnotation().iterator();
 		List<TaskletAnnotationVO> studentAnnotationVOs = new ArrayList<TaskletAnnotationVO>();
 		while( it.hasNext() ){
-			StudentAnnotationType cat = (StudentAnnotationType)it.next();
-			studentAnnotationVOs.add( new TaskletAnnotationVO( cat.getValue(), cat.getDate() ) );
+			StudentAnnotationType sat = (StudentAnnotationType)it.next();
+			studentAnnotationVOs.add( new TaskletAnnotationVO( sat.getValue(), sat.getDate(), sat.isAcknowledged() ) );
 		}
 		ret.setStudentAnnotations( studentAnnotationVOs );
 		
@@ -276,6 +276,7 @@ public class TaskHandlingDaoImpl implements TaskHandlingDao {
 				}
 				sat.setDate( tavo.getDate() );
 				sat.setValue( tavo.getText() );
+				sat.setAcknowledged( tavo.isAcknowledged() );
 				taskletType.getStudentAnnotation().add( sat );
 			}
 			

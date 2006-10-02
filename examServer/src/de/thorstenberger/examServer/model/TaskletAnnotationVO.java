@@ -29,16 +29,20 @@ public class TaskletAnnotationVO {
 
 	private String text;
 	private Long date;
-	
+	private boolean acknowledged;
+
+
 	/**
 	 * @param text
 	 * @param date
+	 * @param acknowledged
 	 */
-	public TaskletAnnotationVO(String text, Long date) {
+	public TaskletAnnotationVO(String text, Long date, boolean acknowledged) {
 		super();
 		// TODO Auto-generated constructor stub
 		this.text = text;
 		this.date = date;
+		this.acknowledged = acknowledged;
 	}
 	/**
 	 * @return Returns the date.
@@ -63,6 +67,18 @@ public class TaskletAnnotationVO {
 	 */
 	public void setText(String text) {
 		this.text = text;
+	}
+	/**
+	 * @return Returns the acknowledged.
+	 */
+	public boolean isAcknowledged() {
+		return acknowledged;
+	}
+	/**
+	 * @param acknowledged The acknowledged to set.
+	 */
+	public void setAcknowledged(boolean acknowledged) {
+		this.acknowledged = acknowledged;
 	}
 	
 	

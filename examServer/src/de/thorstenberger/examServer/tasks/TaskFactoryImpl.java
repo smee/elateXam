@@ -199,7 +199,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 		
 		List<Annotation> studentAnnotations = new ArrayList<Annotation>();
 		for( TaskletAnnotationVO tavo : taskletVO.getStudentAnnotations() )
-			studentAnnotations.add( new AnnotationImpl( tavo.getText(), tavo.getDate() ) );
+			studentAnnotations.add( new AnnotationImpl( tavo.getText(), tavo.getDate(), tavo.isAcknowledged() ) );
 		
 		TaskletCorrection correction =
 			new TaskletCorrectionImpl( taskletVO.getPoints(), correctorAnnotation,
@@ -327,7 +327,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 			}
 		} catch (IndexOutOfBoundsException e) {
 			if( tasklet.getTaskletCorrection().getCorrectorAnnotation() != null )
-				taskletVO.getCorrectorAnnotations().add( 0, new TaskletAnnotationVO( tasklet.getTaskletCorrection().getCorrectorAnnotation(), null ) );
+				taskletVO.getCorrectorAnnotations().add( 0, new TaskletAnnotationVO( tasklet.getTaskletCorrection().getCorrectorAnnotation(), null, false ) );
 			changed = true;
 		}
 		
@@ -374,7 +374,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 	private List<TaskletAnnotationVO> copyAnnotations( List<Annotation> annotations ){
 		List<TaskletAnnotationVO> ret = new ArrayList<TaskletAnnotationVO>();
 		for( Annotation a : annotations )
-			ret.add( new TaskletAnnotationVO( a.getText(), a.getDate() ) );
+			ret.add( new TaskletAnnotationVO( a.getText(), a.getDate(), a.isAcknowledged() ) );
 		return ret;
 	}
 

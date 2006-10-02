@@ -100,8 +100,14 @@
 	  <li><img src="<%= request.getContextPath() %>/pics/excel.gif" align="bottom"> <html:link href="excelReport/report_${Solutions.taskId}.xls">Gesamtliste als Excel-Datei</html:link>
 	</ul>
 	
-	</fieldset>
+	</fieldset><br/>
 </c:if>
+
+<fieldset><legend>Kommentierungsfunktion</legend>
+Bearbeiter können Ihre Korrektur kommentieren. Um darauf zu reagieren, sortieren Sie die Liste Ihrer Korrekturen <c:if test="${Solutions.privileged}">oder die Gesamtliste </c:if>nach
+der Statusspalte. Kommentierte Lösungen haben den Status <b>"annotated"</b>. In der Korrektursicht sehen Sie dann unten den/die Kommentar(e) des Bearbeiters. Dass Sie diese gelesen haben,
+bestätigen Sie mit dem Button "Lesebestätigung setzen", woraufhin der Status auf <b>"annotation_acknowledged"</b> gesetzt wird.	
+</fieldset>
 
 <jsp:include page="../footer.jsp" />
 

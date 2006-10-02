@@ -169,13 +169,13 @@ public class ShowSolutionAction extends Action {
 			if( ct.getTaskletCorrection().getStudentAnnotations().size() > 0 )
 //				request.setAttribute( "actualAnnotation", ct.getTaskletCorrection().getStudentAnnotations().get( 0 ).getText() );
 				if( !ct.getTaskletCorrection().getStudentAnnotations().get( 0 ).isAcknowledged() )
-						sivo.setActualAnnotation( ct.getTaskletCorrection().getStudentAnnotations().get( 0 ).getText() );
+						sivo.setActualAnnotation( ParserUtil.escapeCR( ct.getTaskletCorrection().getStudentAnnotations().get( 0 ).getText() ) );
 		}
 		
 		List<SolutionInfoVO.AnnotationInfoVO> annotations = new ArrayList<SolutionInfoVO.AnnotationInfoVO>();
 		for( Annotation anno : ct.getTaskletCorrection().getStudentAnnotations() )
 			if( anno.isAcknowledged() )
-				annotations.add( sivo.new AnnotationInfoVO( DateUtil.getStringFromMillis( anno.getDate() ), anno.getText() ) );
+				annotations.add( sivo.new AnnotationInfoVO( DateUtil.getStringFromMillis( anno.getDate() ), ParserUtil.escapeCR( anno.getText() ) ) );
 		sivo.setAnnotations( annotations );
 		
     	return mapping.findForward( "success" );

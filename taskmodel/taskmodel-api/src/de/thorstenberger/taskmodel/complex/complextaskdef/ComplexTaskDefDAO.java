@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.complex.complextaskdef;
 
-import java.io.File;
+import java.io.InputStream;
 
 import de.thorstenberger.taskmodel.TaskApiException;
 
@@ -34,6 +34,6 @@ public interface ComplexTaskDefDAO {
 	/**
 	 * @return
 	 */
-	public ComplexTaskDefRoot getComplexTaskDefRoot( File complexTaskFile ) throws TaskApiException;
+	public ComplexTaskDefRoot getComplexTaskDefRoot( InputStream complexTaskIS ) throws TaskApiException;
 	
 }

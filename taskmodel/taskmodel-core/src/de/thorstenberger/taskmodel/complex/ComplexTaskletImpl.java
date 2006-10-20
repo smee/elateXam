@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.complex;
 
-import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 
 import de.thorstenberger.taskmodel.Annotation;
@@ -52,7 +52,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 	private ComplexTaskDefRoot complexTaskDefRoot;
 	private ComplexTaskHandlingRoot complexTaskHandlingRoot;
 	private ComplexTaskHandlingDAO complexTaskHandlingDAO;
-	private File xmlComplexTaskHandlingFile;
+	private InputStream complexTaskletIS;
 	private ComplexTaskBuilder complexTaskBuilder;
 	
 	/**
@@ -63,15 +63,15 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 	 * @param taskletCorrection
 	 */
 	public ComplexTaskletImpl(TaskFactory taskFactory, ComplexTaskBuilder complexTaskBuilder, String userId,
-			long taskId, Tasklet.Status status, List<String> flags, TaskletCorrection taskletCorrection, TaskDef_Complex complexTaskDef, ComplexTaskHandlingDAO complexTaskHandlingDAO, File xmlComplexTaskHandlingFile ) {
+			long taskId, Tasklet.Status status, List<String> flags, TaskletCorrection taskletCorrection, TaskDef_Complex complexTaskDef, ComplexTaskHandlingDAO complexTaskHandlingDAO, InputStream complexTaskletIS ) {
 		
 		super(taskFactory, userId, taskId, status, flags, taskletCorrection );
 		
 		this.complexTaskDef = complexTaskDef;
 		this.complexTaskDefRoot = complexTaskDef.getComplexTaskDefRoot();
 		this.complexTaskHandlingDAO = complexTaskHandlingDAO;
-		this.xmlComplexTaskHandlingFile = xmlComplexTaskHandlingFile;
-		this.complexTaskHandlingRoot = complexTaskHandlingDAO.getComplexTaskHandlingRoot( xmlComplexTaskHandlingFile, complexTaskDefRoot );
+		this.complexTaskletIS = complexTaskletIS;
+		this.complexTaskHandlingRoot = complexTaskHandlingDAO.getComplexTaskHandlingRoot( complexTaskletIS, complexTaskDefRoot );
 		this.complexTaskBuilder = complexTaskBuilder;
 		
 		update();
@@ -335,7 +335,8 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 		super.save();
 		
 		// make the DOM persistent
-		complexTaskHandlingDAO.save( complexTaskHandlingRoot, xmlComplexTaskHandlingFile );
+//		complexTaskHandlingDAO.save( complexTaskHandlingRoot, xmlComplexTaskHandlingFile );
+		// should now be done by the TaskFactory
 	}
 
 	

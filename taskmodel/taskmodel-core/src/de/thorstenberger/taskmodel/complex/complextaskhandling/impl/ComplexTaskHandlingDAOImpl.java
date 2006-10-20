@@ -23,11 +23,9 @@ package de.thorstenberger.taskmodel.complex.complextaskhandling.impl;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -68,38 +66,22 @@ public class ComplexTaskHandlingDAOImpl implements ComplexTaskHandlingDAO {
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.ComplexTaskHandlingDAO#getComplexTaskHandlingRoot(java.io.File, de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot)
 	 */
 	public ComplexTaskHandlingRoot getComplexTaskHandlingRoot(
-			File xmlComplexTaskHandlingFile, ComplexTaskDefRoot complexTaskDefRoot) {
+			InputStream complexTaskletIS, ComplexTaskDefRoot complexTaskDefRoot) {
 
 		ObjectFactory objectFactory = new ObjectFactory();
-		ComplexTaskHandling complexTaskHandlingElem;
+		ComplexTaskHandling complexTaskHandlingElem;		
 		
-		try {
-			
-			// create it for the first time
-			if( xmlComplexTaskHandlingFile == null || !xmlComplexTaskHandlingFile.exists() || xmlComplexTaskHandlingFile.length() == 0 ){
-				complexTaskHandlingElem = objectFactory.createComplexTaskHandling();
-				save( xmlComplexTaskHandlingFile, complexTaskHandlingElem );
-				return new ComplexTaskHandlingRootImpl( complexTaskDefRoot, complexTaskFactory, complexTaskHandlingElem );
-			}
-			
-		} catch (IllegalArgumentException e) {
-			throw new TaskModelPersistenceException( e );
-		} catch (JAXBException e) {
-			throw new TaskModelPersistenceException( e );
-		}
-		
-		
-		BufferedInputStream bis;
-		try {
-			bis = new BufferedInputStream( new FileInputStream( xmlComplexTaskHandlingFile ) );
-		} catch (FileNotFoundException e3) {
-			throw new TaskModelPersistenceException( e3 );
-		}
+		BufferedInputStream bis = new BufferedInputStream( complexTaskletIS );
 		Unmarshaller unmarshaller;
 		try {
 			unmarshaller = jc.createUnmarshaller();
 			unmarshaller.setValidating( true );
 			complexTaskHandlingElem = (ComplexTaskHandling) unmarshaller.unmarshal( bis );
+
+			// create it for the first time
+			if( complexTaskHandlingElem == null )
+				complexTaskHandlingElem = objectFactory.createComplexTaskHandling();
+			
 //			bis.close();
 
 		} catch (JAXBException e1) {
@@ -119,19 +101,14 @@ public class ComplexTaskHandlingDAOImpl implements ComplexTaskHandlingDAO {
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.ComplexTaskHandlingDAO#save(de.thorstenberger.taskmodel.complex.complextaskhandling.ComplexTaskHandlingRoot)
 	 */
-	public void save(ComplexTaskHandlingRoot complexTaskHandlingRoot, File xmlComplexTaskHandlingFile ) {
+	public void save(ComplexTaskHandlingRoot complexTaskHandlingRoot, OutputStream complexTaskletOS ) {
 		ComplexTaskHandlingRootImpl impl = (ComplexTaskHandlingRootImpl)complexTaskHandlingRoot;
-		save( xmlComplexTaskHandlingFile, impl.getComplexTaskHandlingElem() );
+		save( complexTaskletOS, impl.getComplexTaskHandlingElem() );
 	}
 
-	private void save( File xmlComplexTaskHandlingFile, ComplexTaskHandling complexTaskHandlingElem ){
+	private void save( OutputStream complexTaskletOS, ComplexTaskHandling complexTaskHandlingElem ){
 		
-		BufferedOutputStream bos;
-		try {
-			bos = new BufferedOutputStream( new FileOutputStream( xmlComplexTaskHandlingFile ) );
-		} catch (FileNotFoundException e2) {
-			throw new TaskModelPersistenceException( e2 );
-		}
+		BufferedOutputStream bos = new BufferedOutputStream( complexTaskletOS );
 		
 		try {
 			

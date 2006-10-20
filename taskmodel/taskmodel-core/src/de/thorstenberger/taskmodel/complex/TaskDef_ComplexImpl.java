@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.complex;
 
-import java.io.File;
+import java.io.InputStream;
 
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskContants;
@@ -36,9 +36,9 @@ import de.thorstenberger.taskmodel.impl.AbstractTaskDef;
  */
 public class TaskDef_ComplexImpl extends AbstractTaskDef implements TaskDef_Complex {
 
-	private File xmlTaskDefFile;
 	private boolean showCorrectionToUsers;
 	
+	private InputStream complexTaskIS;
 	private ComplexTaskDefDAO complexTaskDefDAO;
 	private ComplexTaskDefRoot complexTaskDefRoot;
 	
@@ -50,18 +50,13 @@ public class TaskDef_ComplexImpl extends AbstractTaskDef implements TaskDef_Comp
 	 * @param deadline
 	 * @param stopped
 	 */
-	public TaskDef_ComplexImpl(long id, String title, String shortDescription, Long deadline, boolean stopped, ComplexTaskDefDAO complexTaskDefDAO ) {
+	public TaskDef_ComplexImpl(long id, String title, String shortDescription, Long deadline, boolean stopped, ComplexTaskDefDAO complexTaskDefDAO, InputStream complexTaskIS ) {
 		super(id, title, shortDescription, deadline, stopped);
 
 		this.complexTaskDefDAO = complexTaskDefDAO;
+		this.complexTaskIS = complexTaskIS;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.complex.TaskDef_Complex#getXmlTaskDefFile(java.io.File)
-	 */
-	public File getXmlTaskDefFile() {
-		return xmlTaskDefFile;
-	}
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.TaskDef_Complex#isShowCorrectionToUsers()
@@ -84,12 +79,6 @@ public class TaskDef_ComplexImpl extends AbstractTaskDef implements TaskDef_Comp
 		this.showCorrectionToUsers = showCorrectionToUsers;
 	}
 
-	/**
-	 * @param xmlTaskDefFile The xmlTaskDefFile to set.
-	 */
-	public void setXmlTaskDefFile(File xmlTaskDefFile) {
-		this.xmlTaskDefFile = xmlTaskDefFile;
-	}
 
 	/**
 	 * @return Returns the complexTaskDefRoot.
@@ -97,7 +86,7 @@ public class TaskDef_ComplexImpl extends AbstractTaskDef implements TaskDef_Comp
 	public ComplexTaskDefRoot getComplexTaskDefRoot() {
 		try {
 			if( complexTaskDefRoot == null )
-				complexTaskDefRoot = complexTaskDefDAO.getComplexTaskDefRoot( xmlTaskDefFile );
+				complexTaskDefRoot = complexTaskDefDAO.getComplexTaskDefRoot( complexTaskIS );
 		} catch (TaskApiException e) {
 			throw new TaskModelPersistenceException( e );
 		}

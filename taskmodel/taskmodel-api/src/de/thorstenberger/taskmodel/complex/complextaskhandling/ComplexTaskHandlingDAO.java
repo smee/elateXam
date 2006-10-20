@@ -21,7 +21,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.complex.complextaskhandling;
 
-import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
 
@@ -31,8 +32,8 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
  */
 public interface ComplexTaskHandlingDAO {
 	
-	public ComplexTaskHandlingRoot getComplexTaskHandlingRoot( File xmlTaskHandlingFile, ComplexTaskDefRoot complexTaskDefRoot );
+	public ComplexTaskHandlingRoot getComplexTaskHandlingRoot( InputStream complexTaskletIS, ComplexTaskDefRoot complexTaskDefRoot );
 	
-	public void save( ComplexTaskHandlingRoot complexTaskHandlingRoot, File xmlTaskHandlingFile );
+	public void save( ComplexTaskHandlingRoot complexTaskHandlingRoot, OutputStream complexTaskletOS );
 	
 }

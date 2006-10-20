@@ -22,9 +22,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 package de.thorstenberger.taskmodel.complex.complextaskdef.impl;
 
 import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -55,7 +54,7 @@ public class ComplexTaskDefDAOImpl implements ComplexTaskDefDAO {
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefDAO#getComplexTaskDefRoot(java.io.File)
 	 */
-	public ComplexTaskDefRoot getComplexTaskDefRoot( File complexTaskFile ) throws TaskApiException {
+	public ComplexTaskDefRoot getComplexTaskDefRoot( InputStream complexTaskIS ) throws TaskApiException {
 		JAXBContext jc;
 		ComplexTaskDef complexTask;
 		try {
@@ -69,7 +68,7 @@ public class ComplexTaskDefDAOImpl implements ComplexTaskDefDAO {
 		try {
 			unmarshaller = jc.createUnmarshaller();
 			unmarshaller.setValidating( true );
-			BufferedInputStream bis = new BufferedInputStream( new FileInputStream( complexTaskFile ) );
+			BufferedInputStream bis = new BufferedInputStream( complexTaskIS );
 			complexTask = (ComplexTaskDef) unmarshaller.
 				unmarshal( bis );
 			bis.close();

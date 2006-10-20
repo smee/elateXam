@@ -21,8 +21,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.complex;
 
-import java.io.File;
-
 import de.thorstenberger.taskmodel.TaskDef;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
 
@@ -32,7 +30,7 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
  */
 public interface TaskDef_Complex extends TaskDef{
 
-	public File getXmlTaskDefFile();
+//	public File getXmlTaskDefFile();
 	
 	public boolean isShowCorrectionToUsers();
 	

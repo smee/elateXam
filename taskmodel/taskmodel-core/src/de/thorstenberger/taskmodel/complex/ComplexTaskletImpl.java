@@ -303,7 +303,8 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 			
 			if( allCorrected ){
 				getTaskletCorrection().setPoints( points );
-				setStatus( Status.CORRECTED );
+				if( getStatus() != Status.ANNOTATED && getStatus() != Status.ANNOTATION_ACKNOWLEDGED )
+					setStatus( Status.CORRECTED );
 			}
 			
         }

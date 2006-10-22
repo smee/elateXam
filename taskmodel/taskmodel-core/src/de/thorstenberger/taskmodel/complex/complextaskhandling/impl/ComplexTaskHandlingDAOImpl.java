@@ -74,18 +74,27 @@ public class ComplexTaskHandlingDAOImpl implements ComplexTaskHandlingDAO {
 		BufferedInputStream bis = new BufferedInputStream( complexTaskletIS );
 		Unmarshaller unmarshaller;
 		try {
-			unmarshaller = jc.createUnmarshaller();
-			unmarshaller.setValidating( true );
-			complexTaskHandlingElem = (ComplexTaskHandling) unmarshaller.unmarshal( bis );
-
-			// create it for the first time
-			if( complexTaskHandlingElem == null )
-				complexTaskHandlingElem = objectFactory.createComplexTaskHandling();
 			
-//			bis.close();
+			if( bis.available() <= 0 ){
+				// create it for the first time
+				complexTaskHandlingElem = objectFactory.createComplexTaskHandling();
 
+			}else{
+			
+				unmarshaller = jc.createUnmarshaller();
+				unmarshaller.setValidating( true );
+				complexTaskHandlingElem = (ComplexTaskHandling) unmarshaller.unmarshal( bis );
+	
+				// create it for the first time
+				if( complexTaskHandlingElem == null )
+					complexTaskHandlingElem = objectFactory.createComplexTaskHandling();
+			
+			}
+			
 		} catch (JAXBException e1) {
 			throw new TaskModelPersistenceException( e1 );
+		} catch( IOException e2 ){
+			throw new TaskModelPersistenceException( e2 );
 		} finally{
 			try {
 				bis.close();
@@ -117,8 +126,6 @@ public class ComplexTaskHandlingDAOImpl implements ComplexTaskHandlingDAO {
 			validator.validate( complexTaskHandlingElem );
 			marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true) );
 			marshaller.marshal( complexTaskHandlingElem, bos );
-			
-//			bos.close();
 			
 		} catch (JAXBException e) {
 			throw new TaskModelPersistenceException( e );

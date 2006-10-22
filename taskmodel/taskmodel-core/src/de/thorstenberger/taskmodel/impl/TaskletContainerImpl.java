@@ -127,10 +127,10 @@ public class TaskletContainerImpl implements TaskletContainer {
 	 * @see de.thorstenberger.taskmodel.TaskletContainer#calculateStatistics(long)
 	 */
 	public TaskStatistics calculateStatistics(long taskId) throws TaskApiException {
-		System.out.println( "start calculateStatistics");
-		long start = System.currentTimeMillis();
+//		System.out.println( "start calculateStatistics");
+//		long start = System.currentTimeMillis();
 		List<Tasklet> tasklets = getTaskletsHelper( taskId );
-		System.out.println( System.currentTimeMillis() - start );
+//		System.out.println( System.currentTimeMillis() - start );
 		int numOfSolutions = 0;
 		int numOfCorrectedSolutions = 0;
 		int numOfAssignedSolutions = 0;
@@ -150,7 +150,7 @@ public class TaskletContainerImpl implements TaskletContainer {
 			
 			}
 		}
-		System.out.println( System.currentTimeMillis() - start );
+//		System.out.println( System.currentTimeMillis() - start );
 		return new TaskStatisticsImpl( taskId, numOfSolutions, numOfCorrectedSolutions, numOfAssignedSolutions );
 
 		

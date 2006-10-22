@@ -22,6 +22,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 package de.thorstenberger.examServer.tasks;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +51,7 @@ import de.thorstenberger.taskmodel.TaskDef;
 import de.thorstenberger.taskmodel.TaskFactory;
 import de.thorstenberger.taskmodel.TaskFilter;
 import de.thorstenberger.taskmodel.TaskFilterException;
+import de.thorstenberger.taskmodel.TaskModelPersistenceException;
 import de.thorstenberger.taskmodel.Tasklet;
 import de.thorstenberger.taskmodel.TaskletCorrection;
 import de.thorstenberger.taskmodel.TaskmodelUtil;
@@ -133,9 +138,14 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 	public TaskDef getTaskDef(long taskId) {
 		TaskDefVO t = taskDefDao.getTaskDef( taskId );
 		
-		TaskDef_ComplexImpl ret = new TaskDef_ComplexImpl( t.getId(), t.getTitle(), t.getShortDescription(), t.getDeadline(), t.isStopped(), complexTaskDefDAO );
+		TaskDef_ComplexImpl ret;
+		try {
+			ret = new TaskDef_ComplexImpl( t.getId(), t.getTitle(),
+					t.getShortDescription(), t.getDeadline(), t.isStopped(), complexTaskDefDAO, new FileInputStream( examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.TASKDEFS + File.separatorChar + t.getComplexTaskFile() ) );
+		} catch (FileNotFoundException e) {
+			throw new TaskModelPersistenceException( e );
+		}
 		ret.setShowCorrectionToUsers( t.isShowSolutionToStudents() );
-		ret.setXmlTaskDefFile( new File( examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.TASKDEFS + File.separatorChar + t.getComplexTaskFile() ) );
 		
 		return ret;
 		
@@ -151,9 +161,14 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 		
 		for( TaskDefVO t : taskDefVOs ){
 			
-			TaskDef_ComplexImpl tdci = new TaskDef_ComplexImpl( t.getId(), t.getTitle(), t.getShortDescription(), t.getDeadline(), t.isStopped(), complexTaskDefDAO );
+			TaskDef_ComplexImpl tdci;
+			try {
+				tdci = new TaskDef_ComplexImpl( t.getId(), t.getTitle(),
+						t.getShortDescription(), t.getDeadline(), t.isStopped(), complexTaskDefDAO, new FileInputStream( examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.TASKDEFS + File.separatorChar + t.getComplexTaskFile() ) );
+			} catch (FileNotFoundException e) {
+				throw new TaskModelPersistenceException( e );
+			}
 			tdci.setShowCorrectionToUsers( t.isShowSolutionToStudents() );
-			tdci.setXmlTaskDefFile( new File( examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.TASKDEFS + File.separatorChar + t.getComplexTaskFile() ) );
 			ret.add( tdci );
 			
 		}
@@ -205,9 +220,17 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 			new TaskletCorrectionImpl( taskletVO.getPoints(), correctorAnnotation,
 										taskletVO.getCorrectorLogin(), taskletVO.getCorrectorHistory(), studentAnnotations );			
 			
+		FileInputStream fis;
+		try {
+			if( !complexTaskHandlingFile.exists() )
+				complexTaskHandlingFile.createNewFile();
+			fis = new FileInputStream( complexTaskHandlingFile );
+		}catch( IOException e ){
+			throw new TaskModelPersistenceException( e );
+		}
 		ComplexTasklet tasklet =
 			new ComplexTaskletImpl( this, complexTaskBuilder, taskletVO.getLogin(), taskDefVO.getId(), 
-					TaskmodelUtil.getStatus( taskletVO.getStatus() ), taskletVO.getFlags() , correction, (TaskDef_Complex)getTaskDef( taskDefVO.getId() ), complexTaskHandlingDAO, complexTaskHandlingFile );
+					TaskmodelUtil.getStatus( taskletVO.getStatus() ), taskletVO.getFlags(), correction, (TaskDef_Complex)getTaskDef( taskDefVO.getId() ), complexTaskHandlingDAO, fis );
 		
 		return tasklet;
 			
@@ -365,6 +388,19 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 			}		
 		}
 			
+		if( tasklet instanceof ComplexTasklet ){
+			
+			// get the taskHandling xml file!
+			File homeDir = new File( examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.HOME + File.separatorChar + tasklet.getUserId() );
+			File complexTaskHandlingFile = new File( homeDir.getAbsolutePath() + File.separatorChar +  COMPLEX_TASKHANDLING_FILE_PREFIX + tasklet.getTaskId() + COMPLEX_TASKHANDLING_FILE_SUFFIX );
+			
+			ComplexTasklet ct = (ComplexTasklet)tasklet;
+			try {
+				complexTaskHandlingDAO.save( ct.getComplexTaskHandlingRoot(), new FileOutputStream( complexTaskHandlingFile ) );
+			} catch (FileNotFoundException e) {
+				throw new TaskModelPersistenceException( e );
+			}
+		}
 		
 		if( changed )
 			taskHandlingDao.saveTasklet( taskletVO );

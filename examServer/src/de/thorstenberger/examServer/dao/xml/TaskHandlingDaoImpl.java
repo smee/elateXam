@@ -371,7 +371,7 @@ public class TaskHandlingDaoImpl implements TaskHandlingDao {
 			Iterator it = taskHandling.getTasklet().iterator();
 			while( it.hasNext() ){
 				TaskletType taskletType = (TaskletType)it.next();
-				if( correctorId.equals( taskletType.getCorrectorLogin() ) )
+				if( taskletType.getTaskDefId() == taskId && correctorId.equals( taskletType.getCorrectorLogin() ) )
 					ret.add( taskletType.getLogin() );
 			}
 			

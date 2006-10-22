@@ -4,7 +4,5 @@ http://www.jaxfront.com
 
 In particular, you need:
 jaxfront-core.jar
-jaxfront-demo.jar
-jaxfront-pdf.jar
 jaxfront-swing.jar
 jaxfront-xuieditor.jar

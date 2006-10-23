@@ -45,6 +45,12 @@
             </properties>
         </dependency>
         <dependency>
+            <groupId>elate</groupId>
+            <artifactId>taskmodel-core-view</artifactId>
+            <version>${elate.version}</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
             <groupId>servletapi</groupId>
             <artifactId>servletapi</artifactId>
             <version>2.4</version>

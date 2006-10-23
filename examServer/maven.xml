@@ -3,13 +3,24 @@
 	<!-- Deploy                                                                                        -->
 	<!-- ================================================================ -->
 	<goal name="deploy">
-		<echo message="Deploy portal war into ${tomcat.deploy.war.dir}"/>
+		<echo message="Deploy examServer war into ${tomcat.deploy.war.dir}"/>
 		
 		<copy todir="${tomcat.deploy.war.dir}" file="${maven.build.dir}/${maven.war.final.name}" overwrite="true"/>		
 	</goal>	
 	
 	<preGoal name="deploy">
 		<attainGoal name= "war:install"/>
+		
+	    <j:forEach var="lib" items="${pom.artifacts}">
+	      <j:set var="dep" value="${lib.dependency}"/>
+	      <j:if test="${dep.artifactId=='taskmodel-core-view'}">
+			<copy tofile="${tomcat.deploy.war.dir}/taskmodel-core-view.war" file="${lib.path}"/>
+	      </j:if>
+   	      <j:if test="${dep.artifactId=='taskmodel-api'}">
+			<copy todir="${tomcat.shared.lib.dir}" file="${lib.path}"/>
+	      </j:if>
+	    </j:forEach>             
+	    
 	</preGoal>
 		
 	<goal name="undeploy">

@@ -106,26 +106,25 @@ public class SaveCorrectionAction extends Action {
 			}
 			
 			CorrectionSubmitData csd;
-
-			// save correctionData
-			if( selectedSubTasklet != null ){
 				
-				try {
-					csd = getCorrectionSubmitData( request, selectedSubTasklet );
-				} catch (ParsingException e) {
-					errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "parsing.error" ) );
-					saveErrors( request, errors );
-					return mapping.findForward( "error" );
-				}
+			try {
+				csd = getCorrectionSubmitData( request, selectedSubTasklet );
+			} catch (ParsingException e) {
+				errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "parsing.error" ) );
+				saveErrors( request, errors );
+				return mapping.findForward( "error" );
+			}
 				
-			}else{
+			boolean correctSubtasklet = true;
+			if( csd == null ){
 				csd = new CorrectionSubmitDataImpl();
+				correctSubtasklet = false;
 			}
 
 			csd.setAnnotation( request.getParameter( "annotation" ) );
 				
 			try {
-				tasklet.doManualCorrection( selectedSubTasklet, csd );
+				tasklet.doManualCorrection( correctSubtasklet? selectedSubTasklet : null, csd );
 			} catch (IllegalStateException e) {
 				errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( e.getMessage() ) );
 				saveErrors( request, errors );
@@ -145,15 +144,24 @@ public class SaveCorrectionAction extends Action {
 			Map subTaskVarMap = new HashMap();
 			while( varNames.hasMoreElements() ){
 			    String varName = (String) varNames.nextElement();
-			    if( varName.startsWith( "task[0].") )
-			        subTaskVarMap.put( varName, request.getParameter(varName) );
+			    if( varName.startsWith( "task[0].") ){
+			    	String value = request.getParameter( varName );
+			    	if( value != null && value.trim().length() > 0 )
+			    		subTaskVarMap.put( varName, request.getParameter(varName) );
+			    }
 			}
 			
-			try {
-				return SubTaskViewFactory.getSubTaskView( subtasklet ).getCorrectionSubmitData( subTaskVarMap );
-			} catch (MethodNotSupportedException e) {
-				return new CorrectionSubmitDataImpl();
-			}
+			if( !subTaskVarMap.isEmpty() ){
+				
+				try {
+					return SubTaskViewFactory.getSubTaskView( subtasklet ).getCorrectionSubmitData( subTaskVarMap );
+				} catch (MethodNotSupportedException e) {
+					return null;
+				}
+				
+			}else
+				return null;
+				
 		
 	}
 

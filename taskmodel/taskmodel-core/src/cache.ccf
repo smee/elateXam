@@ -1,19 +1,19 @@
-# DEFAULT CACHE REGION   
+# taskmodel-core_userObjectCache CACHE REGION
 
-jcs.default=
-jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.default.cacheattributes.MaxObjects=3000
-jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
-jcs.default.cacheattributes.UseMemoryShrinker=false
-jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
-jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
-jcs.default.elementattributes=org.apache.jcs.engine.ElementAttributes
-jcs.default.elementattributes.IsEternal=false
-jcs.default.elementattributes.MaxLifeSeconds=7200
-jcs.default.elementattributes.IdleTime=3600
-jcs.default.elementattributes.IsSpool=false
-jcs.default.elementattributes.IsRemote=false
-jcs.default.elementattributes.IsLateral=false  
+jcs.taskmodel-core_userObjectCache=
+jcs.taskmodel-core_userObjectCache.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.taskmodel-core_userObjectCache.cacheattributes.MaxObjects=3000
+jcs.taskmodel-core_userObjectCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.taskmodel-core_userObjectCache.cacheattributes.UseMemoryShrinker=false
+jcs.taskmodel-core_userObjectCache.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.taskmodel-core_userObjectCache.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.taskmodel-core_userObjectCache.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.taskmodel-core_userObjectCache.elementattributes.IsEternal=false
+jcs.taskmodel-core_userObjectCache.elementattributes.MaxLifeSeconds=7200
+jcs.taskmodel-core_userObjectCache.elementattributes.IdleTime=3600
+jcs.taskmodel-core_userObjectCache.elementattributes.IsSpool=false
+jcs.taskmodel-core_userObjectCache.elementattributes.IsRemote=false
+jcs.taskmodel-core_userObjectCache.elementattributes.IsLateral=false  
     
 
 ## sets the default aux value for any non configured caches

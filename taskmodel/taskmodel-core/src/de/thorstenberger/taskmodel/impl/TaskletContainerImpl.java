@@ -52,7 +52,7 @@ public class TaskletContainerImpl implements TaskletContainer {
 	public TaskletContainerImpl( TaskFactory taskFactory ) {
 		this.taskFactory = taskFactory;
 		try {
-			this.userObjectCache = JCS.getInstance( "userObjectCache" );
+			this.userObjectCache = JCS.getInstance( "taskmodel-core_userObjectCache" );
 		} catch (CacheException e) {
 			throw new TaskModelPersistenceException( e );
 		}

@@ -8,9 +8,3 @@ jaxfront-swing.jar
 jaxfront-pdf.jar
 jaxfront-xuieditor.jar
 
-Please rename them to:
-
-jaxfront-core-1.0.jar
-jaxfront-swing-1.0.jar
-jaxfront-pdf-1.0.jar
-jaxfront-xuieditor-1.0.jar

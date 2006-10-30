@@ -82,25 +82,25 @@
             <groupId>jaxfront</groupId>
             <artifactId>jaxfront-core</artifactId>
             <type>jar</type>
-	    <version>1.0</version>
+	    <version>${jaxfront.version}</version>
         </dependency>
         <dependency>
             <groupId>jaxfront</groupId>
             <artifactId>jaxfront-swing</artifactId>
             <type>jar</type>
-	  <version>1.0</version>
+	  <version>${jaxfront.version}</version>
         </dependency>
         <dependency>
             <groupId>jaxfront</groupId>
             <artifactId>jaxfront-pdf</artifactId>
             <type>jar</type>
-	  <version>1.0</version>
+	  <version>${jaxfront.version}</version>
         </dependency>
         <dependency>
             <groupId>jaxfront</groupId>
             <artifactId>jaxfront-xuieditor</artifactId>
             <type>jar</type>
-	  <version>1.0</version>
+	  <version>${jaxfront.version}</version>
         </dependency>
     </dependencies>
     <build>

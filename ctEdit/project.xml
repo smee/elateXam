@@ -105,6 +105,17 @@
     </dependencies>
     <build>
         <sourceDirectory>src/</sourceDirectory>
+	<resources>
+	  <resource>
+	  <directory>${basedir}/resources</directory>
+	  <includes>
+	     <include>**/*.xsd</include>
+	     <include>**/*.xui</include>
+	     <include>**/*.nls</include>
+	     <include>**/*.properties</include>
+	  </includes>
+	  </resource>
+	</resources>
         <unitTest>
             <includes>
                 <include>**/*Test.java</include>

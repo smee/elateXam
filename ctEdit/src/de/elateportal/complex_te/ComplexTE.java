@@ -58,12 +58,12 @@ public class ComplexTE extends JFrame
 //	private final static int divider_location = 550;
 	
 	// static pathes for the xsd- and the xui-files
-	private final static URL xsd_location = Thread.currentThread().getContextClassLoader().getResource("elateFiles/complexTaskDef.xsd");
-	private final static URL xui_location = Thread.currentThread().getContextClassLoader().getResource("elateFiles/complexTaskDef.xui");
-	private String xml_location = null; //URLHelper.getUserURL("elateFiles/test.xml"); // needed to create or to open an existing xml-file
+	private final static URL xsd_location = Thread.currentThread().getContextClassLoader().getResource("complexTaskDef.xsd");
+	private final static URL xui_location = Thread.currentThread().getContextClassLoader().getResource("complexTaskDef.xui");
+	private String xml_location = null; //URLHelper.getUserURL("/test.xml"); // needed to create or to open an existing xml-file
 	
 	// other files
-	private final static URL language_location = Thread.currentThread().getContextClassLoader().getResource("elateFiles/language.properties");
+	private final static URL language_location = Thread.currentThread().getContextClassLoader().getResource("language.properties");
 	
 	// Components
 	private JSplitPane splitPane;

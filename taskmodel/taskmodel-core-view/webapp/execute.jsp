@@ -107,11 +107,33 @@ function nutzeUhr()
 
 function timer1()
 {
-	var remaining = Math.floor( this.mseconds >= 0 ? this.mseconds / 60000 : 0 );
-	var rt = "noch " + remaining + " min verbleibend";
-	if (DHTML) setCont("id","Uhr",null,rt); //id-Attribut dessen Name Uhr ist
-//	if ( DHTML && remaining == 0 )
-//				setCont("id", "Warnung", null, "weniger als eine Minute verbleibend");
+	var remaining_min = Math.floor( this.mseconds >= 0 ? this.mseconds / 60000 : 0 );
+	var remaining_sec = Math.floor( this.mseconds >= 0 ? this.mseconds / 1000 : 0 );
+	if ( remaining_min < 1 ){
+		var rt_late = "noch " + remaining_min + " min " + remaining_sec % 60 + " sec verbleibend";
+		setCont("id","Uhr",null,rt_late);
+		getElem( "id","Uhr",null).style.fontWeight = "bold";
+		getElem( "id","Uhr",null).style.visibility = "visible";
+	}else{
+		var rt = "noch " + remaining_min + " min verbleibend";
+		setCont("id","Uhr",null,rt);
+	}
+	
+	if( remaining_min < 5 ){
+		getElem( "id","Uhr",null).style.color = "red";	
+	}
+	
+	if( this.mseconds <= 0 ){
+		for( var i = 0; i<500; i++ ){
+			if( getElem("id","TimeOver_"+i,null) != null ){
+				getElem("id","TimeOver_"+i,null).style.visibility = "visible";
+			}
+			else{
+				break;
+			}
+		}
+	}
+	
 	this.mseconds = this.mseconds - 1000;
 
 	window.setTimeout('timer1()',1000);
@@ -258,7 +280,7 @@ function fenster(file,breite,hoehe) {
           </td>
         </tr>
       </table>
-      <br><!--<div id="Warnung" style="color: red;">&nbsp;</div>-->
+      <br>
       <br>
       <br>
       <form method="post" action="<html:rewrite action="/savePage"/>" onSubmit="return preSaveManager.callback();">
@@ -266,6 +288,8 @@ function fenster(file,breite,hoehe) {
 	    <input type="hidden" name="id" value="${Task.taskId}">
 	    <!-- continue after saving -->
 	    <input type="hidden" name="todo" value="continue">
+
+		<% int i = 0; %>
 
 		<c:forEach items="${SubTasklets}" var="SubTasklet">
 			<fieldset class="complexTask"><legend>Aufgabe ${SubTasklet.virtualSubTaskletNumber}</legend>
@@ -280,7 +304,9 @@ function fenster(file,breite,hoehe) {
 			</div>
 			<br><br>
 				${SubTasklet.renderedHTML}			
-			<br></fieldset><br>
+			<br></fieldset>
+				<div id="TimeOver_<%=i++%>" style="visibility:hidden; color:red; font-size:12px" align="right">Bearbeitungszeit abgelaufen</div>
+			<br>
 			
 		</c:forEach>
 

@@ -30,7 +30,7 @@
       <td>
       <c:choose>
       	<c:when test="${task.time != null}">
-      		<c:out value="${task.time}"/>
+      		<c:out value="${task.time}"/> min
       	</c:when>
       	<c:otherwise>
       		-
@@ -69,8 +69,7 @@ Korrekturstand des letzten Versuchs:
 </fieldset>
 <br>
 
-<fieldset class="tasks"><legend>Start</legend> Starten Sie hier Ihren L&ouml;sungsversuch oder 
-setzen Sie einen noch aktiven Versuch fort. <br>
+<fieldset class="tasks"><legend>Start</legend>
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
   <tr>
     <td valign="top" width="50%">
@@ -124,39 +123,37 @@ setzen Sie einen noch aktiven Versuch fort. <br>
 </table>
 </fieldset>
 <br><br>
-<fieldset class="tasks"><legend>Allgemeine Hinweise zu den Aufgabentypen und ihrer Bearbeitung</legend> 
-<p>Sie bearbeiten die Klausurfragen, indem Sie - je nach Aufgabentyp - mit der 
-  Maus Checkboxen anklicken, aus Drop-down-Men&uuml;s mit der Maus Antwortoptionen 
-  anklicken, mit der Tastatur Text in daf&uuml;r vorgesehenen Felder 
-  eingeben oder indem Sie mit der Maus Graphiken zeichnen. Ihre Eingaben werden allerdings <b>erst dann wirksam</b>, wenn Sie 
-  die Schaltfl&auml;che &quot;Speichern&quot; bet&auml;tigt haben, die Sie jeweils 
-  unten auf einer Seite finden. Was Sie nicht speichern, geht nach Verlassen einer 
-  Seite unwiederbringlich verloren! Also bitte merken:<b> Jede &Auml;nderung muss 
-  vor Verlassen der Seite gespeichert werden</b>. 
-<p>Wenn Sie sich durch die Klausur bewegen, benutzen Sie bitte nur die Navigationsleiste 
-  links oben. Hier k&ouml;nnen Sie auch sehen, welche Seiten Sie bereits teilweise 
-  oder vollst&auml;ndig bearbeitet haben und welche noch nicht. <b>Bitte vermeiden 
-  Sie w&auml;hrend der Klausur unbedingt, die &quot;Gehe zur&uuml;ck&quot;- und 
-  &quot;Gehe vor&quot;-Schaltfl&auml;chen Ihres Browsers zu bet&auml;tigen!</b> 
-  Das System kann diese Operationen nicht nachvollziehen, weil sie nur auf dem 
-  lokalen PC, der gerade vor Ihnen steht, ablaufen. Schlimmstenfalls gehen Ihnen 
-  richtige Eingaben und damit Punkte verloren. 
-<p><b><br>
+<fieldset class="tasks"><legend>Allgemeine Hinweise</legend> 
+<p><b>
   Die Bearbeitung</b>: <br>
 
 <ul>
   <li>Mit der Schaltfl&auml;che &quot;Starten&quot; beginnen Sie Ihren L&ouml;sungsversuch.</li>
-  <li>Falls die Bearbeitungszeit eines Lösungsversuchs beschränkt ist, können nach deren Ablauf keine Aufgaben mehr bearbeitet werden, d.h. es ist kein Speichern möglich.
+  <li>Die Bearbeitung der Aufgaben erfolgt seitenweise.</li>
+  <li>Ihre Eingaben werden <b>erst dann wirksam</b>, wenn Sie 
+  die Schaltfl&auml;che &quot;Speichern&quot; bet&auml;tigt haben, die Sie jeweils 
+  unten auf einer Seite finden. Was Sie nicht speichern, geht nach Verlassen einer 
+  Seite unwiederbringlich verloren! Sollten Sie einmal das Speichern vor dem Verlassen einer Seite vergessen, 
+  erscheint ein entsprechender Warnhinweis. Klicken Sie auf "Abbrechen", um auf der aktuellen Seite zu bleiben 
+  und Ihre Änderungen abspeichern zu können.
     </li>
-  <li>Im Rahmen dieser Bearbeitungszeit k&ouml;nnen Sie auch wieder zu dieser 
-    Seite wechseln (Hauptseite), sich aus- und wieder einloggen und diesen L&ouml;sungsversuch 
+  <li>Wenn Sie sich durch die Klausur bewegen, benutzen Sie bitte nur die Navigationsleiste 
+  links oben. Hier k&ouml;nnen Sie auch sehen, welche Seiten Sie bereits teilweise 
+  oder vollst&auml;ndig bearbeitet haben und welche noch nicht. <b>Bitte vermeiden 
+  Sie unbedingt, die &quot;Gehe zur&uuml;ck&quot;- und 
+  &quot;Gehe vor&quot;-Schaltfl&auml;chen Ihres Browsers zu bet&auml;tigen!</b> 
+  Das System kann diese Operationen nicht nachvollziehen, weil sie nur auf dem 
+  lokalen PC, der gerade vor Ihnen steht, ablaufen.</li>
+  <li>Im Rahmen der Bearbeitungszeit k&ouml;nnen Sie auch wieder zu dieser 
+    Seite wechseln ("Hauptseite"), sich aus- und wieder einloggen und diesen L&ouml;sungsversuch 
     jederzeit fortsetzen. Allerdings l&auml;uft die Bearbeitungszeit auch dann 
     weiter.</li>
   <li>Die Bearbeitung endet wenn Sie auf &quot;Abgeben&quot; klicken oder die 
     Bearbeitungszeit abl&auml;uft. Alle bis dahin <b>gespeicherten</b> Seiten 
     flie&szlig;en in die Bewertung ein.</li>
 </ul>
-<p><b><br>
+<p><br>
+<!--<b>
   Die Aufgaben:</b><br>
   <br>
   Es gibt fünf Aufgabentypen: Multiple-Choice-Fragen, 
@@ -193,7 +190,7 @@ setzen Sie einen noch aktiven Versuch fort. <br>
   Aufruf nach. Sie können die Java-Laufzeitumgebung von <a href="http://www.java.com/de/download/index.jsp"/>http://www.java.com/de/download/index.jsp</a> auch selbst installieren.
   </li>
 </ul>
-<br>
+<br>-->
 <b>Die Bewertung</b>:<br>
 <br>
 Bewertet werden alle bis zum Bearbeitungsende abgespeicherten Seiten. 
@@ -203,6 +200,7 @@ Bewertet werden alle bis zum Bearbeitungsende abgespeicherten Seiten.
   <li>Nicht bearbeitete Aufgaben werden mit 0 Punkten bewertet. 
 
 </ul>
+
 </fieldset> 
 
 </td>

@@ -80,11 +80,13 @@ public class SavePageAction extends Action {
 		}
 		
 		TaskModelViewDelegateObject delegateObject = (TaskModelViewDelegateObject)TaskModelViewDelegate.getDelegateObject( request.getSession().getId(), id );
-			if( delegateObject == null ){
+		if( delegateObject == null ){
 			errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "no.session" ) );
 			saveErrors( request, errors );
 			return mapping.findForward( "error" );
 		}
+		request.setAttribute( "ReturnURL", delegateObject.getReturnURL() );
+		
 
 		ComplexTasklet ct;
 		
@@ -188,7 +190,6 @@ public class SavePageAction extends Action {
 			}
 			
 			List<SubmitData> ret = new ArrayList<SubmitData>( subtasklets.size() );
-//			SubmitData[] ret = new SubmitData[ subtasklets.size() ];
 			
 			for( int i=0; i<subtasklets.size(); i++ ){
 				ret.add( i,	SubTaskViewFactory.getSubTaskView( subtasklets.get( i ) ).getSubmitData( taskVarMaps[i] ) );

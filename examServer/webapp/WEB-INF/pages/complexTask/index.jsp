@@ -90,7 +90,7 @@ Korrekturstand des letzten Versuchs:
 			&nbsp;
 		</c:when>
 		<c:when test="${task.startText != null}">
-			<c:out value="${task.startText}"/>
+			<c:out value="${task.startText}" escapeXml="false"/>
 		</c:when>
 		<c:otherwise>
 			Starten Sie Ihren L&ouml;sungsversuch erst, wenn Sie sich sicher sind, die Aufgabenstellung bew&auml;ltigen zu k&ouml;nnen.<br/>

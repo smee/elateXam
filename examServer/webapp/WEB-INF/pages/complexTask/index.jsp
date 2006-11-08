@@ -200,7 +200,7 @@ Bewertet werden alle bis zum Bearbeitungsende abgespeicherten Seiten.
   <li>Nicht bearbeitete Aufgaben werden mit 0 Punkten bewertet. 
 
 </ul>
-
+<br/>
 </fieldset> 
 
 </td>

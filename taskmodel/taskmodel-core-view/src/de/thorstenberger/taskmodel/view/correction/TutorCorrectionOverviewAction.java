@@ -110,7 +110,7 @@ public class TutorCorrectionOverviewAction extends Action {
 		TaskletInfoVO tivo = new TaskletInfoVO();
 		tivo.setTaskId( tasklet.getTaskId() );
 		tivo.setLogin( tasklet.getUserId() );
-		tivo.setPoints( tasklet.getTaskletCorrection().getPoints() != null ? "" + tasklet.getTaskletCorrection().getPoints() : "-" );
+		tivo.setPoints( tasklet.getTaskletCorrection().getPoints() );
 		tivo.setStatus( tasklet.getStatus().getValue() );
 		tivo.setCorrectorLogin( tasklet.getTaskletCorrection().getCorrector() );
 		tivo.setCorrectorHistory( tasklet.getTaskletCorrection().getCorrectorHistory() );

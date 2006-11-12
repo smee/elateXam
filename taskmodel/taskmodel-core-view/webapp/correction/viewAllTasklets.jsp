@@ -54,7 +54,7 @@
 	<display:table requestURI="/viewAllTasklets.do" name="Solutions.allTasklets" uid="row" pagesize="30" sort="list" class="displaytag">
 		<display:column property="login" title="Login&nbsp;&nbsp;&nbsp;" sortable="true"/>
 		<display:column property="status" title="Status&nbsp;&nbsp;&nbsp;" sortable="true"/>
-		<display:column property="points" title="Punkte&nbsp;&nbsp;&nbsp;" sortable="true"/>
+		<display:column property="points" title="Punkte&nbsp;&nbsp;&nbsp;" sortable="true" decorator="de.thorstenberger.taskmodel.view.FloatColumnDecorator"/>
 		<display:column property="correctorLogin" title="zugeordneter Korrektor&nbsp;&nbsp;&nbsp;" sortable="true"/>
 		<display:column title="Korrektoren-History&nbsp;&nbsp;&nbsp;" sortable="false">
 			${row.correctorHistory}

@@ -34,7 +34,7 @@ public class TaskletInfoVO {
 	private long taskId;
 	private String login;
 	private String status;
-	private String points;
+	private Float points;
 	private String correctorLogin;
 	private List<String> correctorHistory;
 	
@@ -106,13 +106,13 @@ public class TaskletInfoVO {
 	/**
 	 * @return Returns the points.
 	 */
-	public String getPoints() {
+	public Float getPoints() {
 		return points;
 	}
 	/**
 	 * @param points The points to set.
 	 */
-	public void setPoints(String points) {
+	public void setPoints(Float points) {
 		this.points = points;
 	}
 	/**

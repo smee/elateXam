@@ -32,6 +32,9 @@ import de.thorstenberger.taskmodel.view.SubTaskletInfoVO;
 public class CorrectionInfoVO {
 
 	private String userId;
+	private String userName;
+	private boolean unregisteredUser;
+	private boolean userNameInvisible;
 	private long taskId;
 	private String status;
 	private String points;
@@ -39,6 +42,7 @@ public class CorrectionInfoVO {
 	private List<String> correctorHistory;
 	private String annotation;
 	private int numOfTry;
+	private String tryStartTime;
 	
 	private List<AnnotationInfoVO> acknowledgedAnnotations;
 	private List<AnnotationInfoVO> nonAcknowledgedAnnotations;
@@ -47,6 +51,54 @@ public class CorrectionInfoVO {
 	private SubTaskletInfoVO subTasklet;
 
 	
+	/**
+	 * @return the unregisteredUser
+	 */
+	public boolean isUnregisteredUser() {
+		return unregisteredUser;
+	}
+	/**
+	 * @param unregisteredUser the unregisteredUser to set
+	 */
+	public void setUnregisteredUser(boolean unregisteredUser) {
+		this.unregisteredUser = unregisteredUser;
+	}
+	/**
+	 * @return the userNameInvisible
+	 */
+	public boolean isUserNameInvisible() {
+		return userNameInvisible;
+	}
+	/**
+	 * @param userNameInvisible the userNameInvisible to set
+	 */
+	public void setUserNameInvisible(boolean userNameInvisible) {
+		this.userNameInvisible = userNameInvisible;
+	}
+	/**
+	 * @return the tryStartTime
+	 */
+	public String getTryStartTime() {
+		return tryStartTime;
+	}
+	/**
+	 * @param tryStartTime the tryStartTime to set
+	 */
+	public void setTryStartTime(String tryStartTime) {
+		this.tryStartTime = tryStartTime;
+	}
+	/**
+	 * @return the userName
+	 */
+	public String getUserName() {
+		return userName;
+	}
+	/**
+	 * @param userName the userName to set
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 	/**
 	 * @return Returns the canAcknowledge.
 	 */

@@ -204,7 +204,6 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 		if( hashcode != activeTry.getPage( pageNo ).getHash() )
 			throw new IllegalStateException( TaskHandlingConstants.SUBMIT_DATA_CORRUPTED );
 		
-//		SubTask[] subtasks = getSubTasks( pageNo );
 		List<SubTasklet> subTasklets = activeTry.getPage( pageNo ).getSubTasklets();
 		
 		int i = 0;

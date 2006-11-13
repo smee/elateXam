@@ -5,53 +5,47 @@
  <data-sources/>
  <form-beans/>
  <global-exceptions/>
- <global-forwards/>
+ <global-forwards>
+  <forward name="error" path="/error.jsp"/>
+ </global-forwards>
  <action-mappings>
   <action path="/execute" type="de.thorstenberger.taskmodel.view.ExecuteAction">
    <forward name="success" path="/execute.jsp"/>
-   <forward name="error" path="/error.jsp"/>
    <forward name="execute" path="/execute.do"/>
   </action>
   <action path="/savePage" type="de.thorstenberger.taskmodel.view.SavePageAction">
    <forward name="success" path="/execute.do" redirect="false"/>
-   <forward name="error" path="/error.jsp"/>
   </action>
   <action path="/commit" type="de.thorstenberger.taskmodel.view.CommitAction">
    <forward name="success" path="/committed.jsp"/>
-   <forward name="error" path="/error.jsp"/>
   </action>
   <action path="/showSolution" type="de.thorstenberger.taskmodel.view.ShowSolutionAction">
    <forward name="success" path="/showCorrection.jsp"/>
-   <forward name="error" path="/error.jsp"/>
   </action>
   <action path="/tutorCorrectionOverview" type="de.thorstenberger.taskmodel.view.correction.TutorCorrectionOverviewAction">
    <forward name="success" path="/correction/tutorCorrectionOverview.jsp"/>
-   <forward name="error" path="/error.jsp"/>
   </action>
   <action path="/assignTasklet" type="de.thorstenberger.taskmodel.view.correction.AssignTaskletAction">
    <forward name="success" path="/tutorCorrectionOverview.do"/>
-   <forward name="error" path="/error.jsp"/>
   </action>
   <action path="/doCorrection" type="de.thorstenberger.taskmodel.view.correction.DoCorrectionAction">
    <forward name="success" path="/correction/doCorrection.jsp"/>
-   <forward name="error" path="/error.jsp"/>
    <forward name="doCorrection" path="/doCorrection.do"/>
   </action>
   <action path="/saveCorrection" type="de.thorstenberger.taskmodel.view.correction.SaveCorrectionAction">
-   <forward name="error" path="/error.jsp"/>
    <forward name="success" path="/doCorrection.do"/>
   </action>
   <action path="/saveStudentAnnotation" type="de.thorstenberger.taskmodel.view.SaveStudentAnnotationAction">
-   <forward name="error" path="/error.jsp"/>
    <forward name="success" path="/showSolution.do"/>
   </action>
   <action path="/viewAllTasklets" type="de.thorstenberger.taskmodel.view.correction.ViewAllTaskletsAction">
-   <forward name="error" path="/error.jsp"/>
    <forward name="success" path="/correction/viewAllTasklets.jsp"/>
   </action>
   <action path="/acknowledge" type="de.thorstenberger.taskmodel.view.correction.AcknowledgeAction">
    <forward name="success" path="/doCorrection.do"/>
-   <forward name="error" path="/error.jsp"/>
+  </action>
+  <action path="/showCorrectionToCorrector" type="de.thorstenberger.taskmodel.view.correction.ShowCorrectionToCorrectorAction">
+   <forward name="success" path="/correction/showCorrectionToCorrector.jsp"/>
   </action>
  </action-mappings>
  <controller nocache="true"/>

@@ -112,6 +112,13 @@ public class TaskManagerImpl implements TaskManager {
 	}
 
 	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.TaskManager#getTaskFactory()
+	 */
+	public TaskFactory getTaskFactory() {
+		return taskFactory;
+	}
+
+	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.TaskManager#getReportBuilder()
 	 */
 	public ReportBuilder getReportBuilder() {

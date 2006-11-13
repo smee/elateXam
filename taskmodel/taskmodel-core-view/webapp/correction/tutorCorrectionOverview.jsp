@@ -52,6 +52,9 @@
 <fieldset><legend>Ihnen zugeordnete, noch nicht korrigierte Lösungen</legend> 
 
 	<display:table requestURI="/tutorCorrectionOverview.do" name="Solutions.assignedUncorrectedTasklets" uid="row" pagesize="30" sort="list" class="displaytag">
+		<display:column title="" sortable="false">
+			<html:link action="/showCorrectionToCorrector" name="row" property="loginAndTaskId"><img src="pics/magnifier.gif" border="0"></html:link>
+		</display:column>
 		<display:column property="login" title="Login&nbsp;&nbsp;&nbsp;" sortable="true"/>
 		<display:column property="status" title="Status&nbsp;&nbsp;&nbsp;" sortable="true"/>
 		<display:column property="points" title="Punkte&nbsp;&nbsp;&nbsp;" sortable="true"/>
@@ -79,6 +82,9 @@
 <fieldset><legend>fertige Korrekturen</legend>
 
 	<display:table requestURI="/tutorCorrectionOverview.do" name="Solutions.assignedCorrectedTasklets" uid="row" pagesize="30" sort="list" class="displaytag">
+		<display:column title="" sortable="false">
+			<html:link action="/showCorrectionToCorrector" name="row" property="loginAndTaskId"><img src="pics/magnifier.gif" border="0"></html:link>
+		</display:column>
 		<display:column property="login" title="Login&nbsp;&nbsp;&nbsp;" sortable="true"/>
 		<display:column property="status" title="Status&nbsp;&nbsp;&nbsp;" sortable="true"/>
 		<display:column property="points" title="Punkte&nbsp;&nbsp;&nbsp;" sortable="true"/>

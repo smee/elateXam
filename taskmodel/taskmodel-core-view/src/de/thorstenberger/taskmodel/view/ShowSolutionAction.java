@@ -183,7 +183,7 @@ public class ShowSolutionAction extends Action {
     }
     
     
-    private void populateVO( SolutionInfoVO sivo, TaskDef_Complex ctd, ComplexTasklet ct ){
+    public static void populateVO( SolutionInfoVO sivo, TaskDef_Complex ctd, ComplexTasklet ct ){
     	
     	sivo.setTaskId( ctd.getId() );
     	

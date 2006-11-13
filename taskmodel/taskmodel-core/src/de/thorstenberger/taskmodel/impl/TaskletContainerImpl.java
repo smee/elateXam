@@ -192,6 +192,15 @@ public class TaskletContainerImpl implements TaskletContainer {
 		return ret;
 
 	}
+	
+	
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.TaskletContainer#getTaskFactory()
+	 */
+	public TaskFactory getTaskFactory() {
+		return taskFactory;
+	}
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.TaskletContainer#reset()

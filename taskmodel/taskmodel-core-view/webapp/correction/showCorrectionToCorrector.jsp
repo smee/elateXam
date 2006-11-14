@@ -25,9 +25,11 @@
     <td valign="top"><img src="<%= request.getContextPath() %>/pics/exit.gif" width="20" height="16"> 
 		<html:link action="/tutorCorrectionOverview" paramId="taskId" paramName="Correction" paramProperty="taskId">Korrektur-Übersicht</html:link>
 	</td>
+	<td valign="top" align="right"><html:link action="/doCorrection" name="Correction" property="loginAndTaskId"><img src="pics/magnifier.gif" border="0" hspace="5">Korrekturansicht</html:link>
+	</td>
   </tr>
   <tr bgcolor="#F2F9FF"> 
-	<td><br>
+	<td colspan="2"><br>
 	<fieldset>
             
       <table>
@@ -57,7 +59,7 @@
 	</td>
   </tr>
   <tr> 
-    <td valign="top" bgcolor="#F2F9FF">
+    <td valign="top" bgcolor="#F2F9FF" colspan="2">
 
 			<c:forEach items="${SubTasklets}" var="SubTasklet">
 				
@@ -95,7 +97,7 @@
   </tr>
   
     <tr bgcolor="#F2F9FF"> 
-	<td><br>
+	<td colspan="2"><br>
 	<fieldset><legend>Kommentare des Bearbeiters</legend>
 		<b>Unbestätigt:</b><br/>
 			<c:forEach items="${Correction.nonAcknowledgedAnnotations}" var="annotation">

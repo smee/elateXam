@@ -24,8 +24,10 @@
 							<input type="hidden" name="selectedSubTaskletNum" value="${Correction.subTasklet.virtualSubTaskletNumber}"/>
 
   <tr bgcolor="#F2F9FF"> 
-    <td colspan="2" valign="top"><img src="<%= request.getContextPath() %>/pics/exit.gif" width="20" height="16"> 
+    <td valign="top"><img src="<%= request.getContextPath() %>/pics/exit.gif" width="20" height="16"> 
     	<html:link action="/tutorCorrectionOverview" paramId="taskId" paramName="Correction" paramProperty="taskId">Korrektur-Übersicht</html:link>
+	</td>
+	<td valign="top" align="right"><html:link action="/showCorrectionToCorrector" name="Correction" property="loginAndTaskId"><img src="pics/magnifier.gif" border="0" hspace="5">Gesamtansicht</html:link>
 	</td>
   </tr>
   <tr> 

@@ -382,7 +382,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#studentAnnotatesCorrection(java.lang.String)
 	 */
-	public boolean studentAnnotatesCorrection(String annotation) throws IllegalStateException {
+	public synchronized boolean studentAnnotatesCorrection(String annotation) throws IllegalStateException {
 		
 		boolean change = false;
 		
@@ -414,7 +414,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#acknowledgeStudentAnnotation()
 	 */
-	public void acknowledgeStudentAnnotation() throws IllegalStateException {
+	public synchronized void acknowledgeStudentAnnotation() throws IllegalStateException {
 		
 		if( !hasOrPassedStatus( Status.ANNOTATED ) )
 			throw new IllegalStateException( TaskHandlingConstants.CORRECTOR_CAN_ONLY_ACKNOWLEDGE_IF_ANNOTATED );

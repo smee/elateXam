@@ -22,10 +22,10 @@
 
 <table border="0" cellspacing="2" cellpadding="2" width="790">
   <tr bgcolor="#F2F9FF"> 
-    <td valign="top"><img src="<%= request.getContextPath() %>/pics/exit.gif" width="20" height="16"> 
+    <td valign="middle"><img src="<%= request.getContextPath() %>/pics/exit.gif" width="20" height="16"> 
 		<html:link action="/tutorCorrectionOverview" paramId="taskId" paramName="Correction" paramProperty="taskId">Korrektur-Übersicht</html:link>
 	</td>
-	<td valign="top" align="right"><html:link action="/doCorrection" name="Correction" property="loginAndTaskId"><img src="pics/magnifier.gif" border="0" hspace="5">Korrekturansicht</html:link>
+	<td valign="middle" align="right"><html:link action="/doCorrection" name="Correction" property="loginAndTaskId"><img src="icons/tango/applications-office-small.png" border="0" hspace="5">Korrekturansicht</html:link>
 	</td>
   </tr>
   <tr bgcolor="#F2F9FF"> 

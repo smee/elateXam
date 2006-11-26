@@ -103,7 +103,8 @@
 	<fieldset><legend>Administrationsfunktionen</legend>
 	<ul>
 	  <li><html:link action="/viewAllTasklets" paramId="taskId" paramName="Solutions" paramProperty="taskId">Gesamtliste</html:link><br><br>
-	  <li><img src="<%= request.getContextPath() %>/pics/excel.gif" align="bottom"> <html:link href="excelReport/report_${Solutions.taskId}.xls">Gesamtliste als Excel-Datei</html:link>
+	  <li><img src="<%= request.getContextPath() %>/pics/excel.gif" align="bottom"> <html:link href="excelReport/report_${Solutions.taskId}.xls">Gesamtliste als Excel-Datei</html:link><br><br>
+	  <li><html:link action="/complexTaskStructure" paramId="taskId" paramName="Solutions" paramProperty="taskId">Strukturübersicht mit Detailauswertung</html:link>
 	</ul>
 	
 	</fieldset><br/>

@@ -54,6 +54,8 @@ public interface ComplexTaskDefRoot {
 	public int getTasksPerPage();
 
 	public boolean hasTimeRestriction();
+	
+	public Integer getKindnessExtensionTimeInMinutes();
 
 	public Integer getTimeInMinutesWithKindnessExtensionTime();
 

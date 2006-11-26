@@ -140,6 +140,16 @@ public class ComplexTaskDefRootImpl implements ComplexTaskDefRoot {
 	public boolean hasTimeRestriction() {
 		return complexTaskDef.getConfig().isSetTime() && complexTaskDef.getConfig().getTime() > 0;
 	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot#getKindnessExtensionTimeInMinutes()
+	 */
+	public Integer getKindnessExtensionTimeInMinutes() {
+		if( !complexTaskDef.getConfig().isSetKindnessExtensionTime() )
+			return null;
+		else
+			return complexTaskDef.getConfig().getKindnessExtensionTime();
+	}
 	
 	
 

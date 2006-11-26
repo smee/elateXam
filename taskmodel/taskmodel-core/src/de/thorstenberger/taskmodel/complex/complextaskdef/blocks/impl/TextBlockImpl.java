@@ -38,6 +38,7 @@ import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.
  */
 public class TextBlockImpl implements Block {
 
+	public static final String TYPE = "text";
 	private TextTaskBlock textTaskBlock;
 
 	/**
@@ -45,6 +46,13 @@ public class TextBlockImpl implements Block {
 	 */
 	public TextBlockImpl(TextTaskBlock block) {
 		textTaskBlock = block;
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.Block#getType()
+	 */
+	public String getType() {
+		return TYPE;
 	}
 
 	/* (non-Javadoc)

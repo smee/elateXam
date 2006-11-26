@@ -38,8 +38,17 @@ import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.
  */
 public class McBlockImpl implements Block {
 
+	public static final String TYPE = "mc";
 	McTaskBlock mcTaskBlock;
 	
+	
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.Block#getType()
+	 */
+	public String getType() {
+		return TYPE;
+	}
+
 	/**
 	 * 
 	 */

@@ -35,9 +35,16 @@ import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.
  */
 public class PaintBlockImpl implements Block {
 
-	
-		private PaintTaskBlock paintTaskBlock;
+	public static final String TYPE = "paint";
+	private PaintTaskBlock paintTaskBlock;
 		
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.Block#getType()
+	 */
+	public String getType() {
+		return TYPE;
+	}
+
 		/**
 		 * @param block
 		 */

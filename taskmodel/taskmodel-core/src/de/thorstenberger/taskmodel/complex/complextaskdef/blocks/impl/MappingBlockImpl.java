@@ -39,7 +39,15 @@ import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.
  */
 public class MappingBlockImpl implements Block {
 
+	public static final String TYPE = "mapping";
 	MappingTaskBlock mappingTaskBlock;
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.Block#getType()
+	 */
+	public String getType() {
+		return TYPE;
+	}
 
 	/**
 	 * @param block

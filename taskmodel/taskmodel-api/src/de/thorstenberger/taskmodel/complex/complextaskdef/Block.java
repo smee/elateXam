@@ -29,6 +29,12 @@ import java.util.List;
  */
 public interface Block {
 
+	/**
+	 * 
+	 * @return a string denoting this block's subtasks type (mc, cloze, text etc.)
+	 */
+	public String getType();
+	
 	public List<SubTaskDefOrChoice> getSubTaskDefOrChoiceList();
 	
 	public int getNumberOfSelectedSubTasks();

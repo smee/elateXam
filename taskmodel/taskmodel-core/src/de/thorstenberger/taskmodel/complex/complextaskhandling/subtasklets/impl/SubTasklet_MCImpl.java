@@ -356,6 +356,13 @@ public class SubTasklet_MCImpl implements SubTasklet_MC {
 				return incorrectAnswerDef.getValue();
 		}
 		
+		public String getId() {
+			if( correct )
+				return correctAnswerDef.getId();
+			else
+				return incorrectAnswerDef.getId();
+		}
+
 		public boolean isSelected(){
 			return answer.isSelected();
 		}

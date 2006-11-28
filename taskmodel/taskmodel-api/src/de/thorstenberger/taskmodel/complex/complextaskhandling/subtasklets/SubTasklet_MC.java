@@ -46,7 +46,15 @@ public interface SubTasklet_MC extends SubTasklet {
 	
 	public interface Answer{
 				
+		/**
+		 * @return the text value of the answer
+		 */
 		public String toString();
+		
+		/**
+		 * @return the id of the answer
+		 */
+		public String getId();
 		
 		public boolean isSelected();
 		

@@ -12,6 +12,7 @@
 <body bgcolor="#FFFFFF" text="#000000">
 
 <jsp:include page="../header.jsp" />
+<div class="correction">
 
 <p class="header">Korrektur - &Uuml;bersicht</p>
 
@@ -73,6 +74,9 @@
 		</display:column>
 	</display:table>
 
+</fieldset>
+
+</div>
 <jsp:include page="../footer.jsp" />
 
 </body>

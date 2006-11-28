@@ -29,6 +29,8 @@ import java.io.OutputStream;
  */
 public interface ReportBuilder {
 
-	public void createExcelBinary( long taskId, OutputStream out ) throws TaskApiException;
+	public void createExcelBinary( long taskId, OutputStream out ) throws TaskApiException, MethodNotSupportedException;
+	
+	public void createExcelAnalysisForBlock( long taskId, String categoryId, int blockIndex, OutputStream out ) throws TaskApiException, MethodNotSupportedException;
 	
 }

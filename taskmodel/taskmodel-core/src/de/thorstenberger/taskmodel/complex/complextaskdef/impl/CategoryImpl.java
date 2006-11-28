@@ -99,11 +99,23 @@ public class CategoryImpl implements Category {
 	public List<Block> getBlocks() {
 		List<Block> ret = new ArrayList<Block>();
 		Iterator it = categoryType.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock().iterator();
+		int i = 0;
 		while( it.hasNext() )
-			ret.add( complexTaskFactory.instantiateBlock( it.next() ) );
+			ret.add( complexTaskFactory.instantiateBlock( it.next(), i++ ) );
 		return ret;
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.Category#getBlock(int)
+	 */
+	public Block getBlock(int index) {
+		
+		if( categoryType.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock().size() <= index )
+			return null;
+		
+		return complexTaskFactory.instantiateBlock( categoryType.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock().get( index ), index );
+		
 	}
 	
 	
-
 }

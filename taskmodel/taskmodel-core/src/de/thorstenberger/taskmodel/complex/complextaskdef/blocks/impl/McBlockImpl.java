@@ -40,20 +40,30 @@ public class McBlockImpl implements Block {
 
 	public static final String TYPE = "mc";
 	McTaskBlock mcTaskBlock;
+	private int index;
+	
+	/**
+	 * 
+	 */
+	public McBlockImpl( McTaskBlock mcTaskBlock, int index ) {
+		this.mcTaskBlock = mcTaskBlock;
+		this.index = index;
+	}
+
 	
 	
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.Block#getIndex()
+	 */
+	public int getIndex() {
+		return index;
+	}
+
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.Block#getType()
 	 */
 	public String getType() {
 		return TYPE;
-	}
-
-	/**
-	 * 
-	 */
-	public McBlockImpl( McTaskBlock mcTaskBlock ) {
-		this.mcTaskBlock = mcTaskBlock;
 	}
 
 	/* (non-Javadoc)

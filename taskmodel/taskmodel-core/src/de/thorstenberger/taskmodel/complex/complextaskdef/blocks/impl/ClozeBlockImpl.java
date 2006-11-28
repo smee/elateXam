@@ -40,6 +40,7 @@ public class ClozeBlockImpl implements Block {
 
 	public static final String TYPE = "cloze";
 	private ClozeTaskBlock clozeTaskBlock;
+	private int index;
 	
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.Block#getType()
@@ -51,8 +52,17 @@ public class ClozeBlockImpl implements Block {
 	/**
 	 * @param block
 	 */
-	public ClozeBlockImpl(ClozeTaskBlock block) {
+	public ClozeBlockImpl(ClozeTaskBlock block, int index) {
 		clozeTaskBlock = block;
+		this.index = index;
+	}
+	
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.Block#getIndex()
+	 */
+	public int getIndex() {
+		return index;
 	}
 
 	/* (non-Javadoc)

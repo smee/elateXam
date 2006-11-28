@@ -12,6 +12,7 @@
 <body bgcolor="#FFFFFF" text="#000000">
 
 <jsp:include page="../header.jsp" />
+<div class="correction">
 
 <p class="header">Korrektur - &Uuml;bersicht</p>
 
@@ -116,6 +117,8 @@ der Statusspalte. Kommentierte Lösungen haben den Status <b>"annotated"</b>. In
 bestätigen Sie mit dem Button "Lesebestätigung setzen", woraufhin der Status auf <b>"annotation_acknowledged"</b> gesetzt wird.	
 </fieldset>
 
+
+</div>
 <jsp:include page="../footer.jsp" />
 
 </body>

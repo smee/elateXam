@@ -25,6 +25,7 @@ import java.util.List;
 
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Category;
+import de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef;
 
 /**
  * @author Thorsten Berger
@@ -47,5 +48,7 @@ public interface Try {
 //	public int getTryIndex();
 	
 	public Page addNewPage(int pageNumber, Category category) throws TaskApiException;
+	
+	public SubTasklet lookupSubTasklet( SubTaskDef subTaskDef );
 	
 }

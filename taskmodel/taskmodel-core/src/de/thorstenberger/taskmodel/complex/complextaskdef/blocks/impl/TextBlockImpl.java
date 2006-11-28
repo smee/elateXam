@@ -40,12 +40,23 @@ public class TextBlockImpl implements Block {
 
 	public static final String TYPE = "text";
 	private TextTaskBlock textTaskBlock;
+	private int index;
 
 	/**
 	 * @param block
 	 */
-	public TextBlockImpl(TextTaskBlock block) {
+	public TextBlockImpl(TextTaskBlock block, int index) {
 		textTaskBlock = block;
+		this.index = index;
+	}
+
+	
+	
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.Block#getIndex()
+	 */
+	public int getIndex() {
+		return index;
 	}
 
 	/* (non-Javadoc)

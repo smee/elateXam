@@ -104,6 +104,7 @@ public class ComplexTaskStructureAction extends Action {
 			List<BlockInfoVO> bivos = new ArrayList<BlockInfoVO>();
 			for( Block block : category.getBlocks() ){
 				BlockInfoVO bivo = new BlockInfoVO();
+				bivo.setIndex( block.getIndex() );
 				bivo.setNumberOfSelectedSubTasks( block.getNumberOfSelectedSubTasks() );
 				bivo.setPointsPerSubTask( block.getPointsPerSubTask() );
 				bivo.setPreserveOrder( block.isPreserveOrder() );

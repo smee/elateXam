@@ -31,6 +31,7 @@ import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.complex.ComplexTaskFactory;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Category;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
+import de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Try;
@@ -145,5 +146,22 @@ public class TryImpl implements Try {
 	public TryType getTryType(){
 		return tryType;
 	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.Try#lookupSubTasklet(de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef)
+	 */
+	public SubTasklet lookupSubTasklet(SubTaskDef subTaskDef) {
+		List<Page> pages = getPages();
+		for( Page page : pages ){
+			List<SubTasklet> subTasklets = page.getSubTasklets();
+			for( SubTasklet subTasklet : subTasklets )
+				if( subTasklet.getSubTaskDefId().equals( subTaskDef.getId() ) )
+					return subTasklet;
+		}
+		// not found, happens if the subTaskDef has not been chosen by the (random) selection algorithms in ComplexTaskBuilder
+		return null;
+	}
+	
+	
 
 }

@@ -39,7 +39,11 @@ a:link
 
 .FailureMessage {  font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-style: normal; font-weight: normal; color: #FF0000}
 legend {  font-family: "Times New Roman", Times, serif; font-size: 15px; color: #0046D5; font-weight: normal; padding-top: 5px; padding-bottom: 5px; }
-fieldset {  border: 1px #BFB8BF solid; -moz-border-radius: 15px; padding:10px; background-color: #FFFFFF; }
+fieldset {  border: 1px #BFB8BF solid; -moz-border-radius: 15px; padding:10px; background-color: #ffffff; }
+
+.correction fieldset{
+	background: url(pics/fade_black_white_bg.jpg);
+}
 
 a.MenuLink:link {  font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold; text-decoration: underline; color: #00327D; }
 a.MenuLink:visited {  font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold; text-decoration: underline; color: #00327D;}

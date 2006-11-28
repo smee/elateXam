@@ -30,10 +30,14 @@ import java.util.List;
 public interface Block {
 
 	/**
-	 * 
 	 * @return a string denoting this block's subtasks type (mc, cloze, text etc.)
 	 */
 	public String getType();
+	
+	/**
+	 * @return the index of the block in its category, starts with 0 for the first block
+	 */
+	public int getIndex();
 	
 	public List<SubTaskDefOrChoice> getSubTaskDefOrChoiceList();
 	

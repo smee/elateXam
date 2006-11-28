@@ -41,19 +41,29 @@ public class MappingBlockImpl implements Block {
 
 	public static final String TYPE = "mapping";
 	MappingTaskBlock mappingTaskBlock;
+	private int index;
+
+	/**
+	 * @param block
+	 */
+	public MappingBlockImpl(MappingTaskBlock block, int index) {
+		mappingTaskBlock = block;
+		this.index = index;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.Block#getIndex()
+	 */
+	public int getIndex() {
+		return index;
+	}
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.Block#getType()
 	 */
 	public String getType() {
 		return TYPE;
-	}
-
-	/**
-	 * @param block
-	 */
-	public MappingBlockImpl(MappingTaskBlock block) {
-		mappingTaskBlock = block;
 	}
 
 	/* (non-Javadoc)

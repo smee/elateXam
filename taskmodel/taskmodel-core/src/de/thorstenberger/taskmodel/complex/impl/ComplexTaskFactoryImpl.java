@@ -72,18 +72,18 @@ public class ComplexTaskFactoryImpl implements ComplexTaskFactory {
 
 	private ObjectFactory objectFactory = new ObjectFactory();
 	
-	public Block instantiateBlock( Object jaxbBlock ){
+	public Block instantiateBlock( Object jaxbBlock, int index ){
 		
 		if( jaxbBlock instanceof McTaskBlock )
-			return new McBlockImpl( (McTaskBlock)jaxbBlock );
+			return new McBlockImpl( (McTaskBlock)jaxbBlock, index );
 		else if( jaxbBlock instanceof MappingTaskBlock )
-			return new MappingBlockImpl( (MappingTaskBlock)jaxbBlock );
+			return new MappingBlockImpl( (MappingTaskBlock)jaxbBlock, index );
 		else if( jaxbBlock instanceof ClozeTaskBlock )
-			return new ClozeBlockImpl( (ClozeTaskBlock)jaxbBlock );
+			return new ClozeBlockImpl( (ClozeTaskBlock)jaxbBlock, index );
 		else if( jaxbBlock instanceof TextTaskBlock )
-			return new TextBlockImpl( (TextTaskBlock)jaxbBlock );
+			return new TextBlockImpl( (TextTaskBlock)jaxbBlock, index );
 		else if ( jaxbBlock instanceof PaintTaskBlock)
-			return new PaintBlockImpl ((PaintTaskBlock)jaxbBlock);
+			return new PaintBlockImpl ((PaintTaskBlock)jaxbBlock, index );
 		
 		return null;
 		

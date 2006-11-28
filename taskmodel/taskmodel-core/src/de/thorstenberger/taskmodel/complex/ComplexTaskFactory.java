@@ -34,7 +34,13 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.Try;
  */
 public interface ComplexTaskFactory {
 	
-	public Block instantiateBlock( Object block );
+	/**
+	 * 
+	 * @param block
+	 * @param index the index determing the position of the block in its category, starts with 0 for the first block
+	 * @return
+	 */
+	public Block instantiateBlock( Object block, int index );
 	
 	public SubTasklet createSubTaskletForSubTaskDef( SubTaskDef subTaskDef, ComplexTaskDefRoot complexTaskDefRoot, String categoryId ) throws TaskApiException;
 	

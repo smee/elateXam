@@ -98,6 +98,7 @@
   
     <tr bgcolor="#F2F9FF"> 
 	<td colspan="2"><br>
+	<div class="correction">
 	<fieldset><legend>Kommentare des Bearbeiters</legend>
 		<b>Unbestätigt:</b><br/>
 			<c:forEach items="${Correction.nonAcknowledgedAnnotations}" var="annotation">
@@ -122,7 +123,7 @@
         <br/><br/>
 
 	</fieldset><br>
-	
+	</div>
 	</td>
   </tr>
   

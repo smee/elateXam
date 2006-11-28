@@ -37,19 +37,33 @@ public class PaintBlockImpl implements Block {
 
 	public static final String TYPE = "paint";
 	private PaintTaskBlock paintTaskBlock;
-		
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.Block#getType()
-	 */
-	public String getType() {
-		return TYPE;
-	}
+	private int index;
+	
 
 		/**
 		 * @param block
 		 */
-		public PaintBlockImpl(PaintTaskBlock block) {
+		public PaintBlockImpl(PaintTaskBlock block, int index ) {
 			paintTaskBlock = block;
+			this.index = index;
+		}
+		
+		
+		
+		/* (non-Javadoc)
+		 * @see de.thorstenberger.taskmodel.complex.complextaskdef.Block#getIndex()
+		 */
+		public int getIndex() {
+			return index;
+		}
+
+
+
+		/* (non-Javadoc)
+		 * @see de.thorstenberger.taskmodel.complex.complextaskdef.Block#getType()
+		 */
+		public String getType() {
+			return TYPE;
 		}
 
 		/* (non-Javadoc)

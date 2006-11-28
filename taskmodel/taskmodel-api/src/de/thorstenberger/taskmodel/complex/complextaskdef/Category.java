@@ -48,5 +48,7 @@ public interface Category {
 	
 	public List<Block> getBlocks();
 	
+	public Block getBlock( int index );
+	
 	
 }

@@ -99,6 +99,7 @@
   </tr>
   <tr> 
     <td colspan="2" valign="top" bgcolor="#F2F9FF">
+    <div class="correction">
 	<table border="0" cellspacing="2" cellpadding="2">
 
   <tr>
@@ -149,7 +150,8 @@
           </td>
   </tr>
 </table>
-	 
+
+	 </div>
 	  </td>
   </tr>
   

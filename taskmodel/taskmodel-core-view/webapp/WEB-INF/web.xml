@@ -33,7 +33,7 @@
  </servlet>
  <servlet>
   <servlet-name>ExcelReport</servlet-name>
-  <servlet-class>de.thorstenberger.taskmodel.view.correction.ExcelReportServlet</servlet-class>
+  <servlet-class>de.thorstenberger.taskmodel.view.statistics.ExcelReportServlet</servlet-class>
  </servlet>
  <servlet-mapping>
   <servlet-name>action</servlet-name>

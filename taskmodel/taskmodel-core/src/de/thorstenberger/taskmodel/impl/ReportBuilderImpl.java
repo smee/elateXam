@@ -24,6 +24,7 @@ package de.thorstenberger.taskmodel.impl;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
@@ -39,6 +40,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 
+import de.thorstenberger.taskmodel.MethodNotSupportedException;
 import de.thorstenberger.taskmodel.ReportBuilder;
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskDef;
@@ -48,10 +50,15 @@ import de.thorstenberger.taskmodel.Tasklet;
 import de.thorstenberger.taskmodel.UserInfo;
 import de.thorstenberger.taskmodel.complex.ComplexTasklet;
 import de.thorstenberger.taskmodel.complex.TaskDef_Complex;
+import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Category;
+import de.thorstenberger.taskmodel.complex.complextaskdef.Choice;
+import de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef;
+import de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDefOrChoice;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Try;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_MC;
 
 /**
  * @author Thorsten Berger
@@ -64,6 +71,8 @@ public class ReportBuilderImpl implements ReportBuilder {
 	
 	Log log = LogFactory.getLog( ReportBuilderImpl.class );
 	
+	private static DateFormat df = DateFormat.getDateTimeInstance( );
+	
 	/**
 	 * @param taskletContainer
 	 */
@@ -75,7 +84,7 @@ public class ReportBuilderImpl implements ReportBuilder {
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.ReportBuilder#createExcelBinary(long, java.io.OutputStream)
 	 */
-	public void createExcelBinary(long taskId, OutputStream out) throws TaskApiException{
+	public void createExcelBinary(long taskId, OutputStream out) throws TaskApiException, MethodNotSupportedException{
 
 		HSSFWorkbook wb = new HSSFWorkbook();
 		HSSFSheet sheet = wb.createSheet();
@@ -113,39 +122,7 @@ public class ReportBuilderImpl implements ReportBuilder {
 			row = sheet.createRow( r++ );
 			c = 0;
 			
-			UserInfo userInfo = taskFactory.getUserInfo( tasklet.getUserId() );
-						
-			String login;
-			String firstName;
-			String name;
-			boolean notfound;
-			
-			if( userInfo != null ){
-				login = userInfo.getLogin();
-				firstName = userInfo.getFirstName();
-				name = userInfo.getName();
-				notfound = false;				
-			}else{
-				login = tasklet.getUserId();
-				firstName = "?";
-				name = "?";
-				notfound = true;
-			}
-			
-			
-			if( notfound ){
-				HSSFCellStyle cs2 = wb.createCellStyle();
-				HSSFFont font2 = wb.createFont(); font2.setColor( HSSFColor.RED.index );
-				cs2.setFont( font2 );		
-				HSSFCell cell2 = row.createCell( c++ );
-				cell2.setCellStyle( cs2 );
-				cell2.setCellValue( login );
-			}else{
-				row.createCell( c++ ).setCellValue( login );
-			}		
-			
-			row.createCell( c++ ).setCellValue( firstName );
-			row.createCell( c++ ).setCellValue( name );
+			c = createUserInfoColumns( tasklet, c, wb, row );
 			row.createCell( c++ ).setCellValue( tasklet.getStatus().toString() );
 			row.createCell( c++ ).setCellValue( tasklet.getTaskletCorrection().getPoints() != null ? "" + tasklet.getTaskletCorrection().getPoints() : "-" );
 			row.createCell( c++ ).setCellValue( tasklet.getTaskletCorrection().getCorrector() != null ? tasklet.getTaskletCorrection().getCorrector() : "-" );
@@ -229,10 +206,149 @@ public class ReportBuilderImpl implements ReportBuilder {
 			
 	}
 	
-	private static String getStringFromMillis( long timestamp ){
+	private short createUserInfoColumns( Tasklet tasklet, short c, HSSFWorkbook wb, HSSFRow row ){
+		UserInfo userInfo = taskFactory.getUserInfo( tasklet.getUserId() );
+		
+		String login;
+		String firstName;
+		String name;
+		boolean notfound;
+		
+		if( userInfo != null ){
+			login = userInfo.getLogin();
+			firstName = userInfo.getFirstName();
+			name = userInfo.getName();
+			notfound = false;				
+		}else{
+			login = tasklet.getUserId();
+			firstName = "?";
+			name = "?";
+			notfound = true;
+		}
+		
+		
+		if( notfound ){
+			HSSFCellStyle cs2 = wb.createCellStyle();
+			HSSFFont font2 = wb.createFont(); font2.setColor( HSSFColor.RED.index );
+			cs2.setFont( font2 );		
+			HSSFCell cell2 = row.createCell( c++ );
+			cell2.setCellStyle( cs2 );
+			cell2.setCellValue( login );
+		}else{
+			row.createCell( c++ ).setCellValue( login );
+		}		
+		
+		row.createCell( c++ ).setCellValue( firstName );
+		row.createCell( c++ ).setCellValue( name );
+		
+		return c;
+	}	
+	
 
-		DateFormat df = DateFormat.
-							getDateTimeInstance( );
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.ReportBuilder#createExcelAnalysisForBlock(de.thorstenberger.taskmodel.complex.complextaskdef.Block, java.io.OutputStream)
+	 */
+	public void createExcelAnalysisForBlock(long taskId, String categoryId, int blockIndex, OutputStream out) throws TaskApiException, MethodNotSupportedException {
+		
+		HSSFWorkbook wb = new HSSFWorkbook();
+		HSSFSheet sheet = wb.createSheet();
+		TaskDef_Complex taskDef;
+		try {
+			taskDef = (TaskDef_Complex)taskManager.getTaskDef( taskId );
+		} catch (ClassCastException e) {
+			throw new MethodNotSupportedException( "Only analysis of complexTasks supported (for now)!" );
+		}
+		Category category = taskDef.getComplexTaskDefRoot().getCategories().get( categoryId );
+		Block block = category.getBlock( blockIndex );
+		
+		short r = 0;
+		short c = 0;
+		
+		HSSFRow row = sheet.createRow( r++ );
+		row.createCell( c++ ).setCellValue( "Login" );
+		row.createCell( c++ ).setCellValue( "Vorname" );
+		row.createCell( c++ ).setCellValue( "Name" );
+
+		if( !block.getType().equals( "mc" ) )
+			throw new MethodNotSupportedException( "Only MC analysis supported (for now)!" );
+		
+		List<SubTaskDefOrChoice> stdocs = block.getSubTaskDefOrChoiceList();
+		List<SubTaskDef> stds = new ArrayList<SubTaskDef>();
+		// put all SubTaskDefs into stds
+		for( SubTaskDefOrChoice stdoc : stdocs ){
+			if( stdoc instanceof SubTaskDef ){
+				stds.add( (SubTaskDef)stdoc );
+				row.createCell( c++ ).setCellValue( ((SubTaskDef)stdoc).getId() );				
+			}else{
+				Choice choice = (Choice)stdoc;
+				for( SubTaskDef std : choice.getSubTaskDefs() ){
+					stds.add( std );
+					row.createCell( c++ ).setCellValue( std.getId() );
+				}
+			}
+		}
+		
+		
+		List<Tasklet> tasklets = taskManager.getTaskletContainer().getTasklets( taskId );
+		
+		for( Tasklet tasklet : tasklets ){
+			
+			if( tasklet.getStatus() == Tasklet.Status.INITIALIZED )
+				continue;
+			
+			if( !(tasklet instanceof ComplexTasklet ) )
+				throw new MethodNotSupportedException( "Only analysis of complexTasklets supported (for now)!" );
+				
+			row = sheet.createRow( r++ );
+			c = 0;
+
+			ComplexTasklet ct = (ComplexTasklet)tasklet;
+			Try actualTry = ct.getSolutionOfLatestTry();
+
+			c = createUserInfoColumns( tasklet, c, wb, row );
+			
+			for( SubTaskDef std : stds ){
+				
+				SubTasklet_MC mcst = (SubTasklet_MC)actualTry.lookupSubTasklet( std );
+				if( mcst == null ){
+					row.createCell( c++ ).setCellValue( "[n/a]" );
+					continue;
+				}
+				
+				StringBuilder sb = new StringBuilder();
+				List<SubTasklet_MC.Answer> answers = mcst.getAnswers();
+				boolean first = true;
+				for( SubTasklet_MC.Answer answer : answers ){
+					if( answer.isSelected() ){
+						if( !first )
+							sb.append( ";" );
+						sb.append( answer.getId() );
+						first = false;
+					}
+				}	
+				row.createCell( c++ ).setCellValue( sb.toString() );
+				
+			}
+			
+		}
+		
+		try {
+			wb.write( out );
+			out.flush();
+		} catch (IOException e) {
+			log.error( "Error writing excel stream!", e );
+			throw new TaskApiException( e );
+		}finally{
+			try {
+				out.close();
+			} catch (IOException e) {
+				throw new TaskApiException( e );
+			}			
+		}
+		
+	}
+
+	private static String getStringFromMillis( long timestamp ){
 		return df.format( new Date( timestamp ) );
 	}
 		

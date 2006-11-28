@@ -12,6 +12,8 @@
 
 <jsp:include page="../header.jsp" />
 
+<div class="correction">
+
 <html:messages message="true" id="msg" header="messages.header" footer="messages.footer">
 	<%=pageContext.getAttribute("msg")%>
 </html:messages>
@@ -30,16 +32,23 @@
 	<td><br>
 	<fieldset>
 
-		${Root.title}
+		Titel: <b>${Root.title}</b>
 		<br/><br/>
 		<ul>
 			<c:forEach items="${Root.categories}" var="category">
 				
-				<li>${category.title}
+				<li>Kategorie "<b>${category.title}</b>" (${category.id})
 					<ul>
 						<c:forEach items="${category.blocks}" var="block">
 							
-							<li>Block vom Typ "${block.type}"</li>
+							<li>Block ${block.index} vom Typ "<b>${block.type}</b>"
+								<ul>
+									<c:if test='${block.type == "mc"}'>
+										<li><img src="<%= request.getContextPath() %>/pics/excel.gif" align="bottom"> <html:link href="excelReport/MCBlockReport_${Root.taskId},${category.id},${block.index}.xls">MC-Auswertung</html:link></li>
+									</c:if>
+								</ul>
+							</li>
+							<br/>
 					
 						</c:forEach>
 					</ul>
@@ -53,6 +62,8 @@
   
 </table>
 
+
+</div>
 
 <jsp:include page="../footer.jsp" />
 

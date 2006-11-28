@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /**
  * 
  */
-package de.thorstenberger.taskmodel.view.correction;
+package de.thorstenberger.taskmodel.view.statistics;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -48,11 +48,20 @@ public class ExcelReportServlet extends HttpServlet {
 		String uri = request.getRequestURI();
 		if( !uri.endsWith( ".xls" ) )
 			throw new ServletException( "Invalid URI!" );
-		int indexOfUnderscore = uri.lastIndexOf( '_' );
-		if( indexOfUnderscore == -1 )
-			throw new ServletException( "Invalid URI (taskId missing)!" );
+		int indexOfLastSlash = uri.lastIndexOf( '/' );
+		String fileName = uri.substring( indexOfLastSlash + 1, uri.length() - ".xls".length() );
+		
+		
+		int startOfTaskId = fileName.indexOf( '_' ) + 1;
+			if( startOfTaskId == -1 )
+				throw new ServletException( "Invalid URI (taskId missing)!" );
+		
+		int endOfTaskId = fileName.indexOf( ',', startOfTaskId );
+		if( endOfTaskId == -1 )
+			endOfTaskId = fileName.length() - ".xls".length();
+		
 		String idString = 
-			uri.substring( indexOfUnderscore + 1 , uri.length() - ".xls".length() );
+			fileName.substring( startOfTaskId, endOfTaskId );
 		
 		long id;
 		try {
@@ -60,7 +69,7 @@ public class ExcelReportServlet extends HttpServlet {
 		} catch (NumberFormatException e) {
 			throw new ServletException( "Invalid Parameter!" );
 		}
-			
+		
 		CorrectorDelegateObject delegateObject = (CorrectorDelegateObject)TaskModelViewDelegate.getDelegateObject( request.getSession().getId(), id );
 
 		if( delegateObject == null ){
@@ -73,9 +82,31 @@ public class ExcelReportServlet extends HttpServlet {
 			
 		response.setContentType( "application/msexcel" );
 		OutputStream out = response.getOutputStream();
-			
+
+		
 		try {
-			delegateObject.getTaskManager().getReportBuilder().createExcelBinary( id, out );
+			if( fileName.startsWith( "report" ) ){
+				
+				delegateObject.getTaskManager().getReportBuilder().createExcelBinary( id, out );
+				
+			}else if( fileName.startsWith( "MCBlockReport" ) ){
+				
+				int startOfCategoryId = endOfTaskId + 1;
+				int endOfCategoryId = fileName.indexOf( ',', startOfCategoryId );
+				String categoryId = fileName.substring( startOfCategoryId, endOfCategoryId );
+				int startOfBlockIndex = endOfCategoryId + 1;
+				int endOfBlockIndex = fileName.length();
+				int blockIndex;
+				try {
+					blockIndex = Integer.parseInt( fileName.substring( startOfBlockIndex, endOfBlockIndex ) );
+				} catch (NumberFormatException e) {
+					throw new ServletException( "Invalid Parameter!" );
+				}
+				delegateObject.getTaskManager().getReportBuilder().createExcelAnalysisForBlock( id, categoryId, blockIndex, out );
+				
+			}else
+				response.sendError( 404 );
+			
 		} catch (TaskApiException e) {
 			throw new ServletException( e );
 		}

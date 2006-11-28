@@ -32,9 +32,22 @@ public class BlockInfoVO {
 	private boolean preserveOrder;
 	private float pointsPerSubTask;
 	private String type;
+	private int index;
 	
 	
 	
+	/**
+	 * @return the index
+	 */
+	public int getIndex() {
+		return index;
+	}
+	/**
+	 * @param index the index to set
+	 */
+	public void setIndex(int index) {
+		this.index = index;
+	}
 	/**
 	 * @return the type
 	 */

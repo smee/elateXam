@@ -58,7 +58,7 @@ public class ExcelReportServlet extends HttpServlet {
 		
 		int endOfTaskId = fileName.indexOf( ',', startOfTaskId );
 		if( endOfTaskId == -1 )
-			endOfTaskId = fileName.length() - ".xls".length();
+			endOfTaskId = fileName.length();
 		
 		String idString = 
 			fileName.substring( startOfTaskId, endOfTaskId );

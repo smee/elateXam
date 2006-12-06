@@ -47,4 +47,10 @@ public class TreeRefreshAction implements Action {
 
 	}
 
+	public void perform(Type arg0, Type arg1) {
+		System.out.println( "repaint" );
+		ComplexTE.getInstance().getEditorPanel().repaint();
+		
+	}
+
 }

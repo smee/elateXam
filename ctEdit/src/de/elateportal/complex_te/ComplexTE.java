@@ -7,6 +7,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +15,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.util.LinkedHashSet;
 import java.util.Properties;
 
 import javax.swing.AbstractAction;
@@ -64,6 +66,7 @@ public class ComplexTE extends JFrame
 	
 	// other files
 	private final static URL language_location = Thread.currentThread().getContextClassLoader().getResource("language.properties");
+	private final static File properties_location = new File("ctedit.properties");
 	
 	// Components
 	private JSplitPane splitPane;
@@ -99,12 +102,15 @@ public class ComplexTE extends JFrame
     // Misc.
     private JFileChooser chooser = null;	//the file chooser (used for open/close-Dialogs)
     private Properties languages;			//the language-specific words (open, save, ...) are stored here
+    private Properties options;
     private int langNo = 0;
     JMenuBar menu;
     JMenu file;
     JMenu edit;
     JMenu language;
     JMenu help;
+    private JMenu myLastFileOpenAction;
+    LinkedHashSet history = new LinkedHashSet();
     
 	// Constructor
 	public ComplexTE()
@@ -140,6 +146,10 @@ public class ComplexTE extends JFrame
 			languages = new Properties();
 			
 			loadLanguages( language_location , false );
+			
+			options = new Properties();
+			
+			loadProperties( properties_location , false );
 			
 			for ( int i=1; i<=Integer.parseInt( languages.getProperty("language_counter") ); i++)
 				if ( languages.getProperty("language_"+i).equals(currentLanguage) ) langNo = i;
@@ -193,7 +203,11 @@ public class ComplexTE extends JFrame
     	}
     	
     	if ( result == JOptionPane.NO_OPTION ) return;
-    	else  exit();		
+    	else  
+    	{
+        	saveProperties( properties_location, false );
+    		exit();		
+    	}
 	}
 
 	public void loadLanguages( URL fileName, boolean showProperties )
@@ -204,6 +218,59 @@ public class ComplexTE extends JFrame
 			languages.load( fis );
 			if (showProperties)
 				languages.list( System.out );
+		}
+		catch ( IOException  e )
+		{
+			e.printStackTrace();
+		} 
+	}
+	
+	private void loadProperties( File fileName, boolean showProperties )
+	{
+		try
+		{
+			if ( fileName == null || !fileName.exists()) 
+				return;
+			FileInputStream fis = new FileInputStream(fileName);
+			options.load( fis );
+			if (showProperties)
+				options.list( System.out );
+			
+			for ( int i = 9; i >= 0; i-- )
+			{
+				String location = options.getProperty( "file_location_"+i, null );
+				if ( location != null)
+					history.add( location );
+			}
+		}
+		catch ( IOException  e )
+		{
+			e.printStackTrace();
+		} 
+	}
+	
+	protected void saveProperties( File fileName, boolean showProperties )
+	{
+		try
+		{
+			if ( fileName == null ) 
+				return;
+			FileOutputStream fos = new FileOutputStream(fileName);
+			
+			Object[] entries = history.toArray(new Object[]{});
+			int j = 0;
+			for ( int i = history.size() - 1; i >= 0; i-- )
+			{
+				if ( history.size() - i == 11) 
+					break;
+				
+				options.setProperty("file_location_"+j, entries[i].toString());
+				j++;
+			}
+			
+			options.store( fos, "" );
+			if (showProperties)
+				options.list( System.out );
 		}
 		catch ( IOException  e )
 		{
@@ -240,11 +307,51 @@ public class ComplexTE extends JFrame
 		file.add(_myExampleAction);
 		file.addSeparator();
 		file.add( myOpenAction );
+		myLastFileOpenAction = new JMenu( languages.getProperty("language_"+langNo+"_lastopen") );
+		myLastFileOpenAction.setIcon(JAXFrontProperties.getImageIcon(SystemImages.ICON_EDIT_XML));
+		updateLastOpenFiles();
+		file.add( myLastFileOpenAction );
 		file.addSeparator();
 		file.add( mySaveAction );
 		file.add( mySaveAsAction );
 		file.addSeparator();
 		file.add(_exitAction);
+	}
+	
+	private void updateLastOpenFiles()
+	{
+		myLastFileOpenAction.removeAll();
+		if ( history.size() == 0 )
+		{
+			myLastFileOpenAction.setEnabled(false);
+			return;
+		}
+		myLastFileOpenAction.setEnabled(true);
+		
+		Object[] entries = history.toArray(new Object[]{});
+		for ( int i = history.size() - 1; i >= 0; i-- )
+		{
+			if ( history.size() - i == 11) 
+				break;
+			
+			final String location = entries[i].toString();
+			AbstractAction abstr = new AbstractAction(location, JAXFrontProperties.getImageIcon(SystemImages.ICON_EDIT_XML)) {
+	            public void actionPerformed( ActionEvent e ) {
+	            	File f = new File(location);
+	            	if (f.exists() && f.isFile())
+	            	{
+	            		history.remove(location);
+	            		history.add(location);
+	            		updateLastOpenFiles();
+		            	xml_location = location;
+		            	myExample();
+	            	} 
+	            	else
+	            		JOptionPane.showMessageDialog(null, languages.getProperty("language_"+langNo+"_notfound"), languages.getProperty("language_"+langNo+"_notfound"), JOptionPane.ERROR_MESSAGE);
+	            }
+			};
+			myLastFileOpenAction.add( abstr );
+		}
 	}
 	
 	private void addEditMenu()
@@ -330,7 +437,11 @@ public class ComplexTE extends JFrame
         mySaveAsAction = new AbstractAction( languages.getProperty("language_"+langNo+"_saveAs"), JAXFrontProperties.getImageIcon(SystemImages.ICON_SAVEAS_FILE) ) {        	
     		public void actionPerformed(ActionEvent ae)
     		{
-    			chooser.setCurrentDirectory(new File("."));
+    			if ( xml_location == null )
+    				chooser.setCurrentDirectory(new File("."));
+    			else
+    				chooser.setCurrentDirectory(new File(xml_location));
+    			
     			ExtensionFileFilter eff = new ExtensionFileFilter();
     			eff.addExtension( "xml" );
     			eff.setDescription( ".xml files" );
@@ -352,7 +463,10 @@ public class ComplexTE extends JFrame
     				
     				//System.out.println(xml_location);
 					currentDom.saveAs(new File( xml_location ));
-    				
+					history.remove(xml_location);
+					history.add(xml_location);
+					updateLastOpenFiles();
+					
 				} catch (ValidationException e) {
 					// Auto-generated catch block
 					e.printStackTrace();
@@ -365,7 +479,11 @@ public class ComplexTE extends JFrame
     	myOpenAction = new AbstractAction( languages.getProperty("language_"+langNo+"_open"), JAXFrontProperties.getImageIcon(SystemImages.ICON_OPEN_FILE) ) {        	
     		public void actionPerformed(ActionEvent ae)
     		{
-    			chooser.setCurrentDirectory(new File("."));
+    			if (history.size() > 0)
+    				chooser.setCurrentDirectory(new File(history.iterator().next().toString()));
+    			else
+    			    chooser.setCurrentDirectory(new File("."));
+    			
     			ExtensionFileFilter eff = new ExtensionFileFilter();
     			eff.addExtension( "xml" );
     			eff.setDescription( ".xml files" );
@@ -380,6 +498,9 @@ public class ComplexTE extends JFrame
     			else
     				return;
     			
+    			history.remove(xml_location);
+    			history.add(xml_location);
+    			updateLastOpenFiles();
     			// Opens a file from a specified location
     			myExample(); // uses the same method as to create a new DOM, but this time a xml_location is specified
     		}			
@@ -410,7 +531,10 @@ public class ComplexTE extends JFrame
     			
     			try {
 					currentDom.saveAs(new File( xml_location ));
-    				
+					history.remove(xml_location);
+					history.add(xml_location);
+					updateLastOpenFiles();
+					
 				} catch (ValidationException e) {
 					// Auto-generated catch block
 					e.printStackTrace();

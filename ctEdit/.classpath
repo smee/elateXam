@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="etc/lib/jaxfront-core.jar"/>
 	<classpathentry kind="lib" path="etc/lib/jaxfront-pdf.jar"/>
 	<classpathentry kind="lib" path="etc/lib/jaxfront-swing.jar"/>
 	<classpathentry kind="lib" path="etc/lib/jaxfront-xuieditor.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/elate/jars/drawtask-1.0.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/xerces/jars/xercesImpl-2.6.2.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-beanutils/jars/commons-beanutils-1.5.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-collections/jars/commons-collections-2.0.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.0.4.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/log4j/jars/log4j-1.2.8.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/jgoodies/jars/looks-1.2.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

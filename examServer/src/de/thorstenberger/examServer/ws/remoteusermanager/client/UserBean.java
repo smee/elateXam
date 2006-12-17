@@ -13,7 +13,7 @@ public class UserBean  implements java.io.Serializable {
     private java.lang.String name;
     private java.lang.String password;
     private java.lang.String role;
-    private java.lang.String surname;
+    private java.lang.String firstName;
 
     public UserBean() {
     }
@@ -30,7 +30,7 @@ public class UserBean  implements java.io.Serializable {
            this.name = name;
            this.password = password;
            this.role = role;
-           this.surname = surname;
+           this.firstName = surname;
     }
 
 
@@ -135,22 +135,22 @@ public class UserBean  implements java.io.Serializable {
 
 
     /**
-     * Gets the surname value for this UserBean.
+     * Gets the firstName value for this UserBean.
      * 
-     * @return surname
+     * @return firstName
      */
-    public java.lang.String getSurname() {
-        return surname;
+    public java.lang.String getFirstName() {
+        return firstName;
     }
 
 
     /**
-     * Sets the surname value for this UserBean.
+     * Sets the firstName value for this UserBean.
      * 
-     * @param surname
+     * @param firstName
      */
-    public void setSurname(java.lang.String surname) {
-        this.surname = surname;
+    public void setFirstName(java.lang.String surname) {
+        this.firstName = surname;
     }
 
     private java.lang.Object __equalsCalc = null;
@@ -180,9 +180,9 @@ public class UserBean  implements java.io.Serializable {
             ((this.role==null && other.getRole()==null) || 
              (this.role!=null &&
               this.role.equals(other.getRole()))) &&
-            ((this.surname==null && other.getSurname()==null) || 
-             (this.surname!=null &&
-              this.surname.equals(other.getSurname())));
+            ((this.firstName==null && other.getFirstName()==null) || 
+             (this.firstName!=null &&
+              this.firstName.equals(other.getFirstName())));
         __equalsCalc = null;
         return _equals;
     }
@@ -209,8 +209,8 @@ public class UserBean  implements java.io.Serializable {
         if (getRole() != null) {
             _hashCode += getRole().hashCode();
         }
-        if (getSurname() != null) {
-            _hashCode += getSurname().hashCode();
+        if (getFirstName() != null) {
+            _hashCode += getFirstName().hashCode();
         }
         __hashCodeCalc = false;
         return _hashCode;
@@ -253,8 +253,8 @@ public class UserBean  implements java.io.Serializable {
         elemField.setNillable(true);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("surname");
-        elemField.setXmlName(new javax.xml.namespace.QName("", "surname"));
+        elemField.setFieldName("firstName");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "firstName"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"));
         elemField.setNillable(true);
         typeDesc.addFieldDesc(elemField);

@@ -112,7 +112,7 @@ public class WSAuthenticationProvider extends AbstractUserDetailsAuthenticationP
 					User user = new User();
 					user.setEnabled( true );
 					user.setUsername( userBean.getLogin() );
-					user.setFirstName( userBean.getSurname() == null ? "" : userBean.getSurname() );
+					user.setFirstName( userBean.getFirstName() == null ? "" : userBean.getFirstName() );
 					user.setLastName( userBean.getName() == null ? "" : userBean.getName() );
 					user.setEmail( userBean.getEmail() == null ? "" : userBean.getEmail() );
 					user.setPassword( StringUtil.encodePassword( userBean.getPassword(), "SHA" ) );

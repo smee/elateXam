@@ -6,6 +6,45 @@
 <head>
 	<title>L&ouml;sung von ${Solution.login}</title>
 	<link rel="stylesheet" href="<%= request.getContextPath() %>/format.css" type="text/css">
+	<script type="text/javascript"> djConfig = { isDebug: false }; </script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/dojo/dojo.js"></script>
+	<script type="text/javascript">
+		dojo.require("dojo.widget.Dialog");
+		dojo.require("dojo.io.*");
+	</script>
+
+	<script type="text/javascript">
+		var dlg;
+
+		function init(e) {
+			dlg = dojo.widget.byId("DialogContent");
+			var btn = document.getElementById("hider");
+			dlg.setCloseControl(btn);
+			
+         	x = new dojo.io.FormBind ({
+           		formNode: "studentAnnotationForm",
+           		url: '<html:rewrite action="/ajaxSaveStudentAnnotation" paramId="id" paramName="Solution" paramProperty="taskId"/>',
+           		load: callBack
+         	});
+		}
+		
+		dojo.addOnLoad(init);
+
+       function callBack(type, data, evt) {
+          	dojo.byId('studentAnnotationTA').value = data;
+          	dlg.hide();
+       }
+    </script>
+    
+	<style type="text/css">
+		.dojoDialog {
+			background : #eee;
+			border : 1px solid #999;
+			-moz-border-radius : 5px;
+			padding : 4px;
+		}
+	</style>
+	
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000">
@@ -26,7 +65,7 @@
       <a href="${ReturnURL}">&Uuml;bersicht</a></td>
   </tr>
   <tr bgcolor="#F2F9FF"> 
-	<td><br>
+	<td><br/>
 	<fieldset>
             
       <table>
@@ -47,7 +86,7 @@
                 <td>${Solution.tryStartTime}</td>
               </tr>
             </table>
-			</fieldset><br>
+			</fieldset><br/>
 	</td>
   </tr>
   <tr> 
@@ -63,23 +102,30 @@
 				</c:if>
 				</td><td valign="top" align="right" class="ComplexTaskHint">
 					${SubTasklet.reachablePoints} Punkt<c:if test="${SubTasklet.reachablePoints != 1}">e</c:if>
-				</td></tr></table><br><br>
+				</td></tr></table><br/><br/>
 
 					${SubTasklet.problem}
 					
-				<br><br>
+				<br/><br/>
 					${SubTasklet.renderedHTML}
 				
 				<c:choose>
 					<c:when test="${SubTasklet.corrected}">
-						<br><br><font color=red>Aufgabe korrigiert, erreichte Punkte: ${SubTasklet.points}</font>
+						<br/><br/><font color=red>Aufgabe korrigiert, erreichte Punkte: ${SubTasklet.points}</font>
 					</c:when>
 					<c:otherwise>
-						<br><br><font color=red>manuelle Korrektur notwendig</font>
+						<br/><br/><font color=red>manuelle Korrektur notwendig</font>
 					</c:otherwise>
 				</c:choose>
 				
-				<br></fieldset><br>
+				<br/></fieldset>
+					<c:if test="${Solution.canAnnotate}">
+						<script type="text/javascript">
+							document.write('<a href="javascript: dlg.show()"><img src="icons/tango/accessories-text-editor-small.png" border="0" hspace="5" align="right"/></a>');
+						</script>
+					</c:if>
+					<br/>
+					<br/>
 
 				
 			</c:forEach>
@@ -89,19 +135,29 @@
   </tr>
   
   <tr bgcolor="#F2F9FF"> 
-	<td><br>
-	<fieldset><legend>Kommentierung</legend>
+	<td>
+	<br/><fieldset><legend>Kommentierung</legend>
+		<img src="<%= request.getContextPath() %>/icons/tango/accessories-text-editor.png" align="left" hspace="10">
 		<c:choose>
 			<c:when test="${Solution.canAnnotate}">
-				Sie haben hier die Möglichkeit, die Korrektur Ihrer Aufgaben zu kommentieren. Bitte geben Sie zu jedem Kommentar die Nummer der betreffenden Aufgabe an.
-				<br><br>
-				<form method="post" action="<html:rewrite action="/saveStudentAnnotation"/>">
-					<input type="hidden" name="id" value="${Solution.taskId}"/>
-					<div align="center">
-					<textarea name="studentAnnotation" cols="80" rows="15" !onChange="setModified()" style="background-color: #FFFFDD;">${Solution.actualAnnotation}</textarea>
-					<input type="submit" name="save" value="Speichern"/>
-					</div>
-				</form>
+				<script type="text/javascript">
+					document.write('Sie haben die Möglichkeit, Ihre Aufgaben in einem Textfeld zu kommentieren. Klicken Sie dazu auf das Icon rechts unter jeder Aufgabe. Es erscheint <b>immer dasselbe Textfeld</b>, geben Sie deswegen bitte zu jedem Kommentar die <b>Nummer der betreffenden Aufgabe an</b>.');
+				</script>
+				<div dojoType="dialog" !dojoType="ModalFloatingPane" id="DialogContent" bgColor="white" bgOpacity="0.5" toggle="fade" toggleDuration="250">
+					Sie haben hier die Möglichkeit, die Korrektur Ihrer Aufgaben zu kommentieren.<br/>Bitte geben Sie zu jedem Kommentar die <b>Nummer der betreffenden Aufgabe</b> an.
+					<br/><br/>
+					<form id="studentAnnotationForm" action="<html:rewrite action="/saveStudentAnnotation" paramId="id" paramName="Solution" paramProperty="taskId"/>">
+
+						<div align="center">
+							<textarea name="studentAnnotation" id="studentAnnotationTA" cols="65" rows="12" style="background-color: #FFFFDD">${Solution.actualAnnotation}</textarea>
+							<br/>
+							<input type="submit" name="save" value="Speichern"/>
+							<script type="text/javascript">
+								document.write('<input type="button" id="hider" value="Ausblenden"/>');
+							</script>
+						</div>
+					</form>
+				</div>
 			</c:when>
 			<c:otherwise>Sie können erst kommentieren, wenn alle Aufgaben korrigiert wurden.</c:otherwise>
 		</c:choose>
@@ -115,7 +171,7 @@
 				<br/>
 			</c:forEach>
 		</c:if>
-	</fieldset><br>
+	</fieldset><br/>
 	</td>
   </tr>
   

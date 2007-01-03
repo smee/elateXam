@@ -15,7 +15,9 @@
 		<attainGoal name= "war:install"/>
 	</preGoal>
 	
-	<!-- copy the drawtask jar to webapps/drawTask -->
+	<!-- copy the drawtask jar into webapps/drawTask
+		and the dojo toolkit into webapps/dojo
+	-->
 	<postGoal name="war:webapp">
 
 	    <j:forEach var="lib" items="${pom.artifacts}">
@@ -30,6 +32,11 @@
 	      </j:if>  
 	
 	    </j:forEach>             
+	    
+		<copy todir="${maven.war.webapp.dir}/dojo">
+			<fileset dir="${org.apache.jetspeed.portal.home}/ajax/dojo">
+			</fileset>
+		</copy>
 		
 	</postGoal>
 	

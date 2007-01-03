@@ -35,6 +35,10 @@
   <servlet-name>ExcelReport</servlet-name>
   <servlet-class>de.thorstenberger.taskmodel.view.statistics.ExcelReportServlet</servlet-class>
  </servlet>
+ <servlet>
+  <servlet-name>AjaxResponse</servlet-name>
+  <servlet-class>de.thorstenberger.taskmodel.view.AjaxResponseServlet</servlet-class>
+ </servlet>
  <servlet-mapping>
   <servlet-name>action</servlet-name>
   <url-pattern>*.do</url-pattern>
@@ -42,6 +46,10 @@
  <servlet-mapping>
   <servlet-name>ExcelReport</servlet-name>
   <url-pattern>/excelReport/*</url-pattern>
+ </servlet-mapping>
+ <servlet-mapping>
+  <servlet-name>AjaxResponse</servlet-name>
+  <url-pattern>/ajaxResponse</url-pattern>
  </servlet-mapping>
  <session-config>
   <session-timeout>240</session-timeout>

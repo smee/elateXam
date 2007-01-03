@@ -45,11 +45,11 @@
  <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#showSolution"
   NAME="action3" PATH="/showSolution" SHAPE="56,320,100,25" TYPE="action">
   <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="success"
-   NAME="forward0" PATH="/showCorrection.jsp" TARGET="page6"
+   NAME="forward0" PATH="/showCorrection.jsp" TARGET="page12"
    TITLE="success" TYPE="forward"/>
  </PROCESS-ITEM>
  <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page6"
-  PATH="/showCorrection.jsp" SHAPE="232,312,50,25" SUBTYPE="jsp"
+  PATH="/showCorrection_bak.jsp" SHAPE="232,312,50,25" SUBTYPE="jsp"
   TITLE="showCorrection.jsp" TYPE="page"/>
  <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#tutorCorrectionOverview"
   NAME="action4" PATH="/tutorCorrectionOverview" SHAPE="56,512,100,25" TYPE="action">
@@ -70,6 +70,9 @@
   <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" NAME="link2"
    PATH="/showCorrectionToCorrector.do" SUBTYPE="confirmed"
    TARGET="action11" TITLE="/showCorrectionToCorrector.do" TYPE="link"/>
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" NAME="link3"
+   PATH="/complexTaskStructure.do" SUBTYPE="confirmed" TARGET="action12"
+   TITLE="/complexTaskStructure.do" TYPE="link"/>
  </PROCESS-ITEM>
  <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#assignTasklet"
   NAME="action6" PATH="/assignTasklet" SHAPE="64,632,100,41" TYPE="action">
@@ -172,4 +175,17 @@
    PATH="/tutorCorrectionOverview.do" SUBTYPE="confirmed"
    TARGET="action4" TITLE="/tutorCorrectionOverview.do" TYPE="link"/>
  </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem"
+  ID="#ajaxSaveStudentAnnotation" NAME="action13"
+  PATH="/ajaxSaveStudentAnnotation" SHAPE="304,1008,100,25" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="success"
+   NAME="forward0" PATH="/ajaxResponse" TARGET="action16"
+   TITLE="success" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page12"
+  PATH="/showCorrection.jsp" SHAPE="264,432,0,0" SUBTYPE="jsp"
+  TITLE="showCorrection.jsp" TYPE="page"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#ajaxResponse"
+  NAME="action16" PATH="/ajaxResponse" SHAPE="720,1008,0,0"
+  SUBTYPE="unknown" TYPE="action"/>
 </PROCESS>

@@ -90,34 +90,35 @@ public class SubTaskView_Paint extends SubTaskView {
 		
 		ret.append( "<input type=\"hidden\" id=\"task_" + relativeTaskNumber + ".image\" name=\"task[" + relativeTaskNumber + "].image\">\n" );
 		ret.append( "<input type=\"hidden\" id=\"task_" + relativeTaskNumber + ".resetted\" name=\"task[" + relativeTaskNumber + "].resetted\">\n" );
-		ret.append( "<script type=\"text/javascript\">\n" );
-		ret.append( " var preSave_task_" + relativeTaskNumber + " = function(){\n" );
-		ret.append( " document.getElementById(\"task_" + relativeTaskNumber + ".image\").value = document.drawTask_" + relativeTaskNumber + ".getForegroundPictureWithUndoData(5);\n" );
-		ret.append( " document.getElementById(\"task_" + relativeTaskNumber + ".resetted\").value = document.drawTask_" + relativeTaskNumber + ".isResetted();\n" );
-		ret.append( "};\n" );
-		ret.append( " var leavePage_task_" + relativeTaskNumber + " = function(){\n" );
-//		ret.append( " alert( document.drawTask_" + relativeTaskNumber + ".hasChanged() );\n" );
-		ret.append( " 	if( document.drawTask_" + relativeTaskNumber + ".hasChanged() ){\n" );
-		ret.append( " 		setModified();\n" );
-		ret.append( " 	};\n" );
-		ret.append( " };\n" );
-		ret.append( "preSaveManager.registerCallback( preSave_task_" + relativeTaskNumber + " );\n" );
-		ret.append( "leavePageManager.registerCallback( leavePage_task_" + relativeTaskNumber + " );\n" );
-		ret.append( "</script>\n" );
 		
+		if( !corrected ){
+			ret.append( "<script type=\"text/javascript\">\n" );
+			ret.append( " var preSave_task_" + relativeTaskNumber + " = function(){\n" );
+			ret.append( " document.getElementById(\"task_" + relativeTaskNumber + ".image\").value = document.drawTask_" + relativeTaskNumber + ".getForegroundPictureWithUndoData(5);\n" );
+			ret.append( " document.getElementById(\"task_" + relativeTaskNumber + ".resetted\").value = document.drawTask_" + relativeTaskNumber + ".isResetted();\n" );
+			ret.append( "};\n" );
+			ret.append( " var leavePage_task_" + relativeTaskNumber + " = function(){\n" );
+			ret.append( " 	if( document.drawTask_" + relativeTaskNumber + ".hasChanged() ){\n" );
+			ret.append( " 		setModified();\n" );
+			ret.append( " 	};\n" );
+			ret.append( " };\n" );
+			ret.append( "preSaveManager.registerCallback( preSave_task_" + relativeTaskNumber + " );\n" );
+			ret.append( "leavePageManager.registerCallback( leavePage_task_" + relativeTaskNumber + " );\n" );
+			ret.append( "</script>\n" );
+		}
 		return ret.toString();
 		
 	}
 
 	@Override
 	public String getCorrectedHTML(HttpServletRequest request, int relativeTaskNumber ) {
-		return getRenderedHTML( request, -1, true );
+		return getRenderedHTML( request, 999999, true );
 	}
 
 	@Override
 	public String getCorrectionHTML(HttpServletRequest request) {
 	    StringBuilder ret = new StringBuilder();
-	    ret.append( getRenderedHTML( request, -1, true ) );
+	    ret.append( getRenderedHTML( request, 999999, true ) );
 	    
 	    NumberFormat nF = NumberFormat.getNumberInstance();
 	    

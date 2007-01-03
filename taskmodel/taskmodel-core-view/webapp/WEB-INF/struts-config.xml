@@ -50,6 +50,9 @@
   <action path="/complexTaskStructure" type="de.thorstenberger.taskmodel.view.statistics.ComplexTaskStructureAction">
    <forward name="success" path="/statistics/complexTaskStructure.jsp"/>
   </action>
+  <action path="/ajaxSaveStudentAnnotation" type="de.thorstenberger.taskmodel.view.AJAXSaveStudentAnnotationAction">
+   <forward name="success" path="/ajaxResponse"/>
+  </action>
  </action-mappings>
  <controller nocache="true"/>
  <message-resources parameter="de.thorstenberger.taskmodel.view.resources.Messages"/>

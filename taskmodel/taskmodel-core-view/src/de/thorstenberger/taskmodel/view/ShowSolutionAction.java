@@ -169,7 +169,7 @@ public class ShowSolutionAction extends Action {
 			if( ct.getTaskletCorrection().getStudentAnnotations().size() > 0 )
 //				request.setAttribute( "actualAnnotation", ct.getTaskletCorrection().getStudentAnnotations().get( 0 ).getText() );
 				if( !ct.getTaskletCorrection().getStudentAnnotations().get( 0 ).isAcknowledged() )
-						sivo.setActualAnnotation( ParserUtil.escapeCR( ct.getTaskletCorrection().getStudentAnnotations().get( 0 ).getText() ) );
+						sivo.setActualAnnotation( ct.getTaskletCorrection().getStudentAnnotations().get( 0 ).getText() );
 		}
 		
 		List<SolutionInfoVO.AnnotationInfoVO> annotations = new ArrayList<SolutionInfoVO.AnnotationInfoVO>();

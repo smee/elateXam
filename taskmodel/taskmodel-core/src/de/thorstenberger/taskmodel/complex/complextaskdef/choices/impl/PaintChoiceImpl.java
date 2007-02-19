@@ -27,8 +27,8 @@ import java.util.List;
 
 import de.thorstenberger.taskmodel.complex.complextaskdef.Choice;
 import de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef;
-import de.thorstenberger.taskmodel.complex.complextaskdef.subtaskdefs.impl.ClozeSubTaskDefImpl;
-import de.thorstenberger.taskmodel.complex.jaxb.ClozeSubTaskDef;
+import de.thorstenberger.taskmodel.complex.complextaskdef.subtaskdefs.impl.PaintSubTaskDefImpl;
+import de.thorstenberger.taskmodel.complex.jaxb.PaintSubTaskDef;
 
 /**
  * @author Steffen Dienst
@@ -52,7 +52,7 @@ public class PaintChoiceImpl implements Choice {
 		List<SubTaskDef> ret = new ArrayList<SubTaskDef>();
 		Iterator it = choice.getPaintSubTaskDef().iterator();
 		while( it.hasNext() ){
-			ret.add( new ClozeSubTaskDefImpl( (ClozeSubTaskDef) it.next() ) );
+			ret.add( new PaintSubTaskDefImpl( (PaintSubTaskDef) it.next() ) );
 		}
 		return ret;
 	}

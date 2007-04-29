@@ -71,12 +71,12 @@ function leave(ziel){
 	if (this.modified)
 	{
 		if ( confirm("Sie haben Ihre Änderungen an dieser Seite noch nicht gespeichert.\n\nOK - Änderungen verwerfen und Seite verlassen\nAbbrechen - Seite noch nicht verlassen") )
-			window.location.href = ziel;
+			window.location.href = escape(ziel);
 		else
 			return;
 	}
 	else
-		window.location.href = ziel;
+		window.location.href = escape(ziel);
 }
 
 function send(){

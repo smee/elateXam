@@ -141,7 +141,7 @@ function timer1()
 
 function checkedLink(name, target, linkClass)
 {
-	document.write("<a class=" +linkClass+ " href=javascript:leave('" +target+ "')>" +name+ "</a>");
+	document.write("<a class=" +linkClass+ " href=javascript:leave('" +escape( target ) + "')>" +name+ "</a>");
 }
 
 function fenster(file,breite,hoehe) {

@@ -51,4 +51,11 @@ public interface TaskDef {
 	 */
 	public boolean isActive();
 	
+	/**
+	 * Denotes whether this task should be visible in the list that shows available
+	 * tasks to the student.
+	 * @return
+	 */
+	public boolean isVisible();
+	
 }

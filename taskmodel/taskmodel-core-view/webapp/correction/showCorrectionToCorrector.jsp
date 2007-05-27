@@ -83,7 +83,7 @@
 						<br><br><font color=red>Aufgabe korrigiert, erreichte Punkte: ${SubTasklet.points}</font>
 					</c:when>
 					<c:otherwise>
-						<br><br><font color=red>manuelle Korrektur notwendig</font>
+						<br><br><font color=red>Aufgabe noch nicht korrigiert</font>
 					</c:otherwise>
 				</c:choose>
 				

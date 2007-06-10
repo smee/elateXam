@@ -58,4 +58,10 @@ public interface TaskDef {
 	 */
 	public boolean isVisible();
 	
+	/**
+	 * Denotes the taskId of the task that is supposed to be executed after this task.
+	 * @return taskId of following task or null if none is defined
+	 */
+	public Long getFollowingTaskId();
+	
 }

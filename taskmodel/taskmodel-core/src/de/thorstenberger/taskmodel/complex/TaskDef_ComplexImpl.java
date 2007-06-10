@@ -37,6 +37,7 @@ import de.thorstenberger.taskmodel.impl.AbstractTaskDef;
 public class TaskDef_ComplexImpl extends AbstractTaskDef implements TaskDef_Complex {
 
 	private boolean showCorrectionToUsers;
+	private boolean isVisible;
 	
 	private InputStream complexTaskIS;
 	private ComplexTaskDefDAO complexTaskDefDAO;
@@ -50,11 +51,19 @@ public class TaskDef_ComplexImpl extends AbstractTaskDef implements TaskDef_Comp
 	 * @param deadline
 	 * @param stopped
 	 */
-	public TaskDef_ComplexImpl(long id, String title, String shortDescription, Long deadline, boolean stopped, ComplexTaskDefDAO complexTaskDefDAO, InputStream complexTaskIS ) {
-		super(id, title, shortDescription, deadline, stopped);
+	public TaskDef_ComplexImpl(long id, String title, String shortDescription, Long deadline, boolean stopped, Long followingTaskId, ComplexTaskDefDAO complexTaskDefDAO, InputStream complexTaskIS ) {
+		super(id, title, shortDescription, deadline, stopped, followingTaskId);
 
 		this.complexTaskDefDAO = complexTaskDefDAO;
 		this.complexTaskIS = complexTaskIS;
+
+		try {
+//			if( complexTaskDefRoot == null )
+				complexTaskDefRoot = complexTaskDefDAO.getComplexTaskDefRoot( complexTaskIS );
+		} catch (TaskApiException e) {
+			throw new TaskModelPersistenceException( e );
+		}
+		
 	}
 
 
@@ -84,17 +93,18 @@ public class TaskDef_ComplexImpl extends AbstractTaskDef implements TaskDef_Comp
 	 * @return Returns the complexTaskDefRoot.
 	 */
 	public ComplexTaskDefRoot getComplexTaskDefRoot() {
-		try {
-			if( complexTaskDefRoot == null )
-				complexTaskDefRoot = complexTaskDefDAO.getComplexTaskDefRoot( complexTaskIS );
-		} catch (TaskApiException e) {
-			throw new TaskModelPersistenceException( e );
-		}
 		return complexTaskDefRoot;
 	}
 
-	
 
+	public boolean isVisible() {
+		return isVisible;
+	}
+
+	public void setVisible(boolean isVisible) {
+		this.isVisible = isVisible;
+	}
+	
 
 
 }

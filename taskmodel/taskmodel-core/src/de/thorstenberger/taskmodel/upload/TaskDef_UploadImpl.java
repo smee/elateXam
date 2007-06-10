@@ -40,8 +40,8 @@ public class TaskDef_UploadImpl extends AbstractTaskDef implements TaskDef_Uploa
 	 * @param deadline
 	 * @param stopped
 	 */
-	public TaskDef_UploadImpl(long id, String title, String shortDescription, Long deadline, boolean stopped) {
-		super(id, title, shortDescription, deadline, stopped);
+	public TaskDef_UploadImpl(long id, String title, String shortDescription, Long deadline, boolean stopped, Long followingTaskId ) {
+		super(id, title, shortDescription, deadline, stopped, followingTaskId);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -66,5 +66,13 @@ public class TaskDef_UploadImpl extends AbstractTaskDef implements TaskDef_Uploa
 	public int maxUploadableFiles(){
 		return 0;
 	}
+
+
+	public boolean isVisible() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	
 
 }

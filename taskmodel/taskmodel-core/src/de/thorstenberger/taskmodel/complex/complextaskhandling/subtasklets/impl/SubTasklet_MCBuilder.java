@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -105,7 +106,23 @@ public class SubTasklet_MCBuilder {
 		int[] correctAnswersOrder = RandomUtil.getPermutation( correctAnswers.size() );
 		int[] incorrectAnswersOrder = RandomUtil.getPermutation( incorrectAnswers.size() );
 		
+		if( mcSubTaskDef.isPreserveOrderOfAnswers() ){
+			int[] tmpOrder = RandomUtil.getPermutation( correctAnswers.size() );
+			correctAnswersOrder = new int[ numOfCorrectAnswers ];
+			System.arraycopy( tmpOrder, 0, correctAnswersOrder, 0, numOfCorrectAnswers );
+			Arrays.sort( correctAnswersOrder );
+			
+			tmpOrder = RandomUtil.getPermutation( incorrectAnswers.size() );
+			incorrectAnswersOrder = new int[ numOfAnswers - numOfCorrectAnswers ];
+			System.arraycopy( tmpOrder, 0, incorrectAnswersOrder, 0, numOfAnswers - numOfCorrectAnswers );
+			Arrays.sort( incorrectAnswersOrder );
+		}
+		
 		int[] insertOrder = RandomUtil.getPermutation( toInsert.length );
+		if( mcSubTaskDef.isPreserveOrderOfAnswers() ){
+			Arrays.sort( insertOrder );
+		}
+			
 		int insertIndex = 0;
 		
 		// korrekte einfügen

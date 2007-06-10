@@ -61,4 +61,6 @@ public interface ComplexTaskDefRoot {
 
 	public Integer getTimeInMinutesWithoutKindnessExtensionTime();
 	
+	public boolean isShowHandlingHintsBeforeStart();
+	
 }

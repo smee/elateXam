@@ -51,6 +51,10 @@ public class TaskletContainerImpl implements TaskletContainer {
 	 */
 	public TaskletContainerImpl( TaskFactory taskFactory ) {
 		this.taskFactory = taskFactory;
+		
+		// TODO check for at least 512MB of free memory
+		Runtime.getRuntime().maxMemory();
+		
 		try {
 			this.userObjectCache = JCS.getInstance( "taskmodel-core_userObjectCache" );
 		} catch (CacheException e) {

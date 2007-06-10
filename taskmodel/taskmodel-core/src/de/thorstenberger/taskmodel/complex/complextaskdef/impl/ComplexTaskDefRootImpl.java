@@ -150,6 +150,16 @@ public class ComplexTaskDefRootImpl implements ComplexTaskDefRoot {
 		else
 			return complexTaskDef.getConfig().getKindnessExtensionTime();
 	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot#isShowHandlingHintsBeforeStart()
+	 */
+	public boolean isShowHandlingHintsBeforeStart() {
+		if( !complexTaskDef.isSetShowHandlingHintsBeforeStart() )
+			return true;
+		else
+			return complexTaskDef.isShowHandlingHintsBeforeStart();
+	}
 	
 	
 

@@ -34,16 +34,24 @@ public abstract class AbstractTaskDef implements TaskDef {
 	private String shortDescription;
 	private boolean stopped;
 	private Long deadline;
+	private Long followingTaskId;
 	
 	/**
 	 * 
+	 * @param id
+	 * @param title
+	 * @param shortDescription
+	 * @param deadline
+	 * @param stopped
+	 * @param followingTaskId
 	 */
-	public AbstractTaskDef( long id, String title, String shortDescription, Long deadline, boolean stopped ) {
+	public AbstractTaskDef( long id, String title, String shortDescription, Long deadline, boolean stopped, Long followingTaskId ) {
 		this.id = id;
 		this.title = title;
 		this.shortDescription = shortDescription;
 		this.deadline = deadline;
 		this.stopped = stopped;
+		this.followingTaskId = followingTaskId;
 	}
 
 	/* (non-Javadoc)
@@ -96,5 +104,11 @@ public abstract class AbstractTaskDef implements TaskDef {
 		
 		return true;
 	}
+
+	public Long getFollowingTaskId() {
+		return followingTaskId;
+	}
+	
+	
 
 }

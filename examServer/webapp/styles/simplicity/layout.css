@@ -117,8 +117,8 @@
 
 /* BEGIN examServer taskhandling stuff */
 
-.tasks legend {  font-family: "Times New Roman", Times, serif; font-size: 15px; color: #0046D5; font-weight: normal; padding-top: 5px; padding-bottom: 5px; }
-.tasks fieldset {  border: 1px #BFB8BF solid; -moz-border-radius: 15px; padding:10px; background-color: #FFFFFF; }
+.tasks legend { color: #0046D5; font-weight: normal; /*padding-top: 5px; padding-bottom: 5px;*/ }
+.tasks fieldset { border: 1px #BFB8BF solid; -moz-border-radius: 15px; /*padding:10px;*/ background-color: #FFFFFF; }
 
 .copytext { color: #aaaaaa; font-size: 10px; font-family: Arial, Helvetica, Geneva, Verdana, sans-serif }
 .copytextlink { color: #777777; font-size: 10px; font-family: Arial, Helvetica, Geneva, Verdana, sans-serif }

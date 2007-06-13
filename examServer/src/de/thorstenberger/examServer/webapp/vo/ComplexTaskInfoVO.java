@@ -36,6 +36,7 @@ public class ComplexTaskInfoVO extends TaskInfoVO{
 	private boolean canContinueTry;
 	private String ctDeadline;
 	private boolean correctionVisible;
+	private boolean showHandlingHintsBeforeStart;
 	
 	/**
 	 * @return Returns the maxTries.
@@ -144,6 +145,18 @@ public class ComplexTaskInfoVO extends TaskInfoVO{
 	 */
 	public void setCorrectionVisible(boolean canSeeCorrection) {
 		this.correctionVisible = canSeeCorrection;
+	}
+	/**
+	 * @return the showHandlingHintsBeforeStart
+	 */
+	public boolean isShowHandlingHintsBeforeStart() {
+		return showHandlingHintsBeforeStart;
+	}
+	/**
+	 * @param showHandlingHintsBeforeStart the showHandlingHintsBeforeStart to set
+	 */
+	public void setShowHandlingHintsBeforeStart(boolean showHandlingHintsBeforeStart) {
+		this.showHandlingHintsBeforeStart = showHandlingHintsBeforeStart;
 	}
 	
 	

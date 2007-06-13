@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSPY v5 U (http://www.xmlspy.com) by tb (ul) -->
-<xs:schema targetNamespace="http://examServer.thorstenberger.de/taskDefs" xmlns="http://examServer.thorstenberger.de/taskDefs" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema targetNamespace="http://examServer.thorstenberger.de/taskDefs" xmlns="http://examServer.thorstenberger.de/taskDefs" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="1.0">
+<xs:annotation>
+   <xs:appinfo>
+      <jaxb:globalBindings generateIsSetMethod="true"/>
+   </xs:appinfo>
+</xs:annotation>
 	<xs:element name="taskDefs">
 		<xs:complexType>
 			<xs:sequence>
@@ -21,6 +26,8 @@
 						<xs:attribute name="title" type="xs:string" use="required"/>
 						<xs:attribute name="stopped" type="xs:boolean" use="required"/>
 						<xs:attribute name="deadline" type="xs:long" use="optional"/>
+						<xs:attribute name="visible" type="xs:boolean" use="optional" default="true"/>
+						<xs:attribute name="followingTaskId" type="xs:long" use="optional"/>
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>

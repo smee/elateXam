@@ -27,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.acegisecurity.userdetails.UsernameNotFoundException;
@@ -70,13 +71,14 @@ import de.thorstenberger.taskmodel.impl.UserInfoImpl;
 
 /**
  * @author Thorsten Berger
- *
+ * FIXME: move caching into TaskManagerImpl of Taskmodel-core
  */
 public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory {
 
 	// the taskhandling file is saved under user's home directory
 	public static final String COMPLEX_TASKHANDLING_FILE_PREFIX = "complextask_";
 	public static final String COMPLEX_TASKHANDLING_FILE_SUFFIX = ".xml";
+	public static final String COMPLEX_TASKHANDLING_BACKUP_FILE_SUFFIX = ".bak";
 	
 	
 	private List<String> availableTypes;
@@ -91,6 +93,9 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 	private ComplexTaskBuilder complexTaskBuilder;
 	
 	private Log log = LogFactory.getLog( "TaskLogger" );
+	
+	
+	private List<TaskDef> taskDefCache = null;
 	
 	/**
 	 * 
@@ -135,45 +140,47 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.TaskFactory#getTaskDef(long)
 	 */
-	public TaskDef getTaskDef(long taskId) {
-		TaskDefVO t = taskDefDao.getTaskDef( taskId );
-		
-		TaskDef_ComplexImpl ret;
-		try {
-			ret = new TaskDef_ComplexImpl( t.getId(), t.getTitle(),
-					t.getShortDescription(), t.getDeadline(), t.isStopped(), complexTaskDefDAO, new FileInputStream( examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.TASKDEFS + File.separatorChar + t.getComplexTaskFile() ) );
-		} catch (FileNotFoundException e) {
-			throw new TaskModelPersistenceException( e );
+	public synchronized TaskDef getTaskDef(long taskId) {
+
+		List<TaskDef> taskDefs = getTaskDefs();
+		Iterator it = taskDefs.iterator();
+		while( it.hasNext() ){
+			TaskDef td = (TaskDef)it.next();
+			if( td.getId() == taskId )
+				return td;
 		}
-		ret.setShowCorrectionToUsers( t.isShowSolutionToStudents() );
-		
-		return ret;
-		
+		return null;
 	}
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.TaskFactory#getTaskDefs()
 	 */
-	public List<TaskDef> getTaskDefs() {
-		List<TaskDefVO> taskDefVOs = taskDefDao.getTaskDefs();
+	public synchronized List<TaskDef> getTaskDefs() {
 		
-		List<TaskDef> ret = new ArrayList<TaskDef>();
+		if( taskDefCache == null ){
 		
-		for( TaskDefVO t : taskDefVOs ){
+			List<TaskDefVO> taskDefVOs = taskDefDao.getTaskDefs();
 			
-			TaskDef_ComplexImpl tdci;
-			try {
-				tdci = new TaskDef_ComplexImpl( t.getId(), t.getTitle(),
-						t.getShortDescription(), t.getDeadline(), t.isStopped(), complexTaskDefDAO, new FileInputStream( examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.TASKDEFS + File.separatorChar + t.getComplexTaskFile() ) );
-			} catch (FileNotFoundException e) {
-				throw new TaskModelPersistenceException( e );
+			taskDefCache = new ArrayList<TaskDef>();
+			
+			for( TaskDefVO t : taskDefVOs ){
+				
+				TaskDef_ComplexImpl tdci;
+				try {
+					tdci = new TaskDef_ComplexImpl( t.getId(), t.getTitle(),
+							t.getShortDescription(), t.getDeadline(), t.isStopped(), t.getFollowingTaskId(), complexTaskDefDAO, new FileInputStream( examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.TASKDEFS + File.separatorChar + t.getComplexTaskFile() ) );
+				} catch (FileNotFoundException e) {
+					throw new TaskModelPersistenceException( e );
+				}
+				tdci.setShowCorrectionToUsers( t.isShowSolutionToStudents() );
+				tdci.setVisible( t.isVisible() );
+				taskDefCache.add( tdci );
+				
 			}
-			tdci.setShowCorrectionToUsers( t.isShowSolutionToStudents() );
-			ret.add( tdci );
 			
 		}
 		
-		return ret;
+		return taskDefCache;
 	}
 
 	/* (non-Javadoc)
@@ -392,10 +399,15 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 			
 			// get the taskHandling xml file!
 			File homeDir = new File( examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.HOME + File.separatorChar + tasklet.getUserId() );
-			File complexTaskHandlingFile = new File( homeDir.getAbsolutePath() + File.separatorChar +  COMPLEX_TASKHANDLING_FILE_PREFIX + tasklet.getTaskId() + COMPLEX_TASKHANDLING_FILE_SUFFIX );
+			String pathOfCTHfile = homeDir.getAbsolutePath() + File.separatorChar +  COMPLEX_TASKHANDLING_FILE_PREFIX + tasklet.getTaskId() + COMPLEX_TASKHANDLING_FILE_SUFFIX;
+			File complexTaskHandlingFile = new File( pathOfCTHfile );
 			
 			ComplexTasklet ct = (ComplexTasklet)tasklet;
 			try {
+				File backup = new File( pathOfCTHfile + COMPLEX_TASKHANDLING_BACKUP_FILE_SUFFIX );
+				backup.delete();
+				complexTaskHandlingFile.renameTo( backup );
+				complexTaskHandlingFile = new File( pathOfCTHfile );
 				complexTaskHandlingDAO.save( ct.getComplexTaskHandlingRoot(), new FileOutputStream( complexTaskHandlingFile ) );
 			} catch (FileNotFoundException e) {
 				throw new TaskModelPersistenceException( e );

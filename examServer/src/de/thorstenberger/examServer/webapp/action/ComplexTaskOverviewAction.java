@@ -86,6 +86,7 @@ public class ComplexTaskOverviewAction extends BaseAction {
 		tivo.setMaxTries( ctd.getComplexTaskDefRoot().getTries() );
 		tivo.setTime( ctd.getComplexTaskDefRoot().getTimeInMinutesWithoutKindnessExtensionTime() );
 		tivo.setStartText( ctd.getComplexTaskDefRoot().getStartText() );
+		tivo.setShowHandlingHintsBeforeStart( ctd.getComplexTaskDefRoot().isShowHandlingHintsBeforeStart() );
 		tivo.setSpecificDescription( ctd.getComplexTaskDefRoot().getDescription() );
 		
 		if( request.getUserPrincipal() == null ){

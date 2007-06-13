@@ -140,6 +140,9 @@ public class TaskDefDaoImpl implements TaskDefDao {
 			taskDefVO.setStopped( taskDef.isStopped() );
 			taskDefVO.setId( taskDef.getId() );
 			taskDefVO.setDeadline( taskDef.getDeadline() == 0 ? null : taskDef.getDeadline() );
+			taskDefVO.setVisible( taskDef.isVisible() );
+			if( taskDef.isSetFollowingTaskId() )
+				taskDefVO.setFollowingTaskId( taskDef.getFollowingTaskId() );
 			
 			taskDefVO.setShowSolutionToStudents( taskDef.getComplexTaskDef().isShowSolutionToStudents() );
 			taskDefVO.setComplexTaskFile( taskDef.getComplexTaskDef().getComplexTaskFile() );
@@ -170,6 +173,9 @@ public class TaskDefDaoImpl implements TaskDefDao {
 				taskDefVO.setStopped( taskDef.isStopped() );
 				taskDefVO.setId( taskDef.getId() );
 				taskDefVO.setDeadline( taskDef.getDeadline() == 0 ? null : taskDef.getDeadline() );
+				taskDefVO.setVisible( taskDef.isVisible() );
+				if( taskDef.isSetFollowingTaskId() )
+					taskDefVO.setFollowingTaskId( taskDef.getFollowingTaskId() );
 				
 				taskDefVO.setShowSolutionToStudents( taskDef.getComplexTaskDef().isShowSolutionToStudents() );
 				taskDefVO.setComplexTaskFile( taskDef.getComplexTaskDef().getComplexTaskFile() );

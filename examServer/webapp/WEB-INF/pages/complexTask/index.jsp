@@ -123,6 +123,7 @@ Korrekturstand des letzten Versuchs:
 </table>
 </fieldset>
 <br><br>
+<c:if test="${task.showHandlingHintsBeforeStart}">
 <fieldset class="tasks"><legend>Allgemeine Hinweise</legend> 
 <p><b>
   Die Bearbeitung</b>: <br>
@@ -202,6 +203,7 @@ Bewertet werden alle bis zum Bearbeitungsende abgespeicherten Seiten.
 </ul>
 <br/>
 </fieldset> 
+</c:if>
 
 </td>
 </tr>

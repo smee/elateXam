@@ -33,6 +33,8 @@ public class TaskDefVO {
 	private String shortDescription;
 	private boolean stopped;
 	private Long deadline;
+	private boolean visible;
+	private Long followingTaskId;
 	
 	private boolean showSolutionToStudents;
 	private String complexTaskFile;
@@ -133,6 +135,30 @@ public class TaskDefVO {
 	 */
 	public void setType(String type) {
 		this.type = type;
+	}
+	/**
+	 * @return the followingTaskId
+	 */
+	public Long getFollowingTaskId() {
+		return followingTaskId;
+	}
+	/**
+	 * @param followingTaskId the followingTaskId to set
+	 */
+	public void setFollowingTaskId(Long followingTaskId) {
+		this.followingTaskId = followingTaskId;
+	}
+	/**
+	 * @return the visible
+	 */
+	public boolean isVisible() {
+		return visible;
+	}
+	/**
+	 * @param visible the visible to set
+	 */
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 	
 	

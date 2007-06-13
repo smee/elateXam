@@ -55,6 +55,9 @@ public class StudentMainAction extends BaseAction {
 		
 		for( TaskDef taskDef : taskDefs ){
 			
+			if( !taskDef.isVisible() )
+				continue;
+			
 			TaskDefVO tdvo = new TaskDefVO();
         	tdvo.setId( "" + taskDef.getId() );
         	tdvo.setTitle( taskDef.getTitle() );

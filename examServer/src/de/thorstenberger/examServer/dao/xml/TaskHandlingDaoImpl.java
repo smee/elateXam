@@ -60,7 +60,10 @@ public class TaskHandlingDaoImpl implements TaskHandlingDao {
 	private ExamServerManager examServerManager;
 	private JAXBContext jc;
 	private TaskHandling taskHandling;
+	
+	private String taskHandlingFilePath;
 	private File taskHandlingFile;
+	
 	private ObjectFactory objectFactory;
 
 	private Log log = LogFactory.getLog( TaskHandlingDaoImpl.class );
@@ -78,7 +81,8 @@ public class TaskHandlingDaoImpl implements TaskHandlingDao {
 
 			jc = JAXBContext.newInstance( "de.thorstenberger.examServer.dao.xml.jaxb" );
 
-			taskHandlingFile = new File( examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.SYSTEM + File.separatorChar + "taskhandling.xml" );
+			taskHandlingFilePath = examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.SYSTEM + File.separatorChar + "taskhandling.xml";
+			taskHandlingFile = new File( taskHandlingFilePath );
 
 			if( !taskHandlingFile.exists() ){
 				taskHandling = objectFactory.createTaskHandling();
@@ -112,6 +116,11 @@ public class TaskHandlingDaoImpl implements TaskHandlingDao {
 			Validator validator = jc.createValidator();
 			validator.validate( taskHandling );
 			marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true) );
+			
+			File backup = new File( taskHandlingFilePath + ".bak" );
+			taskHandlingFile.renameTo( backup );
+			taskHandlingFile = new File( taskHandlingFilePath );
+			
 			BufferedOutputStream bos = new BufferedOutputStream( new FileOutputStream( this.taskHandlingFile ) );
 			marshaller.marshal( taskHandling, bos );
 			

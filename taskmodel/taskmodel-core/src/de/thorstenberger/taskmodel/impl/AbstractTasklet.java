@@ -77,7 +77,7 @@ public abstract class AbstractTasklet implements Tasklet {
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.Tasklet#hasOrPassedStatus(java.lang.String)
 	 */
-	public boolean hasOrPassedStatus(Status status) {		
+	public synchronized boolean hasOrPassedStatus(Status status) {		
 		return this.status.getOrder() >= status.getOrder();
 	}
 

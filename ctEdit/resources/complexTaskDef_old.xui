@@ -1,0 +1,1223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?jaxfront version=2.0;time=2006-06-19 02:44:06.235;xui=file:/D:/Workspaces/elate/ctEdit/elateFiles/complexTaskDef.xui;xsd=complexTaskDef.xsd?>
+<XUI xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="xui.xsd" version="1.6">
+       <global>
+              <general>
+                     <language>de</language>
+              </general>
+       </global>
+       <component xpath="/complexTaskDef">
+              <style>
+                     <treeEntry>
+                            <label>if (nodeValue(&quot;/complexTaskDef/title&quot;) ==NULL, &quot;Neue unbenannte Komplexaufgaben-Definition&quot;,nodeValue(&quot;/complexTaskDef/title&quot;)  ) </label>
+                     </treeEntry>
+              </style>
+       </component>
+       <component xpath="global:clozeSubTaskDef">
+              <style>
+                     <mode childrenView="header" viewHolder="self"></mode>
+                     <treeEntry>
+                            <label>if ( nodeValue(&quot;./@id&quot;)==NULL, &quot;neue LÃ¼ckentextaufgabe&quot;, concat(nodeLabel(&quot;.&quot;), &quot; ( &quot;, nodeValue(&quot;./@id&quot;), &quot; )&quot;) )</label>
+                            <occurrence>
+                                   <visibility>
+                                          <always/>
+                                   </visibility>
+                            </occurrence>
+                     </treeEntry>
+                     <layout>
+                                   <table>
+                                          <row>22.0,,</row>
+                                          <row>22.0,,C</row>
+                                          <row>0.22,,C</row>
+                                          <row>22.0,,C</row>
+                                          <row>0.22,,C</row>
+                                          <row>22.0,,C</row>
+                                          <column>0.3,,C</column>
+                                          <column>0.7,,C</column>
+                                          <cell dimension="1,1,F,C">
+                                                 <type>
+                                                        <xpath>./@id</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,1,F,C">
+                                                 <type>
+                                                        <label xpath="./@id"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="1,2,F,C">
+                                                 <type>
+                                                        <xpath>./problem</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,2,F,C">
+                                                 <type>
+                                                        <label xpath="./problem"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="1,3,F,C">
+                                                 <type>
+                                                        <xpath>./hint</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,3,F,C">
+                                                 <type>
+                                                        <label xpath="./hint"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,4,F,C,1,4">
+                                                 <type>
+                                                        <xpath>./cloze</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,0,F,B,1,0">
+                                                 <type>
+                                                        <label labelType="header"></label>
+                                                 </type>
+                                          </cell>
+                                   </table>
+                     </layout>
+              </style>
+       </component>
+       <component xpath="global:config">
+              <style>
+                     <layout>
+                                   <table>
+                                          <row>22.0,,C</row>
+                                          <row>22.0,,C</row>
+                                          <row>22.0,,C</row>
+                                          <row>22.0,,C</row>
+                                          <row>22.0,,C</row>
+                                          <column>250.0,,C</column>
+                                          <column>80.0,,C</column>
+                                          <cell dimension="1,0,F,C">
+                                                 <type>
+                                                        <xpath>./@pointsPerTask</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,0,F,C">
+                                                 <type>
+                                                        <label xpath="./@pointsPerTask"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="1,1,F,C">
+                                                 <type>
+                                                        <xpath>./@noOfSelectedTasks</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,1,F,C">
+                                                 <type>
+                                                        <label xpath="./@noOfSelectedTasks"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="1,2,F,C">
+                                                 <type>
+                                                        <xpath>./@preserveOrder</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,2,F,C">
+                                                 <type>
+                                                        <label xpath="./@preserveOrder"></label>
+                                                 </type>
+                                          </cell>
+                                   </table>
+                     </layout>
+              </style>
+       </component>
+       <component xpath="global:mappingSubTaskDef">
+              <style>
+                     <mode childrenView="header" viewHolder="self"></mode>
+                     <treeEntry>
+                            <label>if ( nodeValue(&quot;./@id&quot;)==NULL, nodeLabel(&quot;.&quot;), concat(nodeLabel(&quot;.&quot;), &quot; ( &quot;, nodeValue(&quot;./@id&quot;), &quot; )&quot;) )</label>
+                            <occurrence>
+                                   <visibility>
+                                          <always/>
+                                   </visibility>
+                            </occurrence>
+                     </treeEntry>
+                     <layout>
+                                   <table>
+                                          <row>22.0,,</row>
+                                          <row>22.0,,C</row>
+                                          <row>50.0,,C</row>
+                                          <row>22.0,,C</row>
+                                          <row>0.22,,C</row>
+                                          <row>0.22,,C</row>
+                                          <column>0.3,,C</column>
+                                          <column>0.7,,C</column>
+                                          <cell dimension="1,1,F,C">
+                                                 <type>
+                                                        <xpath>./@id</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,1,F,C">
+                                                 <type>
+                                                        <label xpath="./@id"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="1,2,F,C">
+                                                 <type>
+                                                        <xpath>./problem</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,2,F,C">
+                                                 <type>
+                                                        <label xpath="./problem"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="1,3,F,C">
+                                                 <type>
+                                                        <xpath>./hint</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,3,F,C">
+                                                 <type>
+                                                        <label xpath="./hint"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,4,F,C,1,4">
+                                                 <type>
+                                                        <xpath>./concept[list]</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,5,F,C,1,5">
+                                                 <type>
+                                                        <xpath>./assignment[list]</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,0,F,B,1,0">
+                                                 <type>
+                                                        <label labelType="header"></label>
+                                                 </type>
+                                          </cell>
+                                   </table>
+                     </layout>
+              </style>
+       </component>
+       <component xpath="global:mcSubTaskDef">
+              <style>
+                     <mode childrenView="header" viewHolder="self"></mode>
+                     <treeEntry>
+                            <label>if ( nodeValue(&quot;./@id&quot;)==NULL, &quot;neue MC-Aufgabe&quot;, concat(nodeLabel(&quot;.&quot;), &quot; ( &quot;, nodeValue(&quot;./@id&quot;), &quot; )&quot;) )</label>
+                            <occurrence>
+                                   <visibility>
+                                          <always/>
+                                   </visibility>
+                            </occurrence>
+                     </treeEntry>
+                     <layout>
+                                   <table>
+                                          <row>22.0,,</row>
+                                          <row>22.0,,C</row>
+                                          <row>22.0,,C</row>
+                                          <row>22.0,,C</row>
+                                          <row>22.0,,C</row>
+                                          <row>83.0,,C</row>
+                                          <row>22.0,,</row>
+                                          <row>22.0,,</row>
+                                          <row>0.22,,</row>
+                                          <row>0.22,,</row>
+                                          <column>0.3,,C</column>
+                                          <column>0.7,,C</column>
+                                          <cell dimension="1,1,F,C">
+                                                 <type>
+                                                        <xpath>./@id</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,1,F,C">
+                                                 <type>
+                                                        <label xpath="./@id"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="1,2,F,C">
+                                                 <type>
+                                                        <xpath>./@category</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,2,F,C">
+                                                 <type>
+                                                        <label xpath="./@category"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="1,3,F,C">
+                                                 <type>
+                                                        <xpath>./@minCorrectAnswers</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,3,F,C">
+                                                 <type>
+                                                        <label xpath="./@minCorrectAnswers"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="1,4,F,C">
+                                                 <type>
+                                                        <xpath>./@maxCorrectAnswers</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,4,F,C">
+                                                 <type>
+                                                        <label xpath="./@maxCorrectAnswers"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="1,5,F,C">
+                                                 <type>
+                                                        <xpath>./problem</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,5,F,C">
+                                                 <type>
+                                                        <label xpath="./problem"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="1,6,F,B">
+                                                 <type>
+                                                        <xpath>./hint</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,6,F,B">
+                                                 <type>
+                                                        <label xpath="./hint"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="1,7,F,B">
+                                                 <type>
+                                                        <xpath>./displayedAnswers</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,7,F,B">
+                                                 <type>
+                                                        <label xpath="./displayedAnswers"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,8,F,B,1,8">
+                                                 <type>
+                                                        <xpath>./correct[list]</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,9,F,B,1,9">
+                                                 <type>
+                                                        <xpath>./incorrect[list]</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,0,F,B,1,0">
+                                                 <type>
+                                                        <label labelType="header"></label>
+                                                 </type>
+                                          </cell>
+                                   </table>
+                     </layout>
+              </style>
+       </component>
+       <component xpath="global:paintSubTaskDef">
+              <style>
+                     <mode childrenView="header" viewHolder="self"></mode>
+                     <treeEntry>
+                            <label>if ( nodeValue(&quot;./@id&quot;)==NULL, &quot;neue Zeichenaufgabe&quot;, concat(nodeLabel(&quot;.&quot;), &quot; ( &quot;, nodeValue(&quot;./@id&quot;), &quot; )&quot;) )</label>
+                            <occurrence>
+                                   <visibility>
+                                          <always/>
+                                   </visibility>
+                            </occurrence>
+                     </treeEntry>
+              </style>
+       </component>
+       <component xpath="global:textSubTaskDef">
+              <style>
+                     <mode childrenView="header" viewHolder="self"></mode>
+                     <treeEntry>
+                            <label>if ( nodeValue(&quot;./@id&quot;)==NULL, &quot;neue Freitextaufgabe&quot;, concat(nodeLabel(&quot;.&quot;), &quot; ( &quot;, nodeValue(&quot;./@id&quot;), &quot; )&quot;) )</label>
+                            <occurrence>
+                                   <visibility>
+                                          <always/>
+                                   </visibility>
+                            </occurrence>
+                     </treeEntry>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category">
+              <style>
+                     <mode viewHolder="self"></mode>
+                     <treeEntry>
+                            <label>if (nodeValue(&quot;./@id&quot;) ==NULL, &quot;Neue Kategorie&quot;, if( nodeValue(&quot;./@title&quot;)==NULL, concat( &quot;Unbenannte Kategorie ( &quot;, nodeValue(&quot;./@id&quot;), &quot; )&quot; ), concat( nodeValue(&quot;./@title&quot;), &quot; ( &quot;, nodeValue(&quot;./@id&quot;), &quot; )&quot; ) ) )
+</label>
+                     </treeEntry>
+                     <layout>
+                                   <table>
+                                          <row>22.0,,</row>
+                                          <row>22.0,,</row>
+                                          <row>22.0,,</row>
+                                          <row>22.0,,</row>
+                                          <row>22.0,,</row>
+                                          <row>22.0,,</row>
+                                          <row>22.0,,</row>
+                                          <row>0.22,,F</row>
+                                          <row>22.0,,</row>
+                                          <row>22.0,,</row>
+                                          <column>270.0,,</column>
+                                          <column>0.01,,</column>
+                                          <column>0.79,,</column>
+                                          <cell dimension="2,1,F,B">
+                                                 <type>
+                                                        <xpath>./@id</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,1,F,B">
+                                                 <type>
+                                                        <label xpath="./@id"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="2,2,F,B">
+                                                 <type>
+                                                        <xpath>./@title</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,2,F,B">
+                                                 <type>
+                                                        <label xpath="./@title"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="2,3,F,B">
+                                                 <type>
+                                                        <xpath>./@tasksPerPage</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,3,F,B">
+                                                 <type>
+                                                        <label xpath="./@tasksPerPage"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="2,4,F,B">
+                                                 <type>
+                                                        <xpath>./@preserveOrderOfBlocks</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,4,F,B">
+                                                 <type>
+                                                        <label xpath="./@preserveOrderOfBlocks"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="2,5,F,B">
+                                                 <type>
+                                                        <xpath>./@mixAllSubTasks</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,5,F,B">
+                                                 <type>
+                                                        <label xpath="./@mixAllSubTasks"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,0,F,B,2,0">
+                                                 <type>
+                                                        <label labelType="header"></label>
+                                                 </type>
+                                          </cell>
+                                   </table>
+                     </layout>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category[list]">
+              <style>
+                     <mode viewHolder="self"></mode>
+                     <treeEntry>
+                            <label>nodeLabel(&quot;.&quot;)</label>
+                     </treeEntry>
+                     <list visible="false">
+                                   <table>
+                                          <lineInfo width="150">
+                                                 <formulaExpression>nodeValue(&quot;./@title&quot;)</formulaExpression>
+                                          </lineInfo>
+                                          <lineInfo width="80">
+                                                 <formulaExpression>nodeValue(&quot;./@id&quot;)</formulaExpression>
+                                          </lineInfo>
+                                          <lineInfo width="80">
+                                                 <formulaExpression>nodeValue(&quot;./@tasksPerPage&quot;)</formulaExpression>
+                                          </lineInfo>
+                                          <lineInfo width="80">
+                                                 <formulaExpression>nodeValue(&quot;./@preserveOrderOfBlocks&quot;)</formulaExpression>
+                                          </lineInfo>
+                                          <lineInfo width="80">
+                                                 <formulaExpression>nodeValue(&quot;./@mixAllSubTasks&quot;)</formulaExpression>
+                                          </lineInfo>
+                                   </table>
+                     </list>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/config">
+              <style>
+                     <caption>
+                            <style>
+                                   <occurrence>
+                                          <visibility>
+                                                 <never/>
+                                          </visibility>
+                                   </occurrence>
+                            </style>
+                     </caption>
+                     <layout>
+                                   <table>
+                                          <row>26.0,,T</row>
+                                          <row>,,T</row>
+                                          <row>,,T</row>
+                                          <column>220.0,,</column>
+                                          <column>0.1,,</column>
+                                          <column>,,</column>
+                                          <column>200.0,,</column>
+                                          <column>0.1,,</column>
+                                          <cell dimension="1,1,F,T">
+                                                 <type>
+                                                        <xpath>./time</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,1,F,T">
+                                                 <type>
+                                                        <label xpath="./time" text="time"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="4,1,F,T">
+                                                 <type>
+                                                        <xpath>./tries</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="3,1,F,T">
+                                                 <type>
+                                                        <label xpath="./tries" text="tries"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="1,2,F,T">
+                                                 <type>
+                                                        <xpath>./tasksPerPage</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,2,F,T">
+                                                 <type>
+                                                        <label xpath="./tasksPerPage" text="tasksPerPage"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="4,2,F,T">
+                                                 <type>
+                                                        <xpath>./kindnessExtensionTime</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="3,2,F,T">
+                                                 <type>
+                                                        <label xpath="./kindnessExtensionTime" text="kindnessExtensionTime"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,0,F,T,4,0">
+                                                 <type>
+                                                        <label labelType="header" text="Configuration"></label>
+                                                 </type>
+                                          </cell>
+                                   </table>
+                     </layout>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/description">
+              <style>
+                     <leaf>
+                            <component multiLine="5"></component>
+                     </leaf>
+              </style>
+       </component>
+       <component xpath="global:mappingSubTaskDef/assignment[list]">
+              <style>
+                     <list>
+                                   <table>
+                                          <editMode>
+                                                 <panel/>
+                                          </editMode>
+                                   </table>
+                     </list>
+              </style>
+       </component>
+       <component xpath="global:mappingSubTaskDef/concept[list]">
+              <style>
+                     <list>
+                                   <table>
+                                          <editMode>
+                                                 <panel/>
+                                          </editMode>
+                                   </table>
+                     </list>
+              </style>
+       </component>
+       <component xpath="global:mcSubTaskDef/correct[list]">
+              <style>
+                     <list>
+                                   <table>
+                                          <editMode>
+                                                 <panel/>
+                                          </editMode>
+                                          <lineInfo width="30">
+                                                 <formulaExpression>nodeValue(&quot;./@id&quot;)</formulaExpression>
+                                          </lineInfo>
+                                          <lineInfo width="550">
+                                                 <formulaExpression>nodeValue(&quot;./text()&quot;)</formulaExpression>
+                                          </lineInfo>
+                                   </table>
+                     </list>
+              </style>
+       </component>
+       <component xpath="global:mcSubTaskDef/incorrect[list]">
+              <style>
+                     <list>
+                                   <table>
+                                          <editMode>
+                                                 <panel/>
+                                          </editMode>
+                                          <lineInfo width="30">
+                                                 <formulaExpression>nodeValue(&quot;./@id&quot;)</formulaExpression>
+                                          </lineInfo>
+                                          <lineInfo width="550">
+                                                 <formulaExpression>nodeValue(&quot;./text()&quot;)</formulaExpression>
+                                          </lineInfo>
+                                   </table>
+                     </list>
+              </style>
+       </component>
+       <component xpath="global:mcSubTaskDef/problem">
+              <style>
+                     <leaf>
+                            <component size="-1" multiLine="5"></component>
+                     </leaf>
+              </style>
+       </component>
+       <component xpath="global:paintSubTaskDef/images">
+              <style>
+                     <plugIn class="de.elateportal.complex_te.PictureVisualizer"></plugIn>
+              </style>
+       </component>
+       <component xpath="global:paintSubTaskDef/problem">
+              <style>
+                     <leaf>
+                            <component multiLine="5"></component>
+                     </leaf>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1">
+              <style>
+                     <mode viewHolder="self"></mode>
+                     <treeEntry>
+                            <label>nodeLabel( choosenNode( &quot;.&quot; ), true )</label>
+                     </treeEntry>
+                     <caption>
+                            <style>
+                                   <type>
+                                          <header/>
+                                   </type>
+                                   <occurrence>
+                                          <visibility>
+                                                 <always/>
+                                          </visibility>
+                                   </occurrence>
+                            </style>
+                     </caption>
+                     <choice defaultSelection="mcTaskBlock" singleChoiceAndSerialize="true" type="comboBox"/>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1[list]">
+              <style>
+                     <mode visible="true" viewHolder="self"></mode>
+                     <treeEntry>
+                            <label>nodeLabel(&quot;.&quot;)</label>
+                     </treeEntry>
+                     <caption>
+                            <style>
+                                   <type>
+                                          <header/>
+                                   </type>
+                                   <occurrence>
+                                          <visibility>
+                                                 <always/>
+                                          </visibility>
+                                   </occurrence>
+                            </style>
+                     </caption>
+                     <list visible="false">
+                                   <table>
+                                          <lineInfo>
+                                                 <formulaExpression>concat(nodeLabel(&quot;.&quot;),&quot; &quot;,position(node(&quot;.&quot;)))</formulaExpression>
+                                          </lineInfo>
+                                   </table>
+                     </list>
+              </style>
+       </component>
+       <component xpath="global:clozeSubTaskDef/cloze/UNNAMED1[list]">
+              <style>
+                     <list visibleRowCount="10">
+                                   <table>
+                                          <lineInfo width="200">
+                                                 <formulaExpression>concat(nodeLabel( choosenNode(&quot;.&quot;) ), &quot; &quot;, nodeValue( choosenNode( &quot;.&quot; ) ) )</formulaExpression>
+                                          </lineInfo>
+                                   </table>
+                     </list>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/clozeTaskBlock">
+              <style>
+                     <mode viewHolder="self"></mode>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/mappingTaskBlock">
+              <style>
+                     <mode viewHolder="self"></mode>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/mcTaskBlock">
+              <style>
+                     <mode viewHolder="self"></mode>
+                     <treeEntry>
+                            <label>&quot;Aufgabenblock: Multiple Choice&quot;</label>
+                     </treeEntry>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/paintTaskBlock">
+              <style>
+                     <mode viewHolder="self"></mode>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/textTaskBlock">
+              <style>
+                     <mode viewHolder="self"></mode>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/clozeTaskBlock/UNNAMED1[list]">
+              <style>
+                     <treeEntry>
+                            <label>&quot;Lueckentext-Unteraufgabenblock&quot;</label>
+                     </treeEntry>
+                     <list visibleRowCount="10">
+                                   <table>
+                                          <lineInfo width="150">
+                                                 <formulaExpression>if( nodeName( choosenNode(&quot;.&quot;) ) == &quot;clozeSubTaskDef&quot;, nodeValue( &quot;.//@id&quot; ), &quot;exklusive Auswahl von sich ausschlieÃŸenden Teilaufgaben&quot; )</formulaExpression>
+                                          </lineInfo>
+                                          <lineInfo width="500">
+                                                 <formulaExpression>if( nodeName( choosenNode(&quot;.&quot;) ) == &quot;clozeSubTaskDef&quot;, nodeValue( &quot;.//problem&quot; ), &quot;&quot; )</formulaExpression>
+                                          </lineInfo>
+                                   </table>
+                     </list>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/clozeTaskBlock/UNNAMED2[list]">
+              <style>
+                     <list>
+                                   <table>
+                                          <lineInfo>
+                                                 <formulaExpression>concat(nodeLabel(choosenNode(&quot;.&quot;)),&quot; &quot;,nodeValue(choosenNode(&quot;.&quot;),&quot;@id&quot;))</formulaExpression>
+                                          </lineInfo>
+                                   </table>
+                     </list>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/clozeTaskBlock/cloze-config">
+              <style>
+                     <layout>
+                                   <table>
+                                          <row>22.0,,C</row>
+                                          <row>22.0,,C</row>
+                                          <row>22.0,,C</row>
+                                          <row>22.0,,C</row>
+                                          <row>22.0,,C</row>
+                                          <column>0.3,,C</column>
+                                          <column>0.7,,C</column>
+                                          <cell dimension="1,0,F,C">
+                                                 <type>
+                                                        <xpath>./@negativePoints</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,0,F,C">
+                                                 <type>
+                                                        <label xpath="./@negativePoints"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="1,1,F,C">
+                                                 <type>
+                                                        <xpath>./@ignoreCase</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,1,F,C">
+                                                 <type>
+                                                        <label xpath="./@ignoreCase"></label>
+                                                 </type>
+                                          </cell>
+                                   </table>
+                     </layout>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/mappingTaskBlock/UNNAMED1[list]">
+              <style>
+                     <treeEntry>
+                            <label>&quot;Zuordnungs Unteraufgabenblock&quot;</label>
+                     </treeEntry>
+                     <list visibleRowCount="10">
+                                   <table>
+                                          <lineInfo width="150">
+                                                 <formulaExpression>if( nodeName( choosenNode(&quot;.&quot;) ) == &quot;mappingSubTaskDef&quot;, nodeValue( &quot;.//@id&quot; ), &quot;exklusive Auswahl von sich ausschlieÃŸenden Teilaufgaben&quot; )</formulaExpression>
+                                          </lineInfo>
+                                          <lineInfo width="500">
+                                                 <formulaExpression>if( nodeName( choosenNode(&quot;.&quot;) ) == &quot;mappingSubTaskDef&quot;, nodeValue( &quot;.//problem&quot; ), &quot;&quot; )</formulaExpression>
+                                          </lineInfo>
+                                   </table>
+                     </list>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/mappingTaskBlock/UNNAMED2[list]">
+              <style>
+                     <list>
+                                   <table>
+                                          <lineInfo>
+                                                 <formulaExpression>concat(nodeLabel(choosenNode(&quot;.&quot;)),&quot; &quot;,nodeValue(choosenNode(&quot;.&quot;),&quot;@id&quot;))</formulaExpression>
+                                          </lineInfo>
+                                   </table>
+                     </list>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/mappingTaskBlock/mapping-config">
+              <style>
+                     <layout>
+                                   <table>
+                                          <row>22.0,,C</row>
+                                          <row>22.0,,C</row>
+                                          <row>22.0,,C</row>
+                                          <row>22.0,,C</row>
+                                          <row>22.0,,C</row>
+                                          <column>0.3,,C</column>
+                                          <column>0.7,,C</column>
+                                          <cell dimension="1,0,F,C">
+                                                 <type>
+                                                        <xpath>./@negativePoints</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,0,F,C">
+                                                 <type>
+                                                        <label xpath="./@negativePoints"></label>
+                                                 </type>
+                                          </cell>
+                                   </table>
+                     </layout>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/mcTaskBlock/UNNAMED1[list]">
+              <style>
+                     <treeEntry>
+                            <label>&quot;MC Unteraufgabenblock&quot;</label>
+                     </treeEntry>
+                     <list visibleRowCount="10">
+                                   <table>
+                                          <lineInfo width="150">
+                                                 <formulaExpression>if( nodeName( choosenNode(&quot;.&quot;) ) == &quot;mcSubTaskDef&quot;, nodeValue( &quot;.//@id&quot; ), &quot;exklusive Auswahl von sich ausschlieÃŸenden Teilaufgaben&quot; )</formulaExpression>
+                                          </lineInfo>
+                                          <lineInfo width="500">
+                                                 <formulaExpression>if( nodeName( choosenNode(&quot;.&quot;) ) == &quot;mcSubTaskDef&quot;, nodeValue( &quot;.//problem&quot; ), &quot;&quot; )</formulaExpression>
+                                          </lineInfo>
+                                   </table>
+                     </list>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/mcTaskBlock/UNNAMED2[list]">
+              <style>
+                     <list>
+                                   <table>
+                                          <lineInfo>
+                                                 <formulaExpression>concat(nodeLabel(choosenNode(&quot;.&quot;)),&quot; &quot;,nodeValue(choosenNode(&quot;.&quot;),&quot;@id&quot;))</formulaExpression>
+                                          </lineInfo>
+                                   </table>
+                     </list>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/mcTaskBlock/mc-config">
+              <style>
+                     <choice defaultSelection="regular"/>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/paintTaskBlock/UNNAMED1[list]">
+              <style>
+                     <treeEntry>
+                            <label>&quot;Zeichnen-Unteraufgabenblock&quot;</label>
+                     </treeEntry>
+                     <list visibleRowCount="10">
+                                   <table>
+                                          <lineInfo width="150">
+                                                 <formulaExpression>if( nodeName( choosenNode(&quot;.&quot;) ) == &quot;paintSubTaskDef&quot;, nodeValue( &quot;.//@id&quot; ), &quot;exklusive Auswahl von sich ausschlieÃŸenden Teilaufgaben&quot; )</formulaExpression>
+                                          </lineInfo>
+                                          <lineInfo width="500">
+                                                 <formulaExpression>if( nodeName( choosenNode(&quot;.&quot;) ) == &quot;paintSubTaskDef&quot;, nodeValue( &quot;.//problem&quot; ), &quot;&quot; )</formulaExpression>
+                                          </lineInfo>
+                                   </table>
+                     </list>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/textTaskBlock/UNNAMED1[list]">
+              <style>
+                     <treeEntry>
+                            <label>&quot;Freitext Unteraufgabenblock&quot;</label>
+                     </treeEntry>
+                     <list visibleRowCount="10">
+                                   <table>
+                                          <lineInfo width="150">
+                                                 <formulaExpression>if( nodeName( choosenNode(&quot;.&quot;) ) == &quot;textSubTaskDef&quot;, nodeValue( &quot;.//@id&quot; ), &quot;exklusive Auswahl von sich ausschlieÃŸenden Teilaufgaben&quot; )</formulaExpression>
+                                          </lineInfo>
+                                          <lineInfo width="500">
+                                                 <formulaExpression>if( nodeName( choosenNode(&quot;.&quot;) ) == &quot;textSubTaskDef&quot;, nodeValue( &quot;.//problem&quot; ), &quot;&quot; )</formulaExpression>
+                                          </lineInfo>
+                                   </table>
+                     </list>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/textTaskBlock/UNNAMED2[list]">
+              <style>
+                     <list>
+                                   <table>
+                                          <lineInfo>
+                                                 <formulaExpression>concat(nodeLabel(choosenNode(&quot;.&quot;)),&quot; &quot;,nodeValue(choosenNode(&quot;.&quot;),&quot;@id&quot;))</formulaExpression>
+                                          </lineInfo>
+                                   </table>
+                     </list>
+              </style>
+       </component>
+       <component xpath="global:clozeSubTaskDef/cloze/UNNAMED1/gap/correct[list]">
+              <style>
+                     <list>
+                                   <table allowTableFlippingOnTheFly="false"></table>
+                     </list>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/clozeTaskBlock/UNNAMED2/choice">
+              <style>
+                     <mode childrenView="header" viewHolder="self"></mode>
+                     <treeEntry>
+                            <label>nodeLabel(&quot;.&quot;)</label>
+                            <occurrence>
+                                   <visibility>
+                                          <always/>
+                                   </visibility>
+                            </occurrence>
+                     </treeEntry>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/mappingTaskBlock/UNNAMED2/choice">
+              <style>
+                     <mode childrenView="header" viewHolder="self"></mode>
+                     <treeEntry>
+                            <label>nodeLabel(&quot;.&quot;)</label>
+                            <occurrence>
+                                   <visibility>
+                                          <always/>
+                                   </visibility>
+                            </occurrence>
+                     </treeEntry>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/mcTaskBlock/UNNAMED2/choice">
+              <style>
+                     <mode childrenView="header" viewHolder="self"></mode>
+                     <treeEntry>
+                            <label>nodeLabel(&quot;.&quot;)</label>
+                            <occurrence>
+                                   <visibility>
+                                          <always/>
+                                   </visibility>
+                            </occurrence>
+                     </treeEntry>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/mcTaskBlock/mc-config/different">
+              <style>
+                     <layout>
+                                   <table>
+                                          <row>22.0,,C</row>
+                                          <row>22.0,,C</row>
+                                          <row>22.0,,C</row>
+                                          <row>22.0,,C</row>
+                                          <row>22.0,,C</row>
+                                          <column>293.0,,C</column>
+                                          <column>40.0,,C</column>
+                                          <cell dimension="1,0,F,C">
+                                                 <type>
+                                                        <xpath>./correctAnswerNegativePoints</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,0,F,C">
+                                                 <type>
+                                                        <label xpath="./correctAnswerNegativePoints"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="1,1,F,C">
+                                                 <type>
+                                                        <xpath>./incorrectAnswerNegativePoints</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,1,F,C">
+                                                 <type>
+                                                        <label xpath="./incorrectAnswerNegativePoints"></label>
+                                                 </type>
+                                          </cell>
+                                   </table>
+                     </layout>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/mcTaskBlock/mc-config/regular">
+              <style>
+                     <layout>
+                                   <table>
+                                          <row>22.0,,C</row>
+                                          <row>22.0,,C</row>
+                                          <row>22.0,,C</row>
+                                          <column>220.0,,C</column>
+                                          <column>40.0,,C</column>
+                                          <cell dimension="1,0,F,C">
+                                                 <type>
+                                                        <xpath>./negativePoints</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,0,F,C">
+                                                 <type>
+                                                        <label xpath="./negativePoints"></label>
+                                                 </type>
+                                          </cell>
+                                   </table>
+                     </layout>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/textTaskBlock/UNNAMED2/choice">
+              <style>
+                     <mode childrenView="header" viewHolder="self"></mode>
+                     <treeEntry>
+                            <label>nodeLabel(&quot;.&quot;)</label>
+                            <occurrence>
+                                   <visibility>
+                                          <always/>
+                                   </visibility>
+                            </occurrence>
+                     </treeEntry>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/clozeTaskBlock/UNNAMED2/choice/clozeSubTaskDef[list]">
+              <style>
+                     <mode viewHolder="parent"></mode>
+                     <treeEntry>
+                            <label>nodeLabel(&quot;.&quot;)</label>
+                     </treeEntry>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/clozeTaskBlock/UNNAMED2/clozeSubTaskDef/problem">
+              <style>
+                     <leaf>
+                            <component multiLine="5"></component>
+                     </leaf>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/mappingTaskBlock/UNNAMED2/choice/mappingSubTaskDef[list]">
+              <style>
+                     <mode viewHolder="parent"></mode>
+                     <treeEntry>
+                            <label>nodeLabel(&quot;.&quot;)</label>
+                            <occurrence>
+                                   <visibility>
+                                          <never/>
+                                   </visibility>
+                            </occurrence>
+                     </treeEntry>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/mappingTaskBlock/UNNAMED2/mappingSubTaskDef/assignment[list]">
+              <style>
+                     <list>
+                                   <table>
+                                          <editMode>
+                                                 <panel/>
+                                          </editMode>
+                                          <lineInfo width="80">
+                                                 <formulaExpression>nodeValue(&quot;./@id&quot;)</formulaExpression>
+                                          </lineInfo>
+                                          <lineInfo width="400">
+                                                 <formulaExpression>nodeValue(&quot;./@name&quot;)</formulaExpression>
+                                          </lineInfo>
+                                   </table>
+                     </list>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/mappingTaskBlock/UNNAMED2/mappingSubTaskDef/concept[list]">
+              <style>
+                     <list>
+                                   <table>
+                                          <editMode>
+                                                 <panel/>
+                                          </editMode>
+                                          <lineInfo width="400">
+                                                 <formulaExpression>nodeValue(&quot;./@name&quot;)</formulaExpression>
+                                          </lineInfo>
+                                          <lineInfo width="80">
+                                                 <formulaExpression>nodeValue(&quot;./@correctAssignmentID&quot;)</formulaExpression>
+                                          </lineInfo>
+                                   </table>
+                     </list>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/mappingTaskBlock/UNNAMED2/mappingSubTaskDef/problem">
+              <style>
+                     <leaf>
+                            <component multiLine="3"></component>
+                     </leaf>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/mcTaskBlock/UNNAMED1/choice/mcSubTaskDef[list]">
+              <style>
+                     <treeEntry>
+                            <label>&quot;Auswahl&quot;</label>
+                            <occurrence>
+                                   <visibility>
+                                          <always/>
+                                   </visibility>
+                            </occurrence>
+                     </treeEntry>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/mcTaskBlock/UNNAMED2/choice/mcSubTaskDef[list]">
+              <style>
+                     <mode viewHolder="parent"></mode>
+                     <treeEntry>
+                            <label>nodeLabel(&quot;.&quot;)</label>
+                            <occurrence>
+                                   <visibility>
+                                          <never/>
+                                   </visibility>
+                            </occurrence>
+                     </treeEntry>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/textTaskBlock/UNNAMED1/textSubTaskDef/@textFieldHeight">
+              <style>
+                     <leaf>
+                            <component size="40"></component>
+                     </leaf>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/textTaskBlock/UNNAMED1/textSubTaskDef/@textFieldWidth">
+              <style>
+                     <leaf>
+                            <component size="40"></component>
+                     </leaf>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/textTaskBlock/UNNAMED1/textSubTaskDef/correctionHint">
+              <style>
+                     <leaf>
+                            <component multiLine="10"></component>
+                     </leaf>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/textTaskBlock/UNNAMED1/textSubTaskDef/problem">
+              <style>
+                     <leaf>
+                            <label multiLine="true"/>
+                            <component multiLine="10"></component>
+                     </leaf>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/textTaskBlock/UNNAMED2/choice/textSubTaskDef[list]">
+              <style>
+                     <mode viewHolder="parent"></mode>
+                     <treeEntry>
+                            <label>nodeLabel(&quot;.&quot;)</label>
+                            <occurrence>
+                                   <visibility>
+                                          <never/>
+                                   </visibility>
+                            </occurrence>
+                     </treeEntry>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/textTaskBlock/UNNAMED2/textSubTaskDef/correctionHint">
+              <style>
+                     <leaf>
+                            <component multiLine="6"></component>
+                     </leaf>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/textTaskBlock/UNNAMED2/textSubTaskDef/problem">
+              <style>
+                     <leaf>
+                            <component multiLine="6"></component>
+                     </leaf>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/clozeTaskBlock/UNNAMED2/clozeSubTaskDef/cloze/UNNAMED1">
+              <style>
+                     <choice defaultSelection="text" type="radioButton"/>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/clozeTaskBlock/UNNAMED2/clozeSubTaskDef/cloze/UNNAMED1[list]">
+              <style>
+                     <list>
+                                   <table>
+                                          <lineInfo>
+                                                 <formulaExpression>if(nodeName(choosenNode(&quot;.&quot;))==&quot;text&quot;, nodeValue(choosenNode(&quot;.&quot;)), concat(&quot;{&quot;,nodeValue(choosenNode(&quot;.&quot;)),&quot;}&quot;))</formulaExpression>
+                                          </lineInfo>
+                                   </table>
+                     </list>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/clozeTaskBlock/UNNAMED2/clozeSubTaskDef/cloze/UNNAMED1/gap">
+              <style>
+                     <layout>
+                                   <table>
+                                          <row>22.0,,C</row>
+                                          <row>22.0,,C</row>
+                                          <row>0.22,,C</row>
+                                          <row>22.0,,C</row>
+                                          <row>22.0,,C</row>
+                                          <column>0.3,,C</column>
+                                          <column>0.7,,C</column>
+                                          <cell dimension="1,0,F,C">
+                                                 <type>
+                                                        <xpath>./@inputLength</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,0,F,C">
+                                                 <type>
+                                                        <label xpath="./@inputLength"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="1,1,F,C">
+                                                 <type>
+                                                        <xpath>./@ignoreCase</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,1,F,C">
+                                                 <type>
+                                                        <label xpath="./@ignoreCase"></label>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="1,2,F,C">
+                                                 <type>
+                                                        <xpath>./correct[list]</xpath>
+                                                 </type>
+                                          </cell>
+                                          <cell dimension="0,2,F,C">
+                                                 <type>
+                                                        <label xpath="./correct[list]"></label>
+                                                 </type>
+                                          </cell>
+                                   </table>
+                     </layout>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/clozeTaskBlock/UNNAMED2/clozeSubTaskDef/cloze/UNNAMED1/text">
+              <style>
+                     <leaf>
+                            <component multiLine="3"></component>
+                     </leaf>
+              </style>
+       </component>
+       <component xpath="/complexTaskDef/category/UNNAMED1/clozeTaskBlock/UNNAMED2/clozeSubTaskDef/cloze/UNNAMED1/gap/correct[list]">
+              <style>
+                     <list>
+                                   <table>
+                                          <lineInfo>
+                                                 <formulaExpression>nodeValue(&quot;.&quot;)</formulaExpression>
+                                          </lineInfo>
+                                   </table>
+                     </list>
+              </style>
+       </component>
+</XUI>

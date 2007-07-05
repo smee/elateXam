@@ -151,16 +151,12 @@ public class SaveCorrectionAction extends Action {
 			    }
 			}
 			
-			if( !subTaskVarMap.isEmpty() ){
-				
-				try {
-					return SubTaskViewFactory.getSubTaskView( subtasklet ).getCorrectionSubmitData( subTaskVarMap );
-				} catch (MethodNotSupportedException e) {
-					return null;
-				}
-				
-			}else
+			// no posted vars also imply correction data (e.g. none checkbox activated etc.)
+			try {
+				return SubTaskViewFactory.getSubTaskView( subtasklet ).getCorrectionSubmitData( subTaskVarMap );
+			} catch (MethodNotSupportedException e) {
 				return null;
+			}
 				
 		
 	}

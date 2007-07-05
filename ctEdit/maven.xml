@@ -1,7 +1,3 @@
-<project default="uberjar" xmlns:j="jelly:core" xmlns:define="jelly:define">
+<project default="javaapp" xmlns:j="jelly:core" xmlns:define="jelly:define">
 	
-	<preGoal name="build:start">
-		<attainGoal name="clean"/>
-	</preGoal>
-
 </project>

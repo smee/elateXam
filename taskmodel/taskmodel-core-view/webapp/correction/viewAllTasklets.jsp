@@ -55,7 +55,12 @@
 
 	<display:table requestURI="/viewAllTasklets.do" name="Solutions.allTasklets" uid="row" pagesize="30" sort="list" class="displaytag">
 		<display:column title="" sortable="false">
-			<html:link action="/showCorrectionToCorrector" name="row" property="loginAndTaskId"><img src="pics/magnifier.gif" border="0"></html:link>
+			<c:choose>
+				<c:when test="${row.viewable}">
+					<html:link action="/showCorrectionToCorrector" name="row" property="loginAndTaskId"><img src="pics/magnifier.gif" border="0"></html:link>
+				</c:when>
+				<c:otherwise>&nbsp;-&nbsp;</c:otherwise>
+			</c:choose>
 		</display:column>
 		<display:column property="login" title="Login&nbsp;&nbsp;&nbsp;" sortable="true"/>
 		<display:column property="status" title="Status&nbsp;&nbsp;&nbsp;" sortable="true"/>

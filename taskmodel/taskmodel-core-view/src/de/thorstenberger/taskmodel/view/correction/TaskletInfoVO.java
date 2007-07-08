@@ -40,7 +40,15 @@ public class TaskletInfoVO {
 	
 	private Map<String, String> loginAndTaskId;
 	
+	/**
+	 * denotes whether the tasklet can be corrected
+	 */
 	private boolean corrigible;
+	/**
+	 * denotes wether the tasklet can be viewed, i.e. if the corrector wants to see the processing state
+	 * of the tasklet, even if it's still in progress
+	 */
+	private boolean viewable;
 	
 	
 	/**
@@ -54,6 +62,18 @@ public class TaskletInfoVO {
 	 */
 	public void setCorrigible(boolean corrigible) {
 		this.corrigible = corrigible;
+	}
+	/**
+	 * @return the viewable
+	 */
+	public boolean isViewable() {
+		return viewable;
+	}
+	/**
+	 * @param viewable the viewable to set
+	 */
+	public void setViewable(boolean viewable) {
+		this.viewable = viewable;
 	}
 	/**
 	 * @return Returns the taskId.

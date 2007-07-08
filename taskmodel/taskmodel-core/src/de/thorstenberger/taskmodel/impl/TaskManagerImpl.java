@@ -23,7 +23,9 @@ package de.thorstenberger.taskmodel.impl;
 
 import java.util.List;
 
+import de.thorstenberger.taskmodel.CategoryException;
 import de.thorstenberger.taskmodel.CategoryFilter;
+import de.thorstenberger.taskmodel.MethodNotSupportedException;
 import de.thorstenberger.taskmodel.ReportBuilder;
 import de.thorstenberger.taskmodel.TaskCategory;
 import de.thorstenberger.taskmodel.TaskDef;
@@ -125,6 +127,23 @@ public class TaskManagerImpl implements TaskManager {
 		if( reportBuilder == null )
 			reportBuilder = new ReportBuilderImpl( this, taskFactory );
 		return reportBuilder;
+	}
+
+	public TaskCategory addTaskCategory(String name, String description) {
+		List<TaskCategory> categories = getCategories();
+		for (TaskCategory category : categories) {
+			if( category.getName().equals( name ))
+				return category;
+		}
+		return taskFactory.addTaskCategory(name, description);
+	}
+
+	public void deleteCategory(long id_long) throws CategoryException {
+		taskFactory.deleteTaskCategory(id_long);
+	}
+
+	public void saveTaskDef(TaskDef def) {
+		throw new MethodNotSupportedException();		
 	}
 
 

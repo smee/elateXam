@@ -23,6 +23,7 @@ package de.thorstenberger.taskmodel;
 
 import java.util.List;
 
+
 /**
  * 
  * TaskFactory is responsible for retrieving and saving TaskDefs and Tasklets depending on a
@@ -42,6 +43,10 @@ public interface TaskFactory {
 	public List<TaskCategory> getCategories();
 	
 	public List<TaskCategory> getCategories( CategoryFilter categoryFilter );
+	
+	public TaskCategory addTaskCategory( String name, String description );
+	
+	public void deleteTaskCategory( long id ) throws CategoryException;
 	
 //	public List<TaskDef> getTaskDefsByCategory( TaskCategory taskCategory );
 	

@@ -21,6 +21,7 @@ package de.thorstenberger.taskmodel;
 import java.util.List;
 
 
+
 /**
  * @author Thorsten Berger
  *
@@ -46,5 +47,9 @@ public interface TaskManager {
 	public TaskFactory getTaskFactory();
 	
 	public ReportBuilder getReportBuilder();
+
+	public TaskCategory addTaskCategory( String name, String description );
+
+	public void deleteCategory(long id_long) throws CategoryException;
 	
 }

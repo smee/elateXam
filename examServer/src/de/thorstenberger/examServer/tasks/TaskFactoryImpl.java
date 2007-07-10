@@ -387,7 +387,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 			for( int i = 0; i < tasklet.getTaskletCorrection().getStudentAnnotations().size(); i++ ){
 				Annotation a = tasklet.getTaskletCorrection().getStudentAnnotations().get( i );
 				TaskletAnnotationVO tavo = taskletVO.getStudentAnnotations().get( i );
-				if( objectsDiffer( a.getText(), tavo.getText() ) || objectsDiffer( a.getDate(), tavo.getDate() ) ){
+				if( objectsDiffer( a.getText(), tavo.getText() ) || objectsDiffer( a.getDate(), tavo.getDate() ) || objectsDiffer( a.isAcknowledged(), tavo.isAcknowledged() ) ){
 					taskletVO.setStudentAnnotations( copyAnnotations( tasklet.getTaskletCorrection().getStudentAnnotations() ) );
 					changed = true;
 					break;

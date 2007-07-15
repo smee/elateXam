@@ -130,7 +130,7 @@ public class TaskletCorrectionImpl implements TaskletCorrection {
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.TaskletCorrection#reset()
 	 */
-	public void reset() {
+	public synchronized void reset() {
 		points = null;
 		annotation = null;
 		corrector = null;

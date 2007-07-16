@@ -29,6 +29,12 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
  */
 public interface SubTasklet_Text extends SubTasklet {
 	
+	/**
+	 * The text field of Text Subtasklets can be pre-populated with some string.
+	 * @return the initial value of the text field or NULL if not present
+	 */
+	public String getInitialTextFieldValue();
+	
 	public String getAnswer();
 	
 	public int getTextFieldWidth();

@@ -105,6 +105,14 @@ public class SubTasklet_TextImpl implements SubTasklet_Text {
 		return textSubTaskDef.getHint();
 	}
 	
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Text#getInitialTextFieldValue()
+	 */
+	public String getInitialTextFieldValue() {
+		return textSubTaskDef.getInitialTextFieldValue();
+	}
+
+
 	public void setVirtualNum( String virtualNum ){
 		textSubTask.setVirtualNum( virtualNum );
 	}
@@ -131,7 +139,7 @@ public class SubTasklet_TextImpl implements SubTasklet_Text {
 	}
 	
 	public void doAutoCorrection(){
-		if( getAnswer() == null || getAnswer().length() == 0 ){
+		if( !isProcessed() ){
 			setCorrection( 0 , true);
 		}
 		
@@ -173,7 +181,13 @@ public class SubTasklet_TextImpl implements SubTasklet_Text {
 	}
 	
 	public boolean isProcessed(){
-		return textSubTask.getAnswer()!=null && textSubTask.getAnswer().length() > 0;
+		if( getInitialTextFieldValue() != null ){
+			if( getInitialTextFieldValue().equals( textSubTask.getAnswer() ) )
+				return false;
+			else
+				return true;
+		}else
+			return textSubTask.getAnswer() != null && textSubTask.getAnswer().length() > 0;
 	}
 	
 	public int getTextFieldWidth(){
@@ -196,7 +210,7 @@ public class SubTasklet_TextImpl implements SubTasklet_Text {
 	public void build() throws TaskApiException {
 		// nothing to build :)		
 		// except:
-		textSubTask.setAnswer( "" );
+		textSubTask.setAnswer( getInitialTextFieldValue() != null ? getInitialTextFieldValue() : "" );
 	}
 	
 }

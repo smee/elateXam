@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSPY v5 U (http://www.xmlspy.com) by tb (ul) -->
-<xs:schema targetNamespace="http://complex.taskmodel.thorstenberger.de/complexTaskDef" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://complex.taskmodel.thorstenberger.de/complexTaskDef" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" elementFormDefault="qualified" attributeFormDefault="unqualified" jaxb:version="1.0">
+<xs:schema targetNamespace="http://complex.taskmodel.thorstenberger.de/complexTaskDef" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns="http://complex.taskmodel.thorstenberger.de/complexTaskDef" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" jaxb:version="1.0">
 	<!--
 Change Log:
 
@@ -13,6 +13,12 @@ Change Log:
 - 16.07.06 Category-Attribut "preserveOrderOfBlocks" in "ignoreOrderOfBlocks" geändert; ignoreOrderOfBlocks und mixAllSubTasks jetzt optional
 - 22.05.07 McSubTaskDef-Attribut "preserveOrderOfAnswers" (optional) hinzugefügt, mit der die Reihenfolge von Antworten beibehalten werden kann.
 - 22.05.07 Element "showHandlingHintsBeforeStart" hinzugefügt: bestimmt, ob allg. Bearbeitungshinweise/Hilfe auf der Übersichtsseite vor dem Start angezeigt werden sollen
+
+
+TODO:
+- Inkonsistenzen bei MC-Kategorien zw. singleSelect und multipleSelect beseitigen (<cloze-config>@negativePoints; @minCorrectAnswers, @maxCorrectAnswers)
+- preserveOrder der Antworten bei MC-Aufgaben: teilw. sinnlos, da richtige immer vor falschen angegeben werden müssen
+
 -->
 	<xs:element name="complexTaskDef">
 		<xs:annotation>
@@ -322,6 +328,7 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 			<xs:sequence>
 				<xs:element name="problem" type="xs:string"/>
 				<xs:element name="hint" type="xs:string" minOccurs="0"/>
+				<xs:element name="initialTextFieldValue" type="xs:string" minOccurs="0"/>
 				<xs:element name="correctionHint" type="xs:string" minOccurs="0"/>
 			</xs:sequence>
 			<xs:attribute name="id" type="xs:string" use="required"/>

@@ -326,7 +326,7 @@ public class SubTasklet_ClozeImpl implements SubTasklet_Cloze {
 			if( gapDef.isSetInputLength() )
 				return gapDef.getInputLength();
 			else
-				return 25;
+				return 20;
 		}
 		
 		public String getGapValue(){

@@ -101,7 +101,7 @@ public class TryImpl implements Try {
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.Try#getProcessPercentage()
 	 */
-	public float getProcessPercentage() {
+	public ProgressInformation getProgressInformation() {
 		List<Page> pages = getPages();
 		int numOfSubTasks = 0;
 		int numOfProcessedSubTasks = 0;
@@ -115,9 +115,49 @@ public class TryImpl implements Try {
 		}
 		
 		if( numOfSubTasks == 0 )
-			return 0;
+			return new ProgressInformationImpl( numOfSubTasks, numOfProcessedSubTasks, 0 );
 		
-		return (float)numOfProcessedSubTasks / (float) numOfSubTasks;
+		return new ProgressInformationImpl( numOfSubTasks, numOfProcessedSubTasks, (float)numOfProcessedSubTasks / (float) numOfSubTasks );
+		
+	}
+	
+	public static class ProgressInformationImpl implements ProgressInformation{
+
+		private int numOfSubtasks;
+		private int numOfProcessedSubtasks;
+		private float progressPercentage;
+		
+		/**
+		 * @param numOfSubtasks
+		 * @param numOfProcessedSubtasks
+		 * @param progressPercentage
+		 */
+		public ProgressInformationImpl(int numOfSubtasks, int numOfProcessedSubtasks, float progressPercentage) {
+			this.numOfSubtasks = numOfSubtasks;
+			this.numOfProcessedSubtasks = numOfProcessedSubtasks;
+			this.progressPercentage = progressPercentage;
+		}
+
+		/* (non-Javadoc)
+		 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.Try.ProgressInformation#getNumOfProcessedSubtasks()
+		 */
+		public int getNumOfProcessedSubtasklets() {
+			return numOfProcessedSubtasks;
+		}
+
+		/* (non-Javadoc)
+		 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.Try.ProgressInformation#getNumOfSubtasks()
+		 */
+		public int getNumOfSubtasklets() {
+			return numOfSubtasks;
+		}
+
+		/* (non-Javadoc)
+		 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.Try.ProgressInformation#getProgressPercentage()
+		 */
+		public float getProgressPercentage() {
+			return progressPercentage;
+		}
 		
 	}
 	

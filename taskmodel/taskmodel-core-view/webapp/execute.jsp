@@ -236,7 +236,7 @@ function fenster(file,breite,hoehe) {
         </tr>
         <tr> 
           <td class="ComplexTaskSubmitText" valign="top">bearbeitet:</td>
-          <td class="ComplexTaskSubmitText">${Task.processPercentage}</td>
+          <td class="ComplexTaskSubmitText">${Task.numOfProcessedSubtasklets} / ${Task.numOfSubtasklets}: ${Task.processPercentage}</td>
         </tr>
       </table>
 

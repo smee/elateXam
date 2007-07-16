@@ -40,6 +40,7 @@ import de.thorstenberger.taskmodel.TaskModelViewDelegateObject;
 import de.thorstenberger.taskmodel.complex.ComplexTasklet;
 import de.thorstenberger.taskmodel.complex.TaskDef_Complex;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.Try.ProgressInformation;
 
 /**
  * 
@@ -201,14 +202,17 @@ public class ExecuteAction extends org.apache.struts.action.Action {
 			ctivo.setRemainingTimeMillis( -1 );
 		
 		ctivo.setTimeRestricted( ct.getComplexTaskDefRoot().hasTimeRestriction() );
-		ctivo.setEverythingProcessed( ct.getActiveTry().getProcessPercentage() == 1 );
+		ProgressInformation pi = ct.getActiveTry().getProgressInformation();
+		ctivo.setEverythingProcessed( pi.getProgressPercentage() == 1 );
 		
 		ctivo.setPage( page );
 		ctivo.setNumOfPages( ct.getActiveTry().getNumberOfPages() );
 		ctivo.setActualTry( ct.getComplexTaskHandlingRoot().getNumberOfTries() );
 		ctivo.setNumOfTries( ctd.getComplexTaskDefRoot().getTries() );
 		ctivo.setTryStartTime( DateUtil.getStringFromMillis( ct.getActiveTry().getStartTime() ) );
-		ctivo.setProcessPercentage( nf.format( ct.getActiveTry().getProcessPercentage() ) );
+		ctivo.setProcessPercentage( nf.format( pi.getProgressPercentage() ) );
+		ctivo.setNumOfSubtasklets( pi.getNumOfSubtasklets() );
+		ctivo.setNumOfProcessedSubtasklets( pi.getNumOfProcessedSubtasklets() );
 
 		if( ct.getComplexTaskDefRoot().hasTimeRestriction() )
 			ctivo.setDeadline( DateUtil.getStringFromMillis(

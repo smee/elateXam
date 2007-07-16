@@ -43,12 +43,22 @@ public interface Try {
 
 	public List<Page> getPages();
 	
-	public float getProcessPercentage();
+	public ProgressInformation getProgressInformation();
 	
 //	public int getTryIndex();
 	
 	public Page addNewPage(int pageNumber, Category category) throws TaskApiException;
 	
 	public SubTasklet lookupSubTasklet( SubTaskDef subTaskDef );
+	
+	public static interface ProgressInformation{
+		
+		public int getNumOfSubtasklets();
+		
+		public int getNumOfProcessedSubtasklets();
+		
+		public float getProgressPercentage();
+		
+	}
 	
 }

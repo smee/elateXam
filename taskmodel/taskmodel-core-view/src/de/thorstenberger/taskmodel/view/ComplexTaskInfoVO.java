@@ -46,6 +46,8 @@ public class ComplexTaskInfoVO {
 	private String processPercentage;
 	private String deadline;
 	private String hashCode;
+	private int numOfSubtasklets;
+	private int numOfProcessedSubtasklets;
 	
 	/**
 	 * @return Returns the login.
@@ -238,6 +240,30 @@ public class ComplexTaskInfoVO {
 	 */
 	public void setTaskId(long taskId) {
 		this.taskId = taskId;
+	}
+	/**
+	 * @return the numOfProcessedSubtasklets
+	 */
+	public int getNumOfProcessedSubtasklets() {
+		return numOfProcessedSubtasklets;
+	}
+	/**
+	 * @param numOfProcessedSubtasklets the numOfProcessedSubtasklets to set
+	 */
+	public void setNumOfProcessedSubtasklets(int numOfProcessedSubtasklets) {
+		this.numOfProcessedSubtasklets = numOfProcessedSubtasklets;
+	}
+	/**
+	 * @return the numOfSubtasklets
+	 */
+	public int getNumOfSubtasklets() {
+		return numOfSubtasklets;
+	}
+	/**
+	 * @param numOfSubtasklets the numOfSubtasklets to set
+	 */
+	public void setNumOfSubtasklets(int numOfSubtasklets) {
+		this.numOfSubtasklets = numOfSubtasklets;
 	}
 	
 	

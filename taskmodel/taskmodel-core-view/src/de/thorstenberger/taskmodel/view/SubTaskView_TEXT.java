@@ -60,7 +60,7 @@ public class SubTaskView_TEXT extends SubTaskView {
 	public String getRenderedHTML(int relativeTaskNumber, boolean corrected) {
 		StringBuffer ret = new StringBuffer();
 		
-		// workaround: textarea nicht disabled
+		// workaround: textarea not disabled, for better screen reading experience :)
 		corrected = false;
 		
 		ret.append("<div align=\"center\">\n");

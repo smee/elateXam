@@ -30,6 +30,15 @@ import java.util.Map;
  */
 public interface ComplexTaskDefRoot {
 
+	public enum CorrectionModeType{
+		REGULAR,
+		
+		/**
+		 * In this correction mode, only the first n processed Subtasklets wil be corrected and influence the overall result (points).
+		 */
+		CORRECTONLYPROCESSEDTASKS;
+	}
+	
 	/**
 	 * Returns Categories hashed by id in a Map for fast lookup.
 	 * Note that the order of values in a HashMap is not preserved.
@@ -62,5 +71,14 @@ public interface ComplexTaskDefRoot {
 	public Integer getTimeInMinutesWithoutKindnessExtensionTime();
 	
 	public boolean isShowHandlingHintsBeforeStart();
+	
+	public CorrectionMode getCorrectionMode();
+	
+	
+	public interface CorrectionMode{
+		
+		public CorrectionModeType getType(); 
+		
+	}
 	
 }

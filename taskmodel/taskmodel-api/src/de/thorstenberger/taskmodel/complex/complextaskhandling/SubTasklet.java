@@ -43,6 +43,8 @@ public interface SubTasklet {
 	
 	public boolean isCorrected();
 	
+	public boolean isNeedsManualCorrection();
+	
 	public float getPoints() throws IllegalStateException;
 	
 	public void doAutoCorrection();

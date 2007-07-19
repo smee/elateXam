@@ -71,6 +71,23 @@ Every new try results in a random aggregation of subtasks (and possibly answer c
 									</xs:restriction>
 								</xs:simpleType>
 							</xs:element>
+							<xs:element name="correctionMode" minOccurs="0">
+								<xs:complexType>
+									<xs:choice>
+										<xs:element name="regular"/>
+										<xs:element name="correctOnlyProcessedTasks">
+											<xs:annotation>
+												<xs:documentation>In this correction mode, only the first n processed Subtasklets wil be corrected and influence the overall result (points).</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:int">
+													<xs:minInclusive value="1"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+									</xs:choice>
+								</xs:complexType>
+							</xs:element>
 						</xs:all>
 					</xs:complexType>
 				</xs:element>

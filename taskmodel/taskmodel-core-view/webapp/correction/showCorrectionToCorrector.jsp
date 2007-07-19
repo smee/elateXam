@@ -82,9 +82,9 @@
 					<c:when test="${SubTasklet.corrected}">
 						<br><br><font color=red>Aufgabe korrigiert, erreichte Punkte: ${SubTasklet.points}</font>
 					</c:when>
-					<c:otherwise>
-						<br><br><font color=red>Aufgabe noch nicht korrigiert</font>
-					</c:otherwise>
+					<c:when test="${SubTasklet.needsManualCorrection}">
+						<br/><br/><font color=red>manuelle Korrektur notwendig</font>
+					</c:when>
 				</c:choose>
 				
 				<br></fieldset><br>

@@ -62,23 +62,31 @@ public class SubTaskletRootNode implements DataNode {
 	 */
 	public List<DataNode> getSubNodes() {
 		
-		SubtaskletFolder uncorrected = new SubtaskletFolder( false );
-		SubtaskletFolder corrected = new SubtaskletFolder( true );
+		SubtaskletFolder uncorrected = new SubtaskletFolder( SubtaskletFolder.Type.UNCORRECTED );
+		SubtaskletFolder corrected = new SubtaskletFolder( SubtaskletFolder.Type.CORRECTED );
+		SubtaskletFolder needsManualCorrection = new SubtaskletFolder( SubtaskletFolder.Type.NEEDSMANUALCORRECTION );
 		
 		for( SubTasklet subTasklet : subTasklets ){
 			
-			if( subTasklet.isCorrected() )
+			if( subTasklet.isCorrected() ){
 				corrected.addSubNode( new SubtaskletNode( subTasklet.getVirtualSubtaskNumber(),
 						studentLogin, taskId, subTasklet.getVirtualSubtaskNumber().equals( currentlySelectedSubtaskNum ) ) );
-			else
-				uncorrected.addSubNode( new SubtaskletNode( subTasklet.getVirtualSubtaskNumber(),
-						studentLogin, taskId, subTasklet.getVirtualSubtaskNumber().equals( currentlySelectedSubtaskNum ) ) );
+			}else{
+				if( subTasklet.isNeedsManualCorrection() ){
+					needsManualCorrection.addSubNode( new SubtaskletNode( subTasklet.getVirtualSubtaskNumber(),
+							studentLogin, taskId, subTasklet.getVirtualSubtaskNumber().equals( currentlySelectedSubtaskNum ) ) );
+				}else{
+					uncorrected.addSubNode( new SubtaskletNode( subTasklet.getVirtualSubtaskNumber(),
+							studentLogin, taskId, subTasklet.getVirtualSubtaskNumber().equals( currentlySelectedSubtaskNum ) ) );
+				}
+			}
 			
 		}
 		
 		List<DataNode> ret = new ArrayList<DataNode>();
-		ret.add( uncorrected );
+		ret.add( needsManualCorrection );
 		ret.add( corrected );
+		ret.add( uncorrected );
 		
 		return ret;
 		

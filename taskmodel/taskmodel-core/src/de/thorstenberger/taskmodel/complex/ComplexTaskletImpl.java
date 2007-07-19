@@ -31,6 +31,7 @@ import de.thorstenberger.taskmodel.TaskModelPersistenceException;
 import de.thorstenberger.taskmodel.Tasklet;
 import de.thorstenberger.taskmodel.TaskletCorrection;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
+import de.thorstenberger.taskmodel.complex.complextaskdef.impl.ComplexTaskDefRootImpl.CorrectOnlyProcessedTasksCorrectionMode;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.ComplexTaskHandlingDAO;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.ComplexTaskHandlingRoot;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
@@ -229,19 +230,48 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 			throw new IllegalStateException( TaskHandlingConstants.TIME_EXCEEDED_AUTO_SUBMIT_MADE );
 		
 		// automatische Vor-Korrektur durchführen
+		List<de.thorstenberger.taskmodel.complex.complextaskhandling.Page> pages = getActiveTry().getPages();
+		float points = -1;
+		if( complexTaskDef.getComplexTaskDefRoot().getCorrectionMode().getType() == ComplexTaskDefRoot.CorrectionModeType.CORRECTONLYPROCESSEDTASKS ){
+			// we assert n>=1
+			int n = ((CorrectOnlyProcessedTasksCorrectionMode)complexTaskDef.getComplexTaskDefRoot().getCorrectionMode()).getFirst_n_tasks();
+			points = doCorrectOnlyProcessedTasksCorrection( pages, n, false );
+		}
+		else
+			points = doRegularCorrection(pages, false);
 		
+		if( points >= 0 ){
+			getTaskletCorrection().setPoints( points );
+			setStatus( Status.CORRECTED );
+		}else
+			setStatus( Status.SOLVED );
+		
+		try {
+			save();
+		} catch (TaskApiException e) {
+			throw new TaskModelPersistenceException( e );
+		}
+
+	}
+
+	/**
+	 * @param allCorrected
+	 * @param points
+	 * @param pages
+	 */
+	private float doRegularCorrection(List<de.thorstenberger.taskmodel.complex.complextaskhandling.Page> pages, boolean justCountPoints) {
 		boolean allCorrected = true;
 		float points = 0;
-		
-		List<de.thorstenberger.taskmodel.complex.complextaskhandling.Page> pages = getActiveTry().getPages();
-		
+		// regular correction
 		for( de.thorstenberger.taskmodel.complex.complextaskhandling.Page page : pages ){
 			
 			List<SubTasklet> subTasklets = page.getSubTasklets();
 			
 			for( SubTasklet subTasklet : subTasklets ){
 		
-				subTasklet.doAutoCorrection();
+				if( !justCountPoints )
+					subTasklet.doAutoCorrection();
+				
 				if( !subTasklet.isCorrected() )
 					allCorrected = false;
 				else
@@ -250,19 +280,58 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 			}
 		}
 		
-		if( allCorrected ){
-			getTaskletCorrection().setPoints( points );
-			setStatus( Status.CORRECTED );
-		}else
-			setStatus( Status.SOLVED );
+		if( allCorrected )
+			return points;
+		else
+			return -1;
 		
-		
-		try {
-			save();
-		} catch (TaskApiException e) {
-			throw new TaskModelPersistenceException( e );
-		}
+	}
+	
+	/**
+	 * @param allCorrected
+	 * @param points
+	 * @param pages
+	 */
+	private float doCorrectOnlyProcessedTasksCorrection(List<de.thorstenberger.taskmodel.complex.complextaskhandling.Page> pages, int n, boolean justCountPoints) {
+		boolean allCorrected = true;
+		float points = 0;
+		boolean mybreak = false;
 
+		for( de.thorstenberger.taskmodel.complex.complextaskhandling.Page page : pages ){
+			
+			List<SubTasklet> subTasklets = page.getSubTasklets();
+			
+			for( SubTasklet subTasklet : subTasklets ){
+				
+				if( subTasklet.isProcessed() ){
+					
+					if( !justCountPoints )
+						subTasklet.doAutoCorrection();
+					
+					if( !subTasklet.isCorrected() )	// equivalent to !isNeedsManualCorrection
+						allCorrected = false;
+					else
+						points += subTasklet.getPoints();
+					
+					n--;
+					
+				}
+				
+				if( n == 0 ){
+					mybreak = true;
+					break;
+				}
+				
+			}
+			if( mybreak )
+				break;
+		}
+		
+		if( allCorrected ){
+			return points;
+		}else
+			return -1;
+		
 	}
 
 	/* (non-Javadoc)
@@ -273,7 +342,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 
 		if( canContinueTry() )
             throw new IllegalStateException( TaskHandlingConstants.CANNOT_CORRECT_TASK_IN_PROGRESS );
-        if( getStatus() == Status.INITIALIZED )
+        if( !hasOrPassedStatus( Status.SOLVED ) )
             throw new IllegalStateException( TaskHandlingConstants.CANNOT_CORRECT_TASK_NOT_SOLVED );
         
         if( actualSubtasklet != null && csd != null ){
@@ -281,26 +350,20 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 	        actualSubtasklet.doManualCorrection( csd );
 	
 	        
-			boolean allCorrected = true;
-			float points = 0;
-			
+	        
+	        // Punkte zusammenzählen
 			List<de.thorstenberger.taskmodel.complex.complextaskhandling.Page> pages = getSolutionOfLatestTry().getPages();
-			
-			for( de.thorstenberger.taskmodel.complex.complextaskhandling.Page page : pages ){
-				
-				List<SubTasklet> subTasklets = page.getSubTasklets();
-				
-				for( SubTasklet subTasklet : subTasklets ){
-			
-					if( !subTasklet.isCorrected() )
-						allCorrected = false;
-					else
-						points += subTasklet.getPoints();
-					
-				}
+			float points = -1;
+			if( complexTaskDef.getComplexTaskDefRoot().getCorrectionMode().getType() == ComplexTaskDefRoot.CorrectionModeType.CORRECTONLYPROCESSEDTASKS ){
+				// we assert n>=1
+				int n = ((CorrectOnlyProcessedTasksCorrectionMode)complexTaskDef.getComplexTaskDefRoot().getCorrectionMode()).getFirst_n_tasks();
+				points = doCorrectOnlyProcessedTasksCorrection( pages, n, false );
 			}
+			else
+				points = doRegularCorrection(pages, false);
 			
-			if( allCorrected ){
+			
+			if( points >= 0 ){
 				getTaskletCorrection().setPoints( points );
 				if( !hasOrPassedStatus( Status.ANNOTATED ) )
 					setStatus( Status.CORRECTED );

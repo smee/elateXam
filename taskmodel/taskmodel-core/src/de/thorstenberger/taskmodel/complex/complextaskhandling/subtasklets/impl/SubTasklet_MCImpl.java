@@ -126,6 +126,13 @@ public class SubTasklet_MCImpl implements SubTasklet_MC {
 	}
 
 	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#isNeedsManualCorrection()
+	 */
+	public boolean isNeedsManualCorrection() {
+		return false;
+	}
+
+	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getPoints()
 	 */
 	public float getPoints() throws IllegalStateException {

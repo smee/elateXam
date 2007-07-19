@@ -160,7 +160,61 @@ public class ComplexTaskDefRootImpl implements ComplexTaskDefRoot {
 		else
 			return complexTaskDef.isShowHandlingHintsBeforeStart();
 	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot#getCorrectionMode()
+	 */
+	public CorrectionMode getCorrectionMode() {
+		
+		if( complexTaskDef.getConfig().isSetCorrectionMode() ){
+			
+			if( complexTaskDef.getConfig().getCorrectionMode().isSetRegular() )
+				return new RegularCorrectionMode();
+			else if( complexTaskDef.getConfig().getCorrectionMode().isSetCorrectOnlyProcessedTasks() )
+				return new CorrectOnlyProcessedTasksCorrectionMode( complexTaskDef.getConfig().getCorrectionMode().getCorrectOnlyProcessedTasks() );
+			
+		}
+		
+		return new RegularCorrectionMode();
+	}
 	
+	public class RegularCorrectionMode implements CorrectionMode{
+
+		/* (non-Javadoc)
+		 * @see de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot.CorrectionMode#getType()
+		 */
+		public CorrectionModeType getType() {
+			return ComplexTaskDefRoot.CorrectionModeType.REGULAR;
+		}
+		
+	}
+	
+	public class CorrectOnlyProcessedTasksCorrectionMode implements CorrectionMode{
+		
+		private int first_n_tasks;
+
+		/**
+		 * @param first_n_tasks
+		 */
+		public CorrectOnlyProcessedTasksCorrectionMode( int first_n_tasks ) {
+			this.first_n_tasks = first_n_tasks;
+		}
+
+		/**
+		 * @return the first_n_tasks
+		 */
+		public int getFirst_n_tasks() {
+			return first_n_tasks;
+		}
+
+		/* (non-Javadoc)
+		 * @see de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot.CorrectionMode#getType()
+		 */
+		public CorrectionModeType getType() {
+			return ComplexTaskDefRoot.CorrectionModeType.CORRECTONLYPROCESSEDTASKS;
+		}
+		
+	}
 	
 
 }

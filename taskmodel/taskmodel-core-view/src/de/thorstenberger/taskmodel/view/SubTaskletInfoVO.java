@@ -33,6 +33,7 @@ public class SubTaskletInfoVO {
 	private String problem;
 	private String renderedHTML;
 	private boolean corrected;
+	private boolean needsManualCorrection;
 	private String points;
 	
 	private String correctionHint;
@@ -40,6 +41,18 @@ public class SubTaskletInfoVO {
 	private String correctionHTML;
 	
 	
+	/**
+	 * @return the needsManualCorrection
+	 */
+	public boolean isNeedsManualCorrection() {
+		return needsManualCorrection;
+	}
+	/**
+	 * @param needsManualCorrection the needsManualCorrection to set
+	 */
+	public void setNeedsManualCorrection(boolean needsManualCorrection) {
+		this.needsManualCorrection = needsManualCorrection;
+	}
 	/**
 	 * @return Returns the hint.
 	 */

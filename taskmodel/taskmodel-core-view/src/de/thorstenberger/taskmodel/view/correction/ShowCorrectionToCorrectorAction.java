@@ -166,6 +166,7 @@ public class ShowCorrectionToCorrectorAction extends Action {
 					stivo.setVirtualSubTaskletNumber( subTasklet.getVirtualSubtaskNumber() );
 					stivo.setRenderedHTML( SubTaskViewFactory.getSubTaskView( subTasklet ).getCorrectedHTML( request, i++ ) );
 					stivo.setCorrected( subTasklet.isCorrected() );
+					stivo.setNeedsManualCorrection( subTasklet.isNeedsManualCorrection() );
 					if( subTasklet.isCorrected() )
 						stivo.setPoints( "" + subTasklet.getPoints() );
 					stivos.add( stivo );

@@ -32,14 +32,29 @@ import de.thorstenberger.taskmodel.view.tree.DataNode;
  */
 public class SubtaskletFolder implements DataNode {
 
-	private boolean corrected;
+	public enum Type{
+		UNCORRECTED( "uncorrected" ),
+		CORRECTED( "corrected" ),
+		NEEDSMANUALCORRECTION( "needsManualCorrection" );
+		
+		private String name;
+		public String toString(){
+			return name;
+		}
+		Type( String name ){
+			this.name = name;
+		}
+	}
+	
+//	private boolean corrected;
+	private Type type;
 	private List<DataNode> subTaskletNodes = new ArrayList<DataNode>();
     
     /**
      * 
      */
-    public SubtaskletFolder( boolean corrected ) {
-        this.corrected = corrected;
+    public SubtaskletFolder( Type type ) {
+        this.type = type;
     }
 
     public void addSubNode( SubtaskletNode node ){
@@ -50,7 +65,15 @@ public class SubtaskletFolder implements DataNode {
 	 * @see de.thorstenberger.taskmodel.view.tree.DataNode#getName()
 	 */
 	public String getName() {
-		return corrected ? "corrected" : "uncorrected";
+//		return corrected ? "corrected" : "uncorrected";
+		return type.toString();
+	}
+	
+	/**
+	 * @return the type
+	 */
+	public Type getType() {
+		return type;
 	}
 
 	/* (non-Javadoc)
@@ -67,12 +90,12 @@ public class SubtaskletFolder implements DataNode {
 		return true;
 	}
 
-	/**
-	 * @return Returns the corrected.
-	 */
-	public boolean isCorrected() {
-		return corrected;
-	}
+//	/**
+//	 * @return Returns the corrected.
+//	 */
+//	public boolean isCorrected() {
+//		return corrected;
+//	}
 
     
     

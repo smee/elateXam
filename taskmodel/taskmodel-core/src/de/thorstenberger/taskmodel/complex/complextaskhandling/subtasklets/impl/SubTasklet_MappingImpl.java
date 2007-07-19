@@ -207,6 +207,13 @@ public class SubTasklet_MappingImpl implements SubTasklet_Mapping {
 	public boolean isCorrected() {
 		return mappingSubTask.getCorrection() != null;
 	}
+	
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#isNeedsManualCorrection()
+	 */
+	public boolean isNeedsManualCorrection() {
+		return false;
+	}
 
 	public float getPoints() throws IllegalStateException {
 		if( !isCorrected() )

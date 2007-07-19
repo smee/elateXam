@@ -30,7 +30,6 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitD
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.correctionsubmitdata.PaintCorrectionSubmitData;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.correctionsubmitdata.TextCorrectionSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.impl.PageImpl;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.PaintSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Paint;
@@ -81,7 +80,14 @@ public class SubTasklet_PaintImpl implements SubTasklet_Paint {
 	public boolean isCorrected() {
 		return paintSubTask.getCorrection() != null;
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#isNeedsManualCorrection()
+	 */
+	public boolean isNeedsManualCorrection() {
+		return paintSubTask.isNeedsManualCorrection();
+	}
+	
 	public float getPoints() throws IllegalStateException {
 		if( !isCorrected() )
 			throw new IllegalStateException( TaskHandlingConstants.SUBTASK_NOT_CORRECTED );
@@ -90,8 +96,10 @@ public class SubTasklet_PaintImpl implements SubTasklet_Paint {
 	}
 
 	public void doAutoCorrection() {
-		if(isProcessed()==false)
+		if( isProcessed() == false ){
 			setCorrection(0,true);
+		}else
+			paintSubTask.setNeedsManualCorrection( true );
 	}
 	
 	private void setCorrection( float points, boolean auto ){
@@ -111,8 +119,10 @@ public class SubTasklet_PaintImpl implements SubTasklet_Paint {
 	public void doManualCorrection(CorrectionSubmitData csd) {
 	    PaintCorrectionSubmitData pcsd = (PaintCorrectionSubmitData) csd;
 	    float points = pcsd.getPoints();
-	    if( points>=0 && points <= paintTaskBlock.getConfig().getPointsPerTask() )
+	    if( points>=0 && points <= paintTaskBlock.getConfig().getPointsPerTask() ){
 	        setCorrection( points, false );
+	        paintSubTask.setNeedsManualCorrection( false );
+	    }
 	}
 
 	public float getReachablePoints() {

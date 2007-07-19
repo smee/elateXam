@@ -53,8 +53,10 @@ public class CorrectionNodeFormatter implements DataNodeFormatter {
 	public String format(DataNode node) {
 		if( node instanceof SubtaskletFolder ){
 			SubtaskletFolder folder = (SubtaskletFolder)node;
-			if( folder.isCorrected() )
+			if( folder.getType() == SubtaskletFolder.Type.CORRECTED )
 				return "korrigiert";
+			else if( folder.getType() == SubtaskletFolder.Type.NEEDSMANUALCORRECTION )
+				return "manuelle Korr. notw.";
 			else
 				return "nicht korrigiert";
 		}else if( node instanceof SubtaskletNode ){

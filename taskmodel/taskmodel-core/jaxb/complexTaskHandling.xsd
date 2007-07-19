@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSPY v5 U (http://www.xmlspy.com) by tb (ul) -->
-<xs:schema targetNamespace="http://complex.taskmodel.thorstenberger.de/complexTaskHandling" xmlns="http://complex.taskmodel.thorstenberger.de/complexTaskHandling" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" elementFormDefault="qualified" attributeFormDefault="unqualified" jaxb:version="1.0" jaxb:extensionBindingPrefixes="xjc">
+<xs:schema targetNamespace="http://complex.taskmodel.thorstenberger.de/complexTaskHandling" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://complex.taskmodel.thorstenberger.de/complexTaskHandling" elementFormDefault="qualified" attributeFormDefault="unqualified" jaxb:version="1.0" jaxb:extensionBindingPrefixes="xjc">
 	<xs:element name="complexTaskHandling">
 		<xs:complexType>
 			<xs:sequence>
@@ -42,6 +42,7 @@
 															<xs:attribute name="autoCorrected" type="xs:boolean" use="optional"/>
 														</xs:complexType>
 													</xs:element>
+													<xs:element name="needsManualCorrection" type="xs:boolean" default="true" minOccurs="0"/>
 													<xs:element name="correction" minOccurs="0">
 														<xs:complexType>
 															<xs:attribute name="points" type="xs:float" use="required"/>
@@ -56,6 +57,7 @@
 											<xs:complexType>
 												<xs:sequence>
 													<xs:element name="answer" type="xs:string" minOccurs="0"/>
+													<xs:element name="needsManualCorrection" type="xs:boolean" default="true" minOccurs="0"/>
 													<xs:element name="correction" minOccurs="0">
 														<xs:complexType>
 															<xs:attribute name="points" type="xs:float" use="required"/>
@@ -89,6 +91,7 @@
 											<xs:complexType>
 												<xs:sequence>
 													<xs:element name="pictureString" type="xs:string" minOccurs="0"/>
+													<xs:element name="needsManualCorrection" type="xs:boolean" default="true" minOccurs="0"/>
 													<xs:element name="correction" minOccurs="0">
 														<xs:complexType>
 															<xs:attribute name="points" type="xs:float" use="required"/>

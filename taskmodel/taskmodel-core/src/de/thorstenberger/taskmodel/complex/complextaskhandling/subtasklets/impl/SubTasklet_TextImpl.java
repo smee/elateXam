@@ -109,7 +109,12 @@ public class SubTasklet_TextImpl implements SubTasklet_Text {
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Text#getInitialTextFieldValue()
 	 */
 	public String getInitialTextFieldValue() {
-		return textSubTaskDef.getInitialTextFieldValue();
+		// remove Windows/DOS line breaks,
+		// see doSave() downwards
+		if( textSubTaskDef.getInitialTextFieldValue() != null )
+			return textSubTaskDef.getInitialTextFieldValue().replaceAll( "\r", "" );
+		else
+			return null;
 	}
 
 
@@ -135,13 +140,17 @@ public class SubTasklet_TextImpl implements SubTasklet_Text {
 	
 	public void doSave( SubmitData submitData ) throws IllegalStateException{
 		TextSubmitData tsd = (TextSubmitData) submitData;
-		textSubTask.setAnswer( tsd.getAnswer() );
+		// remove Windows/DOS line breaks,
+		// otherwise comparing the answer to the initial text field value will always return false
+		// if the page has been saved without changing the text field by the user
+		textSubTask.setAnswer( tsd.getAnswer().replaceAll( "\r", "" ) );
 	}
 	
 	public void doAutoCorrection(){
 		if( !isProcessed() ){
 			setCorrection( 0 , true);
-		}
+		}else
+			textSubTask.setNeedsManualCorrection( true );
 		
 		// mehr können wir leider nicht machen...
 	}
@@ -149,8 +158,10 @@ public class SubTasklet_TextImpl implements SubTasklet_Text {
 	public void doManualCorrection( CorrectionSubmitData csd ){
 	    TextCorrectionSubmitData tcsd = (TextCorrectionSubmitData) csd;
 	    float points = tcsd.getPoints();
-	    if( points>=0 && points <= textTaskBlock.getConfig().getPointsPerTask() )
+	    if( points>=0 && points <= textTaskBlock.getConfig().getPointsPerTask() ){
 	        setCorrection( points, false );
+	        textSubTask.setNeedsManualCorrection( false );
+	    }
 	}
 	
 	private void setCorrection( float points, boolean auto ){
@@ -173,6 +184,15 @@ public class SubTasklet_TextImpl implements SubTasklet_Text {
 		return textSubTask.getCorrection() != null;
 	}
 	
+	
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#isNeedsManualCorrection()
+	 */
+	public boolean isNeedsManualCorrection() {
+		return textSubTask.isNeedsManualCorrection();
+	}
+
+
 	public float getPoints() throws IllegalStateException{
 		if( !isCorrected() )
 			throw new IllegalStateException( TaskHandlingConstants.SUBTASK_NOT_CORRECTED );

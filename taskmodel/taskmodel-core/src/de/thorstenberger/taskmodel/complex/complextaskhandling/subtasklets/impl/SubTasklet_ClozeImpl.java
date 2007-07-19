@@ -164,7 +164,8 @@ public class SubTasklet_ClozeImpl implements SubTasklet_Cloze {
 			if( points < 0 )
 				points = 0;
 			setCorrection( points );
-		}
+		}else
+			clozeSubTask.setNeedsManualCorrection( true );
 		
 	}
 	
@@ -181,6 +182,7 @@ public class SubTasklet_ClozeImpl implements SubTasklet_Cloze {
 	    }
 	    
 	    calculatePoints();
+	    clozeSubTask.setNeedsManualCorrection( false );
 	}
 	
 	private void calculatePoints(){
@@ -236,6 +238,13 @@ public class SubTasklet_ClozeImpl implements SubTasklet_Cloze {
 	
 	public boolean isCorrected(){
 		return clozeSubTask.getCorrection() != null;
+	}
+	
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#isNeedsManualCorrection()
+	 */
+	public boolean isNeedsManualCorrection() {
+		return clozeSubTask.isNeedsManualCorrection();
 	}
 	
 	public float getPoints() throws IllegalStateException{
@@ -411,7 +420,7 @@ public class SubTasklet_ClozeImpl implements SubTasklet_Cloze {
 				if( s.charAt( j ) != ' ' )
 					break;
 			}
-			if( i >= j )
+			if( i > j )
 				return "";
 			
 			return s.substring( i, j + 1 );

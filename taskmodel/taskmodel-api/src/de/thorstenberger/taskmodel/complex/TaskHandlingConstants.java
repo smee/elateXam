@@ -65,5 +65,7 @@ public class TaskHandlingConstants {
 	
 	public static final String CORRECTOR_CAN_ONLY_ACKNOWLEDGE_IF_ANNOTATED = "task.corrector_can_only_acknowledge_if_annotated";
 	
+//	public static final String CANNOT_MANUALLY_CORRECT_SUBTASK = "task.complex.cannot_manually_correct_subtask";
+	
 	
 }

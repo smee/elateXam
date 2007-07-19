@@ -43,6 +43,7 @@ import de.thorstenberger.examServer.model.User;
 import de.thorstenberger.examServer.service.ExamServerManager;
 import de.thorstenberger.examServer.service.UserManager;
 import de.thorstenberger.taskmodel.Annotation;
+import de.thorstenberger.taskmodel.CategoryException;
 import de.thorstenberger.taskmodel.CategoryFilter;
 import de.thorstenberger.taskmodel.MethodNotSupportedException;
 import de.thorstenberger.taskmodel.TaskApiException;
@@ -472,6 +473,24 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 		ret.setEMail( user.getEmail() );		
 		
 		return ret;
+		
+	}
+	
+	
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.TaskFactory#addTaskCategory(java.lang.String, java.lang.String)
+	 */
+	public TaskCategory addTaskCategory(String name, String description) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.TaskFactory#deleteTaskCategory(long)
+	 */
+	public void deleteTaskCategory(long id) throws CategoryException {
+		// TODO Auto-generated method stub
 		
 	}
 

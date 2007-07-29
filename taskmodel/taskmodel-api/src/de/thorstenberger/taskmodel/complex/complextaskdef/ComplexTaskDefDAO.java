@@ -17,11 +17,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.complex.complextaskdef;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import de.thorstenberger.taskmodel.TaskApiException;
 
@@ -35,5 +36,7 @@ public interface ComplexTaskDefDAO {
 	 * @return
 	 */
 	public ComplexTaskDefRoot getComplexTaskDefRoot( InputStream complexTaskIS ) throws TaskApiException;
-	
+
+	public void save(ComplexTaskDefRoot complexTaskHandlingRoot, OutputStream baos) throws TaskApiException;
+
 }

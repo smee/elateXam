@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.complex.complextaskdef;
 
@@ -33,18 +33,18 @@ public interface Block {
 	 * @return a string denoting this block's subtasks type (mc, cloze, text etc.)
 	 */
 	public String getType();
-	
+
 	/**
 	 * @return the index of the block in its category, starts with 0 for the first block
 	 */
 	public int getIndex();
-	
+
 	public List<SubTaskDefOrChoice> getSubTaskDefOrChoiceList();
-	
+
 	public int getNumberOfSelectedSubTasks();
-	
+
 	public boolean isPreserveOrder();
-	
+
 	public float getPointsPerSubTask();
-	
+
 }

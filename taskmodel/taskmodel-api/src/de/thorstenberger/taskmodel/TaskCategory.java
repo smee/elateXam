@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel;
 
@@ -30,9 +30,11 @@ import java.util.List;
 public interface TaskCategory {
 
 	public long getId();
-	
+
 	public String getName();
-	
+
+	public void setName(String name);
+
 	public List<TaskDef> getTaskDefs();
-	
+
 }

@@ -104,11 +104,14 @@ public abstract class AbstractTaskDef implements TaskDef {
 		
 		return true;
 	}
+	
+	public boolean isVisible() {
+		return true;
+	}
+
 
 	public Long getFollowingTaskId() {
 		return followingTaskId;
 	}
 	
-	
-
 }

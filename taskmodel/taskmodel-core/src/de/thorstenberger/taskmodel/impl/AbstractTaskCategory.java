@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.impl;
 
@@ -35,9 +35,9 @@ public class AbstractTaskCategory implements TaskCategory {
 	private long id;
 	private String name;
 	private List<TaskDef> taskDefs;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public AbstractTaskCategory( long id, String name, List<TaskDef> taskDefs ) {
 		this.id = id;
@@ -64,6 +64,10 @@ public class AbstractTaskCategory implements TaskCategory {
 	 */
 	public List<TaskDef> getTaskDefs() {
 		return taskDefs;
+	}
+
+	public void setName(String name) {
+		this.name=name;
 	}
 
 }

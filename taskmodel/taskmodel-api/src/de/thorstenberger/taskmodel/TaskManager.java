@@ -29,27 +29,34 @@ import java.util.List;
 public interface TaskManager {
 
 	public String getDescription();
-	
+
 	public List<TaskCategory> getCategories() throws MethodNotSupportedException;
-	
+
+	public TaskCategory getCategory( long id ) throws MethodNotSupportedException;
+
 	public List<TaskCategory> getCategories( CategoryFilter categoryFilter ) throws MethodNotSupportedException;
-	
+
+	public void storeTaskCategory( TaskCategory category ) throws MethodNotSupportedException;
+
+	public void deleteCategory(long id_long) throws MethodNotSupportedException;
+
 	public List<TaskDef> getTaskDefs() throws MethodNotSupportedException;
-	
+
 	public List<TaskDef> getTaskDefs( TaskFilter filter ) throws TaskFilterException, MethodNotSupportedException;
-	
+
 	public TaskDef getTaskDef( long id ) throws MethodNotSupportedException;
-	
+
 	public TaskDef getTaskDef( TaskFilter filter, long id ) throws TaskFilterException, MethodNotSupportedException;
-	
+
+	public void storeTaskDef( TaskDef taskDef, long taskCategoryId ) throws TaskApiException;
+
+	public void deleteTaskDef( long id) throws MethodNotSupportedException;
+
 	public TaskletContainer getTaskletContainer();
-	
+
 	public TaskFactory getTaskFactory();
-	
+
 	public ReportBuilder getReportBuilder();
 
-	public TaskCategory addTaskCategory( String name, String description );
 
-	public void deleteCategory(long id_long) throws CategoryException;
-	
 }

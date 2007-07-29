@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel;
 
@@ -25,67 +25,73 @@ import java.util.List;
 
 
 /**
- * 
+ *
  * TaskFactory is responsible for retrieving and saving TaskDefs and Tasklets depending on a
  * specific server and database implementation.
- * 
+ *
  * @author Thorsten Berger
  *
  */
 public interface TaskFactory {
 
 	/**
-	 * 
+	 *
 	 * @return List of Task Types this TaskFactory can instantiate
 	 */
 	public List<String> availableTypes();
-	
+
+	public TaskCategory getCategory(long id);
+
 	public List<TaskCategory> getCategories();
-	
+
 	public List<TaskCategory> getCategories( CategoryFilter categoryFilter );
-	
-	public TaskCategory addTaskCategory( String name, String description );
-	
-	public void deleteTaskCategory( long id ) throws CategoryException;
-	
+
+	public void storeTaskCategory( TaskCategory category );
+
+	public void deleteTaskCategory( long id ) throws MethodNotSupportedException;
+
 //	public List<TaskDef> getTaskDefsByCategory( TaskCategory taskCategory );
-	
+
 	public TaskDef getTaskDef( long taskId );
-	
+
 	public List<TaskDef> getTaskDefs();
-	
+
 	public List<TaskDef> getTaskDefs( TaskFilter filter ) throws TaskFilterException;
-	
+
+	public void storeTaskDef( TaskDef taskDef, long taskCategoryId ) throws TaskApiException;
+
+	public void deleteTaskDef(long id) throws MethodNotSupportedException;
 	/**
-	 * 
+	 *
 	 * @param userId
 	 * @param taskId
 	 * @return the instantiated tasklet or null if not existant
 	 */
 	public Tasklet getTasklet( String userId, long taskId );
-	
+
 	public List<Tasklet> getTasklets( long taskId );
-	
+
 	public List<String> getUserIdsOfAvailableTasklets( long taskId );
-	
+
 	public Tasklet createTasklet( String userId, long taskId ) throws TaskApiException;
-	
+
 	public void storeTasklet( Tasklet tasklet ) throws TaskApiException;
-	
+
 	public void removeTasklet( String userId, long taskId ) throws TaskApiException;
-	
+
 	public void logPostData( String msg, Tasklet tasklet, String ip );
-	
+
 	public void logPostData( String msg, Throwable throwable, Tasklet tasklet, String ip );
-	
+
 //	public List<Tasklet> getTaskletsAssignedToCorrector( long taskId, String correctorId, boolean corrected );
 	public List<String> getUserIdsOfTaskletsAssignedToCorrector( long taskId, String correctorId );
-	
+
 	/**
-	 * 
+	 *
 	 * @param login
 	 * @return the UserInfo instance or null if no such user exists
 	 */
 	public UserInfo getUserInfo( String login );
+
 
 }

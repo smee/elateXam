@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.complex.complextaskdef.impl;
 
@@ -41,9 +41,9 @@ public class ComplexTaskDefRootImpl implements ComplexTaskDefRoot {
 
 	private ComplexTaskDef complexTaskDef;
 	private ComplexTaskFactory complexTaskFactory;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public ComplexTaskDefRootImpl( ComplexTaskDef complexTaskDef, ComplexTaskFactory complexTaskFactory ) {
 		this.complexTaskDef = complexTaskDef;
@@ -103,7 +103,7 @@ public class ComplexTaskDefRootImpl implements ComplexTaskDefRoot {
 	public Integer getTimeInMinutesWithKindnessExtensionTime() {
 		if( !hasTimeRestriction() )
 			return null;
-		
+
 		if( complexTaskDef.getConfig().isSetKindnessExtensionTime() )
 			return complexTaskDef.getConfig().getTime() + complexTaskDef.getConfig().getKindnessExtensionTime();
 		else
@@ -116,7 +116,7 @@ public class ComplexTaskDefRootImpl implements ComplexTaskDefRoot {
 	public Integer getTimeInMinutesWithoutKindnessExtensionTime() {
 		if( !hasTimeRestriction() )
 			return null;
-		
+
 		return complexTaskDef.getConfig().getTime();
 	}
 
@@ -160,7 +160,8 @@ public class ComplexTaskDefRootImpl implements ComplexTaskDefRoot {
 		else
 			return complexTaskDef.isShowHandlingHintsBeforeStart();
 	}
-
+	
+	
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot#getCorrectionMode()
 	 */
@@ -216,5 +217,12 @@ public class ComplexTaskDefRootImpl implements ComplexTaskDefRoot {
 		
 	}
 	
+	
+
+	public ComplexTaskDef getJAXBContent() {
+		return complexTaskDef;
+	}
+
+
 
 }

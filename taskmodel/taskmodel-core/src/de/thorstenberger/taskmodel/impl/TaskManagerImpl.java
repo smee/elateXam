@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.impl;
 
@@ -27,6 +27,7 @@ import de.thorstenberger.taskmodel.CategoryException;
 import de.thorstenberger.taskmodel.CategoryFilter;
 import de.thorstenberger.taskmodel.MethodNotSupportedException;
 import de.thorstenberger.taskmodel.ReportBuilder;
+import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskCategory;
 import de.thorstenberger.taskmodel.TaskDef;
 import de.thorstenberger.taskmodel.TaskFactory;
@@ -44,12 +45,12 @@ public class TaskManagerImpl implements TaskManager {
 	private TaskFactory taskFactory;
 	private TaskletContainer taskletContainer;
 	private ReportBuilder reportBuilder;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public TaskManagerImpl( TaskFactory taskFactory, TaskletContainer taskletContainer /*Map typeMapping*/ ) {
-//		this.typeMapping = typeMapping;		
+//		this.typeMapping = typeMapping;
 		this.taskFactory = taskFactory;
 		this.taskletContainer = taskletContainer;
 	}
@@ -129,22 +130,27 @@ public class TaskManagerImpl implements TaskManager {
 		return reportBuilder;
 	}
 
-	public TaskCategory addTaskCategory(String name, String description) {
-		List<TaskCategory> categories = getCategories();
-		for (TaskCategory category : categories) {
-			if( category.getName().equals( name ))
-				return category;
-		}
-		return taskFactory.addTaskCategory(name, description);
+	public void storeTaskCategory(TaskCategory category) {
+		taskFactory.storeTaskCategory(category);
 	}
 
-	public void deleteCategory(long id_long) throws CategoryException {
+	public void deleteCategory(long id_long) throws MethodNotSupportedException {
 		taskFactory.deleteTaskCategory(id_long);
 	}
 
 	public void saveTaskDef(TaskDef def) {
-		throw new MethodNotSupportedException();		
+		throw new MethodNotSupportedException();
 	}
 
+	public TaskCategory getCategory(long id) throws MethodNotSupportedException {
+		return taskFactory.getCategory(id);
+	}
+
+	public void storeTaskDef(TaskDef taskDef, long taskCategoryId) throws TaskApiException {
+		taskFactory.storeTaskDef(taskDef,taskCategoryId);
+	}
+	public void deleteTaskDef(long id) throws MethodNotSupportedException {
+		taskFactory.deleteTaskDef(id);
+	}
 
 }

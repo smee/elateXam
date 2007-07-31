@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.impl;
 
@@ -35,9 +35,9 @@ public abstract class AbstractTaskDef implements TaskDef {
 	private boolean stopped;
 	private Long deadline;
 	private Long followingTaskId;
-	
+
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @param title
 	 * @param shortDescription
@@ -94,17 +94,17 @@ public abstract class AbstractTaskDef implements TaskDef {
 	 * @see de.thorstenberger.taskmodel.TaskDef#isActive()
 	 */
 	public boolean isActive() {
-		
+
 		if( isStopped() )
 			return false;
-		
+
 		Long deadline = getDeadline();
 		if( deadline != null )
 			return System.currentTimeMillis() < deadline;
-		
+
 		return true;
 	}
-	
+
 	public boolean isVisible() {
 		return true;
 	}
@@ -113,5 +113,20 @@ public abstract class AbstractTaskDef implements TaskDef {
 	public Long getFollowingTaskId() {
 		return followingTaskId;
 	}
-	
+
+
+	public void setDeadline(Long deadline) {
+		this.deadline=deadline;
+	}
+
+
+	public void setStopped(boolean value) {
+		this.stopped=value;
+	}
+
+
+	public void setTitle(String title) {
+		this.title=title;
+	}
+
 }

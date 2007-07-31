@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.complex;
 
@@ -31,11 +31,13 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
 public interface TaskDef_Complex extends TaskDef{
 
 //	public File getXmlTaskDefFile();
-	
+
 	public boolean isShowCorrectionToUsers();
-	
+
+	public void setShowCorrectionToUsers(boolean value);
+
 //	public ComplexTaskDefHelper getComplexTaskDefHelper();
 
 	public ComplexTaskDefRoot getComplexTaskDefRoot();
-	
+
 }

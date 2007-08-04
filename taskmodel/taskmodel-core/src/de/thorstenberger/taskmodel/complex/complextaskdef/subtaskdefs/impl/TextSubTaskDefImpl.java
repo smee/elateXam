@@ -46,6 +46,13 @@ public class TextSubTaskDefImpl implements SubTaskDef {
 		return textSubTaskDef.getId();
 	}
 
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef#isTrash()
+	 */
+	public boolean isTrash() {
+		return textSubTaskDef.isTrash();
+	}
+
 	/**
 	 * backdoor access to JAXB element
 	 * @return Returns the textSubTaskDef.

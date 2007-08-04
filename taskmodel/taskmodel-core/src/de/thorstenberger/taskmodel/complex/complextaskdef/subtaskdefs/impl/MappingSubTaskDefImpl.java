@@ -43,6 +43,13 @@ public class MappingSubTaskDefImpl implements SubTaskDef {
 		return mappingSubTaskDef.getId();
 	}
 
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef#isTrash()
+	 */
+	public boolean isTrash() {
+		return mappingSubTaskDef.isTrash();
+	}
+
 	/**
 	 * backdoor access to JAXB element
 	 * @return Returns the mappingSubTaskDef.

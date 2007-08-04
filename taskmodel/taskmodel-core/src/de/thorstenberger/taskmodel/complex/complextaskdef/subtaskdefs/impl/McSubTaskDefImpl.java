@@ -46,6 +46,13 @@ public class McSubTaskDefImpl implements SubTaskDef {
 		return mcSubTaskDef.getId();
 	}
 
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef#isTrash()
+	 */
+	public boolean isTrash() {
+		return mcSubTaskDef.isTrash();
+	}
+
 	/**
 	 * backdoor access to JAXB element
 	 * @return Returns the mcSubTaskDef.

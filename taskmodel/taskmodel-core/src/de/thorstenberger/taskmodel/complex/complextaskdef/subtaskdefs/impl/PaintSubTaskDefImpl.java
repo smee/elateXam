@@ -39,6 +39,13 @@ public class PaintSubTaskDefImpl implements SubTaskDef {
 		return paintSubTaskDef.getId();
 	}
 
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef#isTrash()
+	 */
+	public boolean isTrash() {
+		return paintSubTaskDef.isTrash();
+	}
+
 	/**
 	 * backdoor access to JAXB element
 	 * @return Returns the paintSubTaskDef.

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSPY v5 U (http://www.xmlspy.com) by tb (ul) -->
-<xs:schema targetNamespace="http://complex.taskmodel.thorstenberger.de/complexTaskDef" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns="http://complex.taskmodel.thorstenberger.de/complexTaskDef" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" jaxb:version="1.0">
+<xs:schema targetNamespace="http://complex.taskmodel.thorstenberger.de/complexTaskDef" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://complex.taskmodel.thorstenberger.de/complexTaskDef" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" elementFormDefault="qualified" attributeFormDefault="unqualified" jaxb:version="1.0">
 	<!--
 Change Log:
 
@@ -13,6 +13,7 @@ Change Log:
 - 16.07.06 Category-Attribut "preserveOrderOfBlocks" in "ignoreOrderOfBlocks" geändert; ignoreOrderOfBlocks und mixAllSubTasks jetzt optional
 - 22.05.07 McSubTaskDef-Attribut "preserveOrderOfAnswers" (optional) hinzugefügt, mit der die Reihenfolge von Antworten beibehalten werden kann.
 - 22.05.07 Element "showHandlingHintsBeforeStart" hinzugefügt: bestimmt, ob allg. Bearbeitungshinweise/Hilfe auf der Übersichtsseite vor dem Start angezeigt werden sollen
+- 31.07.07 Attribut "trash" bei allen (Sub-)Aufgabentypen hinzugefügt: wenn true, dann wird (Sub-)Aufgabe nicht zur Aggregation verwendet
 
 
 TODO:
@@ -326,6 +327,7 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 			</xs:attribute>
 			<xs:attribute name="maxCorrectAnswers" type="xs:int" use="optional"/>
 			<xs:attribute name="preserveOrderOfAnswers" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="trash" type="xs:boolean" use="optional" default="false"/>
 		</xs:complexType>
 		<xs:unique name="answer_id">
 			<xs:selector xpath="./*"/>
@@ -355,6 +357,7 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:attribute>
+			<xs:attribute name="trash" type="xs:boolean" use="optional" default="false"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="clozeSubTaskDef">
@@ -386,6 +389,7 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 				</xs:element>
 			</xs:sequence>
 			<xs:attribute name="id" type="xs:string" use="required"/>
+			<xs:attribute name="trash" type="xs:boolean" use="optional" default="false"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="mappingSubTaskDef">
@@ -407,6 +411,7 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 				</xs:element>
 			</xs:sequence>
 			<xs:attribute name="id" type="xs:string" use="required"/>
+			<xs:attribute name="trash" type="xs:boolean" use="optional" default="false"/>
 		</xs:complexType>
 		<xs:key name="assignmentKey">
 			<xs:selector xpath="./assignment"/>
@@ -475,6 +480,7 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 				<xs:element name="correctionHint" type="xs:string" minOccurs="0"/>
 			</xs:sequence>
 			<xs:attribute name="id" type="xs:string" use="required"/>
+			<xs:attribute name="trash" type="xs:boolean" use="optional" default="false"/>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

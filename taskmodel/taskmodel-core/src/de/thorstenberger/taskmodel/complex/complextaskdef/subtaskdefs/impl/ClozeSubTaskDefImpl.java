@@ -46,6 +46,13 @@ public class ClozeSubTaskDefImpl implements SubTaskDef {
 		return clozeSubTaskDef.getId();
 	}
 
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef#isTrash()
+	 */
+	public boolean isTrash() {
+		return clozeSubTaskDef.isTrash();
+	}
+
 	/**
 	 * backdoor access to JAXB element
 	 * @return Returns the clozeSubTaskDef.

@@ -23,6 +23,7 @@ package de.thorstenberger.taskmodel.complex.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import de.thorstenberger.taskmodel.TaskApiException;
@@ -35,6 +36,7 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.Category;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Choice;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
 import de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef;
+import de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDefOrChoice;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Try;
@@ -112,7 +114,18 @@ public class ComplexTaskBuilderImpl implements ComplexTaskBuilder {
 		
 		List<SubTasklet> ret = new ArrayList<SubTasklet>();
 		
-		List allSubTasksOrChoices = block.getSubTaskDefOrChoiceList();
+		List<SubTaskDefOrChoice> allSubTasksOrChoices = block.getSubTaskDefOrChoiceList();
+		
+		// remove trash SubTaskDefs
+		List<SubTaskDefOrChoice> toRemove = new LinkedList<SubTaskDefOrChoice>();
+		for( SubTaskDefOrChoice stdoc : allSubTasksOrChoices ){
+			if( ( stdoc instanceof SubTaskDef ) && ((SubTaskDef)stdoc).isTrash() )
+				toRemove.add( stdoc );
+		}
+		for( SubTaskDefOrChoice tr : toRemove )
+			allSubTasksOrChoices.remove( tr );
+		
+		
 		
 		// Anzahl der schlieﬂlich angezeigten Aufgaben berechnen:
 		int numOfTasks = Math.min( allSubTasksOrChoices.size(), block.getNumberOfSelectedSubTasks() );

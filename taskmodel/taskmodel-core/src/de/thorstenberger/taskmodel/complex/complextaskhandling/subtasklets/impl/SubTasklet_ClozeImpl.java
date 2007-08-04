@@ -360,10 +360,10 @@ public class SubTasklet_ClozeImpl implements SubTasklet_Cloze {
 			
 			for( int i=0; i<correct.size(); i++ ){
 				if( !isIgnoreCase() ){
-					if( removeLeadingTrailingSpaces( getGapValue() ).equals( (String) correct.get( i ) ) )
+					if( removeLeadingTrailingSpaces( getGapValue() ).equals( removeLeadingTrailingSpaces( (String) correct.get( i ) ) ) )
 						return true;
 				}else{
-					if( removeLeadingTrailingSpaces( getGapValue() ).equalsIgnoreCase( (String) correct.get( i ) ) )
+					if( removeLeadingTrailingSpaces( getGapValue() ).equalsIgnoreCase( removeLeadingTrailingSpaces( (String) correct.get( i ) ) ) )
 						return true;
 				}
 			}

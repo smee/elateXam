@@ -16,6 +16,8 @@
 </head>
 <body id="login"/>
 
+<font size="+1"><b><c:out value="${serverTitle}"/></b></font>
+<br/><br/>
 <%-- Include the login form --%>
 <jsp:include page="/WEB-INF/pages/loginForm.jsp"/>
 

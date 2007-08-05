@@ -43,4 +43,6 @@ public interface ConfigManager {
 	
 	public void setStudentsLoginEnabled( boolean value );
 	
+	public boolean isSetFlag( String flag );
+	
 }

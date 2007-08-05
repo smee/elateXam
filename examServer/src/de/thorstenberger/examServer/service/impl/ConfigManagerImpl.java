@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Iterator;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -174,6 +175,19 @@ public class ConfigManagerImpl implements ConfigManager {
 	public void setStudentsLoginEnabled(boolean value) {
 		config.setStudentsLoginEnabled( value );
 		save();		
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.examServer.service.ConfigManager#isSetFlag(java.lang.String)
+	 */
+	public boolean isSetFlag(String flag) {
+		Iterator it = config.getFlag().iterator();
+		while( it.hasNext() ){
+			String _flag = (String)it.next();
+			if( _flag.equalsIgnoreCase( flag ) )
+				return true;
+		}
+		return false;
 	}
 	
 	

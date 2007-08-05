@@ -15,8 +15,8 @@
 <body<decorator:getProperty property="body.id" writeEntireProperty="true"/><decorator:getProperty property="body.class" writeEntireProperty="true"/>>
 
     <div id="page">
+        <jsp:include page="/common/header.jsp"/>
         <div id="header" class="clearfix">
-            <jsp:include page="/common/header.jsp"/>
         </div>
 
         <div id="content" class="clearfix">
@@ -45,8 +45,8 @@
         </div>
 
         <div id="footer" class="clearfix">
-            <jsp:include page="/common/footer.jsp"/>
         </div>
+        <jsp:include page="/common/footer.jsp"/>
     </div>
 </body>
 </html>

@@ -31,6 +31,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import de.thorstenberger.examServer.model.User;
+import de.thorstenberger.examServer.service.ConfigManager;
+import de.thorstenberger.examServer.service.UserManager;
 import de.thorstenberger.examServer.webapp.vo.TaskDefVO;
 import de.thorstenberger.taskmodel.TaskDef;
 import de.thorstenberger.taskmodel.TaskManager;
@@ -72,6 +75,13 @@ public class StudentMainAction extends BaseAction {
 		
 		request.setAttribute( "TaskDefs", tdvos );
 		
+		ConfigManager configManager = (ConfigManager)getBean( "configManager" );
+		if( configManager.isSetFlag( "askForSemester" ) ){
+			UserManager userManager = (UserManager)getBean( "userManager" );
+			User user = userManager.getUserByUsername( request.getUserPrincipal().getName() );
+			request.setAttribute( "askForSemester", Boolean.TRUE );
+			request.setAttribute( "semester", user.getPhoneNumber() );
+		}
 		return mapping.findForward( "success" );
 	}
 

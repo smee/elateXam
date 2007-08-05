@@ -143,6 +143,12 @@
    <!--forward name="complex" path="/ComplexTaskOverview.html" redirect="true"/-->
    </action>
    
+   <!-- The following action's purpose is to collect some information the students should submit on their Main Menu Page -->
+  <action input="/studentMainMenu" path="/submitStudentsInfo" roles="student"
+   type="de.thorstenberger.examServer.webapp.action.StudentsInfoSubmitAction" validate="false">
+	<forward name="success" path="/studentMainMenu.html"/>
+  </action>
+   
  </action-mappings>
  <controller inputForward="true" maxFileSize="2M" nocache="true"/>
  <message-resources parameter="ApplicationResources"/>

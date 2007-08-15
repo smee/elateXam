@@ -138,10 +138,6 @@ public class TaskManagerImpl implements TaskManager {
 		taskFactory.deleteTaskCategory(id_long);
 	}
 
-	public void saveTaskDef(TaskDef def) {
-		throw new MethodNotSupportedException();
-	}
-
 	public TaskCategory getCategory(long id) throws MethodNotSupportedException {
 		return taskFactory.getCategory(id);
 	}

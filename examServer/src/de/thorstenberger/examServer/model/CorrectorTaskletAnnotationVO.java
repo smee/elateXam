@@ -1,6 +1,6 @@
 /*
 
-Copyright (C) 2006 Thorsten Berger
+Copyright (C) 2007 Thorsten Berger
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,62 +25,42 @@ package de.thorstenberger.examServer.model;
  * @author Thorsten Berger
  *
  */
-public class TaskletAnnotationVO {
+public class CorrectorTaskletAnnotationVO {
 
+	private String corrector;
 	private String text;
-	private Long date;
-	private boolean acknowledged;
-
-
 	/**
+	 * @param corrector
 	 * @param text
-	 * @param date
-	 * @param acknowledged
 	 */
-	public TaskletAnnotationVO(String text, Long date, boolean acknowledged) {
+	public CorrectorTaskletAnnotationVO(String corrector, String text) {
 		super();
-		// TODO Auto-generated constructor stub
+		this.corrector = corrector;
 		this.text = text;
-		this.date = date;
-		this.acknowledged = acknowledged;
 	}
 	/**
-	 * @return Returns the date.
+	 * @return the corrector
 	 */
-	public Long getDate() {
-		return date;
+	public String getCorrector() {
+		return corrector;
 	}
 	/**
-	 * @param date The date to set.
+	 * @param corrector the corrector to set
 	 */
-	public void setDate(Long date) {
-		this.date = date;
+	public void setCorrector(String corrector) {
+		this.corrector = corrector;
 	}
 	/**
-	 * @return Returns the text.
+	 * @return the text
 	 */
 	public String getText() {
 		return text;
 	}
 	/**
-	 * @param text The text to set.
+	 * @param text the text to set
 	 */
 	public void setText(String text) {
 		this.text = text;
 	}
-	/**
-	 * @return Returns the acknowledged.
-	 */
-	public boolean isAcknowledged() {
-		return acknowledged;
-	}
-	/**
-	 * @param acknowledged The acknowledged to set.
-	 */
-	public void setAcknowledged(boolean acknowledged) {
-		this.acknowledged = acknowledged;
-	}
 	
-	
-
 }

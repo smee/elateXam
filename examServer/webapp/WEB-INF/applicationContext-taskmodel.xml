@@ -26,7 +26,14 @@
 	
 	<!-- Change, or better extend the following implementation to add custom SubTasks -->
 	<bean id="ComplexTaskFactory"
-		class="de.thorstenberger.taskmodel.complex.impl.ComplexTaskFactoryImpl"/>
+		class="de.thorstenberger.taskmodel.complex.impl.ComplexTaskFactoryImpl">
+		<constructor-arg>
+			<ref bean="ComplexTaskletCorrector"/>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="ComplexTaskletCorrector"
+		class="de.thorstenberger.taskmodel.complex.ComplexTaskletCorrectorImpl"/>
 		
 	<bean id="ComplexTaskBuilder"
 		class="de.thorstenberger.taskmodel.complex.impl.ComplexTaskBuilderImpl">

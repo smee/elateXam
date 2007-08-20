@@ -29,6 +29,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -44,12 +45,17 @@ import de.thorstenberger.examServer.dao.TaskHandlingDao;
 import de.thorstenberger.examServer.dao.xml.jaxb.ObjectFactory;
 import de.thorstenberger.examServer.dao.xml.jaxb.TaskHandling;
 import de.thorstenberger.examServer.dao.xml.jaxb.TaskHandlingType.TaskletType;
+import de.thorstenberger.examServer.dao.xml.jaxb.TaskHandlingType.TaskletType.AutoCorrectionType;
 import de.thorstenberger.examServer.dao.xml.jaxb.TaskHandlingType.TaskletType.CorrectorAnnotationType;
 import de.thorstenberger.examServer.dao.xml.jaxb.TaskHandlingType.TaskletType.CorrectorHistoryType;
+import de.thorstenberger.examServer.dao.xml.jaxb.TaskHandlingType.TaskletType.ManualCorrectionType;
 import de.thorstenberger.examServer.dao.xml.jaxb.TaskHandlingType.TaskletType.StudentAnnotationType;
-import de.thorstenberger.examServer.model.TaskletAnnotationVO;
+import de.thorstenberger.examServer.model.CorrectorTaskletAnnotationVO;
+import de.thorstenberger.examServer.model.StudentTaskletAnnotationVO;
 import de.thorstenberger.examServer.model.TaskletVO;
+import de.thorstenberger.examServer.model.TaskletVO.ManualCorrectionsVO;
 import de.thorstenberger.examServer.service.ExamServerManager;
+import de.thorstenberger.taskmodel.TaskModelPersistenceException;
 
 /**
  * @author Thorsten Berger
@@ -165,46 +171,45 @@ public class TaskHandlingDaoImpl implements TaskHandlingDao {
 	
 	private TaskletVO instantiateTaskletVO( TaskletType tt ){
 		TaskletVO ret = new TaskletVO();
-		ret.setTaskDefId( tt.getTaskDefId() );
-		ret.setStatus( tt.getStatus() );
-		ret.setPoints( tt.getPoints() == -1 ? null : tt.getPoints() );
-		ret.setLogin( tt.getLogin() );
-		ret.setId( tt.getId() );
-		ret.setCorrectorLogin( tt.getCorrectorLogin() );
+		ret.setTaskDefId( tt.getTaskDefId() ); //
+		ret.setStatus( tt.getStatus() ); //
+		ret.setLogin( tt.getLogin() ); //
+		ret.setId( tt.getId() ); //
+		ret.setCorrectorLogin( tt.getAssignedCorrector() ); //
+		
+		// set corrections (points)
+		ret.setAutoCorrectionPoints( tt.isSetAutoCorrection() ? tt.getAutoCorrection().getPoints() : null );
+		List<ManualCorrectionsVO> mvos = new LinkedList<ManualCorrectionsVO>();
+		List<ManualCorrectionType> mcs = tt.getManualCorrection();
+		for( ManualCorrectionType mc : mcs )
+			mvos.add( ret.new ManualCorrectionsVO( mc.getCorrector(), mc.getPoints() ) );
+		ret.setManualCorrections( mvos );
 				
 		// annotations
-		Iterator it = tt.getCorrectorAnnotation().iterator();
-		List<TaskletAnnotationVO> correctorAnnotationVOs = new ArrayList<TaskletAnnotationVO>();
-		while( it.hasNext() ){
-			CorrectorAnnotationType cat = (CorrectorAnnotationType)it.next();
-			correctorAnnotationVOs.add( new TaskletAnnotationVO( cat.getValue(), cat.getDate() == 0 ? null : cat.getDate(), false ) );
-		}
-		// TODO the attribute "annotation" is deprecated
-		if( tt.getAnnotation() != null )
-			correctorAnnotationVOs.add( 0, new TaskletAnnotationVO( tt.getAnnotation(), null, false ) );
-		
+		List<CorrectorAnnotationType> cas = tt.getCorrectorAnnotation();
+		List<CorrectorTaskletAnnotationVO> correctorAnnotationVOs = new LinkedList<CorrectorTaskletAnnotationVO>();
+		for( CorrectorAnnotationType ca : cas )
+			correctorAnnotationVOs.add( new CorrectorTaskletAnnotationVO( ca.getCorrector(), ca.getValue() ) );
 		ret.setCorrectorAnnotations( correctorAnnotationVOs );
 		
-		it = tt.getStudentAnnotation().iterator();
-		List<TaskletAnnotationVO> studentAnnotationVOs = new ArrayList<TaskletAnnotationVO>();
-		while( it.hasNext() ){
-			StudentAnnotationType sat = (StudentAnnotationType)it.next();
-			studentAnnotationVOs.add( new TaskletAnnotationVO( sat.getValue(), sat.getDate(), sat.isAcknowledged() ) );
-		}
+		List<StudentAnnotationType> sas = tt.getStudentAnnotation();
+		List<StudentTaskletAnnotationVO> studentAnnotationVOs = new LinkedList<StudentTaskletAnnotationVO>();
+		for( StudentAnnotationType sa : sas )
+			studentAnnotationVOs.add( new StudentTaskletAnnotationVO( sa.getValue(), sa.getDate(), sa.isAcknowledged() ) );
 		ret.setStudentAnnotations( studentAnnotationVOs );
 		
 		// flags
-		it = tt.getFlag().iterator();
-		List<String> flags = new ArrayList<String>();
-		while( it.hasNext() )
-			flags.add( (String)it.next() );
+		List<String> fs = tt.getFlag();
+		List<String> flags = new LinkedList<String>();
+		for( String f : fs )
+			flags.add( f );
 		ret.setFlags( flags );
 		
 		// correctors history
-		List<String> correctors = new ArrayList<String>();
-		it = tt.getCorrectorHistory().iterator();
-		while( it.hasNext() )
-			correctors.add( ((CorrectorHistoryType)it.next()).getCorrectorLogin() );
+		List<CorrectorHistoryType> ch = tt.getCorrectorHistory();
+		List<String> correctors = new LinkedList<String>();
+		for( CorrectorHistoryType c : ch )
+			correctors.add( c.getCorrector() );
 		ret.setCorrectorHistory( correctors );
 		
 		return ret;
@@ -257,26 +262,57 @@ public class TaskHandlingDaoImpl implements TaskHandlingDao {
 		synchronized ( taskletType ) {
 
 			taskletType.setStatus( taskletVO.getStatus() );
-			taskletType.setPoints( taskletVO.getPoints() == null ? -1 : taskletVO.getPoints() );
-			taskletType.setCorrectorLogin( taskletVO.getCorrectorLogin() );
+			taskletType.setAssignedCorrector( taskletVO.getCorrectorLogin() );
+			
+			// set corrections (points)
+			if( taskletType.isSetAutoCorrection() ){
+				if( taskletVO.getAutoCorrectionPoints() == null )
+					taskletType.setAutoCorrection( null );
+				else
+					taskletType.getAutoCorrection().setPoints( taskletVO.getAutoCorrectionPoints() );
+			}else{
+				if( taskletVO.getAutoCorrectionPoints() != null ){
+					AutoCorrectionType act;
+					try {
+						act = objectFactory.createTaskHandlingTypeTaskletTypeAutoCorrectionType();
+					} catch (JAXBException e) {
+						throw new TaskModelPersistenceException( e );
+					}
+					act.setPoints( taskletVO.getAutoCorrectionPoints() );
+					taskletType.setAutoCorrection( act );
+				}
+			}
+			if( taskletType.isSetManualCorrection() )
+				taskletType.getManualCorrection().clear();
+			if( taskletVO.getManualCorrections() != null ){
+				for( ManualCorrectionsVO mcvo : taskletVO.getManualCorrections() ){
+					ManualCorrectionType mct;
+					try {
+						mct = objectFactory.createTaskHandlingTypeTaskletTypeManualCorrectionType();
+					} catch (JAXBException e) {
+						throw new TaskModelPersistenceException( e );
+					}
+					mct.setCorrector( mcvo.getCorrector() );
+					mct.setPoints( mct.getPoints() );
+					taskletType.getManualCorrection().add( mct );
+				}
+			}
 			
 			// the annotations
-			// TODO attribute "annotation" deprecated
-			taskletType.setAnnotation( null );
 			taskletType.getCorrectorAnnotation().clear();
-			for( TaskletAnnotationVO tavo : taskletVO.getCorrectorAnnotations() ){
+			for( CorrectorTaskletAnnotationVO tavo : taskletVO.getCorrectorAnnotations() ){
 				CorrectorAnnotationType cat;
 				try {
 					cat = objectFactory.createTaskHandlingTypeTaskletTypeCorrectorAnnotationType();
 				} catch (JAXBException e) {
 					throw new RuntimeException( e );
 				}
-				cat.setDate( tavo.getDate() == null ? 0 : tavo.getDate() );
 				cat.setValue( tavo.getText() == null ? "" : tavo.getText() );
+				cat.setCorrector( tavo.getCorrector() );
 				taskletType.getCorrectorAnnotation().add( cat );
 			}
 			taskletType.getStudentAnnotation().clear();
-			for( TaskletAnnotationVO tavo : taskletVO.getStudentAnnotations() ){
+			for( StudentTaskletAnnotationVO tavo : taskletVO.getStudentAnnotations() ){
 				StudentAnnotationType sat;
 				try {
 					sat = objectFactory.createTaskHandlingTypeTaskletTypeStudentAnnotationType();
@@ -305,7 +341,7 @@ public class TaskHandlingDaoImpl implements TaskHandlingDao {
 					} catch (JAXBException e) {
 						throw new RuntimeException( e );
 					}
-					cht.setCorrectorLogin( c );
+					cht.setCorrector( c );
 					taskletType.getCorrectorHistory().add( cht );
 				}
 			}
@@ -380,7 +416,7 @@ public class TaskHandlingDaoImpl implements TaskHandlingDao {
 			Iterator it = taskHandling.getTasklet().iterator();
 			while( it.hasNext() ){
 				TaskletType taskletType = (TaskletType)it.next();
-				if( taskletType.getTaskDefId() == taskId && correctorId.equals( taskletType.getCorrectorLogin() ) )
+				if( taskletType.getTaskDefId() == taskId && correctorId.equals( taskletType.getAssignedCorrector() ) )
 					ret.add( taskletType.getLogin() );
 			}
 			

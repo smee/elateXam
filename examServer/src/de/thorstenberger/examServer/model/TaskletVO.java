@@ -33,18 +33,30 @@ public class TaskletVO {
 	private String login;
 	private long taskDefId;
 	private String status;
-	private Float points;
+	private Float autoCorrectionPoints;
 
-	private List<TaskletAnnotationVO> correctorAnnotations;
-	private List<TaskletAnnotationVO> studentAnnotations;
+	private List<ManualCorrectionsVO> manualCorrections;
+	
+	private List<CorrectorTaskletAnnotationVO> correctorAnnotations;
+	private List<StudentTaskletAnnotationVO> studentAnnotations;
 	
 	private String correctorLogin;
 	private List<String> correctorHistory;
 	private List<String> flags;
 	
 	
-	
-	
+	/**
+	 * @return the manualCorrections
+	 */
+	public List<ManualCorrectionsVO> getManualCorrections() {
+		return manualCorrections;
+	}
+	/**
+	 * @param manualCorrections the manualCorrections to set
+	 */
+	public void setManualCorrections(List<ManualCorrectionsVO> manualCorrections) {
+		this.manualCorrections = manualCorrections;
+	}
 	/**
 	 * @return Returns the flags.
 	 */
@@ -60,26 +72,26 @@ public class TaskletVO {
 	/**
 	 * @return Returns the correctorAnnotations.
 	 */
-	public List<TaskletAnnotationVO> getCorrectorAnnotations() {
+	public List<CorrectorTaskletAnnotationVO> getCorrectorAnnotations() {
 		return correctorAnnotations;
 	}
 	/**
 	 * @param correctorAnnotations The correctorAnnotations to set.
 	 */
 	public void setCorrectorAnnotations(
-			List<TaskletAnnotationVO> correctorAnnotations) {
+			List<CorrectorTaskletAnnotationVO> correctorAnnotations) {
 		this.correctorAnnotations = correctorAnnotations;
 	}
 	/**
 	 * @return Returns the studentAnnotations.
 	 */
-	public List<TaskletAnnotationVO> getStudentAnnotations() {
+	public List<StudentTaskletAnnotationVO> getStudentAnnotations() {
 		return studentAnnotations;
 	}
 	/**
 	 * @param studentAnnotations The studentAnnotations to set.
 	 */
-	public void setStudentAnnotations(List<TaskletAnnotationVO> studentAnnotations) {
+	public void setStudentAnnotations(List<StudentTaskletAnnotationVO> studentAnnotations) {
 		this.studentAnnotations = studentAnnotations;
 	}
 	/**
@@ -131,16 +143,16 @@ public class TaskletVO {
 		this.login = login;
 	}
 	/**
-	 * @return Returns the points.
+	 * @return Returns the autoCorrectionPoints.
 	 */
-	public Float getPoints() {
-		return points;
+	public Float getAutoCorrectionPoints() {
+		return autoCorrectionPoints;
 	}
 	/**
-	 * @param points The points to set.
+	 * @param points The autoCorrectionPoints to set.
 	 */
-	public void setPoints(Float points) {
-		this.points = points;
+	public void setAutoCorrectionPoints(Float points) {
+		this.autoCorrectionPoints = points;
 	}
 	/**
 	 * @return Returns the status.
@@ -167,6 +179,44 @@ public class TaskletVO {
 		this.taskDefId = taskDefId;
 	}
 	
+	public class ManualCorrectionsVO{
+		private String corrector;
+		private float points;
+		/**
+		 * @param corrector
+		 * @param points
+		 */
+		public ManualCorrectionsVO(String corrector, float points) {
+			super();
+			this.corrector = corrector;
+			this.points = points;
+		}
+		/**
+		 * @return the corrector
+		 */
+		public String getCorrector() {
+			return corrector;
+		}
+		/**
+		 * @param corrector the corrector to set
+		 */
+		public void setCorrector(String corrector) {
+			this.corrector = corrector;
+		}
+		/**
+		 * @return the points
+		 */
+		public float getPoints() {
+			return points;
+		}
+		/**
+		 * @param points the points to set
+		 */
+		public void setPoints(float points) {
+			this.points = points;
+		}
+		
+	}
 	
 
 }

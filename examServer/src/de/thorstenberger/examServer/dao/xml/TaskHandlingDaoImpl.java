@@ -293,7 +293,7 @@ public class TaskHandlingDaoImpl implements TaskHandlingDao {
 						throw new TaskModelPersistenceException( e );
 					}
 					mct.setCorrector( mcvo.getCorrector() );
-					mct.setPoints( mct.getPoints() );
+					mct.setPoints( mcvo.getPoints() );
 					taskletType.getManualCorrection().add( mct );
 				}
 			}

@@ -11,7 +11,9 @@
 	<display:table partialList="false" name="TaskDefs" uid="row" pagesize="30" sort="list" class="table">
 		<display:column title="Name&nbsp;&nbsp;&nbsp;" sortable="true">
 			<html:link action="/CorrectorFactory" paramId="taskId" paramName="row" paramProperty="id"><c:out value="${row.title}"/></html:link>
-			<c:if test="${!row.active}"> <b>(inaktiv)</b></c:if>
+			<c:if test="${!row.active && row.visible}"> <b>(inaktiv)</b></c:if>
+			<c:if test="${!row.visible && row.active}"> <b>(unsichtbar)</b></c:if>
+			<c:if test="${!row.active && !row.visible}"> <b>(inaktiv, unsichtbar)</b></c:if>
 		</display:column>
 		<display:column property="type" title="Typ&nbsp;&nbsp;&nbsp;" sortable="true"/>
 		<display:column property="shortDescription" title="Kurzbeschreibung&nbsp;&nbsp;&nbsp;" sortable="true"/>

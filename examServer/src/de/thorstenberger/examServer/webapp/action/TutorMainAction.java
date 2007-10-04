@@ -64,6 +64,7 @@ public class TutorMainAction extends BaseAction {
 //        		tdvo.setDeadline( DateUtil.getStringFromMillis( taskDef.getDeadline() ) );
         	tdvo.setStopped( taskDef.isStopped() );
         	tdvo.setActive( taskDef.isActive() );
+        	tdvo.setVisible( taskDef.isVisible() );
         	tdvos.add( tdvo );
 		}
 		

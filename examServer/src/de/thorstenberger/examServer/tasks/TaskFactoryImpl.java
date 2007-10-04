@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import org.acegisecurity.userdetails.UsernameNotFoundException;
 import org.apache.commons.logging.Log;
@@ -86,7 +87,8 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 	public static final String COMPLEX_TASKHANDLING_FILE_PREFIX = "complextask_";
 	public static final String COMPLEX_TASKHANDLING_FILE_SUFFIX = ".xml";
 	public static final String COMPLEX_TASKHANDLING_BACKUP_FILE_SUFFIX = ".bak";
-	
+
+	public static final String USER_ATTRIBUTE_SEMESTER = "user.student-info.semester";
 	
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.TaskFactory#deleteTaskDef(long)
@@ -556,13 +558,53 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 		ret.setLogin( user.getUsername() );
 		ret.setFirstName( user.getFirstName() );
 		ret.setName( user.getLastName() );
-		ret.setEMail( user.getEmail() );		
+		ret.setEMail( user.getEmail() );
+		ret.setUserAttribute( USER_ATTRIBUTE_SEMESTER, user.getPhoneNumber() );
 		
 		return ret;
 		
 	}
 	
 	
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.TaskFactory#availableUserAttributeKeys()
+	 */
+	public List<UserAttribute> availableUserAttributes() {
+		List<UserAttribute> ret = new LinkedList<UserAttribute>();
+		ret.add( new UserAttributeImpl( USER_ATTRIBUTE_SEMESTER, "Semester" ) ); // TODO externalize String
+		return ret;
+	}
+	
+	public class UserAttributeImpl implements UserAttribute{
+		
+		private String key;
+		private String name;
+		/**
+		 * @param key
+		 * @param name
+		 */
+		public UserAttributeImpl(String key, String name) {
+			super();
+			this.key = key;
+			this.name = name;
+		}
+		/**
+		 * @return the key
+		 */
+		public String getKey() {
+			return key;
+		}
+		/**
+		 * @return the name
+		 */
+		public String getName( Locale locale ) {
+			return name;
+		}
+		
+		
+		
+	}
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.TaskFactory#addTaskCategory(java.lang.String, java.lang.String)

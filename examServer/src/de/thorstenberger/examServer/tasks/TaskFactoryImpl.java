@@ -38,7 +38,9 @@ import org.apache.commons.logging.LogFactory;
 
 import de.thorstenberger.examServer.dao.TaskDefDao;
 import de.thorstenberger.examServer.dao.TaskHandlingDao;
+import de.thorstenberger.examServer.dao.xml.RoleAndLookupDaoImpl;
 import de.thorstenberger.examServer.model.CorrectorTaskletAnnotationVO;
+import de.thorstenberger.examServer.model.Role;
 import de.thorstenberger.examServer.model.StudentTaskletAnnotationVO;
 import de.thorstenberger.examServer.model.TaskDefVO;
 import de.thorstenberger.examServer.model.TaskletVO;
@@ -564,8 +566,34 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 		return ret;
 		
 	}
-	
-	
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.TaskFactory#getCorrectors()
+	 */
+	public List<UserInfo> getCorrectors() {
+		List<UserInfo> ret = new LinkedList<UserInfo>();
+		User uLookup = new User();
+		uLookup.addRole( new Role( RoleAndLookupDaoImpl.TUTOR ) );
+		List<User> users = userManager.getUsers(uLookup);
+		uLookup = new User();
+		uLookup.addRole( new Role( RoleAndLookupDaoImpl.ADMIN ) );
+		
+		List<User> adminUsers = userManager.getUsers(uLookup);
+		for( User u : adminUsers )
+			if( !users.contains( u ) )
+				users.add( u );
+		
+		for( User u : users ){
+			UserInfoImpl ui = new UserInfoImpl();
+			ui.setLogin( u.getUsername() );
+			ui.setFirstName( u.getFirstName() );
+			ui.setName( u.getLastName() );
+			ui.setEMail( u.getEmail() );
+			ui.setUserAttribute( USER_ATTRIBUTE_SEMESTER, u.getPhoneNumber() );
+			ret.add( ui );
+		}
+		return ret;
+	}
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.TaskFactory#availableUserAttributeKeys()
@@ -601,8 +629,6 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 		public String getName( Locale locale ) {
 			return name;
 		}
-		
-		
 		
 	}
 

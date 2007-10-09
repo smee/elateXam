@@ -38,23 +38,27 @@ import de.thorstenberger.examServer.model.Role;
  */
 public class RoleAndLookupDaoImpl implements RoleDao, LookupDao {
 
-	public static Map<String, Role> roles;
+	public static final String ADMIN = "admin";
+	public static final String STUDENT = "student";
+	public static final String TUTOR = "tutor";
+	
+	private static Map<String, Role> roles;
 	
 	/**
 	 * 
 	 */
 	public RoleAndLookupDaoImpl() {
 		roles = new HashMap<String, Role>();
-		Role admin = new Role( "admin" );
+		Role admin = new Role( ADMIN );
 		admin.setId( 1l );
-		Role student = new Role( "student" );
+		Role student = new Role( STUDENT );
 		student.setId( 2l );
-		Role tutor = new Role( "tutor" );
+		Role tutor = new Role( TUTOR );
 		tutor.setId( 3l );
 		
-		roles.put( "admin", admin );
-		roles.put( "student", student );
-		roles.put( "tutor", tutor );
+		roles.put( ADMIN, admin );
+		roles.put( STUDENT, student );
+		roles.put( TUTOR, tutor );
 	}
 
 	/* (non-Javadoc)

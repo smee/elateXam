@@ -31,6 +31,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -233,8 +234,22 @@ public class UserDaoJAXB implements UserDao, UserDetailsService {
 		List<UserType> usersList = (List<UserType>)users.getUser();
 		List<User> ret = new ArrayList<User>();
 		
-		for( UserType userType : usersList )
-			ret.add( populateUser( userType ) );
+		Set<Role> roles = (Set<Role>)user.getRoles();
+		boolean checkRoles = roles != null && !roles.isEmpty();
+		
+		for( UserType userType : usersList ){
+			boolean passed = true;
+			if( checkRoles ){
+				List<String> roleRefs = userType.getRoleRef();
+				for( Role role : roles ){
+					if( !roleRefs.contains( role.getName() ) )
+						passed = false;
+				}
+			}
+			
+			if( passed )
+				ret.add( populateUser( userType ) );
+		}
 
 		return ret;
 		

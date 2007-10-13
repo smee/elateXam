@@ -21,13 +21,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.impl;
 
-import java.util.List;
-
 import de.thorstenberger.taskmodel.CorrectorDelegateObject;
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskDef;
 import de.thorstenberger.taskmodel.TaskManager;
-import de.thorstenberger.taskmodel.Tasklet;
 
 /**
  * @author Thorsten Berger
@@ -84,14 +81,6 @@ public class CorrectorDelegateObjectImpl implements CorrectorDelegateObject {
 	 */
 	public TaskDef getTaskDef() throws TaskApiException {
 		return taskDef;
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.CorrectorDelegateObject#getTasklets()
-	 */
-	public List<Tasklet> getTasklets() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	/* (non-Javadoc)

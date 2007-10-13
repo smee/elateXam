@@ -31,7 +31,6 @@ public class SolutionInfoVO {
 
 	private String login;
 	private String userName;
-	private String points;
 	private String status;
 	private String tryStartTime;
 	
@@ -40,9 +39,21 @@ public class SolutionInfoVO {
 	private boolean canAnnotate;
 	private String actualAnnotation;
 	private List<AnnotationInfoVO> annotations;
+	private List<Correction> corrections;
 	
 	
-	
+	/**
+	 * @return the corrections
+	 */
+	public List<Correction> getCorrections() {
+		return corrections;
+	}
+	/**
+	 * @param corrections the corrections to set
+	 */
+	public void setCorrections(List<Correction> corrections) {
+		this.corrections = corrections;
+	}
 	/**
 	 * @return Returns the actualAnnotation.
 	 */
@@ -90,18 +101,6 @@ public class SolutionInfoVO {
 	 */
 	public void setLogin(String login) {
 		this.login = login;
-	}
-	/**
-	 * @return Returns the points.
-	 */
-	public String getPoints() {
-		return points;
-	}
-	/**
-	 * @param points The points to set.
-	 */
-	public void setPoints(String points) {
-		this.points = points;
 	}
 	/**
 	 * @return Returns the status.
@@ -194,6 +193,59 @@ public class SolutionInfoVO {
 		 */
 		public void setText(String text) {
 			this.text = text;
+		}
+		
+	}
+	
+public class Correction{
+		
+		private String corrector;
+		private boolean auto;
+		private float points;
+		/**
+		 * @param corrector
+		 * @param points
+		 */
+		public Correction(String corrector, boolean auto, float points) {
+			this.corrector = corrector;
+			this.auto = auto;
+			this.points = points;
+		}
+		/**
+		 * @return the corrector
+		 */
+		public String getCorrector() {
+			return corrector;
+		}
+		/**
+		 * @param corrector the corrector to set
+		 */
+		public void setCorrector(String corrector) {
+			this.corrector = corrector;
+		}
+		/**
+		 * @return the auto
+		 */
+		public boolean isAuto() {
+			return auto;
+		}
+		/**
+		 * @param auto the auto to set
+		 */
+		public void setAuto(boolean auto) {
+			this.auto = auto;
+		}
+		/**
+		 * @return the points
+		 */
+		public float getPoints() {
+			return points;
+		}
+		/**
+		 * @param points the points to set
+		 */
+		public void setPoints(float points) {
+			this.points = points;
 		}
 		
 	}

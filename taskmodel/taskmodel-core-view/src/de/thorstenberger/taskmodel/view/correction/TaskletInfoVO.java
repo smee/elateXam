@@ -34,9 +34,11 @@ public class TaskletInfoVO {
 	private long taskId;
 	private String login;
 	private String status;
-	private Float points;
 	private String correctorLogin;
 	private List<String> correctorHistory;
+	private List<String> flags;
+	private Float autoCorrectionPoints;
+	private List<ManualCorrectionVO> corrections;
 	
 	private Map<String, String> loginAndTaskId;
 	
@@ -124,18 +126,6 @@ public class TaskletInfoVO {
 		this.login = login;
 	}
 	/**
-	 * @return Returns the points.
-	 */
-	public Float getPoints() {
-		return points;
-	}
-	/**
-	 * @param points The points to set.
-	 */
-	public void setPoints(Float points) {
-		this.points = points;
-	}
-	/**
 	 * @return Returns the status.
 	 */
 	public String getStatus() {
@@ -158,7 +148,84 @@ public class TaskletInfoVO {
 		}
 		return loginAndTaskId;
 	}
+	/**
+	 * @return the autoCorrectionPoints
+	 */
+	public Float getAutoCorrectionPoints() {
+		return autoCorrectionPoints;
+	}
+	/**
+	 * @param autoCorrectionPoints the autoCorrectionPoints to set
+	 */
+	public void setAutoCorrectionPoints(Float autoCorrectionPoints) {
+		this.autoCorrectionPoints = autoCorrectionPoints;
+	}
+	/**
+	 * @return the corrections
+	 */
+	public List<ManualCorrectionVO> getCorrections() {
+		return corrections;
+	}
+	/**
+	 * @param corrections the corrections to set
+	 */
+	public void setCorrections(List<ManualCorrectionVO> corrections) {
+		this.corrections = corrections;
+	}
 	
+	
+	public static class ManualCorrectionVO{
+		private String corrector;
+		private Float points;
+		/**
+		 * @param corrector
+		 * @param points
+		 */
+		public ManualCorrectionVO(String corrector, Float points) {
+			super();
+			this.corrector = corrector;
+			this.points = points;
+		}
+		/**
+		 * @return the corrector
+		 */
+		public String getCorrector() {
+			return corrector;
+		}
+		/**
+		 * @param corrector the corrector to set
+		 */
+		public void setCorrector(String corrector) {
+			this.corrector = corrector;
+		}
+		/**
+		 * @return the points
+		 */
+		public Float getPoints() {
+			return points;
+		}
+		/**
+		 * @param points the points to set
+		 */
+		public void setPoints(Float points) {
+			this.points = points;
+		}
+		
+	}
+
+
+	/**
+	 * @return the flags
+	 */
+	public List<String> getFlags() {
+		return flags;
+	}
+	/**
+	 * @param flags the flags to set
+	 */
+	public void setFlags(List<String> flags) {
+		this.flags = flags;
+	}
 	
 	
 }

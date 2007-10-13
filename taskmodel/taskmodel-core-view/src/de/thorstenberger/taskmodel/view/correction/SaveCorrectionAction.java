@@ -121,7 +121,9 @@ public class SaveCorrectionAction extends Action {
 				correctSubtasklet = false;
 			}
 
+			// populate the CorrectionSubmitData with the annotation and the corrector
 			csd.setAnnotation( request.getParameter( "annotation" ) );
+			csd.setCorrector( delegateObject.getCorrectorLogin() );
 				
 			try {
 				tasklet.doManualCorrection( correctSubtasklet? selectedSubTasklet : null, csd );
@@ -138,26 +140,29 @@ public class SaveCorrectionAction extends Action {
 
 	
 	private CorrectionSubmitData getCorrectionSubmitData( HttpServletRequest request, SubTasklet subtasklet ) throws ParsingException{
+		
+		if( subtasklet == null )
+			return new CorrectionSubmitDataImpl();
+		
+		Enumeration varNames = request.getParameterNames();
+		
+		Map subTaskVarMap = new HashMap();
+		while( varNames.hasMoreElements() ){
+		    String varName = (String) varNames.nextElement();
+		    if( varName.startsWith( "task[0].") ){
+		    	String value = request.getParameter( varName );
+		    	if( value != null && value.trim().length() > 0 )
+		    		subTaskVarMap.put( varName, request.getParameter(varName) );
+		    }
+		}
+		
+		// no posted vars also imply correction data (e.g. none checkbox activated etc.)
+		try {
+			return SubTaskViewFactory.getSubTaskView( subtasklet ).getCorrectionSubmitData( subTaskVarMap );
+		} catch (MethodNotSupportedException e) {
+			return null;
+		}
 			
-			Enumeration varNames = request.getParameterNames();
-			
-			Map subTaskVarMap = new HashMap();
-			while( varNames.hasMoreElements() ){
-			    String varName = (String) varNames.nextElement();
-			    if( varName.startsWith( "task[0].") ){
-			    	String value = request.getParameter( varName );
-			    	if( value != null && value.trim().length() > 0 )
-			    		subTaskVarMap.put( varName, request.getParameter(varName) );
-			    }
-			}
-			
-			// no posted vars also imply correction data (e.g. none checkbox activated etc.)
-			try {
-				return SubTaskViewFactory.getSubTaskView( subtasklet ).getCorrectionSubmitData( subTaskVarMap );
-			} catch (MethodNotSupportedException e) {
-				return null;
-			}
-				
 		
 	}
 

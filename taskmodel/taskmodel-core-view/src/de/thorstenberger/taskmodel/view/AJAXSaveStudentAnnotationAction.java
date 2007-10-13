@@ -118,7 +118,7 @@ public class AJAXSaveStudentAnnotationAction extends Action {
 			}
 			
 			request.setAttribute( "contentType", "text/plain" );
-			request.setAttribute( "response", annotation );
+			request.setAttribute( AjaxResponseServlet.RESPONSE, annotation );
 			
 			return mapping.findForward( "success" );
 

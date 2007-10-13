@@ -43,8 +43,25 @@
                 </td>
               </tr>
               <tr> 
-                <td>Gesamtpunktzahl:</td>
-                <td>${Correction.points}</td>
+                <td valign="top">Gesamtpunktzahl:</td>
+                <td>
+                
+	                <table border="0">
+						<c:forEach items="${Correction.corrections}" var="corr">
+							<tr>
+								<c:choose>
+									<c:when test="${corr.auto}">
+										<td>automatische Korrektur:</td><td>${corr.points}</td>
+									</c:when>
+									<c:otherwise>
+										<td>${corr.corrector}</td><td>${corr.points}</td>
+									</c:otherwise>
+								</c:choose>
+							</tr>
+						</c:forEach>
+					</table>
+                
+                </td>
               </tr>
               <tr> 
                 <td>Status:</td>
@@ -80,10 +97,25 @@
 				
 				<c:choose>
 					<c:when test="${SubTasklet.corrected}">
-						<br><br><font color=red>Aufgabe korrigiert, erreichte Punkte: ${SubTasklet.points}</font>
+						<br/><br/><font color="red">Aufgabe korrigiert. Korrekturen: 
+							<table border="0">
+							<c:forEach items="${SubTasklet.corrections}" var="Correction">
+								<tr>
+									<c:choose>
+										<c:when test="${Correction.auto}">
+											<td>automatische Korrektur:</td><td>${Correction.points}</td>
+										</c:when>
+										<c:otherwise>
+											<td>${Correction.corrector}</td><td>${Correction.points}</td>
+										</c:otherwise>
+									</c:choose>
+								</tr>
+							</c:forEach>
+							</table>
+						</font>
 					</c:when>
-					<c:when test="${SubTasklet.needsManualCorrection}">
-						<br/><br/><font color=red>manuelle Korrektur notwendig</font>
+					<c:when test="${SubTasklet.needsManualCorrectionFlag}">
+						<br/><br/><font color="red">manuelle Korrektur notwendig</font>
 					</c:when>
 				</c:choose>
 				
@@ -116,9 +148,13 @@
           <br/><br/>
 
 	</fieldset><br>
-	<fieldset><legend>Kommentare des Korrektors</legend>
+	<fieldset><legend>Kommentare der Korrektoren</legend>
 
-		${Correction.annotation}
+			<c:forEach items="${Correction.otherCorrectorAnnotations}" var="annotation">
+				<div class="newsheader">${annotation.corrector}</div>
+				<div class="newsbody">${annotation.annotation}</div>
+				<br/>
+			</c:forEach>   
 
         <br/><br/>
 

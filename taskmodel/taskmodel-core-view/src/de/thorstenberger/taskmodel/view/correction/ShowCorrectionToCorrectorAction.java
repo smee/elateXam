@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 package de.thorstenberger.taskmodel.view.correction;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,13 +37,15 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 
-import de.thorstenberger.taskmodel.Annotation;
 import de.thorstenberger.taskmodel.CorrectorDelegateObject;
+import de.thorstenberger.taskmodel.ManualCorrection;
+import de.thorstenberger.taskmodel.StudentAnnotation;
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskModelViewDelegate;
 import de.thorstenberger.taskmodel.UserInfo;
 import de.thorstenberger.taskmodel.complex.ComplexTasklet;
 import de.thorstenberger.taskmodel.complex.TaskDef_Complex;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.ManualSubTaskletCorrection;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Try;
@@ -50,6 +53,8 @@ import de.thorstenberger.taskmodel.view.DateUtil;
 import de.thorstenberger.taskmodel.view.ParserUtil;
 import de.thorstenberger.taskmodel.view.SubTaskViewFactory;
 import de.thorstenberger.taskmodel.view.SubTaskletInfoVO;
+import de.thorstenberger.taskmodel.view.SubTaskletInfoVO.Correction;
+import de.thorstenberger.taskmodel.view.correction.CorrectionInfoVO.CorrectorAnnotation;
 
 /**
  * @author Thorsten Berger
@@ -110,18 +115,34 @@ public class ShowCorrectionToCorrectorAction extends Action {
 			CorrectionInfoVO civo = new CorrectionInfoVO();
 			civo.setTaskId( id );
 			civo.setUserId( userId );
-			civo.setPoints( tasklet.getTaskletCorrection().getPoints() != null ? "" + tasklet.getTaskletCorrection().getPoints() : "-" );
+			
+			// set points
+			if( tasklet.getTaskletCorrection().isCorrected() ){
+				List<CorrectionInfoVO.Correction> taskletCorrections = new LinkedList<CorrectionInfoVO.Correction>();
+				if( tasklet.getTaskletCorrection().isAutoCorrected() )
+					taskletCorrections.add( new CorrectionInfoVO.Correction( null, true, tasklet.getTaskletCorrection().getAutoCorrectionPoints() ) );
+				else
+					for( ManualCorrection mc : tasklet.getTaskletCorrection().getManualCorrections() )
+						taskletCorrections.add( new CorrectionInfoVO.Correction( mc.getCorrector(), false, mc.getPoints() ) );
+				civo.setCorrections( taskletCorrections );
+			}
+			
 			civo.setStatus( tasklet.getStatus().getValue() );
 			civo.setCorrectorLogin( tasklet.getTaskletCorrection().getCorrector() );
 			civo.setCorrectorHistory( tasklet.getTaskletCorrection().getCorrectorHistory() );
-			civo.setAnnotation( ParserUtil.escapeCR( tasklet.getTaskletCorrection().getCorrectorAnnotation() ) );
+			// corrrector annotations
+			List<CorrectorAnnotation> cas = new LinkedList<CorrectorAnnotation>();
+			for( de.thorstenberger.taskmodel.CorrectorAnnotation ca : tasklet.getTaskletCorrection().getCorrectorAnnotations() )
+				cas.add( civo.new CorrectorAnnotation( ca.getCorrector(), ParserUtil.escapeCR( ca.getText() ) ) );
+			civo.setOtherCorrectorAnnotations( cas );
+			//
 			civo.setNumOfTry( tasklet.getComplexTaskHandlingRoot().getNumberOfTries() );
 			try {
 				civo.setTryStartTime( DateUtil.getStringFromMillis( tasklet.getSolutionOfLatestTry().getStartTime() ) );
 			} catch (IllegalStateException e) {
 				civo.setTryStartTime( "-" );
 			}
-			UserInfo ui = delegateObject.getTaskManager().getTaskFactory().getUserInfo( userId );
+			UserInfo ui = delegateObject.getTaskManager().getUserInfo( userId );
 			if( ui == null ){
 				civo.setUnregisteredUser( true );
 			}else{
@@ -134,7 +155,7 @@ public class ShowCorrectionToCorrectorAction extends Action {
 
 			List<CorrectionInfoVO.AnnotationInfoVO> acknowledgedAnnotations = new ArrayList<CorrectionInfoVO.AnnotationInfoVO>();
 			List<CorrectionInfoVO.AnnotationInfoVO> nonAcknowledgedAnnotations = new ArrayList<CorrectionInfoVO.AnnotationInfoVO>();
-			for( Annotation anno : tasklet.getTaskletCorrection().getStudentAnnotations() )
+			for( StudentAnnotation anno : tasklet.getTaskletCorrection().getStudentAnnotations() )
 				if( anno.isAcknowledged() )
 					acknowledgedAnnotations.add( civo.new AnnotationInfoVO( DateUtil.getStringFromMillis( anno.getDate() ), ParserUtil.escapeCR( anno.getText() ) ) );
 				else
@@ -166,9 +187,16 @@ public class ShowCorrectionToCorrectorAction extends Action {
 					stivo.setVirtualSubTaskletNumber( subTasklet.getVirtualSubtaskNumber() );
 					stivo.setRenderedHTML( SubTaskViewFactory.getSubTaskView( subTasklet ).getCorrectedHTML( request, i++ ) );
 					stivo.setCorrected( subTasklet.isCorrected() );
-					stivo.setNeedsManualCorrection( subTasklet.isNeedsManualCorrection() );
-					if( subTasklet.isCorrected() )
-						stivo.setPoints( "" + subTasklet.getPoints() );
+					if( subTasklet.isCorrected() ){
+						List<Correction> corrections = new LinkedList<Correction>();
+						if( subTasklet.isAutoCorrected() )
+							corrections.add( stivo.new Correction( null, true, subTasklet.getAutoCorrection().getPoints() ) );
+						else
+							for( ManualSubTaskletCorrection msc : subTasklet.getManualCorrections() )
+								corrections.add( stivo.new Correction( msc.getCorrector(), false, msc.getPoints() ) );
+						stivo.setCorrections( corrections );
+					}
+					stivo.setNeedsManualCorrectionFlag( subTasklet.isSetNeedsManualCorrectionFlag() );
 					stivos.add( stivo );
 				}
 			}

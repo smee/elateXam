@@ -78,10 +78,25 @@
 					</c:otherwise>				
 				</c:choose>					
 
+
 				<c:if test="${Correction.subTasklet.corrected}">
-					<br><font color="red">Aufgabe korrigiert, erreichte Punkte:
-						${Correction.subTasklet.points}
-					</font>
+
+						<br/><br/><font color="red">Aufgabe korrigiert. Korrekturen: 
+							<table border="0">
+							<c:forEach items="${Correction.subTasklet.corrections}" var="stc">
+								<tr>
+									<c:choose>
+										<c:when test="${stc.auto}">
+											<td>automatische Korrektur:</td><td>${stc.points}</td>
+										</c:when>
+										<c:otherwise>
+											<td>${stc.corrector}</td><td>${stc.points}</td>
+										</c:otherwise>
+									</c:choose>
+								</tr>
+							</c:forEach>
+							</table>
+						</font>
 				</c:if>
 				
 				<c:if test="${Correction.subTasklet.correctionHint != null}">
@@ -105,12 +120,16 @@
   <tr>
           <td valign="top"><fieldset><legend>Korrektur-Bemerkungen</legend> 
           
-        <div align="right">
-                <textarea name="annotation" cols="50" rows="7" class="annotation">${Correction.annotation}</textarea>
+		<textarea name="annotation" cols="50" rows="7" class="annotation">${Correction.currentCorrectorAnnotation}</textarea>
           <br>
           <br>
+			<b>Weitere Annotationen:</b><br/><br/>
+			<c:forEach items="${Correction.otherCorrectorAnnotations}" var="annotation">
+				<div class="newsheader">${annotation.corrector}</div>
+				<div class="newsbody">${annotation.annotation}</div>
+				<br/>
+			</c:forEach>   
 
-        </div>
       </fieldset>
           
       </td>
@@ -122,8 +141,26 @@
 
               </tr>
               <tr> 
-                <td>Punkte:</td>
-                <td>${Correction.points}</td>
+                <td valign="top">Punkte:</td>
+                <td>
+                
+                	<table border="0">
+						<c:forEach items="${Correction.corrections}" var="corr">
+							<tr>
+								<c:choose>
+									<c:when test="${corr.auto}">
+										<td>automatische Korrektur:</td><td>${corr.points}</td>
+									</c:when>
+									<c:otherwise>
+										<td>${corr.corrector}</td><td>${corr.points}</td>
+									</c:otherwise>
+								</c:choose>
+							</tr>
+						</c:forEach>
+					</table>
+                
+                
+                </td>
               </tr>
               <tr> 
                 <td>Versuch:</td>
@@ -187,6 +224,49 @@
 			</c:forEach>          
 
           <br/><br/>
+
+      </fieldset>
+      <br/>
+    
+    </td>
+  </tr>
+  
+  <tr bgcolor="#F2F9FF"> 
+    <td colspan="2" valign="top">
+
+      <fieldset><legend>Korrektoren-Zuordnung</legend>
+
+		<table border="0" cellspacing="10">
+			<tr>
+				<td>
+					<form method="post" action="<html:rewrite action="/unassignTaskletFromCorrector"/>">
+												<input type="hidden" name="userId" value="${Correction.userId}"/>
+												<input type="hidden" name="taskId" value="${Correction.taskId}"/>
+						<input type="submit" name="unassign" value="Zuordnung aufheben" 
+							<c:if test="${Correction.correctorLogin == null}">disabled="disabled"</c:if>
+						/>
+					</form>
+				</td>
+				<td>
+					<form method="post" action="<html:rewrite action="/assignTasklet"/>">
+						<input type="hidden" name="userId" value="${Correction.userId}"/>
+						<input type="hidden" name="taskId" value="${Correction.taskId}"/>
+
+						<select name="new_corrector" style="margin: 0 1em 0 10em;">
+						    <option value="___no_selection" selected="selected">neuer Korrektor:</option>
+						    <c:forEach items="${Correction.availableCorrectors}" var="corrector">
+							    <option value="${corrector}"
+								    <c:if test="${Correction.correctorLogin == corrector}">disabled="disabled"</c:if>
+							    >${corrector}</option>
+						    </c:forEach>
+						</select>
+						<input type="submit" name="assign" value="Zuordnen"/>
+					</form>
+				</td>
+			</tr>
+		</table>
+
+          <br/>
 
       </fieldset>
       <br/>

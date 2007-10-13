@@ -22,16 +22,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 package de.thorstenberger.taskmodel.complex;
 
 import java.io.InputStream;
+import java.util.LinkedList;
 import java.util.List;
 
-import de.thorstenberger.taskmodel.Annotation;
+import de.thorstenberger.taskmodel.ManualCorrection;
+import de.thorstenberger.taskmodel.StudentAnnotation;
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskFactory;
 import de.thorstenberger.taskmodel.TaskModelPersistenceException;
 import de.thorstenberger.taskmodel.Tasklet;
 import de.thorstenberger.taskmodel.TaskletCorrection;
+import de.thorstenberger.taskmodel.complex.ComplexTaskletCorrector.Result;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
-import de.thorstenberger.taskmodel.complex.complextaskdef.impl.ComplexTaskDefRootImpl.CorrectOnlyProcessedTasksCorrectionMode;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.ComplexTaskHandlingDAO;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.ComplexTaskHandlingRoot;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
@@ -39,15 +41,14 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Try;
 import de.thorstenberger.taskmodel.impl.AbstractTasklet;
+import de.thorstenberger.taskmodel.impl.ManualCorrectionImpl;
 
 /**
  * @author Thorsten Berger
  *
  * TODO / FIXME : all lifecycle methods should move to the container for thread safety reasons
  */
-public class ComplexTaskletImpl extends AbstractTasklet implements
-		ComplexTasklet {
-
+public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTasklet {
 	
 	private TaskDef_Complex complexTaskDef;
 	private ComplexTaskDefRoot complexTaskDefRoot;
@@ -143,7 +144,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 		// ans Ende, sonst wird auch bei Exceptions, die beim Zusammenstellen der Aufgaben auftreten,
 		// ein inkonsistenter Zustand gespeichert
 		super.getTaskletCorrection().reset();
-		setStatus( Status.INPROGRESS );		
+		setStatus( Status.INPROGRESS );
 		
 		// und schließlich speichern
 		try {
@@ -229,22 +230,32 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 		if( !canContinueTry() )
 			throw new IllegalStateException( TaskHandlingConstants.TIME_EXCEEDED_AUTO_SUBMIT_MADE );
 		
-		// automatische Vor-Korrektur durchführen
-		List<de.thorstenberger.taskmodel.complex.complextaskhandling.Page> pages = getActiveTry().getPages();
-		float points = -1;
-		if( complexTaskDef.getComplexTaskDefRoot().getCorrectionMode().getType() == ComplexTaskDefRoot.CorrectionModeType.CORRECTONLYPROCESSEDTASKS ){
-			// we assert n>=1
-			int n = ((CorrectOnlyProcessedTasksCorrectionMode)complexTaskDef.getComplexTaskDefRoot().getCorrectionMode()).getFirst_n_tasks();
-			points = doCorrectOnlyProcessedTasksCorrection( pages, n, false );
-		}
-		else
-			points = doRegularCorrection(pages, false);
+		setStatus( Status.SOLVED );
 		
-		if( points >= 0 ){
-			getTaskletCorrection().setPoints( points );
-			setStatus( Status.CORRECTED );
-		}else
-			setStatus( Status.SOLVED );
+		// FIXME: use dependency injection to get the corrector instance
+		ComplexTaskletCorrector corrector = complexTaskBuilder.getComplexTaskFactory().getComplexTaskletCorrector();
+		
+		
+		// automatische Vor-Korrektur durchführen
+//		List<de.thorstenberger.taskmodel.complex.complextaskhandling.Page> pages = getActiveTry().getPages();
+		
+		ComplexTaskletCorrector.Result result = corrector.doCorrection( this, getSolutionOfLatestTry(), complexTaskDef.getComplexTaskDefRoot().getCorrectionMode().getType(), false );
+
+		if( result != null ){
+			
+			getTaskletCorrection().setAutoCorrectionPoints( result.getAutoCorrectionPoints() );
+			if( result.getManualCorrections() != null && result.getManualCorrections().size() > 0 ){
+				List<Result.ManualCorrection> mcs = result.getManualCorrections();
+				List<ManualCorrection> manualCorrections = new LinkedList<ManualCorrection>(); 
+				for( Result.ManualCorrection mc : mcs )
+					manualCorrections.add( new ManualCorrectionImpl( mc.getCorrector(), mc.getPoints() ) );
+				getTaskletCorrection().setManualCorrections( manualCorrections );
+			}
+			// only if this property is set, the ComplexTaskCorrector declared the ComplexTasklet for being corrected completely
+			if( result.isCorrected() )
+				setStatus( Status.CORRECTED );
+			
+		}
 		
 		try {
 			save();
@@ -252,86 +263,6 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 			throw new TaskModelPersistenceException( e );
 		}
 
-	}
-
-	/**
-	 * @param allCorrected
-	 * @param points
-	 * @param pages
-	 */
-	private float doRegularCorrection(List<de.thorstenberger.taskmodel.complex.complextaskhandling.Page> pages, boolean justCountPoints) {
-		boolean allCorrected = true;
-		float points = 0;
-		// regular correction
-		for( de.thorstenberger.taskmodel.complex.complextaskhandling.Page page : pages ){
-			
-			List<SubTasklet> subTasklets = page.getSubTasklets();
-			
-			for( SubTasklet subTasklet : subTasklets ){
-		
-				if( !justCountPoints )
-					subTasklet.doAutoCorrection();
-				
-				if( !subTasklet.isCorrected() )
-					allCorrected = false;
-				else
-					points += subTasklet.getPoints();
-				
-			}
-		}
-		
-		if( allCorrected )
-			return points;
-		else
-			return -1;
-		
-	}
-	
-	/**
-	 * @param allCorrected
-	 * @param points
-	 * @param pages
-	 */
-	private float doCorrectOnlyProcessedTasksCorrection(List<de.thorstenberger.taskmodel.complex.complextaskhandling.Page> pages, int n, boolean justCountPoints) {
-		boolean allCorrected = true;
-		float points = 0;
-		boolean mybreak = false;
-
-		for( de.thorstenberger.taskmodel.complex.complextaskhandling.Page page : pages ){
-			
-			List<SubTasklet> subTasklets = page.getSubTasklets();
-			
-			for( SubTasklet subTasklet : subTasklets ){
-				
-				if( subTasklet.isProcessed() ){
-					
-					if( !justCountPoints )
-						subTasklet.doAutoCorrection();
-					
-					if( !subTasklet.isCorrected() )	// equivalent to !isNeedsManualCorrection
-						allCorrected = false;
-					else
-						points += subTasklet.getPoints();
-					
-					n--;
-					
-				}
-				
-				if( n == 0 ){
-					mybreak = true;
-					break;
-				}
-				
-			}
-			if( mybreak )
-				break;
-		}
-		
-		if( allCorrected ){
-			return points;
-		}else
-			return -1;
-		
 	}
 
 	/* (non-Javadoc)
@@ -348,36 +279,35 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
         if( actualSubtasklet != null && csd != null ){
         	
 	        actualSubtasklet.doManualCorrection( csd );
-	
 	        
-	        
-	        // Punkte zusammenzählen
-			List<de.thorstenberger.taskmodel.complex.complextaskhandling.Page> pages = getSolutionOfLatestTry().getPages();
-			float points = -1;
-			if( complexTaskDef.getComplexTaskDefRoot().getCorrectionMode().getType() == ComplexTaskDefRoot.CorrectionModeType.CORRECTONLYPROCESSEDTASKS ){
-				// we assert n>=1
-				int n = ((CorrectOnlyProcessedTasksCorrectionMode)complexTaskDef.getComplexTaskDefRoot().getCorrectionMode()).getFirst_n_tasks();
-				points = doCorrectOnlyProcessedTasksCorrection( pages, n, false );
+			// FIXME: use dependency injection to get the corrector instance
+			ComplexTaskletCorrector corrector = complexTaskBuilder.getComplexTaskFactory().getComplexTaskletCorrector();
+			
+			ComplexTaskletCorrector.Result result = corrector.doCorrection( this, getSolutionOfLatestTry(), complexTaskDef.getComplexTaskDefRoot().getCorrectionMode().getType(), true );
+			
+			getTaskletCorrection().setAutoCorrectionPoints( result.getAutoCorrectionPoints() );
+			getTaskletCorrection().setManualCorrections( new LinkedList<ManualCorrection>() );
+			if( result.getManualCorrections() != null ){
+					List<Result.ManualCorrection> mcs = result.getManualCorrections();
+					for( Result.ManualCorrection mc : mcs )
+						getTaskletCorrection().getManualCorrections().add( new ManualCorrectionImpl( mc.getCorrector(), mc.getPoints() ) );
 			}
-			else
-				points = doRegularCorrection(pages, false);
-			
-			
-			if( points >= 0 ){
-				getTaskletCorrection().setPoints( points );
+				
+			if( result.isCorrected() ){
 				if( !hasOrPassedStatus( Status.ANNOTATED ) )
 					setStatus( Status.CORRECTED );
 			}
-			
+
         }
         
         if( csd != null ){
         	if( csd.getAnnotation() != null && csd.getAnnotation().trim().length() > 0 ){
-        		getTaskletCorrection().setCorrectorAnnotation( csd.getAnnotation() );
+        		getTaskletCorrection().setCorrectorAnnotation( csd.getCorrector(), csd.getAnnotation() );
         		addFlag( Tasklet.FLAG_HAS_CORRECTOR_ANNOTATION );
         	}else{
-        		getTaskletCorrection().setCorrectorAnnotation( null );        		
-        		removeFlag( Tasklet.FLAG_HAS_CORRECTOR_ANNOTATION );
+        		getTaskletCorrection().setCorrectorAnnotation( csd.getCorrector(), null );
+        		if( getTaskletCorrection().getCorrectorAnnotations().size() <= 0 )
+        			removeFlag( Tasklet.FLAG_HAS_CORRECTOR_ANNOTATION );
         	}
         }
 		
@@ -482,7 +412,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 		if( !hasOrPassedStatus( Status.ANNOTATED ) )
 			throw new IllegalStateException( TaskHandlingConstants.CORRECTOR_CAN_ONLY_ACKNOWLEDGE_IF_ANNOTATED );
 		
-		for( Annotation anno : getTaskletCorrection().getStudentAnnotations() ){
+		for( StudentAnnotation anno : getTaskletCorrection().getStudentAnnotations() ){
 			if( !anno.isAcknowledged() )
 				anno.setAcknowledged( true );
 		}
@@ -496,7 +426,51 @@ public class ComplexTaskletImpl extends AbstractTasklet implements
 		}
 		
 	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#doAutoCorrection()
+	 */
+	public synchronized void doAutoCorrection() throws IllegalStateException {
+
+		if( !hasOrPassedStatus( Status.SOLVED ) )
+			throw new IllegalStateException( TaskHandlingConstants.CANNOT_CORRECT_TASK_NOT_SOLVED );
+			
+//		 FIXME: use dependency injection to get the corrector instance
+		ComplexTaskletCorrector corrector = complexTaskBuilder.getComplexTaskFactory().getComplexTaskletCorrector();
+		
+		ComplexTaskletCorrector.Result result = corrector.doCorrection( this, getSolutionOfLatestTry(), complexTaskDef.getComplexTaskDefRoot().getCorrectionMode().getType(), false );
+		
+		getTaskletCorrection().setAutoCorrectionPoints( result.getAutoCorrectionPoints() );
+		getTaskletCorrection().setManualCorrections( new LinkedList<ManualCorrection>() );
+		if( result.getManualCorrections() != null ){
+				List<Result.ManualCorrection> mcs = result.getManualCorrections();
+				for( Result.ManualCorrection mc : mcs )
+					getTaskletCorrection().getManualCorrections().add( new ManualCorrectionImpl( mc.getCorrector(), mc.getPoints() ) );
+		}
+			
+		if( result.isCorrected() ){
+			if( !hasOrPassedStatus( Status.CORRECTED ) )
+				setStatus( Status.CORRECTED );
+		}
+		
+		try {
+			save();
+		} catch (TaskApiException e) {
+			throw new TaskModelPersistenceException( e );
+		}
+		
+	}
 	
 	
+	private boolean objectsDiffer( Object a, Object b ){
+		if( a == null && b == null )
+			return false;
+		if( a == null && b != null )
+			return true;
+		if( b == null && a != null )
+			return true;
+		
+		return !a.equals( b );
+	}
 
 }

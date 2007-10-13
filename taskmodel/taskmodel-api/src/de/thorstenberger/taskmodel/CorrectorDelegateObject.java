@@ -21,7 +21,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel;
 
-import java.util.List;
 
 /**
  * @author Thorsten Berger
@@ -40,8 +39,6 @@ public interface CorrectorDelegateObject extends DelegateObject{
 
 	// redundant
 //	public long getTaskId();
-	
-	public List<Tasklet> getTasklets();
 	
 	/**
 	 * Determines wether the corrector is allowed to correct and see the Tasklets of all users.

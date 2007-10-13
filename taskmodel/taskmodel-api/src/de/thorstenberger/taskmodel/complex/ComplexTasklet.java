@@ -72,6 +72,13 @@ public interface ComplexTasklet extends Tasklet {
 	public boolean studentAnnotatesCorrection( String annotation ) throws IllegalStateException;
 	
 	public void acknowledgeStudentAnnotation() throws IllegalStateException;
-
+	
+	/**
+	 * This method triggers the auto correction of all SubTasklets. After auto-correction, the overall points
+	 * are calculated and set. The method's purpose is to support re-correction if the ComplexTaskDef has been changed
+	 * and these changes influence the overall points.
+	 * @throws IllegalStateException
+	 */
+	public void doAutoCorrection() throws IllegalStateException;
 	
 }

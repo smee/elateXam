@@ -39,13 +39,9 @@ public interface Try {
 	
 	public Page getPage( int pageNo );
 	
-//	public Page addPage( ComplexTaskHandlingType.TryType tryElem, int pageNumber, String categoryRefId );
-
 	public List<Page> getPages();
 	
 	public ProgressInformation getProgressInformation();
-	
-//	public int getTryIndex();
 	
 	public Page addNewPage(int pageNumber, Category category) throws TaskApiException;
 	

@@ -84,7 +84,7 @@ class UserObject implements Serializable{
 			throw new TaskModelPersistenceException(
 					new NullPointerException( "TaskFactory created a Tasklet with a null TaskletCorrection reference!" ) );
 		
-		if( tasklet.getTaskletCorrection().getPoints() != null )
+		if( tasklet.getTaskletCorrection().getAutoCorrectionPoints() != null )
 			throw new TaskModelPersistenceException(
 					new IllegalStateException( "TaskFactory created a Tasklet with points assigned!" ) );
 	}

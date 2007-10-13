@@ -47,6 +47,20 @@ public class ClozeSubTaskDefImpl implements SubTaskDef {
 	}
 
 	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef#getHint()
+	 */
+	public String getHint() {
+		return clozeSubTaskDef.getHint();
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef#getProblem()
+	 */
+	public String getProblem() {
+		return clozeSubTaskDef.getProblem();
+	}
+
+	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef#isTrash()
 	 */
 	public boolean isTrash() {

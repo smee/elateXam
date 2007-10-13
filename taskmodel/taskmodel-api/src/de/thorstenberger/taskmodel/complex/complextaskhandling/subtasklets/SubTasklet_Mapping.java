@@ -21,6 +21,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets;
 
+import java.util.List;
+
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 
 /**
@@ -42,6 +44,8 @@ public interface SubTasklet_Mapping extends SubTasklet {
 		public Assignment getAssignment();
 		
 		public void setAssignment( String assignmentId );
+		
+		public List<Assignment> getCorrectAssignments();
 		
 		public boolean isCorrectlyAssigned();		
 		

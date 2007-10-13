@@ -21,6 +21,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.view;
 
+import java.util.List;
+
 /**
  * @author Thorsten Berger
  *
@@ -33,26 +35,52 @@ public class SubTaskletInfoVO {
 	private String problem;
 	private String renderedHTML;
 	private boolean corrected;
-	private boolean needsManualCorrection;
-	private String points;
+//	private boolean needsManualCorrection;
+//	private String points;
+	private boolean needsManualCorrectionFlag;
+	private List<Correction> corrections;
 	
 	private String correctionHint;
 	private String correctedHTML;
 	private String correctionHTML;
 	
 	
-	/**
-	 * @return the needsManualCorrection
+/**
+	 * @return the corrections
 	 */
-	public boolean isNeedsManualCorrection() {
-		return needsManualCorrection;
+	public List<Correction> getCorrections() {
+		return corrections;
 	}
 	/**
-	 * @param needsManualCorrection the needsManualCorrection to set
+	 * @param corrections the corrections to set
 	 */
-	public void setNeedsManualCorrection(boolean needsManualCorrection) {
-		this.needsManualCorrection = needsManualCorrection;
+	public void setCorrections(List<Correction> corrections) {
+		this.corrections = corrections;
 	}
+	/**
+	 * @return the needsManualCorrectionFlag
+	 */
+	public boolean isNeedsManualCorrectionFlag() {
+		return needsManualCorrectionFlag;
+	}
+	/**
+	 * @param needsManualCorrectionFlag the needsManualCorrectionFlag to set
+	 */
+	public void setNeedsManualCorrectionFlag(boolean needsManualCorrectionFlag) {
+		this.needsManualCorrectionFlag = needsManualCorrectionFlag;
+	}
+	//	/**
+//	 * @return the needsManualCorrection
+//	 */
+//	public boolean isNeedsManualCorrection() {
+//		return needsManualCorrection;
+//	}
+//	/**
+//	 * @param needsManualCorrection the needsManualCorrection to set
+//	 */
+//	public void setNeedsManualCorrection(boolean needsManualCorrection) {
+//		this.needsManualCorrection = needsManualCorrection;
+//	}
 	/**
 	 * @return Returns the hint.
 	 */
@@ -125,18 +153,18 @@ public class SubTaskletInfoVO {
 	public void setCorrected(boolean corrected) {
 		this.corrected = corrected;
 	}
-	/**
-	 * @return Returns the points.
-	 */
-	public String getPoints() {
-		return points;
-	}
-	/**
-	 * @param points The points to set.
-	 */
-	public void setPoints(String points) {
-		this.points = points;
-	}
+//	/**
+//	 * @return Returns the points.
+//	 */
+//	public String getPoints() {
+//		return points;
+//	}
+//	/**
+//	 * @param points The points to set.
+//	 */
+//	public void setPoints(String points) {
+//		this.points = points;
+//	}
 	/**
 	 * @return Returns the correctedHTML.
 	 */
@@ -174,6 +202,58 @@ public class SubTaskletInfoVO {
 		this.correctionHint = correctionHint;
 	}
 	
-	
+	public class Correction{
+		
+		private String corrector;
+		private boolean auto;
+		private float points;
+		/**
+		 * @param corrector
+		 * @param points
+		 */
+		public Correction(String corrector, boolean auto, float points) {
+			super();
+			this.corrector = corrector;
+			this.auto = auto;
+			this.points = points;
+		}
+		/**
+		 * @return the corrector
+		 */
+		public String getCorrector() {
+			return corrector;
+		}
+		/**
+		 * @param corrector the corrector to set
+		 */
+		public void setCorrector(String corrector) {
+			this.corrector = corrector;
+		}
+		/**
+		 * @return the auto
+		 */
+		public boolean isAuto() {
+			return auto;
+		}
+		/**
+		 * @param auto the auto to set
+		 */
+		public void setAuto(boolean auto) {
+			this.auto = auto;
+		}
+		/**
+		 * @return the points
+		 */
+		public float getPoints() {
+			return points;
+		}
+		/**
+		 * @param points the points to set
+		 */
+		public void setPoints(float points) {
+			this.points = points;
+		}
+		
+	}
 
 }

@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 package de.thorstenberger.taskmodel.view;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,16 +37,19 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 
-import de.thorstenberger.taskmodel.Annotation;
+import de.thorstenberger.taskmodel.ManualCorrection;
+import de.thorstenberger.taskmodel.StudentAnnotation;
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskModelViewDelegate;
 import de.thorstenberger.taskmodel.TaskModelViewDelegateObject;
 import de.thorstenberger.taskmodel.Tasklet;
 import de.thorstenberger.taskmodel.complex.ComplexTasklet;
 import de.thorstenberger.taskmodel.complex.TaskDef_Complex;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.ManualSubTaskletCorrection;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Try;
+import de.thorstenberger.taskmodel.view.SubTaskletInfoVO.Correction;
 
 /**
  * @author Thorsten Berger
@@ -151,9 +155,17 @@ public class ShowSolutionAction extends Action {
 				stivo.setVirtualSubTaskletNumber( subTasklet.getVirtualSubtaskNumber() );
 				stivo.setRenderedHTML( SubTaskViewFactory.getSubTaskView( subTasklet ).getCorrectedHTML( request, i++ ) );
 				stivo.setCorrected( subTasklet.isCorrected() );
-				stivo.setNeedsManualCorrection( subTasklet.isNeedsManualCorrection() );
-				if( subTasklet.isCorrected() )
-					stivo.setPoints( "" + subTasklet.getPoints() );
+				
+				if( subTasklet.isCorrected() ){
+					List<Correction> corrections = new LinkedList<Correction>();
+					if( subTasklet.isAutoCorrected() )
+						corrections.add( stivo.new Correction( null, true, subTasklet.getAutoCorrection().getPoints() ) );
+					else
+						for( ManualSubTaskletCorrection msc : subTasklet.getManualCorrections() )
+							corrections.add( stivo.new Correction( msc.getCorrector(), false, msc.getPoints() ) );
+					stivo.setCorrections( corrections );
+				}
+				stivo.setNeedsManualCorrectionFlag( subTasklet.isSetNeedsManualCorrectionFlag() );
 				stivos.add( stivo );
 			}
 			
@@ -166,15 +178,13 @@ public class ShowSolutionAction extends Action {
 		
 		if( ct.hasOrPassedStatus( Tasklet.Status.CORRECTED ) ){
 			sivo.setCanAnnotate( true );
-//			request.setAttribute( "canAnnotate", true );
 			if( ct.getTaskletCorrection().getStudentAnnotations().size() > 0 )
-//				request.setAttribute( "actualAnnotation", ct.getTaskletCorrection().getStudentAnnotations().get( 0 ).getText() );
 				if( !ct.getTaskletCorrection().getStudentAnnotations().get( 0 ).isAcknowledged() )
 						sivo.setActualAnnotation( ct.getTaskletCorrection().getStudentAnnotations().get( 0 ).getText() );
 		}
 		
 		List<SolutionInfoVO.AnnotationInfoVO> annotations = new ArrayList<SolutionInfoVO.AnnotationInfoVO>();
-		for( Annotation anno : ct.getTaskletCorrection().getStudentAnnotations() )
+		for( StudentAnnotation anno : ct.getTaskletCorrection().getStudentAnnotations() )
 			if( anno.isAcknowledged() )
 				annotations.add( sivo.new AnnotationInfoVO( DateUtil.getStringFromMillis( anno.getDate() ), ParserUtil.escapeCR( anno.getText() ) ) );
 		sivo.setAnnotations( annotations );
@@ -188,11 +198,16 @@ public class ShowSolutionAction extends Action {
     	
     	sivo.setTaskId( ctd.getId() );
     	
-    	if( ct.getTaskletCorrection().getPoints() != null )
-    		sivo.setPoints( "" + ct.getTaskletCorrection().getPoints() );
-    	else
-    		sivo.setPoints( "-" );
-		
+    	// set points
+		if( ct.getTaskletCorrection().isCorrected() ){
+			List<SolutionInfoVO.Correction> taskletCorrections = new LinkedList<SolutionInfoVO.Correction>();
+			if( ct.getTaskletCorrection().isAutoCorrected() )
+				taskletCorrections.add( sivo.new Correction( null, true, ct.getTaskletCorrection().getAutoCorrectionPoints() ) );
+			else
+				for( ManualCorrection mc : ct.getTaskletCorrection().getManualCorrections() )
+					taskletCorrections.add( sivo.new Correction( mc.getCorrector(), false, mc.getPoints() ) );
+			sivo.setCorrections( taskletCorrections );
+		}
 		
 		sivo.setStatus( ct.getStatus().getValue() );
 		try {

@@ -43,7 +43,7 @@ public interface TaskletContainer {
 	
 	public List<Tasklet> getTaskletsAssignedToCorrector( long taskId, String correctorId ) throws TaskApiException;
 	
-	public TaskFactory getTaskFactory();
+//	public TaskFactory getTaskFactory();
 	
     /**
      * force subsequent refresh from the persistent store, that means the TaskFactory implementation 

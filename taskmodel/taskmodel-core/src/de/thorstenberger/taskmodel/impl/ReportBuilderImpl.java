@@ -27,6 +27,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -40,14 +41,15 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 
+import de.thorstenberger.taskmodel.ManualCorrection;
 import de.thorstenberger.taskmodel.MethodNotSupportedException;
 import de.thorstenberger.taskmodel.ReportBuilder;
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskDef;
-import de.thorstenberger.taskmodel.TaskFactory;
 import de.thorstenberger.taskmodel.TaskManager;
 import de.thorstenberger.taskmodel.Tasklet;
 import de.thorstenberger.taskmodel.UserInfo;
+import de.thorstenberger.taskmodel.TaskManager.UserAttribute;
 import de.thorstenberger.taskmodel.complex.ComplexTasklet;
 import de.thorstenberger.taskmodel.complex.TaskDef_Complex;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
@@ -67,7 +69,6 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTa
 public class ReportBuilderImpl implements ReportBuilder {
 
 	private TaskManager taskManager;
-	private TaskFactory taskFactory;
 	
 	Log log = LogFactory.getLog( ReportBuilderImpl.class );
 	
@@ -76,9 +77,8 @@ public class ReportBuilderImpl implements ReportBuilder {
 	/**
 	 * @param taskletContainer
 	 */
-	public ReportBuilderImpl( TaskManager taskManager, TaskFactory taskFactory ) {
+	public ReportBuilderImpl( TaskManager taskManager ) {
 		this.taskManager = taskManager;
-		this.taskFactory = taskFactory;
 	}
 
 	/* (non-Javadoc)
@@ -92,12 +92,38 @@ public class ReportBuilderImpl implements ReportBuilder {
 		
 		short r = 0;
 		short c = 0;
+		
+		List<Tasklet> tasklets = taskManager.getTaskletContainer().getTasklets( taskId );
 
+		///////////////////
+		// create header
 		HSSFRow row = sheet.createRow( r++ );
-			row.createCell( c++ ).setCellValue( "Login" ); row.createCell( c++ ).setCellValue( "Vorname" );
-			row.createCell( c++ ).setCellValue( "Name" ); row.createCell( c++ ).setCellValue( "Status" );
-			row.createCell( c++ ).setCellValue( "Punkte" ); row.createCell( c++ ).setCellValue( "Korrektor" );
-			row.createCell( c++ ).setCellValue( "Korrektoren-History" );
+			row.createCell( c++ ).setCellValue( "Login" );
+			row.createCell( c++ ).setCellValue( "Vorname" );
+			row.createCell( c++ ).setCellValue( "Name" );
+			List<UserAttribute> uas = taskManager.availableUserAttributes();
+			for( UserAttribute ua : uas )
+				row.createCell( c++ ).setCellValue( ua.getName( null ) );
+			row.createCell( c++ ).setCellValue( "Status" );
+			
+			// add header cols for automatic and manual corrections
+			row.createCell( c++ ).setCellValue( "autom. Korrektur" );
+			// determine number of correctors
+			int maxManualCorrectors = 0;
+			for( Tasklet tasklet : tasklets ){
+				List<ManualCorrection> mcs = tasklet.getTaskletCorrection().getManualCorrections();
+				if( mcs != null && mcs.size() > maxManualCorrectors )
+					maxManualCorrectors = mcs.size();
+			}
+			
+			// ok, so add header cols for every corrector, as determined above
+			for( int i = 1; i<=maxManualCorrectors; i++ )
+				row.createCell( c++ ).setCellValue( "Punkte " + i + ". Korrektor" );
+			for( int i = 1; i<=maxManualCorrectors; i++ )
+				row.createCell( c++ ).setCellValue( "Name " + i + ". Korrektor" );
+			
+			row.createCell( c++ ).setCellValue( "zugeordneter Korrektor" );
+			row.createCell( c++ ).setCellValue( "Zuordnungs-History" );
 			
 			// add some more columns, if complex task; e.g. points per category
 			if( taskDef instanceof TaskDef_Complex ){
@@ -110,9 +136,14 @@ public class ReportBuilderImpl implements ReportBuilder {
 					row.createCell( c++ ).setCellValue( category.getTitle() + " (" + category.getId() + ")" );
 							
 			}
-
 			
-		List<Tasklet> tasklets = taskManager.getTaskletContainer().getTasklets( taskId );
+			// show tasklet flags
+			row.createCell( c++ ).setCellValue( "Flags" );
+
+		
+		// end create header
+		//////////////////////
+			
 		
 		for( Tasklet tasklet : tasklets ){
 
@@ -124,7 +155,23 @@ public class ReportBuilderImpl implements ReportBuilder {
 			
 			c = createUserInfoColumns( tasklet, c, wb, row );
 			row.createCell( c++ ).setCellValue( tasklet.getStatus().toString() );
-			row.createCell( c++ ).setCellValue( tasklet.getTaskletCorrection().getPoints() != null ? "" + tasklet.getTaskletCorrection().getPoints() : "-" );
+			
+			// auto correction points
+			row.createCell( c++ ).setCellValue( tasklet.getTaskletCorrection().getAutoCorrectionPoints() != null ? "" + tasklet.getTaskletCorrection().getAutoCorrectionPoints() : "-" );
+			List<ManualCorrection> mcs = tasklet.getTaskletCorrection().getManualCorrections();
+			for( int i = 0; i < maxManualCorrectors; i++ ){
+				if( mcs != null && mcs.size() > i )
+					row.createCell( c++ ).setCellValue( mcs.get( i ).getPoints() );
+				else
+					row.createCell( c++ ).setCellValue( "-" );
+			}
+			for( int i = 0; i < maxManualCorrectors; i++ ){
+				if( mcs != null && mcs.size() > i )
+					row.createCell( c++ ).setCellValue( mcs.get( i ).getCorrector() );
+				else
+					row.createCell( c++ ).setCellValue( "-" );
+			}
+			
 			row.createCell( c++ ).setCellValue( tasklet.getTaskletCorrection().getCorrector() != null ? tasklet.getTaskletCorrection().getCorrector() : "-" );
 			row.createCell( c++ ).setCellValue( tasklet.getTaskletCorrection().getCorrectorHistory().toString() );
 
@@ -132,6 +179,9 @@ public class ReportBuilderImpl implements ReportBuilder {
 			if( taskDef instanceof TaskDef_Complex ){
 				
 				TaskDef_Complex ctd = (TaskDef_Complex) taskDef;
+//				if( ctd.getComplexTaskDefRoot().getCorrectionMode().getType() == ComplexTaskDefRoot.CorrectionModeType.MULTIPLECORRECTORS )
+//					throw new IllegalStateException( "MultiCorrectorMode not supported yet. Stay tuned!" );
+					
 				ComplexTasklet ct = (ComplexTasklet)tasklet;
 				row.createCell( c++ ).setCellValue( getStringFromMillis( ct.getSolutionOfLatestTry().getStartTime() ) );
 				
@@ -166,9 +216,9 @@ public class ReportBuilderImpl implements ReportBuilder {
 					
 					List<SubTasklet> subTasklets = page.getSubTasklets();
 					for( SubTasklet subTasklet : subTasklets ){
-						try {
-							points += subTasklet.getPoints();
-						} catch (IllegalStateException e) {
+						if( subTasklet.isCorrected() ){
+							points += subTasklet.isAutoCorrected() ? subTasklet.getAutoCorrection().getPoints() : subTasklet.getManualCorrections().get( 0 ).getPoints();
+						}else{
 							markCategoryAsUncorrected = true;
 							break;
 						}
@@ -187,6 +237,8 @@ public class ReportBuilderImpl implements ReportBuilder {
 				}
 				
 			}
+			
+			row.createCell( c++ ).setCellValue( tasklet.getFlags().toString() );
 			
 		}
 		
@@ -207,22 +259,33 @@ public class ReportBuilderImpl implements ReportBuilder {
 	}
 	
 	private short createUserInfoColumns( Tasklet tasklet, short c, HSSFWorkbook wb, HSSFRow row ){
-		UserInfo userInfo = taskFactory.getUserInfo( tasklet.getUserId() );
+		UserInfo userInfo = taskManager.getUserInfo( tasklet.getUserId() );
+		List<UserAttribute> uas = taskManager.availableUserAttributes();
 		
 		String login;
 		String firstName;
 		String name;
+		List<String> userAttributeValues = new LinkedList<String>();;
 		boolean notfound;
 		
 		if( userInfo != null ){
 			login = userInfo.getLogin();
 			firstName = userInfo.getFirstName();
 			name = userInfo.getName();
-			notfound = false;				
+			for( UserAttribute ua : uas ){
+				String s = userInfo.getUserAttributeValue( ua.getKey() );
+				if( s == null || s.trim().length() == 0 )
+					s = "-";
+				userAttributeValues.add( s );
+				
+			}
+			notfound = false;	
 		}else{
 			login = tasklet.getUserId();
 			firstName = "?";
 			name = "?";
+			for( UserAttribute ua : uas )
+				userAttributeValues.add( "?" );
 			notfound = true;
 		}
 		
@@ -240,6 +303,9 @@ public class ReportBuilderImpl implements ReportBuilder {
 		
 		row.createCell( c++ ).setCellValue( firstName );
 		row.createCell( c++ ).setCellValue( name );
+		for( String uav : userAttributeValues )
+			row.createCell( c++ ).setCellValue( uav );
+			
 		
 		return c;
 	}	

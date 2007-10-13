@@ -96,7 +96,7 @@ public class SubTaskView_MC extends SubTaskView {
 			return "";
 	}
 	
-	public String getCorrectionHTML( HttpServletRequest request ){
+	public String getCorrectionHTML( String actualCorrector, HttpServletRequest request ){
 	    return null;
 	}
 	

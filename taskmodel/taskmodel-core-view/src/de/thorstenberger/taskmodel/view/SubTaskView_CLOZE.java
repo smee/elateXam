@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 package de.thorstenberger.taskmodel.view;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -34,6 +35,7 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.correctionsubmitdata.ClozeCorrectionSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.ClozeSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Cloze;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Cloze.ManualGapCorrection;
 
 /**
  * @author Thorsten Berger
@@ -90,26 +92,35 @@ public class SubTaskView_CLOZE extends SubTaskView {
 				SubTasklet_Cloze.Gap gap = (SubTasklet_Cloze.Gap) content.get( i );
 				ret.append( "&nbsp;<b>\"" + gap.getGapValue() + "\"</b>&nbsp;" );
 				if( gap.isCorrected() ){
-				    if( gap.isCorrect() )
-				        ret.append( "<img src=\"" + request.getContextPath() + "/pics/true.gif\">" );
-				    else
-				        ret.append( "<img src=\"" + request.getContextPath() + "/pics/false.gif\">" );
+					
+					List<Correction> corrections = new LinkedList<Correction>();
+					if( gap.isAutoCorrected() ){
+						corrections.add( new Correction( null, true, gap.isCorrectByAutoCorrection() ) );
+					}else{
+						List<ManualGapCorrection> gcs = gap.getManualCorrections();
+						for( ManualGapCorrection gc : gcs ){
+							corrections.add( new Correction( gc.getCorrector(), false, gc.isCorrect() ) );
+						}
+					}
+					
+					for( Correction correction : corrections ){
+						String corrector = correction.isAuto() ? "autom." : correction.getCorrector();
+				        ret.append( "<span class=\"Cloze_CorrectorLabel\">" + corrector + ": </span><img src=\"" + request.getContextPath() + "/pics/" + correction.isCorrect() + ".gif\">&nbsp;&nbsp;" );
+					}
 				}else
 				    ret.append( "<img src=\"" + request.getContextPath() + "/pics/questionmark.gif\">" );
 				ret.append("&nbsp;\n");
 			}
 		}
 		
-		
 		return ret.toString();
 
 	}
 	
-	public String getCorrectionHTML( HttpServletRequest request ){
+	public String getCorrectionHTML( String actualCorrector, HttpServletRequest request ){
 		StringBuffer ret = new StringBuffer();
 		
 		List content = clozeSubTasklet.getContent();
-	
 		
 		for( int i=0; i<content.size(); i++ ){
 			if( content.get( i ) instanceof String ){
@@ -119,16 +130,23 @@ public class SubTaskView_CLOZE extends SubTaskView {
 			    SubTasklet_Cloze.Gap gap = (SubTasklet_Cloze.Gap) content.get( i );
 				ret.append( "&nbsp;&nbsp;<b class=\"Cloze_Gap\">\"" + gap.getGapValue() + "\"</b>&nbsp;&nbsp;" );
 				if( gap.isCorrected() ){
-				    if( gap.isCorrect() )
-				        ret.append( "<img src=\"" + request.getContextPath() + "/pics/true.gif\">" );
-				    else
-				        ret.append( "<img src=\"" + request.getContextPath() + "/pics/false.gif\">" );
+					
+					if( gap.isAutoCorrected() ){
+						ret.append( "<span class=\"Cloze_CorrectorLabel\">" + "autom." + ": </span><img src=\"" + request.getContextPath() + "/pics/" + gap.isCorrectByAutoCorrection() + ".gif\">&nbsp;&nbsp;" );
+					}else{
+						List<ManualGapCorrection> gcs = gap.getManualCorrections();
+						
+						for( ManualGapCorrection gc : gcs )
+							ret.append( "<span class=\"Cloze_CorrectorLabel\">" + gc.getCorrector() + ": </span><img src=\"" + request.getContextPath() + "/pics/" + gc.isCorrect() + ".gif\">&nbsp;&nbsp;" );
+					}
+					
 				}else
 				    ret.append( "<img src=\"" + request.getContextPath() + "/pics/questionmark.gif\">" );
 				
+				
 				if( !gap.isAutoCorrected() ){
 				    ret.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"checkbox\" name=\"task[0].gap_" + gap.getIndex() + "_correct\"" );
-				    if( gap.isCorrected() && gap.isCorrect() )
+				    if( gap.isCorrectedByCorrector( actualCorrector ) && gap.isCorrectByCorrector( actualCorrector ) )
 				        ret.append(" checked");
 				    ret.append(" value=\"true\">");
 				}
@@ -205,5 +223,59 @@ public class SubTaskView_CLOZE extends SubTaskView {
 		if( s.indexOf('"') != -1 )
 			return (new String( s )).replaceAll( "\\\"", "&quot;" );
 		else return s;
+	}
+	
+	private class Correction{
+		private String corrector;
+		private boolean auto;
+		private boolean correct;
+		/**
+		 * @param corrector
+		 * @param auto
+		 * @param points
+		 */
+		public Correction(String corrector, boolean auto, boolean correct ) {
+			super();
+			this.corrector = corrector;
+			this.auto = auto;
+			this.correct = correct;
+		}
+		/**
+		 * @return the auto
+		 */
+		public boolean isAuto() {
+			return auto;
+		}
+		/**
+		 * @param auto the auto to set
+		 */
+		public void setAuto(boolean auto) {
+			this.auto = auto;
+		}
+		/**
+		 * @return the corrector
+		 */
+		public String getCorrector() {
+			return corrector;
+		}
+		/**
+		 * @param corrector the corrector to set
+		 */
+		public void setCorrector(String corrector) {
+			this.corrector = corrector;
+		}
+		/**
+		 * @return the correct
+		 */
+		public boolean isCorrect() {
+			return correct;
+		}
+		/**
+		 * @param correct the correct to set
+		 */
+		public void setCorrect(boolean correct) {
+			this.correct = correct;
+		}
+		
 	}
 }

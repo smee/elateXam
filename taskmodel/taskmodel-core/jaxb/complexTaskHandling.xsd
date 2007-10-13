@@ -19,7 +19,7 @@
 															<xs:attribute name="selected" type="xs:boolean" use="required"/>
 														</xs:complexType>
 													</xs:element>
-													<xs:element name="correction" minOccurs="0">
+													<xs:element name="autoCorrection" minOccurs="0">
 														<xs:complexType>
 															<xs:attribute name="points" type="xs:float" use="required"/>
 														</xs:complexType>
@@ -36,18 +36,36 @@
 														<xs:complexType>
 															<xs:sequence>
 																<xs:element name="gapValue" type="xs:string"/>
+																<xs:choice minOccurs="0">
+																	<xs:element name="autoCorrection">
+																		<xs:complexType>
+																			<xs:attribute name="correct" type="xs:boolean" use="required"/>
+																		</xs:complexType>
+																	</xs:element>
+																	<xs:element name="manualCorrection" maxOccurs="unbounded">
+																		<xs:complexType>
+																			<xs:attribute name="corrector" type="xs:string" use="required"/>
+																			<xs:attribute name="correct" type="xs:boolean" use="required"/>
+																		</xs:complexType>
+																	</xs:element>
+																</xs:choice>
 															</xs:sequence>
-															<xs:attribute name="corrected" type="xs:boolean" use="required"/>
-															<xs:attribute name="correct" type="xs:boolean" use="optional"/>
-															<xs:attribute name="autoCorrected" type="xs:boolean" use="optional"/>
 														</xs:complexType>
 													</xs:element>
 													<xs:element name="needsManualCorrection" type="xs:boolean" default="true" minOccurs="0"/>
-													<xs:element name="correction" minOccurs="0">
-														<xs:complexType>
-															<xs:attribute name="points" type="xs:float" use="required"/>
-														</xs:complexType>
-													</xs:element>
+													<xs:choice minOccurs="0">
+														<xs:element name="manualCorrection" maxOccurs="unbounded">
+															<xs:complexType>
+																<xs:attribute name="points" type="xs:float" use="required"/>
+																<xs:attribute name="corrector" type="xs:string" use="required"/>
+															</xs:complexType>
+														</xs:element>
+														<xs:element name="autoCorrection">
+															<xs:complexType>
+																<xs:attribute name="points" type="xs:float" use="required"/>
+															</xs:complexType>
+														</xs:element>
+													</xs:choice>
 												</xs:sequence>
 												<xs:attribute name="refId" type="xs:string" use="required"/>
 												<xs:attribute name="virtualNum" type="xs:string" use="optional"/>
@@ -58,12 +76,19 @@
 												<xs:sequence>
 													<xs:element name="answer" type="xs:string" minOccurs="0"/>
 													<xs:element name="needsManualCorrection" type="xs:boolean" default="true" minOccurs="0"/>
-													<xs:element name="correction" minOccurs="0">
-														<xs:complexType>
-															<xs:attribute name="points" type="xs:float" use="required"/>
-															<xs:attribute name="autoCorrected" type="xs:boolean" use="optional"/>
-														</xs:complexType>
-													</xs:element>
+													<xs:choice minOccurs="0">
+														<xs:element name="manualCorrection" maxOccurs="unbounded">
+															<xs:complexType>
+																<xs:attribute name="points" type="xs:float" use="required"/>
+																<xs:attribute name="corrector" type="xs:string" use="required"/>
+															</xs:complexType>
+														</xs:element>
+														<xs:element name="autoCorrection">
+															<xs:complexType>
+																<xs:attribute name="points" type="xs:float" use="required"/>
+															</xs:complexType>
+														</xs:element>
+													</xs:choice>
 												</xs:sequence>
 												<xs:attribute name="refId" type="xs:string" use="required"/>
 												<xs:attribute name="virtualNum" type="xs:string" use="optional"/>
@@ -77,7 +102,7 @@
 															<xs:attribute name="assigned" type="xs:string" use="optional"/>
 														</xs:complexType>
 													</xs:element>
-													<xs:element name="correction" minOccurs="0">
+													<xs:element name="autoCorrection" minOccurs="0">
 														<xs:complexType>
 															<xs:attribute name="points" type="xs:float" use="required"/>
 														</xs:complexType>
@@ -92,15 +117,22 @@
 												<xs:sequence>
 													<xs:element name="pictureString" type="xs:string" minOccurs="0"/>
 													<xs:element name="needsManualCorrection" type="xs:boolean" default="true" minOccurs="0"/>
-													<xs:element name="correction" minOccurs="0">
-														<xs:complexType>
-															<xs:attribute name="points" type="xs:float" use="required"/>
-															<xs:attribute name="autoCorrected" type="xs:boolean" use="optional"/>
-														</xs:complexType>
-													</xs:element>
 													<xs:element name="textAnswer" type="xs:string" minOccurs="0"/>
 													<xs:element name="undoData" type="xs:string" minOccurs="0"/>
 													<xs:element name="resetted" type="xs:boolean" minOccurs="0"/>
+													<xs:choice minOccurs="0">
+														<xs:element name="manualCorrection" maxOccurs="unbounded">
+															<xs:complexType>
+																<xs:attribute name="points" type="xs:float" use="required"/>
+																<xs:attribute name="corrector" type="xs:string" use="required"/>
+															</xs:complexType>
+														</xs:element>
+														<xs:element name="autoCorrection">
+															<xs:complexType>
+																<xs:attribute name="points" type="xs:float" use="required"/>
+															</xs:complexType>
+														</xs:element>
+													</xs:choice>
 												</xs:sequence>
 												<xs:attribute name="refId" type="xs:string" use="required"/>
 												<xs:attribute name="virtualNum" type="xs:string" use="optional"/>

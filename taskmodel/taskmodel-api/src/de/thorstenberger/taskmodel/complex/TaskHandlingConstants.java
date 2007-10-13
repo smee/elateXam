@@ -51,6 +51,12 @@ public class TaskHandlingConstants {
 	
 	public static final String SUBTASK_NOT_CORRECTED = "task.complex.subtask_not_corrected";
 	
+	public static final String SUBTASK_NOT_CORRECTED_BY_CORRECTOR = "task.complex.subtask_not_corrected_by_corrector";
+	
+	public static final String SUBTASK_NOT_AUTO_CORRECTED = "task.complex.subtask_not_auto_corrected";
+	
+	public static final String SUBTASK_AUTO_CORRECTED = "task.complex.subtask_auto_corrected";
+	
 	public static final String TIME_EXCEEDED_AUTO_SUBMIT_MADE = "task.complex.time_exceeded_auto_submit_made";
 	
 	public static final String SHOW_CORRECTION_NOT_POSSIBLE = "task.complex.show_correction_not_possible";

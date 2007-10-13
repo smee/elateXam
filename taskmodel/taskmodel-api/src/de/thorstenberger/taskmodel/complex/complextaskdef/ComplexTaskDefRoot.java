@@ -36,7 +36,12 @@ public interface ComplexTaskDefRoot {
 		/**
 		 * In this correction mode, only the first n processed Subtasklets wil be corrected and influence the overall result (points).
 		 */
-		CORRECTONLYPROCESSEDTASKS;
+		CORRECTONLYPROCESSEDTASKS,
+		
+		/**
+		 * In this correction mode, more than one (human) corrector proceed the correction in order to determine the overall result. 
+		 */
+		MULTIPLECORRECTORS;
 	}
 	
 	/**

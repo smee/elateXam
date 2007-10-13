@@ -23,7 +23,6 @@ package de.thorstenberger.taskmodel.impl;
 
 import java.util.List;
 
-import de.thorstenberger.taskmodel.CategoryException;
 import de.thorstenberger.taskmodel.CategoryFilter;
 import de.thorstenberger.taskmodel.MethodNotSupportedException;
 import de.thorstenberger.taskmodel.ReportBuilder;
@@ -35,6 +34,7 @@ import de.thorstenberger.taskmodel.TaskFilter;
 import de.thorstenberger.taskmodel.TaskFilterException;
 import de.thorstenberger.taskmodel.TaskManager;
 import de.thorstenberger.taskmodel.TaskletContainer;
+import de.thorstenberger.taskmodel.UserInfo;
 
 /**
  * @author Thorsten Berger
@@ -115,19 +115,33 @@ public class TaskManagerImpl implements TaskManager {
 	}
 
 	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.TaskManager#getTaskFactory()
-	 */
-	public TaskFactory getTaskFactory() {
-		return taskFactory;
-	}
-
-	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.TaskManager#getReportBuilder()
 	 */
 	public ReportBuilder getReportBuilder() {
 		if( reportBuilder == null )
-			reportBuilder = new ReportBuilderImpl( this, taskFactory );
+			reportBuilder = new ReportBuilderImpl( this );
 		return reportBuilder;
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.TaskManager#availableUserAttributes()
+	 */
+	public List<UserAttribute> availableUserAttributes() {
+		return taskFactory.availableUserAttributes();
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.TaskManager#getCorrectors()
+	 */
+	public List<UserInfo> getCorrectors() {
+		return taskFactory.getCorrectors();
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.TaskManager#getUserInfo(java.lang.String)
+	 */
+	public UserInfo getUserInfo(String login) {
+		return taskFactory.getUserInfo( login );
 	}
 
 	public void storeTaskCategory(TaskCategory category) {

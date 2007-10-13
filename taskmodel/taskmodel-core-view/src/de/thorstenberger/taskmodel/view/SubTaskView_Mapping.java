@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 package de.thorstenberger.taskmodel.view;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -87,12 +88,19 @@ public class SubTaskView_Mapping extends SubTaskView {
 				
 			}
 			ret.append("</select>&nbsp;\n");
-			if( corrected )
+			if( corrected ){
 			    ret.append( getSymbolForCorrectedAssignment( request, concepts[i] ) );
+			    if( !concepts[i].isCorrectlyAssigned() ){
+			    	ret.append( "<ul style=\"color: #B11915;\">\n" );
+			    	List<SubTasklet_Mapping.Assignment> cas = concepts[i].getCorrectAssignments();
+			    	for( SubTasklet_Mapping.Assignment ca : cas )
+			    		ret.append( "<li style=\"font-size: 90%;\">" + ca.getAssignmentName() + "</li>\n" );
+			    	ret.append( "</ul>\n" );
+			    }
+			}
 			ret.append("</td></tr>");
 			if( i != concepts.length -1 )
 				ret.append("<tr><td colspan=3>&nbsp;</td></tr>");
-			
 		}
 		
 		ret.append("</table>");
@@ -105,7 +113,7 @@ public class SubTaskView_Mapping extends SubTaskView {
 		return getRenderedHTML( request, -1, true );
 	}
 
-	public String getCorrectionHTML( HttpServletRequest request ){
+	public String getCorrectionHTML( String actualCorrector, HttpServletRequest request ){
 	    return null;
 	}
 	

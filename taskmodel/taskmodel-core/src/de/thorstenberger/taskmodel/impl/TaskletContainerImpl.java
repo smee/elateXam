@@ -28,6 +28,7 @@ import java.util.Random;
 import org.apache.jcs.JCS;
 import org.apache.jcs.access.exception.CacheException;
 
+import de.thorstenberger.taskmodel.ManualCorrection;
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskFactory;
 import de.thorstenberger.taskmodel.TaskModelPersistenceException;
@@ -53,7 +54,7 @@ public class TaskletContainerImpl implements TaskletContainer {
 		this.taskFactory = taskFactory;
 		
 		// TODO check for at least 512MB of free memory
-		Runtime.getRuntime().maxMemory();
+		System.out.println( Runtime.getRuntime().maxMemory() );
 		
 		try {
 			this.userObjectCache = JCS.getInstance( "taskmodel-core_userObjectCache" );
@@ -171,8 +172,18 @@ public class TaskletContainerImpl implements TaskletContainer {
 		for( Tasklet tasklet : tasklets ){
 			
 			if( ( tasklet.getStatus() == Tasklet.Status.SOLVED || tasklet.getStatus() == Tasklet.Status.CORRECTING ) && 
-					tasklet.getTaskletCorrection().getCorrector() == null )
-				assignableTasklets.add( tasklet );
+					tasklet.getTaskletCorrection().getCorrector() == null ){
+				
+				List<ManualCorrection> mcs = tasklet.getTaskletCorrection().getManualCorrections();
+				boolean add = true;
+				for( ManualCorrection mc : mcs )
+					if( mc.getCorrector().equals( correctorId ) ){
+						add = false;
+						break;
+					}
+				if( add )
+					assignableTasklets.add( tasklet );
+			}
 			
 		}
 		

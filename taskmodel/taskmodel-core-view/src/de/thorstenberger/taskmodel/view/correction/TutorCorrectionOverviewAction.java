@@ -23,6 +23,7 @@ package de.thorstenberger.taskmodel.view.correction;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,6 +37,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 
 import de.thorstenberger.taskmodel.CorrectorDelegateObject;
+import de.thorstenberger.taskmodel.ManualCorrection;
 import de.thorstenberger.taskmodel.TaskModelViewDelegate;
 import de.thorstenberger.taskmodel.TaskStatistics;
 import de.thorstenberger.taskmodel.Tasklet;
@@ -88,12 +90,36 @@ public class TutorCorrectionOverviewAction extends Action {
 			List<Tasklet> assignedTasklets = delegateObject.getTaskManager().getTaskletContainer().getTaskletsAssignedToCorrector( id, delegateObject.getCorrectorLogin() );
 			List<TaskletInfoVO> assignedUncorrectedTasklets = new ArrayList<TaskletInfoVO>();
 			List<TaskletInfoVO> assignedCorrectedTasklets = new ArrayList<TaskletInfoVO>();
+			
+			
+			// for the list we need the same number of corrections (columns) in every row, so
+			// we expand every row that has too few columns
+			int maxManualCorrections = 0;
+			boolean expandSome = false;
+			
 			for( Tasklet tasklet : assignedTasklets ){
+				TaskletInfoVO tivo = getTIVO( tasklet );
+				if( tivo.getCorrections().size() > maxManualCorrections ){
+					maxManualCorrections = tivo.getCorrections().size();
+					expandSome = true;
+				}
 				if( tasklet.hasOrPassedStatus( Tasklet.Status.CORRECTED ) )
-					assignedCorrectedTasklets.add( getTIVO( tasklet ) );
+					assignedCorrectedTasklets.add( tivo );
 				else
-					assignedUncorrectedTasklets.add( getTIVO( tasklet ) );
+					assignedUncorrectedTasklets.add( tivo );
 			}
+			if( expandSome ){
+				for( TaskletInfoVO tivo : assignedCorrectedTasklets ){
+					for( int i = tivo.getCorrections().size(); i < maxManualCorrections; i++ )
+						tivo.getCorrections().add( new TaskletInfoVO.ManualCorrectionVO( null, null ) );
+				}
+				for( TaskletInfoVO tivo : assignedUncorrectedTasklets ){
+					for( int i = tivo.getCorrections().size(); i < maxManualCorrections; i++ )
+						tivo.getCorrections().add( new TaskletInfoVO.ManualCorrectionVO( null, null ) );
+				}
+				
+			}
+			
 			
 			tsivo.setAssignedCorrectedTasklets( assignedCorrectedTasklets );
 			tsivo.setAssignedUncorrectedTasklets( assignedUncorrectedTasklets );
@@ -110,10 +136,25 @@ public class TutorCorrectionOverviewAction extends Action {
 		TaskletInfoVO tivo = new TaskletInfoVO();
 		tivo.setTaskId( tasklet.getTaskId() );
 		tivo.setLogin( tasklet.getUserId() );
-		tivo.setPoints( tasklet.getTaskletCorrection().getPoints() );
+		
+		
+		// set points
+		List<TaskletInfoVO.ManualCorrectionVO> taskletCorrections = new LinkedList<TaskletInfoVO.ManualCorrectionVO>();
+		if( tasklet.getTaskletCorrection().isCorrected() ){
+			if( tasklet.getTaskletCorrection().isAutoCorrected() )
+				tivo.setAutoCorrectionPoints( tasklet.getTaskletCorrection().getAutoCorrectionPoints() );
+			else{
+				for( ManualCorrection mc : tasklet.getTaskletCorrection().getManualCorrections() ){
+					taskletCorrections.add( new TaskletInfoVO.ManualCorrectionVO( mc.getCorrector(), mc.getPoints() ) );
+				}
+			}
+		}
+		tivo.setCorrections( taskletCorrections );
+		
 		tivo.setStatus( tasklet.getStatus().getValue() );
 		tivo.setCorrectorLogin( tasklet.getTaskletCorrection().getCorrector() );
 		tivo.setCorrectorHistory( tasklet.getTaskletCorrection().getCorrectorHistory() );
+		tivo.setFlags( tasklet.getFlags() );
 		tivo.setCorrigible( tasklet.hasOrPassedStatus( Tasklet.Status.SOLVED ) );
 		tivo.setViewable( tasklet.hasOrPassedStatus( Tasklet.Status.INPROGRESS ));
 

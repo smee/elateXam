@@ -74,12 +74,18 @@
    SHAPE="457,632,480,632,480,904,32,904,32,1184,63,1184"
    SUBTYPE="confirmed" TARGET="action12"
    TITLE="/complexTaskStructure.do" TYPE="link"/>
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" NAME="link4"
+   PATH="/correctionSettings.do" SUBTYPE="confirmed" TARGET="action15"
+   TITLE="/correctionSettings.do" TYPE="link"/>
  </PROCESS-ITEM>
  <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#assignTasklet"
   NAME="action6" PATH="/assignTasklet" SHAPE="64,632,100,41" TYPE="action">
   <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="success"
    NAME="forward0" PATH="/tutorCorrectionOverview.do" TARGET="action4"
    TITLE="success" TYPE="forward"/>
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput"
+   ID="successToCorrection" NAME="forward1" PATH="/doCorrection.do"
+   TARGET="action5" TITLE="successToCorrection" TYPE="forward"/>
  </PROCESS-ITEM>
  <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#doCorrection"
   NAME="action5" PATH="/doCorrection" SHAPE="80,760,100,57" TYPE="action">
@@ -199,4 +205,38 @@
  <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#ajaxResponse"
   NAME="action16" PATH="/ajaxResponse" SHAPE="584,1024,100,25"
   SUBTYPE="unknown" TYPE="action"/>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem"
+  ID="#unassignTaskletFromCorrector" NAME="action14"
+  PATH="/unassignTaskletFromCorrector" SHAPE="272,664,100,73" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="success"
+   NAME="forward0" PATH="/doCorrection.do" TARGET="action5"
+   TITLE="success" TYPE="forward"/>
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput"
+   ID="successToAllTaskletsList" NAME="forward2"
+   PATH="/viewAllTasklets.do" TARGET="action9"
+   TITLE="successToAllTaskletsList" TYPE="forward"/>
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput"
+   ID="tutorListSuccess" NAME="forward1"
+   PATH="/tutorCorrectionOverview.do" TARGET="action4"
+   TITLE="tutorListSuccess" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#correctionSettings"
+  NAME="action15" PATH="/correctionSettings" SHAPE="64,1280,100,25" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="success"
+   NAME="forward0" PATH="/correction/correctionSettings.jsp"
+   TARGET="page6" TITLE="success" TYPE="forward"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" NAME="page6"
+  PATH="/correction/correctionSettings.jsp" SHAPE="304,1272,50,40"
+  SUBTYPE="jsp" TITLE="correctionSettings.jsp" TYPE="page">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" NAME="link0"
+   PATH="/tutorCorrectionOverview.do" SUBTYPE="confirmed"
+   TARGET="action4" TITLE="/tutorCorrectionOverview.do" TYPE="link"/>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM ENTITY="StrutsProcessItem" ID="#ajaxAutoReCorrection"
+  NAME="action17" PATH="/ajaxAutoReCorrection" SHAPE="240,1633,0,0" TYPE="action">
+  <PROCESS-ITEM-OUTPUT ENTITY="StrutsProcessItemOutput" ID="success"
+   NAME="forward0" PATH="/ajaxResponse" TARGET="action16"
+   TITLE="success" TYPE="forward"/>
+ </PROCESS-ITEM>
 </PROCESS>

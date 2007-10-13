@@ -27,6 +27,7 @@ import java.util.Map;
 
 import de.thorstenberger.taskmodel.view.SubTaskletInfoVO;
 
+
 /**
  * @author Thorsten Berger
  *
@@ -39,13 +40,14 @@ public class CorrectionInfoVO {
 	private boolean userNameInvisible;
 	private long taskId;
 	private String status;
-	private String points;
 	private String correctorLogin;
 	private List<String> correctorHistory;
-	private String annotation;
 	private int numOfTry;
 	private String tryStartTime;
+	private List<Correction> corrections;
 	
+	private String currentCorrectorAnnotation;
+	private List<CorrectorAnnotation> otherCorrectorAnnotations;
 	private List<AnnotationInfoVO> acknowledgedAnnotations;
 	private List<AnnotationInfoVO> nonAcknowledgedAnnotations;
 	private boolean canAcknowledge;
@@ -54,6 +56,34 @@ public class CorrectionInfoVO {
 
 	private Map<String, String> loginAndTaskId;
 	
+	private List<String> availableCorrectors;
+	
+	
+	
+	/**
+	 * @return the availableCorrectors
+	 */
+	public List<String> getAvailableCorrectors() {
+		return availableCorrectors;
+	}
+	/**
+	 * @param availableCorrectors the availableCorrectors to set
+	 */
+	public void setAvailableCorrectors(List<String> availableCorrectors) {
+		this.availableCorrectors = availableCorrectors;
+	}
+	/**
+	 * @return the corrections
+	 */
+	public List<Correction> getCorrections() {
+		return corrections;
+	}
+	/**
+	 * @param corrections the corrections to set
+	 */
+	public void setCorrections(List<Correction> corrections) {
+		this.corrections = corrections;
+	}
 	/**
 	 * @return the unregisteredUser
 	 */
@@ -201,18 +231,6 @@ public class CorrectionInfoVO {
 		this.correctorHistory = correctorHistory;
 	}
 	/**
-	 * @return Returns the points.
-	 */
-	public String getPoints() {
-		return points;
-	}
-	/**
-	 * @param points The points to set.
-	 */
-	public void setPoints(String points) {
-		this.points = points;
-	}
-	/**
 	 * @return Returns the status.
 	 */
 	public String getStatus() {
@@ -235,18 +253,6 @@ public class CorrectionInfoVO {
 	 */
 	public void setSubTasklet(SubTaskletInfoVO subTasklet) {
 		this.subTasklet = subTasklet;
-	}
-	/**
-	 * @return Returns the annotation.
-	 */
-	public String getAnnotation() {
-		return annotation;
-	}
-	/**
-	 * @param annotation The annotation to set.
-	 */
-	public void setAnnotation(String annotation) {
-		this.annotation = annotation;
 	}
 	
 	public class AnnotationInfoVO{
@@ -292,6 +298,31 @@ public class CorrectionInfoVO {
 	}
 	
 	/**
+	 * @return the otherCorrectorAnnotations
+	 */
+	public List<CorrectorAnnotation> getOtherCorrectorAnnotations() {
+		return otherCorrectorAnnotations;
+	}
+	/**
+	 * @param otherCorrectorAnnotations the otherCorrectorAnnotations to set
+	 */
+	public void setOtherCorrectorAnnotations(
+			List<CorrectorAnnotation> correctorAnnotations) {
+		this.otherCorrectorAnnotations = correctorAnnotations;
+	}
+	/**
+	 * @return the currentCorrectorAnnotation
+	 */
+	public String getCurrentCorrectorAnnotation() {
+		return currentCorrectorAnnotation;
+	}
+	/**
+	 * @param currentCorrectorAnnotation the currentCorrectorAnnotation to set
+	 */
+	public void setCurrentCorrectorAnnotation(String currentCorrectorAnnotation) {
+		this.currentCorrectorAnnotation = currentCorrectorAnnotation;
+	}
+	/**
 	 * @return Returns the loginAndTaskId.
 	 */
 	public Map getLoginAndTaskId() {
@@ -302,6 +333,99 @@ public class CorrectionInfoVO {
 		}
 		return loginAndTaskId;
 	}
+	
+	public class CorrectorAnnotation{
+		private String corrector;
+		private String annotation;
+		/**
+		 * @param corrector
+		 * @param annotation
+		 */
+		public CorrectorAnnotation(String corrector, String annotation) {
+			super();
+			this.corrector = corrector;
+			this.annotation = annotation;
+		}
+		/**
+		 * @return the annotation
+		 */
+		public String getAnnotation() {
+			return annotation;
+		}
+		/**
+		 * @param annotation the annotation to set
+		 */
+		public void setAnnotation(String annotation) {
+			this.annotation = annotation;
+		}
+		/**
+		 * @return the corrector
+		 */
+		public String getCorrector() {
+			return corrector;
+		}
+		/**
+		 * @param corrector the corrector to set
+		 */
+		public void setCorrector(String corrector) {
+			this.corrector = corrector;
+		}
+		
+	}
+	
+	public static class Correction{
+		
+		private String corrector;
+		private boolean auto;
+		private float points;
+		/**
+		 * @param corrector
+		 * @param points
+		 */
+		public Correction(String corrector, boolean auto, float points) {
+			this.corrector = corrector;
+			this.auto = auto;
+			this.points = points;
+		}
+		/**
+		 * @return the corrector
+		 */
+		public String getCorrector() {
+			return corrector;
+		}
+		/**
+		 * @param corrector the corrector to set
+		 */
+		public void setCorrector(String corrector) {
+			this.corrector = corrector;
+		}
+		/**
+		 * @return the auto
+		 */
+		public boolean isAuto() {
+			return auto;
+		}
+		/**
+		 * @param auto the auto to set
+		 */
+		public void setAuto(boolean auto) {
+			this.auto = auto;
+		}
+		/**
+		 * @return the points
+		 */
+		public float getPoints() {
+			return points;
+		}
+		/**
+		 * @param points the points to set
+		 */
+		public void setPoints(float points) {
+			this.points = points;
+		}
+		
+	}
+
 	
 
 }

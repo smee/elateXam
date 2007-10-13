@@ -21,6 +21,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import de.thorstenberger.taskmodel.UserInfo;
 
 /**
@@ -33,6 +36,7 @@ public class UserInfoImpl implements UserInfo {
 	private String firstName;
 	private String name;
 	private String eMail;
+	private Map<String, String> userAttributes;
 	
 	/**
 	 * @return Returns the eMail.
@@ -82,7 +86,20 @@ public class UserInfoImpl implements UserInfo {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	public synchronized void setUserAttribute( String key, String value ){
+		if( userAttributes == null )
+			userAttributes = new HashMap<String, String>();
+		userAttributes.put( key, value );
+		
+	}
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.UserInfo#getUserAttributeValue(java.lang.String)
+	 */
+	public synchronized String getUserAttributeValue(String key) {
+		if( userAttributes == null )
+			return null;
+		return userAttributes.get( key );
+	}
 
 
 }

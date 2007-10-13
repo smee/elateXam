@@ -25,7 +25,7 @@ package de.thorstenberger.taskmodel;
  * @author Thorsten Berger
  *
  */
-public interface Annotation extends Comparable{
+public interface StudentAnnotation extends Comparable{
 	
 	public long getDate();
 	

@@ -49,7 +49,7 @@ public abstract class SubTaskView {
 	
 	public abstract String getCorrectedHTML( HttpServletRequest request, int relativeTaskNumber );
 	
-	public abstract String getCorrectionHTML( HttpServletRequest request );
+	public abstract String getCorrectionHTML( String actualCorrector, HttpServletRequest request );
 	
 
 	/**

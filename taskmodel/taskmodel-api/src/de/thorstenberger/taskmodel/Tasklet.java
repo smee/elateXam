@@ -42,13 +42,6 @@ import java.util.List;
  */
 public interface Tasklet {
 
-//	public static final String INITIALIZED = "initialized";
-//	public static final String INPROGRESS = "in_progress";
-//	public static final String SOLVED = "processed";
-//	public static final String CORRECTING = "correcting";
-//	public static final String CORRECTED = "corrected";
-//	public static final String ANNOTATED = "annotated";
-//	public static final String ANNOTATION_ACKNOWLEDGED = "annotation_acknowledged";
 
 	public enum Status{
 		
@@ -79,12 +72,6 @@ public interface Tasklet {
 		
 	}
 	
-//	public static final int INITIALIZED = 1;
-//	public static final int INPROGRESS = 2;
-//	public static final int SOLVED = 3;
-//	public static final int CORRECTING = 4;
-//	public static final int CORRECTED = 5;
-
 	public static final String FLAG_HAS_CORRECTOR_ANNOTATION = "has_corrector_annotation";
 	public static final String FLAG_HAS_STUDENT_ANNOTATION = "has_student_annotation";
 	
@@ -107,7 +94,18 @@ public interface Tasklet {
 	
 	public void removeFlag( String flag );
 	
+	/**
+	 * Assigns the tasklet to the mentioned corrector.
+	 * @param correctorId the corrector id/login
+	 * @throws TaskApiException if Tasklet cannot be assigned due to the status not being {@link Status.SOLVED}.
+	 */
 	public void assignToCorrector( String correctorId ) throws TaskApiException;
+	
+	/**
+	 * Unassigns the tasklet from the currently assigned corrector.
+	 * @throws TaskApiException if tasklet is not assigned
+	 */
+	public void unassignFromCorrector() throws TaskApiException;
 	
 	public void logPostData(String msg, String ip);
 

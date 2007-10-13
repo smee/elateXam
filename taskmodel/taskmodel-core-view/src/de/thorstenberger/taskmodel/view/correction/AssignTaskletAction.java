@@ -34,6 +34,8 @@ import org.apache.struts.action.ActionMessages;
 import de.thorstenberger.taskmodel.CorrectorDelegateObject;
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskModelViewDelegate;
+import de.thorstenberger.taskmodel.complex.ComplexTasklet;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 
 /**
  * @author Thorsten Berger
@@ -66,13 +68,42 @@ public class AssignTaskletAction extends Action {
 			return mapping.findForward( "error" );
 		}
 		
-		try {
-			delegateObject.getTaskManager().getTaskletContainer().assignRandomTaskletToCorrector( id, delegateObject.getCorrectorLogin() );
-		} catch (TaskApiException e) {
-			errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( e.getMessage() ) );
-			saveErrors( request, errors );
-			return mapping.findForward( "success" );
+		String new_corrector = request.getParameter( "new_corrector" );
+		if( new_corrector == null || new_corrector.length() == 0 ){
+			
+			try {
+				delegateObject.getTaskManager().getTaskletContainer().assignRandomTaskletToCorrector( id, delegateObject.getCorrectorLogin() );
+			} catch (TaskApiException e) {
+				errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( e.getMessage() ) );
+				saveErrors( request, errors );
+				return mapping.findForward( "success" );
+			}
+			
+		}else if( !new_corrector.equals( "___no_selection" ) ){
+			
+			String userId = request.getParameter( "userId" );
+			ComplexTasklet tasklet = (ComplexTasklet)delegateObject.getTaskManager().getTaskletContainer().getTasklet( id, userId );
+
+			if( !delegateObject.isPrivileged() ){
+				if( !delegateObject.getCorrectorLogin().equals( tasklet.getTaskletCorrection().getCorrector() ) ){
+					errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "Unprivileged user: you need to have the Tasklet assigned to execute this action." ) );
+					saveErrors( request, errors );
+					return mapping.findForward( "error" );
+				}
+			}
+			
+			tasklet.assignToCorrector( new_corrector );
+			
+			if( delegateObject.isPrivileged() )
+				return mapping.findForward( "successToCorrection" );
+			
+		}else{
+			
+			if( delegateObject.isPrivileged() )
+				return mapping.findForward( "successToCorrection" );
+			
 		}
+		
 		
 		return mapping.findForward( "success" );
 	}

@@ -44,6 +44,20 @@ public class MappingSubTaskDefImpl implements SubTaskDef {
 	}
 
 	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef#getHint()
+	 */
+	public String getHint() {
+		return mappingSubTaskDef.getHint();
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef#getProblem()
+	 */
+	public String getProblem() {
+		return mappingSubTaskDef.getProblem();
+	}
+
+	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef#isTrash()
 	 */
 	public boolean isTrash() {

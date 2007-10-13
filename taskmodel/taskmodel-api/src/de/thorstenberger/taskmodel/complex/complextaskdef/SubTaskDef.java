@@ -32,4 +32,8 @@ public interface SubTaskDef extends SubTaskDefOrChoice{
 	public boolean isTrash();
 	// TODO accessors for problem, hint etc...
 	
+	public String getHint();
+	
+	public String getProblem();
+	
 }

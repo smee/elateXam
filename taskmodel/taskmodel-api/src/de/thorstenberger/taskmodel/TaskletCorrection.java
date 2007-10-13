@@ -29,23 +29,45 @@ import java.util.List;
  */
 public interface TaskletCorrection {
 
-	public Float getPoints();
+	/**
+	 * 
+	 * @return true if there is at least one correction, either one auto-correction or at least one manual correction
+	 */
+	public boolean isCorrected();
 	
-	public String getCorrectorAnnotation();
+	public boolean isAutoCorrected();
+	
+	public List<ManualCorrection> getManualCorrections();
+	
+	public void setManualCorrections( List<ManualCorrection> manualCorrections );
+	
+	public Float getAutoCorrectionPoints();
+	
+	public void setAutoCorrectionPoints( Float value );
 	
 	/**
-	 * If allowed, students can comment the corrector's marking.
-	 * @return the student's annotation
+	 * Correctors can comment the overall Tasklet. As there can be several correctors, a List of CorrectorAnnotation
+	 * is returned.
+	 * @return the corrector's annotations
 	 */
-	public List<Annotation> getStudentAnnotations();
+	public List<CorrectorAnnotation> getCorrectorAnnotations();
 	
+	/**
+	 * If allowed, students can comment the corrector's marking. If the annotation gets acknowledged by a corrector
+	 * the student may be allowed to add another annotation, which implies the List.
+	 * @return the student's annotations
+	 */
+	public List<StudentAnnotation> getStudentAnnotations();
+	
+	/**
+	 * Tasklets have to be assigned to correctors if they need manual correction.
+	 * @return the currently assigned corrector
+	 */
 	public String getCorrector();
 	
 	public List<String> getCorrectorHistory();
 	
-	public void setPoints( Float points ) throws IllegalArgumentException;
-	
-	public void setCorrectorAnnotation( String value );
+	public void setCorrectorAnnotation( String corrector, String value );
 	
 	/**
 	 * If allowed, students can comment the corrector's marking.

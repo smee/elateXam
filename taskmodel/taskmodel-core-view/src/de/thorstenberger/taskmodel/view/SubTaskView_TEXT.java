@@ -78,16 +78,24 @@ public class SubTaskView_TEXT extends SubTaskView {
 		return getRenderedHTML( -1, true );
 	}
 	
-	public String getCorrectionHTML( HttpServletRequest request ){
+	public String getCorrectionHTML( String actualCorrector, HttpServletRequest request ){
 	    StringBuffer ret = new StringBuffer();
 	    ret.append( getRenderedHTML( -1, true ) );
 	    
 	    NumberFormat nF = NumberFormat.getNumberInstance();
 	    
-	    String points = textSubTasklet.isCorrected() ? ( nF.format( textSubTasklet.getPoints() ) ) : "";
-	    
-	    ret.append("<br><div align=\"right\">Punkte: " +
-	    		"<input type=\"text\" name=\"task[0].text_points\" size=\"4\" value=\"" + points + "\"></div><br>");
+	    String points = "";
+	    if( !textSubTasklet.isAutoCorrected() ){
+	    	
+	    	if( textSubTasklet.isCorrectedByCorrector( actualCorrector ) )
+	    		points = nF.format( textSubTasklet.getPointsByCorrector( actualCorrector ) );
+	    	else
+	    		points = nF.format( 0 );
+	    	
+		    ret.append("<br><div align=\"right\">Punkte: " +
+		    		"<input type=\"text\" name=\"task[0].text_points\" size=\"4\" value=\"" + points + "\"></div><br>");
+		    
+	    }
 	    
 	    return ret.toString();
 	}

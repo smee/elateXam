@@ -32,7 +32,7 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 public interface SubTasklet_Cloze extends SubTasklet {
 	
 	/**
-	 * List mit Instanzen von entweder
+	 * List with instances of either
 	 * - String
 	 * - Gap
 	 * @return
@@ -53,17 +53,51 @@ public interface SubTasklet_Cloze extends SubTasklet {
 		
 		public void setAutoCorrection( boolean correct );
 		
-		public void setManualCorrection( boolean correct );
+		public void setManualCorrection( String corrector, boolean multiCorrectorMode, boolean correct );
 		
+		/**
+		 * 
+		 * @return true if there is either an auto correction or at least one manual correction
+		 */
 		public boolean isCorrected();
+		
+		/**
+		 * Denotes whether this Gap has been corrected by the given corrector.
+		 * Please note that, depending on the correction mode, the corrector parameter can be ignored
+		 * (as by the regular single corrector mode).
+		 * @param corrector
+		 * @return true if the Gap has been corrected by the specified corrector
+		 */
+		public boolean isCorrectedByCorrector( String corrector );
+		
+		/**
+		 * Denotes whether this Gap is correctly solved as constituted by the corrector.
+		 * Please note that, depending on the correction mode, the corrector parameter can be ignored
+		 * (as by the regular single corrector mode).
+		 * @param corrector
+		 * @return
+		 * @throws IllegalStateException
+		 */
+		public boolean isCorrectByCorrector( String corrector ) throws IllegalStateException;
 		
 		public boolean isAutoCorrected();
 		
-		public boolean isCorrect() throws IllegalStateException;
+		public boolean isCorrectByAutoCorrection() throws IllegalStateException;
+		
+		public List<ManualGapCorrection> getManualCorrections() throws IllegalStateException;
 		
 		public String[] getCorrectValues();
 		
 		public String removeLeadingTrailingSpaces( String s );
+		
+	}
+	
+	public interface ManualGapCorrection{
+		
+		public String getCorrector();
+		
+		public boolean isCorrect();
+		
 	}
 
 }

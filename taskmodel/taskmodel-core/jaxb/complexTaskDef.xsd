@@ -86,6 +86,16 @@ Every new try results in a random aggregation of subtasks (and possibly answer c
 												</xs:restriction>
 											</xs:simpleType>
 										</xs:element>
+										<xs:element name="multipleCorrectors">
+											<xs:annotation>
+												<xs:documentation>In this correction mode, more than one (human) corrector proceed the correction of the Tasklet, in order to determine the overall result.</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:int">
+													<xs:minInclusive value="2"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
 									</xs:choice>
 								</xs:complexType>
 							</xs:element>
@@ -399,8 +409,10 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 				<xs:element name="hint" type="xs:string" minOccurs="0"/>
 				<xs:element name="concept" maxOccurs="unbounded">
 					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="correctAssignmentID" type="xs:string" maxOccurs="unbounded"/>
+						</xs:sequence>
 						<xs:attribute name="name" type="xs:string" use="required"/>
-						<xs:attribute name="correctAssignmentID" type="xs:string" use="required"/>
 					</xs:complexType>
 				</xs:element>
 				<xs:element name="assignment" maxOccurs="unbounded">

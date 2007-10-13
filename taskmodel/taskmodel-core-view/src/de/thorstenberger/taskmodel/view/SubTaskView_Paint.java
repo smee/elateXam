@@ -116,17 +116,23 @@ public class SubTaskView_Paint extends SubTaskView {
 	}
 
 	@Override
-	public String getCorrectionHTML(HttpServletRequest request) {
-	    StringBuilder ret = new StringBuilder();
+	public String getCorrectionHTML( String actualCorrector, HttpServletRequest request) {
+
+		StringBuilder ret = new StringBuilder();
 	    ret.append( getRenderedHTML( request, 999999, true ) );
 	    
 	    NumberFormat nF = NumberFormat.getNumberInstance();
 	    
-	    String points = paintSubTasklet.isCorrected() ? ( nF.format( paintSubTasklet.getPoints() ) ) : "";
-	    
-	    ret.append("<br><div align=\"right\">Punkte: " +
-	    		"<input type=\"text\" name=\"task[0].text_points\" size=\"4\" value=\"" + points + "\"></div><br>");
-	    
+	    String points = "";
+	    if( paintSubTasklet.isCorrected() && !paintSubTasklet.isAutoCorrected() ){
+	    	
+	    	points = nF.format( paintSubTasklet.getPointsByCorrector( actualCorrector ) );
+	    	
+		    ret.append("<br><div align=\"right\">Punkte: " +
+		    		"<input type=\"text\" name=\"task[0].text_points\" size=\"4\" value=\"" + points + "\"></div><br>");
+		    
+	    }
+
 	    return ret.toString();
 	}
 

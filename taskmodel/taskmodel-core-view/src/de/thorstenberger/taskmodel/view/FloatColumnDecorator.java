@@ -39,7 +39,7 @@ public class FloatColumnDecorator implements ColumnDecorator {
 	public String decorate(Object arg0) throws DecoratorException {
 		
 		if( arg0 == null )
-			return "-";
+			return null;
 		else
 			return arg0.toString();
 			

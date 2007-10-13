@@ -31,7 +31,22 @@ public class CorrectionSubmitDataImpl implements
 		CorrectionSubmitData {
 
 	private String annotation;
+	private String corrector;
 	
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData#getCorrector()
+	 */
+	public String getCorrector() {
+		return corrector;
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData#setCorrector(java.lang.String)
+	 */
+	public void setCorrector(String corrector) {
+		this.corrector = corrector;
+	}
+
 	/**
 	 * @param annotation The annotation to set.
 	 */

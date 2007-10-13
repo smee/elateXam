@@ -21,13 +21,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.impl;
 
-import de.thorstenberger.taskmodel.Annotation;
+import de.thorstenberger.taskmodel.StudentAnnotation;
 
 /**
  * @author Thorsten Berger
  *
  */
-public class AnnotationImpl implements Annotation {
+public class StudentAnnotationImpl implements StudentAnnotation {
 
 	private long date;
 	private String text;
@@ -36,28 +36,28 @@ public class AnnotationImpl implements Annotation {
 	/**
 	 * 
 	 */
-	public AnnotationImpl( String text, long date, boolean acknowledged ) {
+	public StudentAnnotationImpl( String text, long date, boolean acknowledged ) {
 		this.date = date;
 		this.text = text;
 		this.acknowledged = acknowledged;
 	}
 
 	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.Annotation#getDate()
+	 * @see de.thorstenberger.taskmodel.StudentAnnotation#getDate()
 	 */
 	public long getDate() {
 		return date;
 	}
 
 	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.Annotation#getText()
+	 * @see de.thorstenberger.taskmodel.StudentAnnotation#getText()
 	 */
 	public String getText() {
 		return this.text;
 	}
 
 	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.Annotation#isAcknowledged()
+	 * @see de.thorstenberger.taskmodel.StudentAnnotation#isAcknowledged()
 	 */
 	public boolean isAcknowledged() {
 		return acknowledged;
@@ -74,7 +74,7 @@ public class AnnotationImpl implements Annotation {
 	 * @see java.lang.Comparable#compareTo(T)
 	 */
 	public int compareTo(Object o) {
-		Annotation anno = (Annotation)o;
+		StudentAnnotation anno = (StudentAnnotation)o;
 		if( date > anno.getDate() )
 			return -1;
 		else if( date < anno.getDate() )

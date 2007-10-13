@@ -29,27 +29,35 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jdom.Document;
+import org.jdom.output.XMLOutputter;
+
 /**
  * @author Thorsten Berger
  *
  */
 public class AjaxResponseServlet extends HttpServlet {
 
+	public static final String RESPONSE = "response";
+	
 	/* (non-Javadoc)
 	 * @see javax.servlet.http.HttpServlet#service(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		// very quick hack
-		// TODO respond DOMs
 		String contentType = (String)request.getAttribute( "contentType" );
-		response.setContentType( contentType != null ? contentType : "text/plain" );
-		String ret = (String)request.getAttribute( "response" );
-		
-		PrintWriter out = response.getWriter();
-		out.print( ret );
-		out.flush();
+		Object resp = request.getAttribute( RESPONSE );
+		if( resp instanceof String ){
+			response.setContentType( "text/plain" );
+			PrintWriter out = response.getWriter();
+			out.print( resp );
+			out.flush();
+		}else if( resp instanceof Document ){
+			response.setContentType( "text/xml" );
+			XMLOutputter outPutter = new XMLOutputter();
+			outPutter.output( (Document)resp, response.getOutputStream() );
+		}
 		
 		super.service(request, response);
 	}

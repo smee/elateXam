@@ -123,6 +123,7 @@ select {  font-family: Arial, Helvetica, sans-serif; font-size: 12px}
 .Cloze_Gap {  background-color: #FFFF66}
 .annotation {  font-size: 12px; border-style: dashed; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; font-family: Arial, Helvetica, sans-serif}
 
+.Cloze_CorrectorLabel { font-size: 10px; font-weight: bold; }
 
 /* DisplayTag */
 

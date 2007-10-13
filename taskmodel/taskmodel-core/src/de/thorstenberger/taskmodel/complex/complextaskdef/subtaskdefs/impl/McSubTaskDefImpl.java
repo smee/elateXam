@@ -47,6 +47,20 @@ public class McSubTaskDefImpl implements SubTaskDef {
 	}
 
 	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef#getHint()
+	 */
+	public String getHint() {
+		return mcSubTaskDef.getHint();
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef#getProblem()
+	 */
+	public String getProblem() {
+		return mcSubTaskDef.getProblem();
+	}
+
+	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef#isTrash()
 	 */
 	public boolean isTrash() {

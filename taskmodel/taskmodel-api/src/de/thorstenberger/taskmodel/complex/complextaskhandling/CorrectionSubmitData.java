@@ -21,12 +21,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.complex.complextaskhandling;
 
+
 /**
  * @author Thorsten Berger
  *
  */
 public interface CorrectionSubmitData {
 
+	public String getCorrector();
+	
+	public void setCorrector( String corrector );
+	
 	/**
 	 * Annotations are used to save corrector's comments for the whole ComplexTasklet.
 	 * @return the corrector's annotation for the ComplexTasklet

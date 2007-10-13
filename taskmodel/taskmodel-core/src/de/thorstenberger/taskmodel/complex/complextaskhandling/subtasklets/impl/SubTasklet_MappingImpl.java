@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.bind.JAXBException;
@@ -29,10 +30,13 @@ import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskModelPersistenceException;
 import de.thorstenberger.taskmodel.complex.TaskHandlingConstants;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
+import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
 import de.thorstenberger.taskmodel.complex.complextaskdef.blocks.impl.MappingBlockImpl;
 import de.thorstenberger.taskmodel.complex.complextaskdef.subtaskdefs.impl.MappingSubTaskDefImpl;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.ManualSubTaskletCorrection;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTaskletCorrection;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.impl.PageImpl;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.MappingSubmitData;
@@ -48,7 +52,7 @@ import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.
  * @author Thorsten Berger
  *
  */
-public class SubTasklet_MappingImpl implements SubTasklet_Mapping {
+public class SubTasklet_MappingImpl extends AbstractSubTasklet implements SubTasklet_Mapping {
 
 	private Block block;
 	private MappingTaskBlock mappingTaskBlock;
@@ -58,20 +62,14 @@ public class SubTasklet_MappingImpl implements SubTasklet_Mapping {
 	/**
 	 * 
 	 */
-	public SubTasklet_MappingImpl( Block block, MappingSubTaskDefImpl mappingSubTaskDefImpl, MappingSubTask mappingSubTask ) {
+	public SubTasklet_MappingImpl( Block block, MappingSubTaskDefImpl mappingSubTaskDefImpl, MappingSubTask mappingSubTask, ComplexTaskDefRoot complexTaskDefRoot ) {
+		super( complexTaskDefRoot, mappingSubTaskDefImpl );
 		this.block = block;
 		this.mappingTaskBlock = ((MappingBlockImpl)block).getMappingTaskBlock();
 		this.mappingSubTaskDef = mappingSubTaskDefImpl.getMappingSubTaskDef();
 		this.mappingSubTask = mappingSubTask;
 	}
 
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getSubTaskDefId()
-	 */
-	public String getSubTaskDefId() {
-		return mappingSubTaskDef.getId();
-	}
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#addToPage(de.thorstenberger.taskmodel.complex.complextaskhandling.Page)
@@ -106,16 +104,8 @@ public class SubTasklet_MappingImpl implements SubTasklet_Mapping {
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getCorrectionHint()
 	 */
 	public String getCorrectionHint() {
-		// no correction necessary
+		// no manual correction necessary
 		return null;
-	}
-
-	public String getProblem() {
-		return mappingSubTaskDef.getProblem();
-	}
-
-	public String getHint() {
-		return mappingSubTaskDef.getHint();
 	}
 
 	/* (non-Javadoc)
@@ -133,6 +123,30 @@ public class SubTasklet_MappingImpl implements SubTasklet_Mapping {
 		}
 		
 		return ret.toString().hashCode();
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getAutoCorrection()
+	 */
+	public SubTaskletCorrection getAutoCorrection(){
+		if( mappingSubTask.isSetAutoCorrection() )
+			return new AutoSubTaskletCorrectionImpl( mappingSubTask.getAutoCorrection().getPoints() );
+		else
+			return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getManualCorrections()
+	 */
+	public List<ManualSubTaskletCorrection> getManualCorrections(){
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#isSetNeedsManualCorrectionFlag()
+	 */
+	public boolean isSetNeedsManualCorrectionFlag() {
+		return false;
 	}
 
 	public void doSave(SubmitData submitData) throws IllegalStateException {
@@ -190,35 +204,17 @@ public class SubTasklet_MappingImpl implements SubTasklet_Mapping {
 	}
 	
 	private void setCorrection( float points ){
-		ComplexTaskHandlingType.TryType.PageType.MappingSubTaskType.CorrectionType corr = mappingSubTask.getCorrection();
+		ComplexTaskHandlingType.TryType.PageType.MappingSubTaskType.AutoCorrectionType corr = mappingSubTask.getAutoCorrection();
 		if( corr == null ){
 			ObjectFactory of = new ObjectFactory();
 			try {
-				corr = of.createComplexTaskHandlingTypeTryTypePageTypeMappingSubTaskTypeCorrectionType();
-				mappingSubTask.setCorrection( corr );
+				corr = of.createComplexTaskHandlingTypeTryTypePageTypeMappingSubTaskTypeAutoCorrectionType();
+				mappingSubTask.setAutoCorrection( corr );
 			} catch (JAXBException e) {
 				throw new TaskModelPersistenceException( e );
 			}
 		}
 		corr.setPoints( points );
-	}
-
-
-	public boolean isCorrected() {
-		return mappingSubTask.getCorrection() != null;
-	}
-	
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#isNeedsManualCorrection()
-	 */
-	public boolean isNeedsManualCorrection() {
-		return false;
-	}
-
-	public float getPoints() throws IllegalStateException {
-		if( !isCorrected() )
-			throw new IllegalStateException( TaskHandlingConstants.SUBTASK_NOT_CORRECTED );
-		return mappingSubTask.getCorrection().getPoints();
 	}
 
 	public boolean isProcessed() {
@@ -313,18 +309,25 @@ public class SubTasklet_MappingImpl implements SubTasklet_Mapping {
 			if( getAssignment() == null )
 				return false;
 			
-//			List correctAssignments = conceptDef.getCorrectAssignmentRefId();
-//			List correctAssignments = conceptDef.getCorrectAssignmentIDs();
-			String correctAssignment = conceptDef.getCorrectAssignmentID();
-			if( getAssignment().getId().equals( correctAssignment ))
-				return true;
-//			for( int i=0; i<correctAssignments.size(); i++ ){
-//				if( getAssignment().getId().equals( (String) correctAssignments.get( i ) ) )
-//					return true;
-//			}
+			List correctAssignments = conceptDef.getCorrectAssignmentID();
+//			String correctAssignment = conceptDef.getCorrectAssignmentID();
+//			if( getAssignment().getId().equals( correctAssignment ))
+//				return true;
+			for( int i=0; i<correctAssignments.size(); i++ ){
+				if( getAssignment().getId().equals( (String) correctAssignments.get( i ) ) )
+					return true;
+			}
 			
 			return false;
 			
+		}
+		
+		public List<Assignment> getCorrectAssignments(){
+			List<Assignment> ret = new LinkedList<Assignment>();
+			List<String> correctAssignmentIDs = conceptDef.getCorrectAssignmentID();
+			for( String caid : correctAssignmentIDs )
+				ret.add( findAssignment( caid ) );
+			return ret;
 		}
 		
 	}

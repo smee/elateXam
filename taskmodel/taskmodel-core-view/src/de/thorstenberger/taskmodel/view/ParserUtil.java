@@ -101,10 +101,25 @@ public class ParserUtil {
 	 */
 	public static String getProblem( String problem ){
 		
+		if( problem == null )
+			return "";
+		
 		if( problem.indexOf( "<br") != -1 )
 			return problem;
 		else
 			return escapeCR( problem );
+		
+	}
+	
+	public static String getCorrectionHint( String hint ){
+
+		if( hint == null )
+			return null;
+		
+		if( hint.indexOf( "</" ) != -1 || hint.indexOf( "/>") != -1 )
+			return hint;
+		else
+			return escapeCR( hint );
 		
 	}
 

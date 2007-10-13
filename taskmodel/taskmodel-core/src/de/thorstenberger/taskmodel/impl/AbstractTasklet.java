@@ -123,7 +123,27 @@ public abstract class AbstractTasklet implements Tasklet {
 		if( getStatus() == Status.SOLVED )
 			setStatus( Status.CORRECTING );
 		
+		// don't forget to save
 		save();
+	}
+
+	
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.Tasklet#unassignFromCorrector()
+	 */
+	public void unassignFromCorrector() throws TaskApiException {
+
+		if( getTaskletCorrection().getCorrector() == null )
+			throw new TaskApiException( "Tasklet not assigned to any corrector." );
+
+		// move current corrector to history
+		getTaskletCorrection().getCorrectorHistory().add( getTaskletCorrection().getCorrector() );
+		
+		getTaskletCorrection().setCorrector( null );
+		
+		// don't forget to save
+		save();
+		
 	}
 
 	protected synchronized void setStatus( Status status ){

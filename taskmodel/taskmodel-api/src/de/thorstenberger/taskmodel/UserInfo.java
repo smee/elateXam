@@ -34,5 +34,12 @@ public interface UserInfo {
 	public String getName();
 	
 	public String getEMail();
+	
+	/**
+	 * @see TaskFactory#availableUserAttributes()
+	 * @param key
+	 * @return
+	 */
+	public String getUserAttributeValue( String key );
 
 }

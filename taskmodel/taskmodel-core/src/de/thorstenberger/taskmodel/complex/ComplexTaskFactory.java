@@ -48,4 +48,6 @@ public interface ComplexTaskFactory {
 	
 	public Try createTry( long startTime, ComplexTaskFactory complexTaskFactory, ComplexTaskDefRoot complexTaskDefRoot ) throws TaskApiException;
 	
+	public ComplexTaskletCorrector getComplexTaskletCorrector();
+	
 }

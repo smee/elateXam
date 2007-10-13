@@ -23,6 +23,8 @@ package de.thorstenberger.taskmodel;
 
 import java.util.List;
 
+import de.thorstenberger.taskmodel.TaskManager.UserAttribute;
+
 
 /**
  *
@@ -92,6 +94,20 @@ public interface TaskFactory {
 	 * @return the UserInfo instance or null if no such user exists
 	 */
 	public UserInfo getUserInfo( String login );
-
+	
+	/**
+	 * This method should return a list of UserInfo objects that determine all
+	 * correctors/tutors that are able to manually correct Tasklets. Needed when
+	 * assigning Tasklets to correctors etc.
+	 * @return
+	 */
+	public List<UserInfo> getCorrectors();
+	
+	/**
+	 * Users can have several user attributes being provided by the host system.
+	 * @return list of user attributes in P3P notation that will be provided by this TaskFactory implementation 
+	 */
+	public List<UserAttribute> availableUserAttributes();
+	
 
 }

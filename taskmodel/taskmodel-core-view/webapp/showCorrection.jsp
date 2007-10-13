@@ -74,8 +74,23 @@
                 <td>${Solution.userName}</td>
               </tr>
               <tr> 
-                <td>Gesamtpunktzahl:</td>
-                <td>${Solution.points}</td>
+                <td valign="top">Gesamtpunktzahl:</td>
+                <td>
+	                <table border="0">
+						<c:forEach items="${Solution.corrections}" var="corr">
+							<tr>
+								<c:choose>
+									<c:when test="${corr.auto}">
+										<td>automatische Korrektur:</td><td><font color="red">${corr.points}</font></td>
+									</c:when>
+									<c:otherwise>
+										<td>${corr.corrector}</td><td><font color="red">${corr.points}</font></td>
+									</c:otherwise>
+								</c:choose>
+							</tr>
+						</c:forEach>
+					</table>
+                </td>
               </tr>
               <tr> 
                 <td>Status:</td>
@@ -111,10 +126,25 @@
 				
 				<c:choose>
 					<c:when test="${SubTasklet.corrected}">
-						<br/><br/><font color=red>Aufgabe korrigiert, erreichte Punkte: ${SubTasklet.points}</font>
+						<br/><br/><font color="red">Aufgabe korrigiert. Korrekturen: 
+							<table border="0">
+							<c:forEach items="${SubTasklet.corrections}" var="Correction">
+								<tr>
+									<c:choose>
+										<c:when test="${Correction.auto}">
+											<td>automatische Korrektur:</td><td>${Correction.points}</td>
+										</c:when>
+										<c:otherwise>
+											<td>${Correction.corrector}</td><td>${Correction.points}</td>
+										</c:otherwise>
+									</c:choose>
+								</tr>
+							</c:forEach>
+							</table>
+						</font>
 					</c:when>
-					<c:when test="${SubTasklet.needsManualCorrection}">
-						<br/><br/><font color=red>manuelle Korrektur notwendig</font>
+					<c:when test="${SubTasklet.needsManualCorrectionFlag}">
+						<br/><br/><font color="red">manuelle Korrektur notwendig</font>
 					</c:when>
 				</c:choose>
 				

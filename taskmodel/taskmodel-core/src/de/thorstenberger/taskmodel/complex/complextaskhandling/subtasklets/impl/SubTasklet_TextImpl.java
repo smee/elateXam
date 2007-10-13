@@ -21,18 +21,25 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.xml.bind.JAXBException;
 
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskModelPersistenceException;
 import de.thorstenberger.taskmodel.complex.TaskHandlingConstants;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
+import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
 import de.thorstenberger.taskmodel.complex.complextaskdef.blocks.impl.TextBlockImpl;
 import de.thorstenberger.taskmodel.complex.complextaskdef.subtaskdefs.impl.TextSubTaskDefImpl;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.ManualSubTaskletCorrection;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTaskletCorrection;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.correctionsubmitdata.TextCorrectionSubmitData;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.impl.ManualSubTaskletCorrectionImpl;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.impl.PageImpl;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.TextSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Text;
@@ -41,35 +48,33 @@ import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
 import de.thorstenberger.taskmodel.complex.jaxb.TextSubTaskDef;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.TextTaskBlock;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.TextSubTask;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.TextSubTaskType.ManualCorrectionType;
 
 /**
  * @author Thorsten Berger
  *
  */
-public class SubTasklet_TextImpl implements SubTasklet_Text {
+public class SubTasklet_TextImpl extends AbstractSubTasklet implements SubTasklet_Text {
 
 	private Block block;
 	private TextTaskBlock textTaskBlock;
 	private TextSubTaskDef textSubTaskDef;
 	private TextSubTask textSubTask;
+	private ComplexTaskDefRoot complexTaskDefRoot;
+	private ObjectFactory objectFactory = new ObjectFactory();
 	
 	/**
 	 * 
 	 */
-	public SubTasklet_TextImpl( Block block, TextSubTaskDefImpl textSubTaskDefImpl, TextSubTask textSubTask ) {
+	public SubTasklet_TextImpl( Block block, TextSubTaskDefImpl textSubTaskDefImpl, TextSubTask textSubTask, ComplexTaskDefRoot complexTaskDefRoot ) {
+		super( complexTaskDefRoot, textSubTaskDefImpl );
 		this.block = block;
 		this.textTaskBlock = ((TextBlockImpl)block).getTextTaskBlock();
 		this.textSubTaskDef = textSubTaskDefImpl.getTextSubTaskDef();
 		this.textSubTask = textSubTask;
+		this.complexTaskDefRoot = complexTaskDefRoot;
 	}
 
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getSubTaskDefId()
-	 */
-	public String getSubTaskDefId() {
-		return textSubTaskDef.getId();
-	}
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#addToPage(de.thorstenberger.taskmodel.complex.complextaskhandling.Page)
@@ -97,14 +102,6 @@ public class SubTasklet_TextImpl implements SubTasklet_Text {
 		return textTaskBlock.getConfig().getPointsPerTask();
 	}
 	
-	public String getProblem(){
-		return textSubTaskDef.getProblem();
-	}
-	
-	public String getHint(){
-		return textSubTaskDef.getHint();
-	}
-	
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Text#getInitialTextFieldValue()
 	 */
@@ -116,7 +113,6 @@ public class SubTasklet_TextImpl implements SubTasklet_Text {
 		else
 			return null;
 	}
-
 
 	public void setVirtualNum( String virtualNum ){
 		textSubTask.setVirtualNum( virtualNum );
@@ -138,6 +134,31 @@ public class SubTasklet_TextImpl implements SubTasklet_Text {
 		return textSubTask.getAnswer();
 	}
 	
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getAutoCorrection()
+	 */
+	public SubTaskletCorrection getAutoCorrection(){
+		if ( textSubTask.isSetAutoCorrection() )
+			return new AutoSubTaskletCorrectionImpl( textSubTask.getAutoCorrection().getPoints() );
+		else
+			return null;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getManualCorrections()
+	 */
+	public List<ManualSubTaskletCorrection> getManualCorrections(){
+		if( !textSubTask.isSetManualCorrection() )
+			return null;
+		List<ManualSubTaskletCorrection> ret = new LinkedList<ManualSubTaskletCorrection>();
+		List<de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.TextSubTaskType.ManualCorrectionType> mcs = textSubTask.getManualCorrection();
+		for( de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.TextSubTaskType.ManualCorrectionType mc : mcs )
+			ret.add( new ManualSubTaskletCorrectionImpl( mc.getCorrector(), mc.getPoints() ) );
+		return ret;
+	}
+
+
 	public void doSave( SubmitData submitData ) throws IllegalStateException{
 		TextSubmitData tsd = (TextSubmitData) submitData;
 		// remove Windows/DOS line breaks,
@@ -148,7 +169,7 @@ public class SubTasklet_TextImpl implements SubTasklet_Text {
 	
 	public void doAutoCorrection(){
 		if( !isProcessed() ){
-			setCorrection( 0 , true);
+			setAutoCorrection( 0 );
 		}else
 			textSubTask.setNeedsManualCorrection( true );
 		
@@ -156,50 +177,84 @@ public class SubTasklet_TextImpl implements SubTasklet_Text {
 	}
 	
 	public void doManualCorrection( CorrectionSubmitData csd ){
-	    TextCorrectionSubmitData tcsd = (TextCorrectionSubmitData) csd;
-	    float points = tcsd.getPoints();
-	    if( points>=0 && points <= textTaskBlock.getConfig().getPointsPerTask() ){
-	        setCorrection( points, false );
-	        textSubTask.setNeedsManualCorrection( false );
-	    }
+		
+		if( isAutoCorrected() )
+			throw new IllegalStateException( TaskHandlingConstants.SUBTASK_AUTO_CORRECTED );
+		
+		TextCorrectionSubmitData tcsd = (TextCorrectionSubmitData) csd;
+		
+		if( tcsd.getPoints() <0 || tcsd.getPoints() > textTaskBlock.getConfig().getPointsPerTask() )
+			return;
+			
+		List<ManualCorrectionType> manualCorrections = textSubTask.getManualCorrection();
+		if( complexTaskDefRoot.getCorrectionMode().getType() == ComplexTaskDefRoot.CorrectionModeType.MULTIPLECORRECTORS ){
+			
+			for( ManualCorrectionType mc : manualCorrections ){
+				if( mc.getCorrector().equals( tcsd.getCorrector() ) ){
+					mc.setPoints( tcsd.getPoints() );
+					return;
+				}
+			}
+			// corrector not found, so create a new ManualCorrection for him
+			ManualCorrectionType mc;
+			try {
+				mc = objectFactory.createComplexTaskHandlingTypeTryTypePageTypeTextSubTaskTypeManualCorrectionType();
+			} catch (JAXBException e) {
+				throw new TaskModelPersistenceException( e );
+			}
+			mc.setCorrector( tcsd.getCorrector() );
+			mc.setPoints( tcsd.getPoints() );
+			manualCorrections.add( mc );
+			
+		}else{
+			
+			ManualCorrectionType mc;
+			if( manualCorrections.size() > 0 ){
+				mc = manualCorrections.get( 0 );
+			}else{
+				try {
+					mc = objectFactory.createComplexTaskHandlingTypeTryTypePageTypeTextSubTaskTypeManualCorrectionType();
+				} catch (JAXBException e) {
+					throw new TaskModelPersistenceException( e );
+				}
+				manualCorrections.add( mc );
+			}
+			mc.setCorrector( tcsd.getCorrector() );
+			mc.setPoints( tcsd.getPoints() );
+		}
+		
 	}
 	
-	private void setCorrection( float points, boolean auto ){
-		ComplexTaskHandlingType.TryType.PageType.TextSubTaskType.CorrectionType corr = textSubTask.getCorrection();
+	private void setAutoCorrection( float points ){
+		ComplexTaskHandlingType.TryType.PageType.TextSubTaskType.AutoCorrectionType corr = textSubTask.getAutoCorrection();
 		if( corr == null ){
 			ObjectFactory of = new ObjectFactory();
 			try {
-				corr = of.createComplexTaskHandlingTypeTryTypePageTypeTextSubTaskTypeCorrectionType();
-				textSubTask.setCorrection( corr );
+				corr = of.createComplexTaskHandlingTypeTryTypePageTypeTextSubTaskTypeAutoCorrectionType();
+				textSubTask.setAutoCorrection( corr );
 			} catch (JAXBException e) {
 				throw new TaskModelPersistenceException( e );
 			}
 		}
 		corr.setPoints( points );
-		corr.setAutoCorrected( auto );
 	}
 
 	
-	public boolean isCorrected(){
-		return textSubTask.getCorrection() != null;
-	}
-	
+
+//	public float getPoints() throws IllegalStateException{
+//		if( !isCorrected() )
+//			throw new IllegalStateException( TaskHandlingConstants.SUBTASK_NOT_CORRECTED );
+//		
+//		return textSubTask.getCorrection().getPoints();
+//	}
 	
 	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#isNeedsManualCorrection()
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#isSetNeedsManualCorrectionFlag()
 	 */
-	public boolean isNeedsManualCorrection() {
+	public boolean isSetNeedsManualCorrectionFlag() {
 		return textSubTask.isNeedsManualCorrection();
 	}
 
-
-	public float getPoints() throws IllegalStateException{
-		if( !isCorrected() )
-			throw new IllegalStateException( TaskHandlingConstants.SUBTASK_NOT_CORRECTED );
-		
-		return textSubTask.getCorrection().getPoints();
-	}
-	
 	public boolean isProcessed(){
 		if( getInitialTextFieldValue() != null ){
 			if( getInitialTextFieldValue().equals( textSubTask.getAnswer() ) )

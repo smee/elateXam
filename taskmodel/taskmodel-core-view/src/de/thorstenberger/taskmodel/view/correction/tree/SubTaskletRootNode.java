@@ -37,15 +37,17 @@ public class SubTaskletRootNode implements DataNode {
     private String studentLogin;
     private long taskId;
     private String currentlySelectedSubtaskNum;
+    private String actualCorrector;
     
     /**
      * 
      */
-    public SubTaskletRootNode( List<SubTasklet> subTasklets, String studentLogin, long taskId, String currentlySelectedSubtaskNum) {
+    public SubTaskletRootNode( List<SubTasklet> subTasklets, String studentLogin, long taskId, String currentlySelectedSubtaskNum, String actualCorrector ) {
         this.subTasklets = subTasklets;
         this.studentLogin = studentLogin;
         this.taskId = taskId;
         this.currentlySelectedSubtaskNum = currentlySelectedSubtaskNum;
+        this.actualCorrector = actualCorrector;
     }
     
     
@@ -68,17 +70,15 @@ public class SubTaskletRootNode implements DataNode {
 		
 		for( SubTasklet subTasklet : subTasklets ){
 			
-			if( subTasklet.isCorrected() ){
+			if( subTasklet.isNeedsManualCorrection( actualCorrector ) ){
+				needsManualCorrection.addSubNode( new SubtaskletNode( subTasklet.getVirtualSubtaskNumber(),
+						studentLogin, taskId, subTasklet.getVirtualSubtaskNumber().equals( currentlySelectedSubtaskNum ) ) );
+			}else if( subTasklet.isCorrected() ){
 				corrected.addSubNode( new SubtaskletNode( subTasklet.getVirtualSubtaskNumber(),
 						studentLogin, taskId, subTasklet.getVirtualSubtaskNumber().equals( currentlySelectedSubtaskNum ) ) );
 			}else{
-				if( subTasklet.isNeedsManualCorrection() ){
-					needsManualCorrection.addSubNode( new SubtaskletNode( subTasklet.getVirtualSubtaskNumber(),
-							studentLogin, taskId, subTasklet.getVirtualSubtaskNumber().equals( currentlySelectedSubtaskNum ) ) );
-				}else{
-					uncorrected.addSubNode( new SubtaskletNode( subTasklet.getVirtualSubtaskNumber(),
-							studentLogin, taskId, subTasklet.getVirtualSubtaskNumber().equals( currentlySelectedSubtaskNum ) ) );
-				}
+				uncorrected.addSubNode( new SubtaskletNode( subTasklet.getVirtualSubtaskNumber(),
+					studentLogin, taskId, subTasklet.getVirtualSubtaskNumber().equals( currentlySelectedSubtaskNum ) ) );
 			}
 			
 		}

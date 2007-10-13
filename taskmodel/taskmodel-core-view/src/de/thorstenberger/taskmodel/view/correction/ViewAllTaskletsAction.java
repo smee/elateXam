@@ -93,9 +93,26 @@ public class ViewAllTaskletsAction extends Action {
 			
 			List<Tasklet> tasklets = delegateObject.getTaskManager().getTaskletContainer().getTasklets( id );
 			List<TaskletInfoVO> tivos = new ArrayList<TaskletInfoVO>();
-			for( Tasklet tasklet : tasklets )
-					tivos.add( TutorCorrectionOverviewAction.getTIVO( tasklet ) );
 			
+			// for the list we need the same number of corrections (columns) in every row, so
+			// we expand every row that has too few columns
+			int maxManualCorrections = 0;
+			boolean expandSome = false;
+			
+			for( Tasklet tasklet : tasklets ){
+				TaskletInfoVO tivo = TutorCorrectionOverviewAction.getTIVO( tasklet );
+				if( tivo.getCorrections().size() > maxManualCorrections ){
+					maxManualCorrections = tivo.getCorrections().size();
+					expandSome = true;
+				}
+				tivos.add( tivo );
+			}
+			if( expandSome ){
+				for( TaskletInfoVO tivo : tivos ){
+					for( int i = tivo.getCorrections().size(); i < maxManualCorrections; i++ )
+						tivo.getCorrections().add( new TaskletInfoVO.ManualCorrectionVO( null, null ) );
+				}
+			}
 			tsivo.setAllTasklets( tivos );
 			
 			request.setAttribute( "Solutions", tsivo );

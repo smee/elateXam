@@ -47,6 +47,20 @@ public class TextSubTaskDefImpl implements SubTaskDef {
 	}
 
 	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef#getHint()
+	 */
+	public String getHint() {
+		return textSubTaskDef.getHint();
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef#getProblem()
+	 */
+	public String getProblem() {
+		return textSubTaskDef.getProblem();
+	}
+
+	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef#isTrash()
 	 */
 	public boolean isTrash() {

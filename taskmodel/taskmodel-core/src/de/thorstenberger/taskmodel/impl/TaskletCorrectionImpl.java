@@ -112,14 +112,14 @@ public class TaskletCorrectionImpl implements TaskletCorrection {
 				correctorAnnotation = ca;
 		}
 		
-		if( correctorAnnotation != null ){
-			if( value != null )
+		if( value != null ){
+			if( correctorAnnotation != null )
 				correctorAnnotation.setText( value );
 			else
+				correctorAnnotations.add( new CorrectorAnnotationImpl( corrector, value ) );
+		}else if( correctorAnnotation != null )
 				correctorAnnotations.remove( correctorAnnotation );
-		}else{
-			correctorAnnotations.add( new CorrectorAnnotationImpl( corrector, value ) );
-		}
+		
 	}
 
 	/* (non-Javadoc)

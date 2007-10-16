@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.complex;
 
@@ -35,44 +35,46 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
  *
  */
 public interface ComplexTasklet extends Tasklet {
-	
+
 	public boolean canStartNewTry();
 
 	public void startNewTry( int tryNo ) throws IllegalStateException;
-	
+
 	public boolean canContinueTry();
-	
+
 	public void continueLastTry( ) throws IllegalStateException;
-	
+
 	public void canSavePage( int pageNo, long hashcode ) throws IllegalStateException;
-	
+
 	public void savePage( int pageNo, List<SubmitData> submitData, long hashcode ) throws IllegalStateException;
-	
+
 	public void submit() throws IllegalStateException;
-	
+
 	public void doManualCorrection( SubTasklet actualSubtasklet, CorrectionSubmitData csd ) throws IllegalStateException;
-	
+
+	public void doInteractiveFeedback( SubTasklet actualSubtasklet, SubmitData csd ) throws IllegalStateException;
+
 	public ComplexTaskDefRoot getComplexTaskDefRoot();
-	
+
 	public ComplexTaskHandlingRoot getComplexTaskHandlingRoot();
-	
+
 	/**
 	 * Returniert den zur Zeit aktiven Versuch.
 	 * @return
 	 * @throws IllegalStateException falls gerade kein Versuch aktiv
 	 */
 	public de.thorstenberger.taskmodel.complex.complextaskhandling.Try getActiveTry() throws IllegalStateException;
-	
+
 	/**
 	 * Gibt den letzten (nicht unbedingt aktiven) Versuch zur Korrektur und Einsichtnahme zurück.
 	 * @return
 	 */
 	public de.thorstenberger.taskmodel.complex.complextaskhandling.Try getSolutionOfLatestTry() throws IllegalStateException;
-	
+
 	public boolean studentAnnotatesCorrection( String annotation ) throws IllegalStateException;
-	
+
 	public void acknowledgeStudentAnnotation() throws IllegalStateException;
-	
+
 	/**
 	 * This method triggers the auto correction of all SubTasklets. After auto-correction, the overall points
 	 * are calculated and set. The method's purpose is to support re-correction if the ComplexTaskDef has been changed
@@ -80,5 +82,5 @@ public interface ComplexTasklet extends Tasklet {
 	 * @throws IllegalStateException
 	 */
 	public void doAutoCorrection() throws IllegalStateException;
-	
+
 }

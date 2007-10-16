@@ -13,7 +13,9 @@
 <body>
 
 <jsp:include page="header.jsp" />
-
+<script type="text/javascript" src="/taskmodel-core-view/jquery.js"></script>
+<script type="text/javascript" src="/taskmodel-core-view/thickbox.js"></script>
+<link rel="stylesheet" href="/taskmodel-core-view/thickbox.css" type="text/css" media="screen" />
 <!--
 Scripts by Daniel Zimmermann and Thorsten Berger
 -->
@@ -93,7 +95,7 @@ function send(){
 	if (!this.everythingDone){
 		warning = "\n\nSie haben noch nicht alle Aufgaben bearbeitet. Wollen Sie wirklich abgeben?";
 	}
-	
+
 	return confirm("Mit der Abgabe Ihrer Aufgaben beenden Sie die Bearbeitung." + warning );
 
 }
@@ -118,11 +120,11 @@ function timer1()
 		var rt = "noch " + remaining_min + " min verbleibend";
 		setCont("id","Uhr",null,rt);
 	}
-	
+
 	if( remaining_min < 5 ){
-		getElem( "id","Uhr",null).style.color = "red";	
+		getElem( "id","Uhr",null).style.color = "red";
 	}
-	
+
 	if( this.mseconds <= 0 ){
 		for( var i = 0; i<500; i++ ){
 			if( getElem("id","TimeOver_"+i,null) != null ){
@@ -133,7 +135,7 @@ function timer1()
 			}
 		}
 	}
-	
+
 	this.mseconds = this.mseconds - 1000;
 
 	window.setTimeout('timer1()',1000);
@@ -170,12 +172,12 @@ function fenster(file,breite,hoehe) {
 
 <table border="0" cellspacing="0" cellpadding="5" width="790">
   <tr>
-      
-    <td bgcolor="#F2F9FF" class="complexTaskNav"> 
-      <div align="left"><img src="<%= request.getContextPath() %>/pics/exit.gif" width="20" height="16" align="absbottom"> 
+
+    <td bgcolor="#F2F9FF" class="complexTaskNav">
+      <div align="left"><img src="<%= request.getContextPath() %>/pics/exit.gif" width="20" height="16" align="absbottom">
         <script type="text/javascript">
 		 <!--
-			checkedLink("Hauptseite", "${ReturnURL}", "ComplexTaskLink"); 
+			checkedLink("Hauptseite", "${ReturnURL}", "ComplexTaskLink");
 		 //-->
 		</script>
 		  <noscript>
@@ -183,25 +185,25 @@ function fenster(file,breite,hoehe) {
 		  </noscript>
 		</div>
     </td>
-	  
+
     <td bgcolor="#F2F9FF" class="complexTaskNav">&nbsp;</td>
-	  
-    <td bgcolor="#F2F9FF" class="complexTaskNav"> 
+
+    <td bgcolor="#F2F9FF" class="complexTaskNav">
       <div align="right">Seite ${Task.page}&nbsp;/&nbsp;${Task.numOfPages}&nbsp;&nbsp;<img src="<%= request.getContextPath() %>/pics/pages.gif" width="11" height="12" align="absmiddle"></div>
     </td>
   </tr>
 
-  <tr> 
-    <td valign="top" bgcolor="#F2F9FF" width="170" class="complexTaskNav"> 
+  <tr>
+    <td valign="top" bgcolor="#F2F9FF" width="170" class="complexTaskNav">
 	<img src="<%= request.getContextPath() %>/pics/pixel.gif" width="170" height="1">
 	<br>
       <span class="ComplexNavHeadline">
       Navigation</span><br>
       <img src="<%= request.getContextPath() %>/pics/pixel.gif" width="1" height="4"><br>
-      <fieldset><jsp:include page="dhtmlTree.jsp"/><br></fieldset> 
-      <div align="right"> 
+      <fieldset><jsp:include page="dhtmlTree.jsp"/><br></fieldset>
+      <div align="right">
         <table border="0" cellspacing="0" cellpadding="0">
-          <tr> 
+          <tr>
             <td bgcolor="#E1F4FF">
 			<a class="ComplexTaskNavLegend" href="javascript:fenster('NavigationHelp.jsp',200,180)">
 			<img src="<%= request.getContextPath() %>/icons/small/help.gif" width="14" height="14" align="absbottom" border="0">Symbol-Legende
@@ -218,23 +220,23 @@ function fenster(file,breite,hoehe) {
 	<span class="ComplexNavHeadline">Bearbeitung</span> <br>
       <br>
       <table border="0" cellspacing="2" cellpadding="0" align="center">
-        <tr> 
+        <tr>
           <td class="ComplexTaskSubmitText" valign="top">Versuch:</td>
           <td class="ComplexTaskSubmitText">${Task.actualTry} / ${Task.numOfTries}</td>
         </tr>
-        <tr> 
-          <td class="ComplexTaskSubmitText" valign="top" colspan="2" bgcolor="#FFFFFF"> 
+        <tr>
+          <td class="ComplexTaskSubmitText" valign="top" colspan="2" bgcolor="#FFFFFF">
             <img src="<%= request.getContextPath() %>/pics/pixel.gif" width="1" height="2"></td>
         </tr>
-        <tr> 
+        <tr>
           <td class="ComplexTaskSubmitText" valign="top">Start:</td>
           <td class="ComplexTaskSubmitText">${Task.tryStartTime}</td>
         </tr>
-        <tr> 
+        <tr>
           <td class="ComplexTaskSubmitText" valign="top" colspan="2" bgcolor="#FFFFFF">
 		  <img src="<%= request.getContextPath() %>/pics/pixel.gif" width="1" height="2"></td>
         </tr>
-        <tr> 
+        <tr>
           <td class="ComplexTaskSubmitText" valign="top">bearbeitet:</td>
           <td class="ComplexTaskSubmitText">${Task.numOfProcessedSubtasklets} / ${Task.numOfSubtasklets}: ${Task.processPercentage}</td>
         </tr>
@@ -244,16 +246,16 @@ function fenster(file,breite,hoehe) {
       Abgabe</span><br>
       <br>
       <table border="0" cellspacing="0" cellpadding="2" align="center">
-        <tr> 
+        <tr>
           <td class="ComplexTaskSubmitText" valign="top">bis: ${Task.deadline}</td>
         </tr>
-        <tr> 
+        <tr>
           <td class="ComplexTaskSubmitText"><div id="Uhr" class="ComplexTaskSubmitText">&nbsp;</div>
  		<script type="text/javascript">
 		 <!--
 			nutzeUhr();
 		 //-->
-		</script>		  
+		</script>
 		  </td>
         </tr>
       </table>
@@ -261,7 +263,7 @@ function fenster(file,breite,hoehe) {
       <br>
       <form method="post" action="<html:rewrite action="/commit"/>" onSubmit=" return send() ">
    	    <input type="hidden" name="id" value="${Task.taskId}">
-        <div align="center"> 
+        <div align="center">
           <input type="submit" name="submit" value="Abgeben">
         </div>
       </form>
@@ -270,7 +272,7 @@ function fenster(file,breite,hoehe) {
 
     </td>
     <td width="20">&nbsp;</td>
-    <td width="600" valign="top"> 
+    <td width="600" valign="top">
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr>
           <td valign="top">${Task.userName}<br>
@@ -292,6 +294,7 @@ function fenster(file,breite,hoehe) {
 		<% int i = 0; %>
 
 		<c:forEach items="${SubTasklets}" var="SubTasklet">
+			<jsp:useBean id="SubTasklet" class="de.thorstenberger.taskmodel.view.SubTaskletInfoVO"/>
 			<fieldset class="complexTask"><legend>Aufgabe ${SubTasklet.virtualSubTaskletNumber}</legend>
 			<table width="100%" cellspacing="0" cellpadding="0"><tr><td align="center" valign="top" class="ComplexTaskHint">
 			<c:if test="${SubTasklet.hint != null}">
@@ -303,11 +306,39 @@ function fenster(file,breite,hoehe) {
 				${SubTasklet.problem}
 			</div>
 			<br><br>
-				${SubTasklet.renderedHTML}			
+				${SubTasklet.renderedHTML}
+			<br><br>
+			<c:if test="${SubTasklet.interactiveFeedback}">
+					<div class="problem" id="taskletFeedback_${SubTasklet.virtualSubTaskletNumber}" style="display:none"><br><br>
+						<fieldset>
+							<legend>Korrekturinformationen zum letzten Versuch:</legend>
+							${SubTasklet.correctedHTML}<br><br>
+						</fieldset>
+					</div>
+					<table width="100%>
+						<tr>
+						<td valign="top">
+            			</td>
+            			<td valign="top">
+   							<c:if test="${SubTasklet.corrected}">
+   								<input alt="#TB_inline?height=500&width=600&inlineId=taskletFeedback_${SubTasklet.virtualSubTaskletNumber}" title="Letzter Korrekturstand" class="thickbox" type="button" value="Korrektur zeigen" />
+   							</c:if>
+            			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            			<td valign="top">
+              				<p align="right">
+                				<input type="submit" name="doAutoCorrection_${SubTasklet.virtualSubTaskletNumber}" value="Neu bewerten">
+                				<br>
+                				<br>
+              				</p>
+              			</td>
+          				</tr>
+        			</table>
+
+			</c:if>
 			<br></fieldset>
 				<div id="TimeOver_<%=i++%>" style="visibility:hidden; color:red; font-size:12px" align="right">Bearbeitungszeit abgelaufen</div>
 			<br>
-			
+
 		</c:forEach>
 
 
@@ -316,12 +347,12 @@ function fenster(file,breite,hoehe) {
         <hr size="1" noshade>
         <br>
         <table width="100%">
-          <tr> 
+          <tr>
             <td valign="top"> <br>
             </td>
             <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-            <td valign="top"> 
-              <p align="right"> 
+            <td valign="top">
+              <p align="right">
 			  	<input type="hidden" name="page" value="${Task.page}">
                 <input type="submit" name="save" value="Speichern">
                 <br>

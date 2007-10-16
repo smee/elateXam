@@ -17,26 +17,26 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel;
 
 import java.util.List;
 
 /**
- * 
- * 
+ *
+ *
  * The tasklet lifecycle is determined by its status:
- * 
+ *
  * INITIALIZED: tasklet new instantiated and nothing done yet, student can start the tasklet
  * INPROGRESS: solving the tasklet is in progress
  * SOLVED: tasklet solved, no more progress
  * CORRECTING: a corrector or the system is currently correcting the tasklet, corrector may also annotate the student's solution
  * CORRECTED: the complete tasklet has been corrected, student may also annotate the corrector's marking
  * ANNOTATED: student annotated the corrector's marking
- * ANNOTATION_ACKNOWLEDGED: corrector acknowledged the student's annotation and possibly adjusted the marking 
- * 
- * 
+ * ANNOTATION_ACKNOWLEDGED: corrector acknowledged the student's annotation and possibly adjusted the marking
+ *
+ *
  * @author Thorsten Berger
  *
  */
@@ -44,7 +44,7 @@ public interface Tasklet {
 
 
 	public enum Status{
-		
+
 		INITIALIZED( 0, "initialized" ),
 		INPROGRESS( 1, "in_progress" ),
 		SOLVED( 2, "processed" ),
@@ -52,7 +52,7 @@ public interface Tasklet {
 		CORRECTED( 4, "corrected" ),
 		ANNOTATED( 5, "annotated" ),
 		ANNOTATION_ACKNOWLEDGED( 6, "annotation_acknowledged" );
-		
+
 		private int order;
 		private String value;
 		public int getOrder(){
@@ -64,51 +64,51 @@ public interface Tasklet {
 		public String getValue(){
 			return value;
 		}
-		
+
 		Status( int order, String value ){
 			this.order = order;
 			this.value = value;
 		}
-		
+
 	}
-	
+
 	public static final String FLAG_HAS_CORRECTOR_ANNOTATION = "has_corrector_annotation";
 	public static final String FLAG_HAS_STUDENT_ANNOTATION = "has_student_annotation";
-	
-	
+
+
 	public void update();
-	
+
 	public String getUserId();
-	
+
 	public long getTaskId();
-	
+
 	public Status getStatus();
-	
+
 	public boolean hasOrPassedStatus( Status status );
-	
+
 	public TaskletCorrection getTaskletCorrection();
-	
+
 	public List<String> getFlags();
-	
+
 	public void addFlag( String flag );
-	
+
 	public void removeFlag( String flag );
-	
+
 	/**
 	 * Assigns the tasklet to the mentioned corrector.
 	 * @param correctorId the corrector id/login
 	 * @throws TaskApiException if Tasklet cannot be assigned due to the status not being {@link Status.SOLVED}.
 	 */
 	public void assignToCorrector( String correctorId ) throws TaskApiException;
-	
+
 	/**
 	 * Unassigns the tasklet from the currently assigned corrector.
 	 * @throws TaskApiException if tasklet is not assigned
 	 */
 	public void unassignFromCorrector() throws TaskApiException;
-	
+
 	public void logPostData(String msg, String ip);
 
 	public void logPostData(String msg, Throwable throwable, String ip);
-	
+
 }

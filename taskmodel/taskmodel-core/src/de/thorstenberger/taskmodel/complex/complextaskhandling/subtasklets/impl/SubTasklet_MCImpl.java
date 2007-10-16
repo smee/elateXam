@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl;
 
@@ -31,20 +31,17 @@ import de.thorstenberger.taskmodel.TaskModelPersistenceException;
 import de.thorstenberger.taskmodel.complex.TaskHandlingConstants;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
-import de.thorstenberger.taskmodel.complex.complextaskdef.blocks.impl.McBlockImpl;
-import de.thorstenberger.taskmodel.complex.complextaskdef.subtaskdefs.impl.McSubTaskDefImpl;
+import de.thorstenberger.taskmodel.complex.complextaskdef.blocks.impl.GenericBlockImpl;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.ManualSubTaskletCorrection;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTaskletCorrection;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.impl.PageImpl;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.McSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_MC;
+import de.thorstenberger.taskmodel.complex.jaxb.AutoCorrectionType;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType;
 import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDef;
 import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDefType;
 import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
+import de.thorstenberger.taskmodel.complex.jaxb.SubTaskDefType;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.McTaskBlock;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.McSubTask;
 
@@ -54,57 +51,24 @@ import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.
  */
 public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_MC {
 
-	private Block block;
 	private McTaskBlock mcTaskBlock;
 	private McSubTaskDef mcSubTaskDef;
 	private McSubTask mcSubTask;
-	
+
 	/**
-	 * 
+	 *
 	 */
-	public SubTasklet_MCImpl( Block block, McSubTaskDefImpl mcSubTaskDefImpl, McSubTask mcSubTask, ComplexTaskDefRoot complexTaskDefRoot ) {
-		super( complexTaskDefRoot, mcSubTaskDefImpl );
-		this.block = block;
-		this.mcTaskBlock = ((McBlockImpl)block).getMcTaskBlock();
-		this.mcSubTaskDef = mcSubTaskDefImpl.getMcSubTaskDef();
+	public SubTasklet_MCImpl( Block block, SubTaskDefType mcSubTaskDef, McSubTask mcSubTask, ComplexTaskDefRoot complexTaskDefRoot ) {
+		super( complexTaskDefRoot, block, mcSubTaskDef, mcSubTask );
+		this.mcTaskBlock = (McTaskBlock) ((GenericBlockImpl)block).getJaxbTaskBlock();
+		this.mcSubTaskDef = (McSubTaskDef) mcSubTaskDef;
 		this.mcSubTask = mcSubTask;
 	}
 
 	public String getMcCategory(){
 		return mcSubTaskDef.getCategory();
 	}
-	
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#addToPage(de.thorstenberger.taskmodel.complex.complextaskhandling.Page)
-	 */
-	public void addToPage(Page page) {
-		PageImpl pageImpl = (PageImpl)page;
-		pageImpl.getPageType().getMcSubTaskOrClozeSubTaskOrTextSubTask().add( mcSubTask );
-	}
 
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#setVirtualSubtaskNumber(java.lang.String)
-	 */
-	public void setVirtualSubtaskNumber(String number) {
-		mcSubTask.setVirtualNum( number );
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getAutoCorrection()
-	 */
-	public SubTaskletCorrection getAutoCorrection(){
-		if( mcSubTask.isSetAutoCorrection() )
-			return new AutoSubTaskletCorrectionImpl( mcSubTask.getAutoCorrection().getPoints() );
-		else
-			return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getManualCorrections()
-	 */
-	public List<ManualSubTaskletCorrection> getManualCorrections(){
-		return null;
-	}
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#isSetNeedsManualCorrectionFlag()
@@ -120,7 +84,7 @@ public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_
 		McSubmitData mcSubmitData = (McSubmitData) submitData;
 		boolean sstest = false;
 		boolean ss = getMcCategory().equals( CAT_SINGLESELECT );
-		
+
 		List<Answer> answers = getAnswers();
 		for( int i = 0; i < answers.size(); i++ ){
 			AnswerImpl answerImpl = (AnswerImpl)answers.get( i );
@@ -135,7 +99,7 @@ public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_
 			}else{
 				answerImpl.setSelected( false );
 			}
-			
+
 		}
 	}
 
@@ -145,7 +109,7 @@ public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_
 //	public float getPoints() throws IllegalStateException {
 //		if( mcSubTask.getCorrection() == null )
 //			throw new IllegalStateException( TaskHandlingConstants.SUBTASK_NOT_CORRECTED );
-//		
+//
 //		return mcSubTask.getCorrection().getPoints();
 //	}
 
@@ -153,65 +117,65 @@ public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#doAutoCorrection()
 	 */
 	public void doAutoCorrection() {
-		
+
 		float pointsPerTask = block.getPointsPerSubTask();
-		
+
 		// Single Select
 		if( mcSubTaskDef.getCategory().equals( CAT_SINGLESELECT ) ){
 
 			if( isCompletelyCorrectSolved() ){
-				setCorrection( pointsPerTask );
+				setAutoCorrection( pointsPerTask );
 				return;
 			}else{
-				setCorrection( 0 );
+				setAutoCorrection( 0 );
 				return;
 			}
 
 		// Multiple Select
 		}else{
-			
+
 			int numOfSelectedAnswers = getNumOfSelectedAnswers();
 			int minCorrect = Math.max( mcSubTaskDef.isSetMinCorrectAnswers() ? mcSubTaskDef.getMinCorrectAnswers() : 1 , 1);
-			
+
 			if( numOfSelectedAnswers < minCorrect ){
-				setCorrection( 0 );
+				setAutoCorrection( 0 );
 				return;
 			}
-			
+
 			if( mcSubTaskDef.isSetMaxCorrectAnswers() && numOfSelectedAnswers > mcSubTaskDef.getMaxCorrectAnswers() ){
-				setCorrection( 0 );
+				setAutoCorrection( 0 );
 				return;
 			}
-			
+
 			float points = pointsPerTask;
-			
+
 			// Bewertung abh. vom Korrekturschema:
 			if( mcTaskBlock.getMcConfig().getRegular() != null ){
-				
+
 				// kein Unterschied zw. richtigen und falschen Antworten
 				float negativePoints = mcTaskBlock.getMcConfig().getRegular().getNegativePoints();
 				points -=  negativePoints * getNumOfIncorrectSolvedAnswers() ;
-				
+
 			}else{
-				
+
 				// richtige und falsche Antworten werden unterschiedlich behandelt
 				float correctAnswerNegativePoints = mcTaskBlock.getMcConfig().getDifferent().getCorrectAnswerNegativePoints();
 				float incorrectAnswerNegativePoints = mcTaskBlock.getMcConfig().getDifferent().getIncorrectAnswerNegativePoints();
-				
+
 				List<Answer> answers = getAnswers();
 				for( Answer answer : answers )
 					if( answer.isCorrect() && !answer.isCorrectlySolvedAnswer() )
 						points -= correctAnswerNegativePoints;
 					else if( !answer.isCorrect() && !answer.isCorrectlySolvedAnswer() )
 						points -= incorrectAnswerNegativePoints;
-				
+
 			}
 
 			if( points < 0 )
 				points = 0;
-			
-			setCorrection( points );
-			
+
+			setAutoCorrection( points );
+
 		}
 
 	}
@@ -224,26 +188,13 @@ public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_
 		// nothing to do "by hand"
 	}
 
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getReachablePoints()
-	 */
-	public float getReachablePoints() {
-		return block.getPointsPerSubTask();
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getVirtualSubtaskNumber()
-	 */
-	public String getVirtualSubtaskNumber() {
-		return mcSubTask.getVirtualNum();
-	}
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getHash()
 	 */
 	public int getHash() {
 		StringBuffer ret = new StringBuffer();
-		
+
 		ret.append( mcSubTask.getRefId() );
 		List answers = mcSubTask.getAnswer();
 		for( int i=0; i<answers.size(); i++ ){
@@ -252,7 +203,7 @@ public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_
 			ret.append( answer.getRefId() );
 			ret.append( answer.isSelected() );
 		}
-		
+
 		return ret.toString().hashCode();
 	}
 
@@ -263,27 +214,19 @@ public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_
 		return getNumOfSelectedAnswers() > 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getCorrectionHint()
-	 */
-	public String getCorrectionHint() {
-		// hint for manual correction not necessary
-		return null;
-	}
-	
 	public List<Answer> getAnswers(){
 		List answers = mcSubTask.getAnswer();
 		List<Answer> ret = new ArrayList<Answer>( answers.size() );
-		
+
 		List correctAnswerDefs = mcSubTaskDef.getCorrect();
 		List incorrectAnswerDefs = mcSubTaskDef.getIncorrect();
-		
+
 		for( int i=0; i<answers.size(); i++ ){
 			ComplexTaskHandlingType.TryType.PageType.McSubTaskType.AnswerType answer =
 				(ComplexTaskHandlingType.TryType.PageType.McSubTaskType.AnswerType) answers.get( i );
-			
+
 			boolean found = false;
-			
+
 			// korrekte Antwort?
 			for( int j=0; j<correctAnswerDefs.size(); j++ ){
 				McSubTaskDefType.CorrectType correctAnswerDef =
@@ -294,10 +237,10 @@ public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_
 					break;
 				}
 			}
-			
+
 			if( found )
 				continue;
-			
+
 			// falsche Antwort?
 			for( int j=0; j<incorrectAnswerDefs.size(); j++ ){
 				McSubTaskDefType.IncorrectType incorrectAnswerDef =
@@ -308,54 +251,54 @@ public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_
 					break;
 				}
 			}
-			
+
 			// wenn nicht gefunden, dann haben wir'n ernstes Problem...
 			if( !found )
 				throw new TaskModelPersistenceException( "Daten-Inkonsistenz: AnswerDef nicht gefunden." );
-			
+
 		}
-		
+
 		return ret;
-		
+
 	}
-	
+
 	public class AnswerImpl implements SubTasklet_MC.Answer{
-		
+
 		private SubTasklet_MC mcSubTasklet;
 		private McSubTaskDefType.CorrectType correctAnswerDef;
 		private McSubTaskDefType.IncorrectType incorrectAnswerDef;
 		private ComplexTaskHandlingType.TryType.PageType.McSubTaskType.AnswerType answer;
 		private boolean correct;
-		
+
 		AnswerImpl( SubTasklet_MC mcSubTasklet,
 				McSubTaskDefType.CorrectType correctAnswerDef,
 				ComplexTaskHandlingType.TryType.PageType.McSubTaskType.AnswerType answer ){
-			
+
 			correct = true;
 			this.mcSubTasklet = mcSubTasklet;
 			this.correctAnswerDef = correctAnswerDef;
 			this.incorrectAnswerDef = null;
 			this.answer = answer;
 		}
-		
+
 		AnswerImpl( SubTasklet_MC mcSubTasklet,
 				McSubTaskDefType.IncorrectType incorrectAnswerDef,
 				ComplexTaskHandlingType.TryType.PageType.McSubTaskType.AnswerType answer ){
-			
+
 			correct = false;
 			this.mcSubTasklet = mcSubTasklet;
 			this.incorrectAnswerDef = incorrectAnswerDef;
 			this.correctAnswerDef = null;
 			this.answer = answer;
 		}
-		
+
 		public String toString(){
 			if( correct )
 				return correctAnswerDef.getValue();
 			else
 				return incorrectAnswerDef.getValue();
 		}
-		
+
 		public String getId() {
 			if( correct )
 				return correctAnswerDef.getId();
@@ -366,7 +309,7 @@ public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_
 		public boolean isSelected(){
 			return answer.isSelected();
 		}
-		
+
 		public boolean isCorrect() {
 			return correct;
 		}
@@ -376,49 +319,36 @@ public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_
 				return false;
 			if( !isSelected() && correct )
 				return false;
-			
+
 			return true;
 		}
-		
+
 		void setSelected( boolean selected ){
 			answer.setSelected( selected );
 		}
-		
+
 	}
-	
+
 	private boolean isCompletelyCorrectSolved(){
 		List<Answer> answers = getAnswers();
 		for( Answer answer : answers )
 			if( !answer.isCorrectlySolvedAnswer() )
 				return false;
-			
+
 		return true;
 	}
-	
+
 	private int getNumOfIncorrectSolvedAnswers(){
 		int ret = 0;
 		List<Answer> answers = getAnswers();
 		for( Answer answer : answers )
 			if( !answer.isCorrectlySolvedAnswer() )
 				ret++;
-			
+
 		return ret;
 	}
-	
-	private void setCorrection( float points ){
-		ComplexTaskHandlingType.TryType.PageType.McSubTaskType.AutoCorrectionType corr = mcSubTask.getAutoCorrection();
-		if( corr == null ){
-			ObjectFactory of = new ObjectFactory();
-			try {
-				corr = of.createComplexTaskHandlingTypeTryTypePageTypeMcSubTaskTypeAutoCorrectionType();
-				mcSubTask.setAutoCorrection( corr );
-			} catch (JAXBException e) {
-				throw new TaskModelPersistenceException( e );
-			}
-		}
-		corr.setPoints( points );
-	}
-	
+
+
 	private int getNumOfSelectedAnswers(){
 		int ret = 0;
 		List<Answer> answers = getAnswers();
@@ -439,8 +369,6 @@ public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_
 			throw new TaskApiException( e );
 		}
 	}
-	
-	
-	
+
 
 }

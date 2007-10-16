@@ -17,43 +17,70 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl;
 
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
-import de.thorstenberger.taskmodel.complex.TaskHandlingConstants;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
-import de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.ManualSubTaskletCorrection;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
-import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
+import javax.xml.bind.JAXBException;
 
-/**
- * @author Thorsten Berger
- *
- */
-public abstract class AbstractSubTasklet implements SubTasklet {
+import de.thorstenberger.taskmodel.TaskModelPersistenceException;
+import de.thorstenberger.taskmodel.complex.TaskHandlingConstants;
+import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
+import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.ManualSubTaskletCorrection;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTaskletCorrection;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.impl.ManualSubTaskletCorrectionImpl;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.impl.PageImpl;
+import de.thorstenberger.taskmodel.complex.jaxb.AutoCorrectionType;
+import de.thorstenberger.taskmodel.complex.jaxb.ManualCorrectionType;
+import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
+import de.thorstenberger.taskmodel.complex.jaxb.SubTaskDefType;
+import de.thorstenberger.taskmodel.complex.jaxb.SubTaskType;
+import de.thorstenberger.taskmodel.util.ReflectionHelper;
+
+public abstract class AbstractSubTasklet implements SubTasklet{
+	protected Block block;
+	protected SubTaskDefType jaxbSubTaskDef;
+	protected SubTaskType subTaskType;
 
 	protected ComplexTaskDefRoot complexTaskDefRoot;
-	protected SubTaskDef subTaskDef;
 	protected ObjectFactory objectFactory = new ObjectFactory();
-	
+
 	/**
 	 * @param complexTaskDefRoot
 	 */
-	public AbstractSubTasklet(ComplexTaskDefRoot complexTaskDefRoot, SubTaskDef subTaskDef ) {
-		super();
+	public AbstractSubTasklet(ComplexTaskDefRoot complexTaskDefRoot, Block block,SubTaskDefType subTaskDefImpl, SubTaskType subTaskType) {
 		this.complexTaskDefRoot = complexTaskDefRoot;
-		this.subTaskDef = subTaskDef;
+		this.block=block;
+		this.jaxbSubTaskDef=subTaskDefImpl;
+		this.subTaskType=subTaskType;
 	}
-
+	/*
+	 * (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#addToPage(de.thorstenberger.taskmodel.complex.complextaskhandling.Page)
+	 */
+	public void addToPage(Page page) {
+		PageImpl pageImpl = (PageImpl)page;
+		pageImpl.getPageType().getMcSubTaskOrClozeSubTaskOrTextSubTask().add( subTaskType );
+	}
+	/*
+	 * (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getCorrectionHint()
+	 */
+	public String getCorrectionHint() {
+		return (String) ReflectionHelper.callMethod(this.jaxbSubTaskDef, "getCorrectionHint");
+	}
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getHint()
 	 */
 	public String getHint() {
-		return subTaskDef.getHint();
+		return jaxbSubTaskDef.getHint();
 	}
 
 	/* (non-Javadoc)
@@ -85,7 +112,7 @@ public abstract class AbstractSubTasklet implements SubTasklet {
 			throw new IllegalStateException( TaskHandlingConstants.SUBTASK_NOT_CORRECTED );
 		if( isAutoCorrected() )
 			throw new IllegalStateException( TaskHandlingConstants.SUBTASK_AUTO_CORRECTED );
-		
+
 		List<ManualSubTaskletCorrection> mcs = getManualCorrections();
 
 		// if multiple corrector mode
@@ -99,9 +126,17 @@ public abstract class AbstractSubTasklet implements SubTasklet {
 				throw new IllegalStateException( TaskHandlingConstants.SUBTASK_NOT_CORRECTED );
 			return mcs.get( 0 ).getPoints();
 		}
-		
-		
+
+
 	}
+		/*
+	 * (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getReachablePoints()
+	 */
+	public float getReachablePoints(){
+		return block.getReachablePoints();
+	}
+
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#isCorrectedByCorrector(java.lang.String)
@@ -118,21 +153,35 @@ public abstract class AbstractSubTasklet implements SubTasklet {
 		}else{
 			return corrections != null && corrections.size() > 0;
 		}
-		
+
+	}
+		/*
+	 * (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getVirtualSubtaskNumber()
+	 */
+	public String getVirtualSubtaskNumber() {
+		return subTaskType.getVirtualNum();
+	}
+		/*
+	 * (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#setVirtualSubtaskNumber(java.lang.String)
+	 */
+	public void setVirtualSubtaskNumber(String number) {
+		subTaskType.setVirtualNum(number);
 	}
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getProblem()
 	 */
 	public String getProblem() {
-		return subTaskDef.getProblem();
+		return jaxbSubTaskDef.getProblem() == null? "":jaxbSubTaskDef.getProblem();
 	}
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getSubTaskDefId()
 	 */
 	public String getSubTaskDefId() {
-		return subTaskDef.getId();
+		return jaxbSubTaskDef.getId();
 	}
 
 	/* (non-Javadoc)
@@ -143,9 +192,9 @@ public abstract class AbstractSubTasklet implements SubTasklet {
 			return false;
 		if( !isCorrected() ) // if there has not been at least one (manual) correction, the flag is the decisive factor
 			return true;
-		
+
 		if( complexTaskDefRoot.getCorrectionMode().getType() == ComplexTaskDefRoot.CorrectionModeType.MULTIPLECORRECTORS ){
-			
+
 			if( isAutoCorrected() ) // should not happen, as the needsManualCorrection is only set if no auto-correction has been possible
 				return false;
 			else{
@@ -154,10 +203,10 @@ public abstract class AbstractSubTasklet implements SubTasklet {
 				for( ManualSubTaskletCorrection mc : mcs )
 					if( mc.getCorrector().equals( corrector ) )
 						return false; // ok, the corrector already corrected the SubTasklet
-				
+
 				return true; // no, the corrector did not correct the SubTasklet, so (according to the flag) return true
 			}
-			
+
 		}else{
 			if( isAutoCorrected() ) // should not happen, as the needsManualCorrection is only set if no auto-correction has been possible
 				return false;
@@ -165,5 +214,48 @@ public abstract class AbstractSubTasklet implements SubTasklet {
 				return getManualCorrections().size() <= 0;
 		}
 	}
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getAutoCorrection()
+	 */
+	public SubTaskletCorrection getAutoCorrection() throws IllegalStateException {
+		if ( subTaskType.isSetAutoCorrection() )
+			return new AutoSubTaskletCorrectionImpl( subTaskType.getAutoCorrection().getPoints() );
+		else
+			return null;
+	}
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getManualCorrections()
+	 */
+	public List<ManualSubTaskletCorrection> getManualCorrections(){
+		if( !subTaskType.isSetManualCorrection() )
+			return Collections.EMPTY_LIST;
+		List<ManualSubTaskletCorrection> ret = new LinkedList<ManualSubTaskletCorrection>();
+		List<ManualCorrectionType> mcs = subTaskType.getManualCorrection();
+		for( ManualCorrectionType mc : mcs )
+			ret.add( new ManualSubTaskletCorrectionImpl( mc.getCorrector(), mc.getPoints() ) );
+		return ret;
+	}
+	public boolean isInteractiveFeedback() {
+		return jaxbSubTaskDef.isSetInteractiveFeedback() && jaxbSubTaskDef.isInteractiveFeedback();
+	}
 
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#isSetNeedsManualCorrectionFlag()
+	 */
+	public boolean isSetNeedsManualCorrectionFlag() {
+		return subTaskType.isNeedsManualCorrection();
+	}
+	protected void setAutoCorrection( float points ){
+		AutoCorrectionType corr = subTaskType.getAutoCorrection();
+		if( corr == null ){
+			ObjectFactory of = new ObjectFactory();
+			try {
+				corr = of.createAutoCorrectionType();
+				subTaskType.setAutoCorrection( corr );
+			} catch (JAXBException e) {
+				throw new TaskModelPersistenceException( e );
+			}
+		}
+		corr.setPoints( points );
+	}
 }

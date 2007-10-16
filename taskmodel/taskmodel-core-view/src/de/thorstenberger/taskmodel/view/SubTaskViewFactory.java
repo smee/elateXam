@@ -18,6 +18,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 package de.thorstenberger.taskmodel.view;
 
+import de.thorstenberger.taskmodel.TaskModelServices;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.AddOnSubTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Cloze;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_MC;
@@ -33,7 +35,7 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTa
  */
 public class SubTaskViewFactory {
 
-	
+
 	public static SubTaskView getSubTaskView( SubTasklet subTasklet ){
 		if( subTasklet instanceof SubTasklet_MC )
 			return new SubTaskView_MC( (SubTasklet_MC)subTasklet );
@@ -45,8 +47,12 @@ public class SubTaskViewFactory {
 			return new SubTaskView_Mapping( (SubTasklet_Mapping) subTasklet );
 		else if( subTasklet instanceof SubTasklet_Paint)
 			return new SubTaskView_Paint((SubTasklet_Paint) subTasklet);
-		// TODO erweitern
-		
+		else if( subTasklet instanceof AddOnSubTasklet) {
+			AddOnSubTasklet aost=(AddOnSubTasklet) subTasklet;
+			AddonSubTaskViewFactory factory=(AddonSubTaskViewFactory) TaskModelServices.getInstance().getAddonSubtaskletFactory().getSubTaskViewFactory(aost.getAddOnType());
+			if(factory!=null)
+				return factory.getSubTaskView(aost);
+		}
 		return null;
 	}
 

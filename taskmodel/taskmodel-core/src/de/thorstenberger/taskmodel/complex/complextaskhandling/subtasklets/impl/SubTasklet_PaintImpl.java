@@ -28,8 +28,7 @@ import de.thorstenberger.taskmodel.TaskModelPersistenceException;
 import de.thorstenberger.taskmodel.complex.TaskHandlingConstants;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
-import de.thorstenberger.taskmodel.complex.complextaskdef.blocks.impl.PaintBlockImpl;
-import de.thorstenberger.taskmodel.complex.complextaskdef.subtaskdefs.impl.PaintSubTaskDefImpl;
+import de.thorstenberger.taskmodel.complex.complextaskdef.blocks.impl.GenericBlockImpl;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.ManualSubTaskletCorrection;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
@@ -40,45 +39,31 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.impl.ManualSubTas
 import de.thorstenberger.taskmodel.complex.complextaskhandling.impl.PageImpl;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.PaintSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Paint;
+import de.thorstenberger.taskmodel.complex.jaxb.AutoCorrectionType;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType;
+import de.thorstenberger.taskmodel.complex.jaxb.ManualCorrectionType;
 import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
 import de.thorstenberger.taskmodel.complex.jaxb.PaintSubTaskDef;
+import de.thorstenberger.taskmodel.complex.jaxb.SubTaskDefType;
+import de.thorstenberger.taskmodel.complex.jaxb.SubTaskType;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.PaintTaskBlock;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.PaintSubTask;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.PaintSubTaskType.ManualCorrectionType;
+
 
 public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTasklet_Paint {
 
-	private Block block;
 	private PaintTaskBlock paintTaskBlock;
 	private PaintSubTaskDef paintSubTaskDef;
 	private PaintSubTask paintSubTask;
-	
+
 	/**
-	 * 
+	 *
 	 */
-	public SubTasklet_PaintImpl( Block block, PaintSubTaskDefImpl paintSubTaskDefImpl, PaintSubTask paintSubTask, ComplexTaskDefRoot complexTaskDefRoot ) {
-		super( complexTaskDefRoot, paintSubTaskDefImpl );
-		this.block = block;
-		this.paintTaskBlock = ((PaintBlockImpl)block).getPaintTaskBlock();
-		this.paintSubTaskDef = paintSubTaskDefImpl.getPaintSubTaskDef();
-		this.paintSubTask = paintSubTask;
-	}
-
-	public void addToPage(Page page) {
-		PageImpl pageImpl = (PageImpl)page;
-		pageImpl.getPageType().getMcSubTaskOrClozeSubTaskOrTextSubTask().add( paintSubTask );
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getReachablePoints()
-	 */
-	public float getReachablePoints() {
-		return paintTaskBlock.getConfig().getPointsPerTask();
-	}
-
-	public void setVirtualSubtaskNumber(String number) {
-		paintSubTask.setVirtualNum( number );
+	public SubTasklet_PaintImpl( Block block, SubTaskDefType paintSubTaskDef, SubTaskType paintSubTask, ComplexTaskDefRoot complexTaskDefRoot ) {
+		super( complexTaskDefRoot, block, paintSubTaskDef, paintSubTask  );
+		this.paintTaskBlock = (PaintTaskBlock) ((GenericBlockImpl)block).getJaxbTaskBlock();
+		this.paintSubTaskDef = (PaintSubTaskDef) paintSubTaskDef;
+		this.paintSubTask = (PaintSubTask) paintSubTask;;
 	}
 
 	public void doSave(SubmitData submitData) throws IllegalStateException {
@@ -92,41 +77,12 @@ public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTaskl
 	public boolean isCorrected() {
 		return paintSubTask.isSetAutoCorrection() || paintSubTask.isSetManualCorrection();
 	}
-	
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getAutoCorrection()
-	 */
-	public SubTaskletCorrection getAutoCorrection() throws IllegalStateException {
-		if ( paintSubTask.isSetAutoCorrection() )
-			return new AutoSubTaskletCorrectionImpl( paintSubTask.getAutoCorrection().getPoints() );
-		else
-			return null;
-	}
 
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getManualCorrections()
-	 */
-	public List<ManualSubTaskletCorrection> getManualCorrections() throws IllegalStateException {
-		if( !paintSubTask.isSetManualCorrection() )
-			return null;
-		List<ManualSubTaskletCorrection> ret = new LinkedList<ManualSubTaskletCorrection>();
-		List<de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.TextSubTaskType.ManualCorrectionType> mcs = paintSubTask.getManualCorrection();
-		for( de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.TextSubTaskType.ManualCorrectionType mc : mcs )
-			ret.add( new ManualSubTaskletCorrectionImpl( mc.getCorrector(), mc.getPoints() ) );
-		return ret;
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#isSetNeedsManualCorrectionFlag()
-	 */
-	public boolean isSetNeedsManualCorrectionFlag() {
-		return paintSubTask.isNeedsManualCorrection();
-	}
 
 //	public float getPoints() throws IllegalStateException {
 //		if( !isCorrected() )
 //			throw new IllegalStateException( TaskHandlingConstants.SUBTASK_NOT_CORRECTED );
-//		
+//
 //		return paintSubTask.getCorrection().getPoints();
 //	}
 
@@ -136,20 +92,20 @@ public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTaskl
 		}else
 			paintSubTask.setNeedsManualCorrection( true );
 	}
-	
+
 	public void doManualCorrection( CorrectionSubmitData csd ){
-		
+
 		if( isAutoCorrected() )
 			throw new IllegalStateException( TaskHandlingConstants.SUBTASK_AUTO_CORRECTED );
-		
+
 		TextCorrectionSubmitData tcsd = (TextCorrectionSubmitData) csd;
-		
+
 		if( tcsd.getPoints() < 0 || tcsd.getPoints() > paintTaskBlock.getConfig().getPointsPerTask() )
 			return;
-			
+
 		List<ManualCorrectionType> manualCorrections = paintSubTask.getManualCorrection();
 		if( complexTaskDefRoot.getCorrectionMode().getType() == ComplexTaskDefRoot.CorrectionModeType.MULTIPLECORRECTORS ){
-			
+
 			for( ManualCorrectionType mc : manualCorrections ){
 				if( mc.getCorrector().equals( tcsd.getCorrector() ) ){
 					mc.setPoints( tcsd.getPoints() );
@@ -159,22 +115,22 @@ public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTaskl
 			// corrector not found, so create a new ManualCorrection for him
 			ManualCorrectionType mc;
 			try {
-				mc = objectFactory.createComplexTaskHandlingTypeTryTypePageTypePaintSubTaskTypeManualCorrectionType();
+				mc = objectFactory.createManualCorrectionType();
 			} catch (JAXBException e) {
 				throw new TaskModelPersistenceException( e );
 			}
 			mc.setCorrector( tcsd.getCorrector() );
 			mc.setPoints( tcsd.getPoints() );
 			manualCorrections.add( mc );
-			
+
 		}else{
-			
+
 			ManualCorrectionType mc;
 			if( manualCorrections.size() > 0 ){
 				mc = manualCorrections.get( 0 );
 			}else{
 				try {
-					mc = objectFactory.createComplexTaskHandlingTypeTryTypePageTypePaintSubTaskTypeManualCorrectionType();
+					mc = objectFactory.createManualCorrectionType();
 				} catch (JAXBException e) {
 					throw new TaskModelPersistenceException( e );
 				}
@@ -183,28 +139,14 @@ public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTaskl
 			mc.setCorrector( tcsd.getCorrector() );
 			mc.setPoints( tcsd.getPoints() );
 		}
-		
+
 	}
-	
-	private void setAutoCorrection( float points ){
-		ComplexTaskHandlingType.TryType.PageType.PaintSubTaskType.AutoCorrectionType corr = paintSubTask.getAutoCorrection();
-		if( corr == null ){
-			ObjectFactory of = new ObjectFactory();
-			try {
-				corr = of.createComplexTaskHandlingTypeTryTypePageTypePaintSubTaskTypeAutoCorrectionType();
-				paintSubTask.setAutoCorrection( corr );
-			} catch (JAXBException e) {
-				throw new TaskModelPersistenceException( e );
-			}
-		}
-		corr.setPoints( points );
-	}
-	
-	
-	
-//	
-//	
-//	
+
+
+
+//
+//
+//
 //	private void setCorrection( float points, boolean auto ){
 //		ComplexTaskHandlingType.TryType.PageType.PaintSubTaskType.CorrectionType corr = paintSubTask.getCorrection();
 //		if( corr == null ){
@@ -228,9 +170,6 @@ public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTaskl
 //	    }
 //	}
 
-	public String getVirtualSubtaskNumber() {
-		return paintSubTask.getVirtualNum();
-	}
 
 	public int getHash() {
 		StringBuffer sb=new StringBuffer();
@@ -246,9 +185,6 @@ public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTaskl
 			return !paintSubTask.isResetted() || isTextuallyAnswerdByStudent();
 	}
 
-	public String getCorrectionHint() {
-	    return paintSubTaskDef.getCorrectionHint();
-	}
 
 	public void build() throws TaskApiException{
 		paintSubTask.setTextAnswer( "" );
@@ -260,7 +196,7 @@ public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTaskl
 		String answer = paintSubTask.getTextAnswer();
 		return answer == null? "":answer;
 	}
-	
+
 	private boolean isTextuallyAnswerdByStudent(){
 		return paintSubTask.getTextAnswer() != null && paintSubTask.getTextAnswer().trim().length() != 0;
 	}
@@ -269,7 +205,7 @@ public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTaskl
 		return paintSubTaskDef.getTextualAnswer()!=null && paintSubTaskDef.getTextualAnswer().isSetTextFieldWidth() ?
 					paintSubTaskDef.getTextualAnswer().getTextFieldWidth() : 60;
 	}
-	
+
 	public int getTextFieldHeight(){
 		return paintSubTaskDef.getTextualAnswer()!=null && paintSubTaskDef.getTextualAnswer().isSetTextFieldHeight() ?
 				paintSubTaskDef.getTextualAnswer().getTextFieldHeight() : 10;

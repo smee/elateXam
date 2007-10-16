@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.complex;
 
@@ -27,27 +27,28 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
 import de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Try;
+import de.thorstenberger.taskmodel.complex.jaxb.TaskBlockType;
 
 /**
  * @author Thorsten Berger
  *
  */
 public interface ComplexTaskFactory {
-	
+
 	/**
-	 * 
+	 *
 	 * @param block
 	 * @param index the index determing the position of the block in its category, starts with 0 for the first block
 	 * @return
 	 */
-	public Block instantiateBlock( Object block, int index );
-	
+	public Block instantiateBlock( TaskBlockType block, int index );
+
 	public SubTasklet createSubTaskletForSubTaskDef( SubTaskDef subTaskDef, ComplexTaskDefRoot complexTaskDefRoot, String categoryId ) throws TaskApiException;
-	
+
 	public SubTasklet instantiateSubTasklet( Object subTask, ComplexTaskDefRoot complexTaskDefRoot, String categoryId );
-	
+
 	public Try createTry( long startTime, ComplexTaskFactory complexTaskFactory, ComplexTaskDefRoot complexTaskDefRoot ) throws TaskApiException;
-	
+
 	public ComplexTaskletCorrector getComplexTaskletCorrector();
-	
+
 }

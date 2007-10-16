@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 package de.thorstenberger.taskmodel.view;
 
+import java.text.NumberFormat;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import de.thorstenberger.taskmodel.MethodNotSupportedException;
 import de.thorstenberger.taskmodel.complex.ParsingException;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 
 /**
@@ -36,39 +38,55 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 public abstract class SubTaskView {
 
 	/**
-	 * 
+	 *
 	 */
 	public SubTaskView() {
 	}
-	
+
 	/**
 	 * @param relativeTaskNumber number of the task on the current html page
 	 * @return
 	 */
 	public abstract String getRenderedHTML( HttpServletRequest request, int relativeTaskNumber );
-	
+
 	public abstract String getCorrectedHTML( HttpServletRequest request, int relativeTaskNumber );
-	
+
 	public abstract String getCorrectionHTML( String actualCorrector, HttpServletRequest request );
-	
+
 
 	/**
-	 * 
+	 *
 	 * task[0].answer[1]
 	 *
 	 */
 	public abstract SubmitData getSubmitData( Map postedVarsForTask ) throws ParsingException;
-	
+
 	public abstract CorrectionSubmitData getCorrectionSubmitData( Map postedVars ) throws ParsingException, MethodNotSupportedException;
-	
+
 	protected String getMyPart( String varName ) throws ParsingException{
 		try {
-			
+
 			return varName.substring( varName.indexOf( '.' ) + 1, varName.length() );
-			
+
 		} catch (StringIndexOutOfBoundsException e) {
 			throw new ParsingException( e );
 		}
 	}
-	
+
+	protected String getCorrectorPointsInputString(String actualCorrector, String taskTypePrefix, SubTasklet subtasklet) {
+		NumberFormat nF = NumberFormat.getNumberInstance();
+
+	    String points = "";
+	    if( subtasklet.isCorrected() && !subtasklet.isAutoCorrected() ){
+
+	    	points = nF.format( subtasklet.getPointsByCorrector( actualCorrector ) );
+
+		    return "<br><div align=\"right\">Punkte: " +
+		    		"<input type=\"text\" name=\"task[0]."+taskTypePrefix+"_points\" size=\"4\" value=\"" + points + "\"></div><br>";
+
+	    }
+	    else
+	    	return "";
+	}
+
 }

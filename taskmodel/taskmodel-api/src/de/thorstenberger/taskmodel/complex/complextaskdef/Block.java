@@ -46,5 +46,7 @@ public interface Block {
 	public boolean isPreserveOrder();
 
 	public float getPointsPerSubTask();
-
+	
+	public float getReachablePoints();
+	
 }

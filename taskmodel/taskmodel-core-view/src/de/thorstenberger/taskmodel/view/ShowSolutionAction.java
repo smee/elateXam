@@ -155,6 +155,7 @@ public class ShowSolutionAction extends Action {
 				stivo.setVirtualSubTaskletNumber( subTasklet.getVirtualSubtaskNumber() );
 				stivo.setRenderedHTML( SubTaskViewFactory.getSubTaskView( subTasklet ).getCorrectedHTML( request, i++ ) );
 				stivo.setCorrected( subTasklet.isCorrected() );
+				stivo.setInteractiveFeedback( subTasklet.isInteractiveFeedback() );
 				
 				if( subTasklet.isCorrected() ){
 					List<Correction> corrections = new LinkedList<Correction>();

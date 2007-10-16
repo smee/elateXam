@@ -35,6 +35,7 @@ public class SubTaskletInfoVO {
 	private String problem;
 	private String renderedHTML;
 	private boolean corrected;
+		private boolean interactiveFeedback;	
 //	private boolean needsManualCorrection;
 //	private String points;
 	private boolean needsManualCorrectionFlag;
@@ -201,6 +202,13 @@ public class SubTaskletInfoVO {
 	public void setCorrectionHint(String correctionHint) {
 		this.correctionHint = correctionHint;
 	}
+	public boolean isInteractiveFeedback() {
+		return interactiveFeedback;
+	}
+	public void setInteractiveFeedback(boolean interactiveFeedback) {
+		this.interactiveFeedback = interactiveFeedback;
+	}
+	
 	
 	public class Correction{
 		

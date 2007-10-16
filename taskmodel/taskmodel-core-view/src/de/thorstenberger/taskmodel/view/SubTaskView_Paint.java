@@ -35,7 +35,7 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTa
 
 public class SubTaskView_Paint extends SubTaskView {
 
-	private SubTasklet_Paint paintSubTasklet;
+	public SubTasklet_Paint paintSubTasklet;
 
 	public SubTaskView_Paint(SubTasklet_Paint paintSubTasklet) {
 		this.paintSubTasklet=paintSubTasklet;
@@ -47,30 +47,30 @@ public class SubTaskView_Paint extends SubTaskView {
 	public String getRenderedHTML( HttpServletRequest request, int relativeTaskNumber) {
 		return getRenderedHTML( request, relativeTaskNumber, false );
 	}
-	
+
 	public String getRenderedHTML( HttpServletRequest request, int relativeTaskNumber, boolean corrected) {
 		StringBuffer ret = new StringBuffer();
-		
+
 		// workaround: textarea nicht disabled
 //		corrected = false;
-		
+
 		String userAgent = request.getHeader( "User-Agent" );
 		boolean mozilla = userAgent != null && userAgent.startsWith( "Mozilla" ) && userAgent.indexOf( "MSIE" ) == -1;
-		
-		
+
+
 		ret.append("<div align=\"center\">\n");
-		ret.append("<object\r\n" + 
-				( mozilla ? "    classid = \"java:drawing/DrawingApplet.class\"\r\n" : "    classid = \"clsid:8AD9C840-044E-11D1-B3E9-00805F499D93\"\r\n" )  + 
-				"    codebase = \"http://java.sun.com/update/1.5.0/jinstall-1_5-windows-i586.cab#Version=5,0,0,7\"\r\n" + 
-				"    WIDTH = \"600\" HEIGHT = \"" + (corrected ? 355 : 395 ) + "\" NAME = \"drawTask_" + relativeTaskNumber + "\" >\r\n" + 
-				"    <param name=\"code\" value=\"drawing/DrawingApplet.class\" >\r\n" + 
-				"    <param name=\"codebase\" value=\"" + request.getContextPath() + "/drawTask\" >\r\n" + 
-				"    <param name=\"archive\" value=\"drawtask-1.0.jar\" >\r\n" + 
-				"    <param name=\"name\" value=\"drawTask_" + relativeTaskNumber + "\" >\r\n" + 
-				"    <param name=\"mayscript\" value=\"true\" >\r\n" + 
-				"    <param name=\"type\" value=\"application/x-java-applet;version=1.5\">\r\n" + 
+		ret.append("<object\r\n" +
+				( mozilla ? "    classid = \"java:drawing/DrawingApplet.class\"\r\n" : "    classid = \"clsid:8AD9C840-044E-11D1-B3E9-00805F499D93\"\r\n" )  +
+				"    codebase = \"http://java.sun.com/update/1.5.0/jinstall-1_5-windows-i586.cab#Version=5,0,0,7\"\r\n" +
+				"    WIDTH = \"600\" HEIGHT = \"" + (corrected ? 355 : 395 ) + "\" NAME = \"drawTask_" + relativeTaskNumber + "\" >\r\n" +
+				"    <param name=\"code\" value=\"drawing/DrawingApplet.class\" >\r\n" +
+				"    <param name=\"codebase\" value=\"" + request.getContextPath() + "/drawTask\" >\r\n" +
+				"    <param name=\"archive\" value=\"drawtask-1.0.jar\" >\r\n" +
+				"    <param name=\"name\" value=\"drawTask_" + relativeTaskNumber + "\" >\r\n" +
+				"    <param name=\"mayscript\" value=\"true\" >\r\n" +
+				"    <param name=\"type\" value=\"application/x-java-applet;version=1.5\">\r\n" +
 				"    <param name=\"scriptable\" value=\"true\"> ");
-		
+
 //		ret.append("<applet name=\"drawTask_" + relativeTaskNumber + "\" codebase=\"");
 //		ret.append(request.getContextPath()).append("/drawTask\" code=\"drawing/DrawingApplet.class\" archive=\"drawtask-1.0.jar\" width=\"600\" height=\"395\" mayscript>\n");
 		ret.append("<param name=\"mutableForeground\" value=\"").append( paintSubTasklet.getMutablePictureString()).append("\">\n");
@@ -80,17 +80,17 @@ public class SubTaskView_Paint extends SubTaskView {
 		ret.append("<param name=\"resetted\" value=\"").append( paintSubTasklet.isResetted()).append("\">\n");
 		if( corrected )
 			ret.append("<param name=\"viewonly\" value=\"true\">\n");
-		
+
 		ret.append("</object>\n<br/><br/>\n");
 		ret.append("<textarea name=\"task[" + relativeTaskNumber + "].text\" cols=\"" +
 						paintSubTasklet.getTextFieldWidth() + "\" rows=\"" + paintSubTasklet.getTextFieldHeight() + "\" onChange=\"setModified()\">\n");
 		ret.append( paintSubTasklet.getTextualAnswer() );
 		ret.append("</textarea>\n");
 		ret.append("</div>\n");
-		
+
 		ret.append( "<input type=\"hidden\" id=\"task_" + relativeTaskNumber + ".image\" name=\"task[" + relativeTaskNumber + "].image\">\n" );
 		ret.append( "<input type=\"hidden\" id=\"task_" + relativeTaskNumber + ".resetted\" name=\"task[" + relativeTaskNumber + "].resetted\">\n" );
-		
+
 		if( !corrected ){
 			ret.append( "<script type=\"text/javascript\">\n" );
 			ret.append( " var preSave_task_" + relativeTaskNumber + " = function(){\n" );
@@ -107,7 +107,7 @@ public class SubTaskView_Paint extends SubTaskView {
 			ret.append( "</script>\n" );
 		}
 		return ret.toString();
-		
+
 	}
 
 	@Override
@@ -120,18 +120,8 @@ public class SubTaskView_Paint extends SubTaskView {
 
 		StringBuilder ret = new StringBuilder();
 	    ret.append( getRenderedHTML( request, 999999, true ) );
-	    
-	    NumberFormat nF = NumberFormat.getNumberInstance();
-	    
-	    String points = "";
-	    if( paintSubTasklet.isCorrected() && !paintSubTasklet.isAutoCorrected() ){
-	    	
-	    	points = nF.format( paintSubTasklet.getPointsByCorrector( actualCorrector ) );
-	    	
-		    ret.append("<br><div align=\"right\">Punkte: " +
-		    		"<input type=\"text\" name=\"task[0].text_points\" size=\"4\" value=\"" + points + "\"></div><br>");
-		    
-	    }
+
+	    ret.append(getCorrectorPointsInputString(actualCorrector, "text", paintSubTasklet));
 
 	    return ret.toString();
 	}
@@ -145,7 +135,7 @@ public class SubTaskView_Paint extends SubTaskView {
 		String textString = null;
 		String undoData= null;
 		boolean isResetted=false;
-		
+
 		while( keyIt.hasNext() ){
 			String key = (String)keyIt.next();
 			if( getMyPart( key ).equals( "image" ) ){
@@ -161,7 +151,7 @@ public class SubTaskView_Paint extends SubTaskView {
 				undoData = pictureString.substring(pos+3);
 				pictureString=pictureString.substring(0,pos);
 			}
-		}			
+		}
 		return new PaintSubmitData(pictureString,undoData,isResetted,textString);
 	}
 

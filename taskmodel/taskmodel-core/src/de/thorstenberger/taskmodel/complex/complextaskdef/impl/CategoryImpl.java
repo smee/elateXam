@@ -28,6 +28,7 @@ import java.util.List;
 import de.thorstenberger.taskmodel.complex.ComplexTaskFactory;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Category;
+import de.thorstenberger.taskmodel.complex.jaxb.TaskBlockType;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType;
 
 /**
@@ -101,7 +102,7 @@ public class CategoryImpl implements Category {
 		Iterator it = categoryType.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock().iterator();
 		int i = 0;
 		while( it.hasNext() )
-			ret.add( complexTaskFactory.instantiateBlock( it.next(), i++ ) );
+			ret.add( complexTaskFactory.instantiateBlock( (TaskBlockType) it.next(), i++ ) );
 		return ret;
 	}
 
@@ -113,7 +114,7 @@ public class CategoryImpl implements Category {
 		if( categoryType.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock().size() <= index )
 			return null;
 		
-		return complexTaskFactory.instantiateBlock( categoryType.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock().get( index ), index );
+		return complexTaskFactory.instantiateBlock( (TaskBlockType) categoryType.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock().get( index ), index );
 		
 	}
 	

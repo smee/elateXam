@@ -42,9 +42,9 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTa
 public class SubTaskView_TEXT extends SubTaskView {
 
 	private SubTasklet_Text textSubTasklet;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public SubTaskView_TEXT( SubTasklet_Text textSubTasklet ) {
 		this.textSubTasklet = textSubTasklet;
@@ -56,47 +56,34 @@ public class SubTaskView_TEXT extends SubTaskView {
 	public String getRenderedHTML( HttpServletRequest request, int relativeTaskNumber) {
 		return getRenderedHTML( relativeTaskNumber, false );
 	}
-	
+
 	public String getRenderedHTML(int relativeTaskNumber, boolean corrected) {
 		StringBuffer ret = new StringBuffer();
-		
+
 		// workaround: textarea not disabled, for better screen reading experience :)
 		corrected = false;
-		
+
 		ret.append("<div align=\"center\">\n");
 		ret.append("<textarea name=\"task[" + relativeTaskNumber + "].text\" cols=\"" +
 						textSubTasklet.getTextFieldWidth() + "\" rows=\"" + textSubTasklet.getTextFieldHeight() + "\" onChange=\"setModified()\"" +
 						( corrected ? "disabled=\"disabled\"" : "" ) + ">\n");
 		ret.append( textSubTasklet.getAnswer() );
 		ret.append("</textarea></div>\n");
-		
+
 		return ret.toString();
-		
+
 	}
-	
+
 	public String getCorrectedHTML( HttpServletRequest request, int relativeTaskNumber ){
 		return getRenderedHTML( -1, true );
 	}
-	
+
 	public String getCorrectionHTML( String actualCorrector, HttpServletRequest request ){
 	    StringBuffer ret = new StringBuffer();
 	    ret.append( getRenderedHTML( -1, true ) );
-	    
-	    NumberFormat nF = NumberFormat.getNumberInstance();
-	    
-	    String points = "";
-	    if( !textSubTasklet.isAutoCorrected() ){
-	    	
-	    	if( textSubTasklet.isCorrectedByCorrector( actualCorrector ) )
-	    		points = nF.format( textSubTasklet.getPointsByCorrector( actualCorrector ) );
-	    	else
-	    		points = nF.format( 0 );
-	    	
-		    ret.append("<br><div align=\"right\">Punkte: " +
-		    		"<input type=\"text\" name=\"task[0].text_points\" size=\"4\" value=\"" + points + "\"></div><br>");
-		    
-	    }
-	    
+
+	    ret.append(getCorrectorPointsInputString(actualCorrector, "text", textSubTasklet));
+
 	    return ret.toString();
 	}
 
@@ -105,13 +92,13 @@ public class SubTaskView_TEXT extends SubTaskView {
 	 */
 	public SubmitData getSubmitData(Map postedVarsForTask)
 			throws ParsingException {
-		
+
 		Iterator it = postedVarsForTask.values().iterator();
 		if( it.hasNext() )
 			return new TextSubmitData( (String) it.next() );
 		else
 			throw new ParsingException();
-		
+
 		}
 
 	public CorrectionSubmitData getCorrectionSubmitData( Map postedVars ) throws ParsingException, MethodNotSupportedException{

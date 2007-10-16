@@ -1,0 +1,45 @@
+
+<project default="java:jar"
+         xmlns:j="jelly:core"
+         xmlns:define="jelly:define"
+		 xmlns:ant="jelly:ant"
+		 xmlns:artifact="artifact">
+
+	<goal name="deploy" prereqs="build">
+	    <artifact:install
+      		artifact="${maven.build.dir}/${maven.final.name}.jar"
+      		type="jar"
+      		project="${pom}"/>
+	</goal>
+
+	<goal name="build" prereqs="java:compile,osgi:copyjars">
+		<ant:delete file="${maven.build.dir}/${maven.final.name}.jar"/>
+		<ant:taskdef name="bnd" classname="aQute.bnd.ant.BndTask">
+  			<ant:classpath>
+    			<ant:pathelement location="${plugin.getDependencyPath('biz.aqute:bnd')}"/>
+    			<ant:path refid="maven.dependency.classpath"/>
+  			</ant:classpath>
+		</ant:taskdef>
+		<ant:bnd classpath="${maven.build.dir}/classes"
+				 eclipse="false"
+				 failok="false"
+				 exceptions="true"
+				 files="junittask.bnd"
+				 output="${maven.build.dir}/${maven.final.name}.jar"/>
+		<echo message="Done building bundle via BND."/>
+	</goal>
+
+<goal name="osgi:copyjars"
+    description="Copy all dependent JARs">
+
+    <ant:echo>Copy dependent JARs into ${maven.build.dir}/lib</ant:echo>
+	<ant:mkdir dir="${maven.build.dir}/lib"/>
+    <j:forEach var="lib" items="${pom.artifacts}">
+      <j:set var="dep" value="${lib.dependency}"/>
+      <j:if test="${dep.getProperty('osgi.bundle')=='true'}">
+        <ant:copy todir="${maven.build.dir}/lib" file="${lib.path}"/>
+      </j:if>
+    </j:forEach>
+
+  </goal>
+</project>

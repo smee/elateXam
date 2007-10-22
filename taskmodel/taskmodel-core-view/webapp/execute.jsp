@@ -13,9 +13,10 @@
 <body>
 
 <jsp:include page="header.jsp" />
-<script type="text/javascript" src="/taskmodel-core-view/jquery.js"></script>
+<!--script type="text/javascript" src="/taskmodel-core-view/jquery.js"></script>
 <script type="text/javascript" src="/taskmodel-core-view/thickbox.js"></script>
-<link rel="stylesheet" href="/taskmodel-core-view/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="/taskmodel-core-view/thickbox.css" type="text/css" media="screen" /-->
+
 <!--
 Scripts by Daniel Zimmermann and Thorsten Berger
 -->

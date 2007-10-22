@@ -28,6 +28,7 @@ public class SandboxClassLoader extends ClassLoader{
 		super(parent);
 		this.restricted=true;
 	}
+
 	@Override
 	protected synchronized Class<?> loadClass(String c, boolean resolve)
 	throws ClassNotFoundException{
@@ -50,9 +51,10 @@ public class SandboxClassLoader extends ClassLoader{
 				c.startsWith("java.rmi") ||
 				c.startsWith("javax.") ||
 				!(c.startsWith("java.") || c.startsWith("groovy."))))
-			throw new ClassNotFoundException(c);
+			throw new SecurityException("Class \""+c+"\" is not permitted.");
 		return super.loadClass(c,resolve);
 	}
+
 	public void setRestricted(boolean b) {
 		this.restricted=b;
 	}

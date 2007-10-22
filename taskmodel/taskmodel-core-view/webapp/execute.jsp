@@ -295,7 +295,6 @@ function fenster(file,breite,hoehe) {
 		<% int i = 0; %>
 
 		<c:forEach items="${SubTasklets}" var="SubTasklet">
-			<jsp:useBean id="SubTasklet" class="de.thorstenberger.taskmodel.view.SubTaskletInfoVO"/>
 			<fieldset class="complexTask"><legend>Aufgabe ${SubTasklet.virtualSubTaskletNumber}</legend>
 			<table width="100%" cellspacing="0" cellpadding="0"><tr><td align="center" valign="top" class="ComplexTaskHint">
 			<c:if test="${SubTasklet.hint != null}">
@@ -316,7 +315,7 @@ function fenster(file,breite,hoehe) {
 							${SubTasklet.correctedHTML}<br><br>
 						</fieldset>
 					</div>
-					<table width="100%>
+					<table width="100%">
 						<tr>
 						<td valign="top">
             			</td>

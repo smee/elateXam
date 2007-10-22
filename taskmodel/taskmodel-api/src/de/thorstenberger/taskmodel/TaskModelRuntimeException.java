@@ -1,6 +1,6 @@
 /*
 
-Copyright (C) 2006 Steffen Dienst
+Copyright (C) 2007 Steffen Dienst
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,17 +16,44 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package de.thorstenberger.taskmodel.util;
+package de.thorstenberger.taskmodel;
 
+/**
+ * RuntimeException as parent for all exceptions occuring at runtime
+ * @author Steffen Dienst
+ *
+ */
+public class TaskModelRuntimeException extends RuntimeException {
 
-import de.thorstenberger.taskmodel.TaskModelRuntimeException;
-
-public class ReflectionHelper {
-	public static Object callMethod(Object obj, String method,Object... args) {
-		try {
-			return obj.getClass().getMethod(method).invoke(obj,args);
-		} catch (Exception e) {
-			throw new TaskModelRuntimeException(e);
-		}
+	/**
+	 *
+	 */
+	public TaskModelRuntimeException() {
 	}
+
+	/**
+	 *
+	 * @param message
+	 */
+	public TaskModelRuntimeException(String message) {
+		super(message);
+	}
+
+	/**
+	 *
+	 * @param cause
+	 */
+	public TaskModelRuntimeException(Throwable cause) {
+		super(cause);
+	}
+
+	/**
+	 *
+	 * @param message
+	 * @param cause
+	 */
+	public TaskModelRuntimeException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
 }

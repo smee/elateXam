@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import de.thorstenberger.taskmodel.TaskModelRuntimeException;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDefOrChoice;
 import de.thorstenberger.taskmodel.complex.complextaskdef.choices.impl.GenericChoiceImpl;
@@ -75,12 +76,8 @@ public class GenericBlockImpl implements Block{
 			if(method.getName().endsWith("SubTaskDefOrChoice"))
 				try {
 					return (List) method.invoke(jaxbTaskBlock);
-				} catch (IllegalArgumentException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				} catch (InvocationTargetException e) {
-					e.printStackTrace();
+				} catch (Exception e) {
+					throw new TaskModelRuntimeException(e);
 				}
 		}
 		return Collections.EMPTY_LIST;

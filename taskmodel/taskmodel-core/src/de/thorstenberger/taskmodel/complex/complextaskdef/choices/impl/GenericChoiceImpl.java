@@ -18,12 +18,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 package de.thorstenberger.taskmodel.complex.complextaskdef.choices.impl;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import de.thorstenberger.taskmodel.TaskModelRuntimeException;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Choice;
 import de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef;
 import de.thorstenberger.taskmodel.complex.complextaskdef.subtaskdefs.impl.GenericSubTaskDefImpl;
@@ -36,7 +36,7 @@ public class GenericChoiceImpl implements Choice {
 	public GenericChoiceImpl(Object jaxbChoice) {
 		this.jaxbChoice=jaxbChoice;
 	}
-	
+
 	public List<SubTaskDef> getSubTaskDefs() {
 		List<SubTaskDef> ret = new ArrayList<SubTaskDef>();
 		Iterator it = getSubTaskDefIterator();
@@ -52,12 +52,8 @@ public class GenericChoiceImpl implements Choice {
 			if(method.getName().contains("SubTaskDef")) {
 				try {
 					return ((List)method.invoke(jaxbChoice)).iterator();
-				} catch (IllegalArgumentException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				} catch (InvocationTargetException e) {
-					e.printStackTrace();
+				} catch (Exception e) {
+					throw new TaskModelRuntimeException(e);
 				}
 			}
 		}

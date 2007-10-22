@@ -33,6 +33,7 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.AddOnSubTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 import de.thorstenberger.taskmodel.view.SubTaskView;
+import de.thorstenberger.taskmodel.view.ViewContext;
 
 public class SubTaskView_JUnit extends SubTaskView {
 
@@ -42,7 +43,7 @@ public class SubTaskView_JUnit extends SubTaskView {
 		this.just=(SubTasklet_JUnit)tasklet;
 	}
 
-	public String getRenderedHTML( HttpServletRequest request, int relativeTaskNumber) {
+	public String getRenderedHTML( ViewContext context, int relativeTaskNumber) {
 		return getRenderedHTML( relativeTaskNumber, false );
 	}
 
@@ -66,11 +67,11 @@ public class SubTaskView_JUnit extends SubTaskView {
 
 	}
 
-	public String getCorrectedHTML( HttpServletRequest request, int relativeTaskNumber ){
+	public String getCorrectedHTML( ViewContext context, int relativeTaskNumber ){
 		return getRenderedHTML( -1, true );
 	}
 
-	public String getCorrectionHTML( String actualCorrector, HttpServletRequest request ){
+	public String getCorrectionHTML( String actualCorrector, ViewContext context ){
 	    StringBuffer ret = new StringBuffer();
 	    ret.append( getRenderedHTML( -1, true ) );
 

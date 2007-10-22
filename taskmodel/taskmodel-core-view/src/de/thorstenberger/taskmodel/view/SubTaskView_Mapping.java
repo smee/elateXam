@@ -43,9 +43,9 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTa
 public class SubTaskView_Mapping extends SubTaskView {
 
 	private SubTasklet_Mapping mappingSubTasklet;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public SubTaskView_Mapping( SubTasklet_Mapping mappingSubTasklet ) {
 		this.mappingSubTasklet = mappingSubTasklet;
@@ -54,18 +54,20 @@ public class SubTaskView_Mapping extends SubTaskView {
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.uebman.services.student.task.complex.SubTaskView#getRenderedHTML(int)
 	 */
-	public String getRenderedHTML(HttpServletRequest request, int relativeTaskNumber) {
+	public String getRenderedHTML(ViewContext context, int relativeTaskNumber) {
 		return getRenderedHTML( null, relativeTaskNumber, false );
 	}
-	
-	private String getRenderedHTML( HttpServletRequest request, int relativeTaskNumber, boolean corrected ) {
+
+	private String getRenderedHTML( ViewContext context, int relativeTaskNumber, boolean corrected ) {
+		HttpServletRequest request=(HttpServletRequest) context.getViewContextObject();
+
 		StringBuffer ret = new StringBuffer();
-		
+
 		SubTasklet_Mapping.Concept[] concepts = mappingSubTasklet.getConcepts();
 		SubTasklet_Mapping.Assignment[] assignments = mappingSubTasklet.getAssignments();
-		
+
 		ret.append("<table border=\"0\" cellspacing=\"2\" cellpadding=\"2\">\n");
-		
+
 		for( int i=0; i<concepts.length; i++ ){
 			ret.append("<tr><td>");
 			ret.append( concepts[i].getConceptName() );
@@ -77,15 +79,15 @@ public class SubTaskView_Mapping extends SubTaskView {
 				ret.append( "	<option selected=\"selected\" value=\"null\"></option>\n" );
 			else
 				ret.append( "	<option value=\"null\"></option>\n" );
-			
-			
+
+
 			for( int j=0; j<assignments.length; j++ ){
-					
+
 				if( assignments[j].equals( concepts[i].getAssignment() ) )
 					ret.append( "	<option selected=\"selected\" value=\"" + j + "\">" + assignments[j].getAssignmentName() + "</option>\n" );
 				else
 					ret.append( "	<option value=\"" + j + "\">" + assignments[j].getAssignmentName() + "</option>\n" );
-				
+
 			}
 			ret.append("</select>&nbsp;\n");
 			if( corrected ){
@@ -102,69 +104,69 @@ public class SubTaskView_Mapping extends SubTaskView {
 			if( i != concepts.length -1 )
 				ret.append("<tr><td colspan=3>&nbsp;</td></tr>");
 		}
-		
+
 		ret.append("</table>");
-		
-		
+
+
 		return ret.toString();
 	}
-	
-	public String getCorrectedHTML( HttpServletRequest request, int relativeTaskNumber ){
-		return getRenderedHTML( request, -1, true );
+
+	public String getCorrectedHTML( ViewContext context, int relativeTaskNumber ){
+		return getRenderedHTML( context, -1, true );
 	}
 
-	public String getCorrectionHTML( String actualCorrector, HttpServletRequest request ){
+	public String getCorrectionHTML( String actualCorrector, ViewContext context ){
 	    return null;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.uebman.services.student.task.complex.SubTaskView#getSubmitData(java.util.Map, int)
 	 */
 	public SubmitData getSubmitData(Map postedVarsForTask)
 			throws ParsingException {
-		
+
 		MappingSubmitData ret = new MappingSubmitData();
 		Set varNames = postedVarsForTask.keySet();
 		Iterator it = varNames.iterator();
-		
+
 		while( it.hasNext() ){
 			String varName = (String) it.next();
 			String myPart = getMyPart( varName );
-			
+
 			int conceptIndex = getConceptIndex( myPart );
 			ret.setAssignment( conceptIndex, (String) postedVarsForTask.get( varName ) );
 		}
-		
+
 		ret.constructAssignments();
-		
+
 		return ret;
 	}
-	
+
 	public CorrectionSubmitData getCorrectionSubmitData( Map postedVars ) throws ParsingException, MethodNotSupportedException{
 	    throw new MethodNotSupportedException();
 	}
-	
+
 	private int getConceptIndex( String part ) throws ParsingException{
 		try {
-			
+
 			StringTokenizer st = new StringTokenizer(part, "_");
 			st.nextToken();	// concept
 			return Integer.parseInt( st.nextToken() );	// Nummer
-			
+
 		} catch (NumberFormatException e) {
 			throw new ParsingException( e );
 		} catch (NoSuchElementException e1){
 			throw new ParsingException( e1 );
 		}
 	}
-	
+
 	private String getSymbolForCorrectedAssignment( HttpServletRequest request , SubTasklet_Mapping.Concept concept ){
-		
+
 		if( concept.isCorrectlyAssigned() )
 			return "<img src=\"" + request.getContextPath() + "/pics/true.gif\">";
 		else
 			return "<img src=\"" + request.getContextPath() + "/pics/false.gif\">";
-		
+
 	}
 
 }

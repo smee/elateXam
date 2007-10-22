@@ -10,7 +10,7 @@
     <currentVersion>${elatePortal.version}</currentVersion>
     <repository />
     <dependencies>
-    
+
     	<!--  not really necessary -->
 	    <dependency>
 	      <groupId>commons-logging</groupId>
@@ -18,15 +18,8 @@
 	      <version>1.0.4</version>
 	      <type>jar</type>
 	    </dependency>
-	    
-	    <dependency>
-            <groupId>servletapi</groupId>
-            <artifactId>servletapi</artifactId>
-            <version>2.4</version>
-            <type>jar</type>
-        </dependency>
 
-	</dependencies>    
+	</dependencies>
     <build>
         <sourceDirectory>src</sourceDirectory>
         <resources>

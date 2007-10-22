@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.view.correction;
 
@@ -46,9 +46,11 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.ManualSubTaskletC
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 import de.thorstenberger.taskmodel.view.DateUtil;
+import de.thorstenberger.taskmodel.view.HtmlViewContext;
 import de.thorstenberger.taskmodel.view.ParserUtil;
 import de.thorstenberger.taskmodel.view.SubTaskViewFactory;
 import de.thorstenberger.taskmodel.view.SubTaskletInfoVO;
+import de.thorstenberger.taskmodel.view.ViewContext;
 import de.thorstenberger.taskmodel.view.correction.CorrectionInfoVO.CorrectorAnnotation;
 import de.thorstenberger.taskmodel.view.correction.tree.CorrectionNodeFormatter;
 import de.thorstenberger.taskmodel.view.correction.tree.SubTaskletRootNode;
@@ -64,14 +66,14 @@ public class DoCorrectionAction extends Action {
 	 */
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
+
 		   ActionMessages errors = new ActionMessages();
 
 			long id;
 			String userId = request.getParameter( "userId" );
 			String selectedSubTaskletNum = request.getParameter( "selectedSubTaskletNum" );
 			SubTasklet selectedSubTasklet = null;
-			
+
 			try {
 				id = Long.parseLong( request.getParameter( "taskId" ) );
 			} catch (NumberFormatException e) {
@@ -79,7 +81,7 @@ public class DoCorrectionAction extends Action {
 				saveErrors( request, errors );
 				return mapping.findForward( "error" );
 			}
-			
+
 			CorrectorDelegateObject delegateObject = (CorrectorDelegateObject)TaskModelViewDelegate.getDelegateObject( request.getSession().getId(), id );
 
 			if( delegateObject == null ){
@@ -90,7 +92,7 @@ public class DoCorrectionAction extends Action {
 			request.setAttribute( "ReturnURL", delegateObject.getReturnURL() );
 
 			ComplexTasklet tasklet = (ComplexTasklet)delegateObject.getTaskManager().getTaskletContainer().getTasklet( id, userId );
-			
+
 			if( !delegateObject.isPrivileged() ){
 				if( !delegateObject.getCorrectorLogin().equals( tasklet.getTaskletCorrection().getCorrector() ) ){
 					errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "may.only.correct.assigned.tasklets" ) );
@@ -98,10 +100,10 @@ public class DoCorrectionAction extends Action {
 					return mapping.findForward( "error" );
 				}
 			}
-			
+
 			// check the status
 			if( tasklet.hasOrPassedStatus( Tasklet.Status.SOLVED ) ){
-			
+
 				List<Page> pages = tasklet.getSolutionOfLatestTry().getPages();
 				List<SubTasklet> subTasklets = new ArrayList<SubTasklet>();
 				for( Page page : pages ){
@@ -111,21 +113,21 @@ public class DoCorrectionAction extends Action {
 						if( subTasklet.getVirtualSubtaskNumber().equals( selectedSubTaskletNum ) )
 							selectedSubTasklet = subTasklet;
 					}
-					
+
 				}
-				
+
 				String currentCorrector = delegateObject.getCorrectorLogin();
-				
+
 				SubTaskletRootNode rn = new SubTaskletRootNode( subTasklets, userId, id, selectedSubTaskletNum, currentCorrector );
 				CorrectionNodeFormatter cnf = new CorrectionNodeFormatter( id, userId, request.getContextPath() + mapping.findForward( "doCorrection" ).getPath(), request, response );
 				request.setAttribute( "rootNode", rn );
 				request.setAttribute( "nodeFormatter", cnf );
 				request.setAttribute( "expanded", true );
-				
+
 				CorrectionInfoVO civo = new CorrectionInfoVO();
 				civo.setTaskId( id );
 				civo.setUserId( userId );
-				
+
 				// set points
 				if( tasklet.getTaskletCorrection().isCorrected() ){
 					List<CorrectionInfoVO.Correction> taskletCorrections = new LinkedList<CorrectionInfoVO.Correction>();
@@ -136,7 +138,7 @@ public class DoCorrectionAction extends Action {
 							taskletCorrections.add( new CorrectionInfoVO.Correction( mc.getCorrector(), false, mc.getPoints() ) );
 					civo.setCorrections( taskletCorrections );
 				}
-				
+
 				civo.setStatus( tasklet.getStatus().getValue() );
 				civo.setCorrectorLogin( tasklet.getTaskletCorrection().getCorrector() );
 				civo.setCorrectorHistory( tasklet.getTaskletCorrection().getCorrectorHistory() );
@@ -150,7 +152,7 @@ public class DoCorrectionAction extends Action {
 				civo.setOtherCorrectorAnnotations( cas );
 				//
 				civo.setNumOfTry( tasklet.getComplexTaskHandlingRoot().getNumberOfTries() );
-				
+
 				List<CorrectionInfoVO.AnnotationInfoVO> acknowledgedAnnotations = new ArrayList<CorrectionInfoVO.AnnotationInfoVO>();
 				List<CorrectionInfoVO.AnnotationInfoVO> nonAcknowledgedAnnotations = new ArrayList<CorrectionInfoVO.AnnotationInfoVO>();
 				for( StudentAnnotation anno : tasklet.getTaskletCorrection().getStudentAnnotations() )
@@ -161,20 +163,21 @@ public class DoCorrectionAction extends Action {
 				civo.setAcknowledgedAnnotations( acknowledgedAnnotations );
 				civo.setNonAcknowledgedAnnotations( nonAcknowledgedAnnotations );
 				civo.setCanAcknowledge( tasklet.getStatus() == Tasklet.Status.ANNOTATED );
-				
+
 				// available correctors
 				List<UserInfo> availableCorrectorsUI = delegateObject.getTaskManager().getCorrectors();
 				List<String> availableCorrectors = new LinkedList<String>();
 				for( UserInfo corrector : availableCorrectorsUI )
 					availableCorrectors.add( corrector.getLogin() );
 				civo.setAvailableCorrectors( availableCorrectors );
-				
+
 				request.setAttribute( "Correction", civo );
-				
-				
+
+				ViewContext context = new HtmlViewContext( request );
+
 				// SubTasklet selected -> show it
 				if( selectedSubTasklet != null ){
-					
+
 					SubTaskletInfoVO stivo = new SubTaskletInfoVO();
 					stivo.setCorrected( selectedSubTasklet.isCorrected() );
 					if( selectedSubTasklet.isCorrected() ){
@@ -187,32 +190,32 @@ public class DoCorrectionAction extends Action {
 						stivo.setCorrections( corrections );
 					}
 					stivo.setNeedsManualCorrectionFlag( selectedSubTasklet.isSetNeedsManualCorrectionFlag() );
-						
+
 					stivo.setHint( selectedSubTasklet.getHint() );
 					stivo.setCorrectionHint( ParserUtil.getCorrectionHint( selectedSubTasklet.getCorrectionHint() ) );
 					stivo.setProblem( ParserUtil.getProblem( selectedSubTasklet.getProblem() ) );
 					stivo.setReachablePoints( selectedSubTasklet.getReachablePoints() );
 					stivo.setVirtualSubTaskletNumber( selectedSubTasklet.getVirtualSubtaskNumber() );
-					
-					stivo.setCorrectionHTML( SubTaskViewFactory.getSubTaskView( selectedSubTasklet ).getCorrectionHTML( delegateObject.getCorrectorLogin(), request ) );
+
+					stivo.setCorrectionHTML( SubTaskViewFactory.getSubTaskView( selectedSubTasklet ).getCorrectionHTML( delegateObject.getCorrectorLogin(), context ) );
 					if( stivo.getCorrectionHTML() == null )
-						stivo.setCorrectedHTML( SubTaskViewFactory.getSubTaskView( selectedSubTasklet ).getCorrectedHTML( request, -1 ) );
-					
-					civo.setSubTasklet( stivo );				
-					
+						stivo.setCorrectedHTML( SubTaskViewFactory.getSubTaskView( selectedSubTasklet ).getCorrectedHTML( context, -1 ) );
+
+					civo.setSubTasklet( stivo );
+
 				}
-			
+
 				return mapping.findForward( "success" );
-			
+
 			}else{
-				
+
 				errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "task.cannot_correct_task_not_solved" ) );
 				saveErrors( request, errors );
-				return mapping.findForward( "error" );				
-				
+				return mapping.findForward( "error" );
+
 			}
 	}
 
-	
+
 
 }

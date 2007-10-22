@@ -21,8 +21,6 @@ package de.thorstenberger.taskmodel.view;
 import java.text.NumberFormat;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import de.thorstenberger.taskmodel.MethodNotSupportedException;
 import de.thorstenberger.taskmodel.complex.ParsingException;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
@@ -47,11 +45,11 @@ public abstract class SubTaskView {
 	 * @param relativeTaskNumber number of the task on the current html page
 	 * @return
 	 */
-	public abstract String getRenderedHTML( HttpServletRequest request, int relativeTaskNumber );
+	public abstract String getRenderedHTML( ViewContext context, int relativeTaskNumber );
 
-	public abstract String getCorrectedHTML( HttpServletRequest request, int relativeTaskNumber );
+	public abstract String getCorrectedHTML( ViewContext context, int relativeTaskNumber );
 
-	public abstract String getCorrectionHTML( String actualCorrector, HttpServletRequest request );
+	public abstract String getCorrectionHTML( String actualCorrector, ViewContext context );
 
 
 	/**

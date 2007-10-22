@@ -46,9 +46,9 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTa
 public class SubTaskView_CLOZE extends SubTaskView {
 
 	private SubTasklet_Cloze clozeSubTasklet;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public SubTaskView_CLOZE( SubTasklet_Cloze clozeSubTasklet ) {
 		this.clozeSubTasklet = clozeSubTasklet;
@@ -57,13 +57,13 @@ public class SubTaskView_CLOZE extends SubTaskView {
 	/**
 	 * @see de.thorstenberger.uebman.services.student.task.complex.SubTaskView#getRenderedHTML(int)
 	 */
-	public String getRenderedHTML(HttpServletRequest request, int relativeTaskNumber) {
+	public String getRenderedHTML(ViewContext context, int relativeTaskNumber) {
 		StringBuffer ret = new StringBuffer();
-		
+
 		List content = clozeSubTasklet.getContent();
-		
+
 //		ret.append("<br>");
-		
+
 		for( int i=0; i<content.size(); i++ ){
 			if( content.get( i ) instanceof String ){
 				ret.append( content.get( i ) );
@@ -75,16 +75,17 @@ public class SubTaskView_CLOZE extends SubTaskView {
 										">&nbsp;" );
 			}
 		}
-		
-		
+
+
 		return ret.toString();
 	}
-	
-	public String getCorrectedHTML( HttpServletRequest request, int relativeTaskNumber ){
+
+	public String getCorrectedHTML( ViewContext context, int relativeTaskNumber ){
 		StringBuffer ret = new StringBuffer();
-		
+
 		List content = clozeSubTasklet.getContent();
-				
+		HttpServletRequest request=(HttpServletRequest) context.getViewContextObject();
+
 		for( int i=0; i<content.size(); i++ ){
 			if( content.get( i ) instanceof String ){
 				ret.append( content.get( i ) );
@@ -92,7 +93,7 @@ public class SubTaskView_CLOZE extends SubTaskView {
 				SubTasklet_Cloze.Gap gap = (SubTasklet_Cloze.Gap) content.get( i );
 				ret.append( "&nbsp;<b>\"" + gap.getGapValue() + "\"</b>&nbsp;" );
 				if( gap.isCorrected() ){
-					
+
 					List<Correction> corrections = new LinkedList<Correction>();
 					if( gap.isAutoCorrected() ){
 						corrections.add( new Correction( null, true, gap.isCorrectByAutoCorrection() ) );
@@ -102,7 +103,7 @@ public class SubTaskView_CLOZE extends SubTaskView {
 							corrections.add( new Correction( gc.getCorrector(), false, gc.isCorrect() ) );
 						}
 					}
-					
+
 					for( Correction correction : corrections ){
 						String corrector = correction.isAuto() ? "autom." : correction.getCorrector();
 				        ret.append( "<span class=\"Cloze_CorrectorLabel\">" + corrector + ": </span><img src=\"" + request.getContextPath() + "/pics/" + correction.isCorrect() + ".gif\">&nbsp;&nbsp;" );
@@ -112,16 +113,17 @@ public class SubTaskView_CLOZE extends SubTaskView {
 				ret.append("&nbsp;\n");
 			}
 		}
-		
+
 		return ret.toString();
 
 	}
-	
-	public String getCorrectionHTML( String actualCorrector, HttpServletRequest request ){
+
+	public String getCorrectionHTML( String actualCorrector, ViewContext context ){
 		StringBuffer ret = new StringBuffer();
-		
+
 		List content = clozeSubTasklet.getContent();
-		
+		HttpServletRequest request=(HttpServletRequest) context.getViewContextObject();
+
 		for( int i=0; i<content.size(); i++ ){
 			if( content.get( i ) instanceof String ){
 				ret.append( content.get( i ) );
@@ -130,20 +132,20 @@ public class SubTaskView_CLOZE extends SubTaskView {
 			    SubTasklet_Cloze.Gap gap = (SubTasklet_Cloze.Gap) content.get( i );
 				ret.append( "&nbsp;&nbsp;<b class=\"Cloze_Gap\">\"" + gap.getGapValue() + "\"</b>&nbsp;&nbsp;" );
 				if( gap.isCorrected() ){
-					
+
 					if( gap.isAutoCorrected() ){
 						ret.append( "<span class=\"Cloze_CorrectorLabel\">" + "autom." + ": </span><img src=\"" + request.getContextPath() + "/pics/" + gap.isCorrectByAutoCorrection() + ".gif\">&nbsp;&nbsp;" );
 					}else{
 						List<ManualGapCorrection> gcs = gap.getManualCorrections();
-						
+
 						for( ManualGapCorrection gc : gcs )
 							ret.append( "<span class=\"Cloze_CorrectorLabel\">" + gc.getCorrector() + ": </span><img src=\"" + request.getContextPath() + "/pics/" + gc.isCorrect() + ".gif\">&nbsp;&nbsp;" );
 					}
-					
+
 				}else
 				    ret.append( "<img src=\"" + request.getContextPath() + "/pics/questionmark.gif\">" );
-				
-				
+
+
 				if( !gap.isAutoCorrected() ){
 				    ret.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"checkbox\" name=\"task[0].gap_" + gap.getIndex() + "_correct\"" );
 				    if( gap.isCorrectedByCorrector( actualCorrector ) && gap.isCorrectByCorrector( actualCorrector ) )
@@ -152,18 +154,18 @@ public class SubTaskView_CLOZE extends SubTaskView {
 				}
 				ret.append("<br>");
 				ret.append("&nbsp;&nbsp;[ ");
-				
+
 				String[] correct = gap.getCorrectValues();
 				for( int j=0; j<correct.length - 1; j++ )
 				    ret.append( correct[j] + " | " );
-				
+
 				ret.append( correct[ correct.length - 1] + " ]<br><br>");
 			}
 		}
-		
-		
+
+
 		return ret.toString();
-	    
+
 	}
 
 	/* (non-Javadoc)
@@ -174,39 +176,39 @@ public class SubTaskView_CLOZE extends SubTaskView {
 		ClozeSubmitData ret = new ClozeSubmitData();
 		Set varNames = postedVarsForTask.keySet();
 		Iterator it = varNames.iterator();
-		
+
 		while( it.hasNext() ){
 			String varName = (String) it.next();
 			String myPart = getMyPart( varName );
-			
+
 			int gapIndex = getGapIndex( myPart );
 			ret.setGapValue( gapIndex, (String)postedVarsForTask.get( varName ) );
-			
+
 		}
-		
+
 		return ret;
-		
+
 	}
-	
-	
+
+
 	public CorrectionSubmitData getCorrectionSubmitData( Map postedVars ) throws ParsingException, MethodNotSupportedException{
 	    ClozeCorrectionSubmitData ret = new ClozeCorrectionSubmitData();
 
 		Set varNames = postedVars.keySet();
 		Iterator it = varNames.iterator();
-		
+
 		while( it.hasNext() ){
 			String varName = (String) it.next();
-			
+
 			int gapIndex = getGapIndex( getMyPart( varName ) );
 			if( ( (String)postedVars.get( varName ) ).equals("true") )
 			    ret.setCorrect( gapIndex );
 		}
-	    
+
 	    return ret;
 	}
-	
-	
+
+
 	private int getGapIndex( String part ) throws ParsingException{
 		try {
 			StringTokenizer st = new StringTokenizer( part, "_");
@@ -224,7 +226,7 @@ public class SubTaskView_CLOZE extends SubTaskView {
 			return (new String( s )).replaceAll( "\\\"", "&quot;" );
 		else return s;
 	}
-	
+
 	private class Correction{
 		private String corrector;
 		private boolean auto;
@@ -276,6 +278,6 @@ public class SubTaskView_CLOZE extends SubTaskView {
 		public void setCorrect(boolean correct) {
 			this.correct = correct;
 		}
-		
+
 	}
 }

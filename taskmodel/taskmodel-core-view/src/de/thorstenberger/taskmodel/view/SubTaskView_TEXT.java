@@ -53,7 +53,7 @@ public class SubTaskView_TEXT extends SubTaskView {
 	/**
 	 * @see de.thorstenberger.uebman.services.student.task.complex.SubTaskView#getRenderedHTML(int)
 	 */
-	public String getRenderedHTML( HttpServletRequest request, int relativeTaskNumber) {
+	public String getRenderedHTML( ViewContext context, int relativeTaskNumber) {
 		return getRenderedHTML( relativeTaskNumber, false );
 	}
 
@@ -74,11 +74,11 @@ public class SubTaskView_TEXT extends SubTaskView {
 
 	}
 
-	public String getCorrectedHTML( HttpServletRequest request, int relativeTaskNumber ){
+	public String getCorrectedHTML( ViewContext context, int relativeTaskNumber ){
 		return getRenderedHTML( -1, true );
 	}
 
-	public String getCorrectionHTML( String actualCorrector, HttpServletRequest request ){
+	public String getCorrectionHTML( String actualCorrector, ViewContext context ){
 	    StringBuffer ret = new StringBuffer();
 	    ret.append( getRenderedHTML( -1, true ) );
 

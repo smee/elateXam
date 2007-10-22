@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.view.correction;
 
@@ -50,9 +50,11 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Try;
 import de.thorstenberger.taskmodel.view.DateUtil;
+import de.thorstenberger.taskmodel.view.HtmlViewContext;
 import de.thorstenberger.taskmodel.view.ParserUtil;
 import de.thorstenberger.taskmodel.view.SubTaskViewFactory;
 import de.thorstenberger.taskmodel.view.SubTaskletInfoVO;
+import de.thorstenberger.taskmodel.view.ViewContext;
 import de.thorstenberger.taskmodel.view.SubTaskletInfoVO.Correction;
 import de.thorstenberger.taskmodel.view.correction.CorrectionInfoVO.CorrectorAnnotation;
 
@@ -63,18 +65,18 @@ import de.thorstenberger.taskmodel.view.correction.CorrectionInfoVO.CorrectorAnn
 public class ShowCorrectionToCorrectorAction extends Action {
 
 	private Log log = LogFactory.getLog( ShowCorrectionToCorrectorAction.class );
-	
+
 	/* (non-Javadoc)
 	 * @see org.apache.struts.action.Action#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
+
 		   ActionMessages errors = new ActionMessages();
 
 			long id;
 			String userId = request.getParameter( "userId" );
-			
+
 			try {
 				id = Long.parseLong( request.getParameter( "taskId" ) );
 			} catch (NumberFormatException e) {
@@ -82,7 +84,7 @@ public class ShowCorrectionToCorrectorAction extends Action {
 				saveErrors( request, errors );
 				return mapping.findForward( "error" );
 			}
-			
+
 			CorrectorDelegateObject delegateObject = (CorrectorDelegateObject)TaskModelViewDelegate.getDelegateObject( request.getSession().getId(), id );
 
 			if( delegateObject == null ){
@@ -92,7 +94,7 @@ public class ShowCorrectionToCorrectorAction extends Action {
 			}
 			request.setAttribute( "ReturnURL", delegateObject.getReturnURL() );
 
-			TaskDef_Complex taskDef;		
+			TaskDef_Complex taskDef;
 			try {
 				taskDef = (TaskDef_Complex) delegateObject.getTaskDef();
 			} catch (TaskApiException e3) {
@@ -101,9 +103,9 @@ public class ShowCorrectionToCorrectorAction extends Action {
 				log.error( e3 );
 				return mapping.findForward( "error" );
 			}
-			
+
 			ComplexTasklet tasklet = (ComplexTasklet)delegateObject.getTaskManager().getTaskletContainer().getTasklet( id, userId );
-			
+
 			if( !delegateObject.isPrivileged() ){
 				if( !delegateObject.getCorrectorLogin().equals( tasklet.getTaskletCorrection().getCorrector() ) ){
 					errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "may.only.see.assigned.tasklets" ) );
@@ -111,11 +113,11 @@ public class ShowCorrectionToCorrectorAction extends Action {
 					return mapping.findForward( "error" );
 				}
 			}
-			
+
 			CorrectionInfoVO civo = new CorrectionInfoVO();
 			civo.setTaskId( id );
 			civo.setUserId( userId );
-			
+
 			// set points
 			if( tasklet.getTaskletCorrection().isCorrected() ){
 				List<CorrectionInfoVO.Correction> taskletCorrections = new LinkedList<CorrectionInfoVO.Correction>();
@@ -126,7 +128,7 @@ public class ShowCorrectionToCorrectorAction extends Action {
 						taskletCorrections.add( new CorrectionInfoVO.Correction( mc.getCorrector(), false, mc.getPoints() ) );
 				civo.setCorrections( taskletCorrections );
 			}
-			
+
 			civo.setStatus( tasklet.getStatus().getValue() );
 			civo.setCorrectorLogin( tasklet.getTaskletCorrection().getCorrector() );
 			civo.setCorrectorHistory( tasklet.getTaskletCorrection().getCorrectorHistory() );
@@ -162,7 +164,7 @@ public class ShowCorrectionToCorrectorAction extends Action {
 					nonAcknowledgedAnnotations.add( civo.new AnnotationInfoVO( DateUtil.getStringFromMillis( anno.getDate() ), ParserUtil.escapeCR( anno.getText() ) ) );
 			civo.setAcknowledgedAnnotations( acknowledgedAnnotations );
 			civo.setNonAcknowledgedAnnotations( nonAcknowledgedAnnotations );
-			
+
 			Try latestTry;
 			try {
 				latestTry = tasklet.getSolutionOfLatestTry();
@@ -171,9 +173,10 @@ public class ShowCorrectionToCorrectorAction extends Action {
 				saveErrors( request, errors );
 				log.info( e );
 				return mapping.findForward( "error" );
-			}		
-			
+			}
+
 			// add the subtasklets
+			ViewContext context = new HtmlViewContext( request );
 			List<SubTaskletInfoVO> stivos = new ArrayList<SubTaskletInfoVO>();
 			List<Page> pages = latestTry.getPages();
 			int i = 0;
@@ -185,9 +188,9 @@ public class ShowCorrectionToCorrectorAction extends Action {
 					stivo.setProblem( ParserUtil.getProblem( subTasklet.getProblem() ) );
 					stivo.setReachablePoints( subTasklet.getReachablePoints() );
 					stivo.setVirtualSubTaskletNumber( subTasklet.getVirtualSubtaskNumber() );
-					stivo.setRenderedHTML( SubTaskViewFactory.getSubTaskView( subTasklet ).getCorrectedHTML( request, i++ ) );
+					stivo.setRenderedHTML( SubTaskViewFactory.getSubTaskView( subTasklet ).getCorrectedHTML( context, i++ ) );
 					stivo.setCorrected( subTasklet.isCorrected() );
-					stivo.setInteractiveFeedback( subTasklet.isInteractiveFeedback() );					
+					stivo.setInteractiveFeedback( subTasklet.isInteractiveFeedback() );
 					if( subTasklet.isCorrected() ){
 						List<Correction> corrections = new LinkedList<Correction>();
 						if( subTasklet.isAutoCorrected() )
@@ -201,14 +204,14 @@ public class ShowCorrectionToCorrectorAction extends Action {
 					stivos.add( stivo );
 				}
 			}
-			
+
 			request.setAttribute( "SubTasklets", stivos );
 			request.setAttribute( "Correction", civo );
-	
+
 			return mapping.findForward( "success" );
-			
+
 	}
 
-	
+
 
 }

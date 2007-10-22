@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.view;
 
@@ -58,9 +58,9 @@ import de.thorstenberger.taskmodel.view.SubTaskletInfoVO.Correction;
 public class ShowSolutionAction extends Action {
 
 	private Log log = LogFactory.getLog( ShowSolutionAction.class );
-    
+
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-    	
+
 	   ActionMessages errors = new ActionMessages();
 
 		long id;
@@ -71,7 +71,7 @@ public class ShowSolutionAction extends Action {
 			saveErrors( request, errors );
 			return mapping.findForward( "error" );
 		}
-		
+
 		TaskModelViewDelegateObject delegateObject = (TaskModelViewDelegateObject)TaskModelViewDelegate.getDelegateObject( request.getSession().getId(), id );
 
 		if( delegateObject == null ){
@@ -80,8 +80,8 @@ public class ShowSolutionAction extends Action {
 			return mapping.findForward( "error" );
 		}
 		request.setAttribute( "ReturnURL", delegateObject.getReturnURL() );
-		
-		TaskDef_Complex taskDef;		
+
+		TaskDef_Complex taskDef;
 		try {
 			taskDef = (TaskDef_Complex) delegateObject.getTaskDef();
 		} catch (ClassCastException e2) {
@@ -94,7 +94,7 @@ public class ShowSolutionAction extends Action {
 			log.error( e3 );
 			return mapping.findForward( "error" );
 		}
-		
+
 		if( !taskDef.isShowCorrectionToUsers() ){
 			errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "solutions.not.shown" ) );
 			saveErrors( request, errors );
@@ -102,12 +102,12 @@ public class ShowSolutionAction extends Action {
 		}
 
 		SolutionInfoVO sivo = new SolutionInfoVO();
-		
+
 		sivo.setLogin( delegateObject.getLogin() );
 		sivo.setUserName( delegateObject.getUserName() );
-		
+
 		ComplexTasklet ct;
-		
+
 		try {
 			ct = (ComplexTasklet) delegateObject.getTasklet();
 		} catch (ClassCastException e1) {
@@ -120,13 +120,13 @@ public class ShowSolutionAction extends Action {
 			log.error( e3 );
 			return mapping.findForward( "error" );
 		}
-		
+
 		if( ct == null ){
 			errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "no.solution.available" ) );
 			saveErrors( request, errors );
 			return mapping.findForward( "error" );
-		}    	
-		
+		}
+
 		Try latestTry;
 		try {
 			latestTry = ct.getSolutionOfLatestTry();
@@ -135,28 +135,29 @@ public class ShowSolutionAction extends Action {
 			saveErrors( request, errors );
 			log.info( e );
 			return mapping.findForward( "error" );
-		}		
-		
+		}
+
 		// add the subtasklets
 		List<SubTaskletInfoVO> stivos = new ArrayList<SubTaskletInfoVO>();
 		List<Page> pages = latestTry.getPages();
-		
+		ViewContext context = new HtmlViewContext( request );
+
 		int i = 0;
-		
+
 		for( Page page : pages ){
-			
+
 			List<SubTasklet> subtasklets = page.getSubTasklets();
-			
+
 			for( SubTasklet subTasklet : subtasklets ){
 				SubTaskletInfoVO stivo = new SubTaskletInfoVO();
 				stivo.setHint( subTasklet.getHint() );
 				stivo.setProblem( ParserUtil.getProblem( subTasklet.getProblem() ) );
 				stivo.setReachablePoints( subTasklet.getReachablePoints() );
 				stivo.setVirtualSubTaskletNumber( subTasklet.getVirtualSubtaskNumber() );
-				stivo.setRenderedHTML( SubTaskViewFactory.getSubTaskView( subTasklet ).getCorrectedHTML( request, i++ ) );
+				stivo.setRenderedHTML( SubTaskViewFactory.getSubTaskView( subTasklet ).getCorrectedHTML( context, i++ ) );
 				stivo.setCorrected( subTasklet.isCorrected() );
 				stivo.setInteractiveFeedback( subTasklet.isInteractiveFeedback() );
-				
+
 				if( subTasklet.isCorrected() ){
 					List<Correction> corrections = new LinkedList<Correction>();
 					if( subTasklet.isAutoCorrected() )
@@ -169,36 +170,36 @@ public class ShowSolutionAction extends Action {
 				stivo.setNeedsManualCorrectionFlag( subTasklet.isSetNeedsManualCorrectionFlag() );
 				stivos.add( stivo );
 			}
-			
+
 		}
-		
-		
+
+
 		populateVO( sivo, taskDef, ct );
 		request.setAttribute( "SubTasklets", stivos );
 		request.setAttribute( "Solution", sivo );
-		
+
 		if( ct.hasOrPassedStatus( Tasklet.Status.CORRECTED ) ){
 			sivo.setCanAnnotate( true );
 			if( ct.getTaskletCorrection().getStudentAnnotations().size() > 0 )
 				if( !ct.getTaskletCorrection().getStudentAnnotations().get( 0 ).isAcknowledged() )
 						sivo.setActualAnnotation( ct.getTaskletCorrection().getStudentAnnotations().get( 0 ).getText() );
 		}
-		
+
 		List<SolutionInfoVO.AnnotationInfoVO> annotations = new ArrayList<SolutionInfoVO.AnnotationInfoVO>();
 		for( StudentAnnotation anno : ct.getTaskletCorrection().getStudentAnnotations() )
 			if( anno.isAcknowledged() )
 				annotations.add( sivo.new AnnotationInfoVO( DateUtil.getStringFromMillis( anno.getDate() ), ParserUtil.escapeCR( anno.getText() ) ) );
 		sivo.setAnnotations( annotations );
-		
+
     	return mapping.findForward( "success" );
-    	
+
     }
-    
-    
+
+
     public static void populateVO( SolutionInfoVO sivo, TaskDef_Complex ctd, ComplexTasklet ct ){
-    	
+
     	sivo.setTaskId( ctd.getId() );
-    	
+
     	// set points
 		if( ct.getTaskletCorrection().isCorrected() ){
 			List<SolutionInfoVO.Correction> taskletCorrections = new LinkedList<SolutionInfoVO.Correction>();
@@ -209,14 +210,14 @@ public class ShowSolutionAction extends Action {
 					taskletCorrections.add( sivo.new Correction( mc.getCorrector(), false, mc.getPoints() ) );
 			sivo.setCorrections( taskletCorrections );
 		}
-		
+
 		sivo.setStatus( ct.getStatus().getValue() );
 		try {
 			sivo.setTryStartTime( DateUtil.getStringFromMillis( ct.getSolutionOfLatestTry().getStartTime() ) );
 		} catch (IllegalStateException e) {
 			sivo.setTryStartTime( "-" );
 		}
-		
+
 
     }
 

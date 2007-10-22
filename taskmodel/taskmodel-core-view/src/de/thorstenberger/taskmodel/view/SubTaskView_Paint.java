@@ -44,11 +44,12 @@ public class SubTaskView_Paint extends SubTaskView {
 	/**
 	 * @see de.thorstenberger.uebman.services.student.task.complex.SubTaskView#getRenderedHTML(int)
 	 */
-	public String getRenderedHTML( HttpServletRequest request, int relativeTaskNumber) {
-		return getRenderedHTML( request, relativeTaskNumber, false );
+	public String getRenderedHTML( ViewContext context, int relativeTaskNumber) {
+		return getRenderedHTML( context, relativeTaskNumber, false );
 	}
 
-	public String getRenderedHTML( HttpServletRequest request, int relativeTaskNumber, boolean corrected) {
+	public String getRenderedHTML( ViewContext context, int relativeTaskNumber, boolean corrected) {
+		HttpServletRequest request=(HttpServletRequest) context.getViewContextObject();
 		StringBuffer ret = new StringBuffer();
 
 		// workaround: textarea nicht disabled
@@ -111,15 +112,15 @@ public class SubTaskView_Paint extends SubTaskView {
 	}
 
 	@Override
-	public String getCorrectedHTML(HttpServletRequest request, int relativeTaskNumber ) {
-		return getRenderedHTML( request, 999999, true );
+	public String getCorrectedHTML(ViewContext context, int relativeTaskNumber ) {
+		return getRenderedHTML( context, 999999, true );
 	}
 
 	@Override
-	public String getCorrectionHTML( String actualCorrector, HttpServletRequest request) {
+	public String getCorrectionHTML( String actualCorrector, ViewContext context) {
 
 		StringBuilder ret = new StringBuilder();
-	    ret.append( getRenderedHTML( request, 999999, true ) );
+	    ret.append( getRenderedHTML( context, 999999, true ) );
 
 	    ret.append(getCorrectorPointsInputString(actualCorrector, "text", paintSubTasklet));
 

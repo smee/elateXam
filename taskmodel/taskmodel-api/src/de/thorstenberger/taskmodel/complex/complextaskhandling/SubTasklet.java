@@ -40,6 +40,8 @@ public interface SubTasklet {
 	 * @return the associated SubTaskDef of this SubTasklet
 	 */
 	public String getSubTaskDefId();
+	
+	// FIXME: add method getSubTaskDef
 
 	public void addToPage( Page page );
 
@@ -96,10 +98,13 @@ public interface SubTasklet {
 
 	public void doManualCorrection( CorrectionSubmitData csd ) throws IllegalStateException;
 
+	// FIXME: move to SubTaskDef
 	public float getReachablePoints();
 
+	// FIXME: move to SubTaskDef
 	public String getProblem();
 
+	// FIXME: move to SubTaskDef
 	public String getHint();
 
 	public String getVirtualSubtaskNumber();
@@ -112,6 +117,9 @@ public interface SubTasklet {
 	 */
 	public boolean isProcessed();
 
+	
+	
+	// FIXME: move to SubTaskDef
 	/**
 	 * Some SubTaskDefs contain hints to advice correctors in how to correct the SubTasklet.
 	 * @return correction hint of the associated SubTaskDef
@@ -125,6 +133,8 @@ public interface SubTasklet {
 	 */
 	public void build() throws TaskApiException;
 
+	
+	// FIXME: move to SubTaskDef
 	public boolean isInteractiveFeedback();
 
 }

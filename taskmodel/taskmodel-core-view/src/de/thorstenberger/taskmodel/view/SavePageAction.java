@@ -169,7 +169,12 @@ public class SavePageAction extends Action {
 	private void processInteractiveTasklets(ComplexTasklet ct, List<SubTasklet> subtasklets, List<SubmitData> submitDatas, HttpServletRequest request) {
 		for (int i = 0; i < subtasklets.size(); i++) {
 			SubTasklet subTasklet = subtasklets.get(i);
-			if(request.getParameterMap().containsKey("doAutoCorrection_"+subTasklet.getVirtualSubtaskNumber()) && subTasklet.isInteractiveFeedback()) {
+			
+			// FIXME: add TaskModelSecurityException being subclassed from SecurityException
+			if( !subTasklet.isInteractiveFeedback() )
+				throw new SecurityException( "No interactive feedback allowed for SubTaskDef " + subTasklet.getSubTaskDefId() );
+			
+			if(request.getParameterMap().containsKey("doAutoCorrection_"+subTasklet.getVirtualSubtaskNumber()) ) {
 				ct.doInteractiveFeedback(subTasklet,submitDatas.get(i));
 			}
 		}

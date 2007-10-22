@@ -1,6 +1,6 @@
 /*
 
-Copyright (C) 2006 Steffen Dienst
+Copyright (C) 2007 Steffen Dienst
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,7 +19,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 package de.thorstenberger.taskmodel;
 
 import de.thorstenberger.taskmodel.complex.addon.AddonSubtaskletFactoryPerOSGi;
-
+/**
+ * This class provides the singleton access to any addon task specific implementations.
+ * @author Steffen Dienst
+ *
+ */
 public class TaskModelServices {
 	private static final TaskModelServices instance=new TaskModelServices();
 	AddonSubtaskletFactoryPerOSGi factory;
@@ -30,9 +34,16 @@ public class TaskModelServices {
 		return instance;
 	}
 
+	/*
+	 * @see de.thorstenberger.taskmodel.complex.addon.AddonSubtaskletFactoryPerOSGi
+	 */
 	public AddonSubtaskletFactoryPerOSGi getAddonSubtaskletFactory() {
 		return factory;
 	}
+
+	/*
+	 * @see de.thorstenberger.taskmodel.complex.addon.AddonSubtaskletFactoryPerOSGi
+	 */
 	public void setAddonSubtaskletFactory(AddonSubtaskletFactoryPerOSGi f) {
 		this.factory=f;
 	}

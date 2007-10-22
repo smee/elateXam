@@ -40,7 +40,7 @@ public interface SubTasklet {
 	 * @return the associated SubTaskDef of this SubTasklet
 	 */
 	public String getSubTaskDefId();
-	
+
 	// FIXME: add method getSubTaskDef
 
 	public void addToPage( Page page );
@@ -117,8 +117,8 @@ public interface SubTasklet {
 	 */
 	public boolean isProcessed();
 
-	
-	
+
+
 	// FIXME: move to SubTaskDef
 	/**
 	 * Some SubTaskDefs contain hints to advice correctors in how to correct the SubTasklet.
@@ -133,8 +133,12 @@ public interface SubTasklet {
 	 */
 	public void build() throws TaskApiException;
 
-	
+
 	// FIXME: move to SubTaskDef
+	/**
+	 * Returns whether this subtasklet allows showing interactive feedback including the result of
+	 * the automatic correction after saving.
+	 */
 	public boolean isInteractiveFeedback();
 
 }

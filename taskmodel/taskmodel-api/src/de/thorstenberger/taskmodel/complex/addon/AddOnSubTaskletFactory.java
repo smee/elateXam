@@ -1,6 +1,6 @@
 /*
 
-Copyright (C) 2006 Steffen Dienst
+Copyright (C) 2007 Steffen Dienst
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,12 +23,11 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.AddOnSubTasklet;
 
 /**
- *
- * @author Steffen Dienst
+ * Subtaskletfactory for addon tasks.
  *
  */
 public interface AddOnSubTaskletFactory {
-	//TODO eigentlich implementierungsspezifisch
+
 	public AddOnSubTasklet createAddOnSubTasklet(ComplexTaskDefRoot root, Block block, Object subTaskDef, Object subTask);
 
 	public String getAddonTaskType();

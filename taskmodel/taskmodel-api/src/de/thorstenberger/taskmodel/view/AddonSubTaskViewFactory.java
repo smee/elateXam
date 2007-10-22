@@ -1,6 +1,6 @@
 /*
 
-Copyright (C) 2006 Steffen Dienst
+Copyright (C) 2007 Steffen Dienst
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,6 +20,9 @@ package de.thorstenberger.taskmodel.view;
 
 import de.thorstenberger.taskmodel.complex.complextaskhandling.AddOnSubTasklet;
 
+/**
+ * Factory for addon task views
+ */
 public interface AddonSubTaskViewFactory {
 
 	SubTaskView getSubTaskView(AddOnSubTasklet subTasklet);

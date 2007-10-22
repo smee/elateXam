@@ -20,11 +20,31 @@ package de.thorstenberger.taskmodel.complex.addon;
 
 import de.thorstenberger.taskmodel.view.AddonSubTaskViewFactory;
 
+/**
+ * This interface specifies the methods needed for any kind of addon task.
+ * Any kind of plugin implementation should be usable.
+ * @author Steffen Dienst
+ *
+ */
 public interface AddonSubtaskletFactoryPerOSGi {
 
+	/**
+	 * Get the subtaskview factory for the addon task.
+	 * @param id the id for the addon task, @see de.thorstenberger.taskmodel.view.AddonSubTaskViewFactory
+	 * @return
+	 */
 	public AddonSubTaskViewFactory getSubTaskViewFactory(String id);
 
+	/**
+	 * Get the subtasklet factory for the addon task.
+	 * @param id the id for the addon task, @see de.thorstenberger.taskmodel.complex.addon.AddOnSubTaskletFactory
+	 * @return
+	 */
 	public AddOnSubTaskletFactory getSubTaskletFactory(String id);
 
+	/**
+	 * Hook for shutting down this addon task plugin facility.
+	 * @throws Exception
+	 */
 	public void shutDown() throws Exception;
 }

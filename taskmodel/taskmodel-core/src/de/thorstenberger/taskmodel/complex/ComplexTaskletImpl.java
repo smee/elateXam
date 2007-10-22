@@ -476,8 +476,11 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
 	public void doInteractiveFeedback(SubTasklet actualSubtasklet, SubmitData sd)
 			throws IllegalStateException {
 
-        if( !hasOrPassedStatus( Status.SOLVED ) )
-            throw new IllegalStateException( TaskHandlingConstants.CANNOT_CORRECT_TASK_NOT_SOLVED );
+        if( !hasOrPassedStatus( Status.INPROGRESS ) )
+        	if(getStatus().getOrder()<Status.INPROGRESS.getOrder())
+        		throw new IllegalStateException( TaskHandlingConstants.CANNOT_CORRECT_TASK_NOT_IN_PROGRESS );
+        	else
+        		throw new IllegalStateException( TaskHandlingConstants.CANNOT_CORRECT_TASK_NOT_SOLVED );
 
         if( actualSubtasklet != null && sd != null ){
         	actualSubtasklet.doSave( sd );

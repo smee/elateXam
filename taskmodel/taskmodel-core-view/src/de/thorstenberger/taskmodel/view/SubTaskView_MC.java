@@ -55,7 +55,7 @@ public class SubTaskView_MC extends SubTaskView {
 
 
 	public String getRenderedHTML( ViewContext context, int relativeTaskNumber ){
-		return getRenderedHTML( null, relativeTaskNumber, false );
+		return getRenderedHTML( context, relativeTaskNumber, false );
 	}
 
 	private String getRenderedHTML( ViewContext context, int relativeTaskNumber, boolean corrected ){

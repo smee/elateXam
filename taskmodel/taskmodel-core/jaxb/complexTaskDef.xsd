@@ -386,7 +386,6 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 	<xs:element name="mcSubTaskDef">
 		<xs:complexType><xs:complexContent><xs:extension base="SubTaskDefType">
                     <xs:sequence>
-
 				<xs:element name="displayedAnswers">
 					<xs:simpleType>
 						<xs:restriction base="xs:int">
@@ -446,10 +445,7 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 			<xs:complexContent>
 				<xs:extension base="SubTaskDefType">
 					<xs:sequence>
-
 						<xs:element name="initialTextFieldValue"
-							type="xs:string" minOccurs="0" />
-						<xs:element name="correctionHint"
 							type="xs:string" minOccurs="0" />
 					</xs:sequence>
 
@@ -482,7 +478,6 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 			<xs:complexContent>
 				<xs:extension base="SubTaskDefType">
 					<xs:sequence>
-
 						<xs:element name="cloze">
 							<xs:complexType mixed="false">
 								<xs:choice minOccurs="0"
@@ -525,7 +520,6 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 			<xs:complexContent>
 				<xs:extension base="SubTaskDefType">
 					<xs:sequence>
-
 						<xs:element name="concept"
 							maxOccurs="unbounded">
 							<xs:complexType>
@@ -631,8 +625,6 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 							type="xs:boolean" minOccurs="0" />
 						<xs:element name="strokewidthChangeable"
 							type="xs:boolean" minOccurs="0" />
-						<xs:element name="correctionHint"
-							type="xs:string" minOccurs="0" />
 					</xs:sequence>
 
 
@@ -647,9 +639,6 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 			<xs:complexContent>
 				<xs:extension base="SubTaskDefType">
 					<xs:sequence>
-						<xs:element name="correctionHint"
-							type="xs:string" minOccurs="0">
-						</xs:element>
 						<xs:element name="Memento" type="xs:anyType"
 							xjc:processContents="skip">
 							<xs:annotation>
@@ -680,6 +669,7 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 		<xs:sequence>
 			<xs:element name="problem" type="xs:string"></xs:element>
 			<xs:element name="hint" type="xs:string" minOccurs="0"></xs:element>
+			<xs:element name="correctionHint" type="xs:string" minOccurs="0"></xs:element>
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:string"></xs:attribute>
 		<xs:attribute name="interactiveFeedback" type="xs:boolean"

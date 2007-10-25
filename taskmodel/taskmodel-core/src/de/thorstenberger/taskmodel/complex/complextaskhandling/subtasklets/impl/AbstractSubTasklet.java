@@ -74,7 +74,7 @@ public abstract class AbstractSubTasklet implements SubTasklet{
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getCorrectionHint()
 	 */
 	public String getCorrectionHint() {
-		return (String) ReflectionHelper.callMethod(this.jaxbSubTaskDef, "getCorrectionHint");
+		return jaxbSubTaskDef.getCorrectionHint();
 	}
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getHint()

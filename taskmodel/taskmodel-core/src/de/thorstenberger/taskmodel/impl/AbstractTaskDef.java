@@ -35,6 +35,7 @@ public abstract class AbstractTaskDef implements TaskDef {
 	private boolean stopped;
 	private Long deadline;
 	private Long followingTaskId;
+	protected boolean visible;
 
 	/**
 	 *
@@ -45,13 +46,14 @@ public abstract class AbstractTaskDef implements TaskDef {
 	 * @param stopped
 	 * @param followingTaskId
 	 */
-	public AbstractTaskDef( long id, String title, String shortDescription, Long deadline, boolean stopped, Long followingTaskId ) {
+	public AbstractTaskDef( long id, String title, String shortDescription, Long deadline, boolean stopped, Long followingTaskId, boolean visible ) {
 		this.id = id;
 		this.title = title;
 		this.shortDescription = shortDescription;
 		this.deadline = deadline;
 		this.stopped = stopped;
 		this.followingTaskId = followingTaskId;
+		this.visible = visible;
 	}
 
 	/* (non-Javadoc)
@@ -106,7 +108,7 @@ public abstract class AbstractTaskDef implements TaskDef {
 	}
 
 	public boolean isVisible() {
-		return true;
+		return visible;
 	}
 
 

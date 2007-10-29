@@ -21,16 +21,26 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.upload;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import de.thorstenberger.taskmodel.TaskContants;
+import de.thorstenberger.taskmodel.TaskModelPersistenceException;
 import de.thorstenberger.taskmodel.impl.AbstractTaskDef;
 
 
 /**
- * TODO implementation deferred
+ * 
  * @author Thorsten Berger
  *
  */
 public class TaskDef_UploadImpl extends AbstractTaskDef implements TaskDef_Upload {
 
+	private String problem;
+	private int maxUploadableFiles;
+	private InputStream resourceInputStream;
+	private String resourceFilename;
+	private String resourceMimeType;
 
 	/**
 	 * @param id
@@ -40,9 +50,17 @@ public class TaskDef_UploadImpl extends AbstractTaskDef implements TaskDef_Uploa
 	 * @param deadline
 	 * @param stopped
 	 */
-	public TaskDef_UploadImpl(long id, String title, String shortDescription, Long deadline, boolean stopped, Long followingTaskId ) {
-		super(id, title, shortDescription, deadline, stopped, followingTaskId);
-		// TODO Auto-generated constructor stub
+	public TaskDef_UploadImpl(long id, String title, String shortDescription, Long deadline,
+			boolean stopped, Long followingTaskId, boolean visible, String problem, int maxUploadableFiles,
+			InputStream resourceInputStream, String resourceFilename, String resourceMimeType ) {
+		
+		super(id, title, shortDescription, deadline, stopped, followingTaskId, visible);
+		
+		this.problem = problem;
+		this.maxUploadableFiles = maxUploadableFiles;
+		this.resourceInputStream = resourceInputStream;
+		this.resourceFilename = resourceFilename;
+		this.resourceMimeType = resourceMimeType;
 	}
 
 
@@ -50,28 +68,51 @@ public class TaskDef_UploadImpl extends AbstractTaskDef implements TaskDef_Uploa
 	 * @see de.thorstenberger.taskmodel.TaskDef#getType()
 	 */
 	public String getType() {
-		// TODO Auto-generated method stub
-		return null;
+		return TaskContants.TYPE_UPLOAD;
 	}
 	
 	
 	public String getProblem(){
-		return null;
+		return problem;
 	}
 	
-	public String getProblemResource(){
-		return null;
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.upload.TaskDef_Upload#hasAttachedResource()
+	 */
+	public boolean hasAttachedResource() {
+		try {
+			return resourceInputStream != null && resourceInputStream.available() > 0 && resourceFilename != null;
+		} catch (IOException e) {
+			throw new TaskModelPersistenceException( e );
+		}
+	}
+
+
+	public String getResourceFilename(){
+		if( resourceFilename == null || resourceFilename.length() == 0 )
+			return "task_" + getId();
+		return resourceFilename;
 	}
 	
 	public int maxUploadableFiles(){
-		return 0;
+		return maxUploadableFiles;
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.upload.TaskDef_Upload#getResourceAsStream()
+	 */
+	public InputStream getResourceAsStream() {
+		return resourceInputStream;
 	}
 
 
-	public boolean isVisible() {
-		// TODO Auto-generated method stub
-		return false;
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.upload.TaskDef_Upload#getResourceMimeType()
+	 */
+	public String getResourceMimeType() {
+		return resourceMimeType;
 	}
+	
 	
 	
 

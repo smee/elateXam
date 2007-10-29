@@ -21,6 +21,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.upload;
 
+import java.io.InputStream;
+
 import de.thorstenberger.taskmodel.TaskDef;
 
 /**
@@ -31,7 +33,18 @@ public interface TaskDef_Upload extends TaskDef {
 
 	public String getProblem();
 	
-	public String getProblemResource();
+	/**
+	 * Denotes whether the problem description is attached as a file. If true, {@link #getResourceAsStream()} and {@link #getResourceFilename()}
+	 * have to return non-null values.
+	 * @return
+	 */
+	public boolean hasAttachedResource();
+	
+	public String getResourceFilename();
+	
+	public InputStream getResourceAsStream();
+	
+	public String getResourceMimeType();
 	
 	public int maxUploadableFiles();
 	

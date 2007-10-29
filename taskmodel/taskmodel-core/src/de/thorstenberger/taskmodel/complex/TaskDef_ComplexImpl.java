@@ -37,7 +37,6 @@ import de.thorstenberger.taskmodel.impl.AbstractTaskDef;
 public class TaskDef_ComplexImpl extends AbstractTaskDef implements TaskDef_Complex {
 
 	private boolean showCorrectionToUsers;
-	private boolean isVisible;
 	
 	private InputStream complexTaskIS;
 	private ComplexTaskDefDAO complexTaskDefDAO;
@@ -51,11 +50,13 @@ public class TaskDef_ComplexImpl extends AbstractTaskDef implements TaskDef_Comp
 	 * @param deadline
 	 * @param stopped
 	 */
-	public TaskDef_ComplexImpl(long id, String title, String shortDescription, Long deadline, boolean stopped, Long followingTaskId, ComplexTaskDefDAO complexTaskDefDAO, InputStream complexTaskIS ) {
-		super(id, title, shortDescription, deadline, stopped, followingTaskId);
+	public TaskDef_ComplexImpl(long id, String title, String shortDescription, Long deadline, boolean stopped, Long followingTaskId, ComplexTaskDefDAO complexTaskDefDAO, InputStream complexTaskIS, boolean showCorrectionToUsers, boolean visible ) {
+		super(id, title, shortDescription, deadline, stopped, followingTaskId, visible);
 
 		this.complexTaskDefDAO = complexTaskDefDAO;
 		this.complexTaskIS = complexTaskIS;
+		this.showCorrectionToUsers = showCorrectionToUsers;
+		this.visible = visible;
 
 		try {
 //			if( complexTaskDefRoot == null )
@@ -88,7 +89,6 @@ public class TaskDef_ComplexImpl extends AbstractTaskDef implements TaskDef_Comp
 		this.showCorrectionToUsers = showCorrectionToUsers;
 	}
 
-
 	/**
 	 * @return Returns the complexTaskDefRoot.
 	 */
@@ -96,15 +96,6 @@ public class TaskDef_ComplexImpl extends AbstractTaskDef implements TaskDef_Comp
 		return complexTaskDefRoot;
 	}
 
-
-	public boolean isVisible() {
-		return isVisible;
-	}
-
-	public void setVisible(boolean isVisible) {
-		this.isVisible = isVisible;
-	}
-	
 
 
 }

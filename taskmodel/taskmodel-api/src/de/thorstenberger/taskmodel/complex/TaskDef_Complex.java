@@ -30,13 +30,9 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
  */
 public interface TaskDef_Complex extends TaskDef{
 
-//	public File getXmlTaskDefFile();
-
 	public boolean isShowCorrectionToUsers();
 
 	public void setShowCorrectionToUsers(boolean value);
-
-//	public ComplexTaskDefHelper getComplexTaskDefHelper();
 
 	public ComplexTaskDefRoot getComplexTaskDefRoot();
 

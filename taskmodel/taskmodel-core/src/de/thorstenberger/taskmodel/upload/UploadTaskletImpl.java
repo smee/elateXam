@@ -23,9 +23,13 @@ package de.thorstenberger.taskmodel.upload;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
+import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskFactory;
+import de.thorstenberger.taskmodel.TaskModelPersistenceException;
 import de.thorstenberger.taskmodel.TaskletCorrection;
+import de.thorstenberger.taskmodel.complex.TaskHandlingConstants;
 import de.thorstenberger.taskmodel.impl.AbstractTasklet;
 
 /**
@@ -45,28 +49,48 @@ public class UploadTaskletImpl extends AbstractTasklet implements UploadTasklet 
 	 * @param taskletCorrection
 	 */
 	public UploadTaskletImpl(TaskFactory taskFactory, String userId,
-			long taskId, Status status, List<String> flags,
-			TaskletCorrection taskletCorrection) {
-		super(taskFactory, userId, taskId, status, flags, taskletCorrection);
+			TaskDef_Upload uploadTaskDef, Status status, List<String> flags,
+			TaskletCorrection taskletCorrection, Map<String, String> properties) {
+		super(taskFactory, userId, uploadTaskDef, status, flags, taskletCorrection, properties);
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.upload.UploadTasklet#doCorrectionUpload(java.io.InputStream, java.lang.String, java.lang.String, java.lang.String)
-	 */
-	public synchronized void doCorrectionUpload(InputStream is, String fileName,
-			String contentType, String corrector) throws IllegalStateException {
-		// TODO Auto-generated method stub
-
-	}
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.upload.UploadTasklet#doUpload(java.io.InputStream, java.lang.String, java.lang.String)
 	 */
 	public synchronized void doUpload(InputStream is, String fileName, String contentType)
 			throws IllegalStateException {
-		// TODO Auto-generated method stub
+		
+		checkActive();
+		
+		if( getStatus() == Status.CORRECTING )
+			throw new IllegalStateException( TaskHandlingConstants.CANNOT_UPLOAD_CORRECTING_TASKLET );
+		if( hasOrPassedStatus( Status.CORRECTED ) )
+			throw new IllegalStateException( TaskHandlingConstants.CANNOT_UPLOAD_TASKLET_CORRECTED );
+		
+		int revision = -1;
+		if( uploadFile != null )
+			revision = uploadFile.getRevision();
+		
+		this.uploadFile = new UploadFileImpl( fileName, contentType, is, revision + 1 );
+		setStatus( Status.SOLVED );
+		
+		try {
+			save();
+		} catch (TaskApiException e) {
+			throw new TaskModelPersistenceException( e );
+		}
 
+	}
+	
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.upload.UploadTasklet#doCorrectionUpload(java.io.InputStream, java.lang.String, java.lang.String, java.lang.String)
+	 */
+	public synchronized void doCorrectionUpload(InputStream is, String fileName,
+			String contentType, String corrector) throws IllegalStateException {
+		// TODO Auto-generated method stub
+		
 	}
 
 	/* (non-Javadoc)
@@ -109,21 +133,32 @@ public class UploadTaskletImpl extends AbstractTasklet implements UploadTasklet 
 
 	}
 	
+	
+	/**
+	 * non-interface method for injecting the upload file
+	 *
+	 */
+	public synchronized void setUploadFile( UploadFile uploadFile ){
+		this.uploadFile = uploadFile;
+	}
+	
 	public class UploadFileImpl implements UploadFile{
 
 		private String filename, contentType;
-		private InputStream inputStream;
+		private InputStream temporaryUploadInputStream, persistenceStoreInputStream;
+		private int revision;
 		
 		/**
 		 * @param filename
 		 * @param contentType
 		 * @param inputStream
 		 */
-		public UploadFileImpl(String filename, String contentType, InputStream inputStream) {
+		public UploadFileImpl(String filename, String contentType, InputStream temporaryUploadInputStream, int revision) {
 			super();
 			this.filename = filename;
 			this.contentType = contentType;
-			this.inputStream = inputStream;
+			this.temporaryUploadInputStream = temporaryUploadInputStream;
+			this.revision = revision;
 		}
 
 		/* (non-Javadoc)
@@ -141,10 +176,32 @@ public class UploadTaskletImpl extends AbstractTasklet implements UploadTasklet 
 		}
 
 		/* (non-Javadoc)
-		 * @see de.thorstenberger.taskmodel.upload.UploadTasklet.UploadFile#getInputStream()
+		 * @see de.thorstenberger.taskmodel.upload.UploadTasklet.UploadFile#getPersistenceStoreInputStream()
 		 */
-		public InputStream getInputStream() {
-			return inputStream;
+		public InputStream getPersistenceStoreInputStream() {
+			return persistenceStoreInputStream;
+		}
+
+		/* (non-Javadoc)
+		 * @see de.thorstenberger.taskmodel.upload.UploadTasklet.UploadFile#getTemporaryUploadInputStream()
+		 */
+		public InputStream getTemporaryUploadInputStream() {
+			return temporaryUploadInputStream;
+		}
+
+		
+		/* (non-Javadoc)
+		 * @see de.thorstenberger.taskmodel.upload.UploadTasklet.UploadFile#setPersistenceStoreInputStream(java.io.InputStream)
+		 */
+		public void setPersistenceStoreInputStream(InputStream is) {
+			this.persistenceStoreInputStream = is;
+		}
+
+		/* (non-Javadoc)
+		 * @see de.thorstenberger.taskmodel.upload.UploadTasklet.UploadFile#getRevision()
+		 */
+		public int getRevision() {
+			return revision;
 		}
 		
 	}

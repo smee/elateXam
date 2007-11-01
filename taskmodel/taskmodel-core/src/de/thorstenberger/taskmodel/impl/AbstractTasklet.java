@@ -22,11 +22,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 package de.thorstenberger.taskmodel.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import de.thorstenberger.taskmodel.TaskApiException;
+import de.thorstenberger.taskmodel.TaskDef;
 import de.thorstenberger.taskmodel.TaskFactory;
 import de.thorstenberger.taskmodel.Tasklet;
 import de.thorstenberger.taskmodel.TaskletCorrection;
+import de.thorstenberger.taskmodel.complex.TaskHandlingConstants;
 
 /**
  * @author Thorsten Berger
@@ -34,23 +37,27 @@ import de.thorstenberger.taskmodel.TaskletCorrection;
  */
 public abstract class AbstractTasklet implements Tasklet {
 
-	private TaskFactory taskFactory;
+	protected TaskFactory taskFactory;
 	private String userId;
-	private long taskId;
 	private Status status;
 	private List<String> flags;
 	protected TaskletCorrection taskletCorrection;
 	
+	protected TaskDef taskDef;
+	
+	private Map<String, String> properties;
+	
 	/**
 	 * 
 	 */
-	public AbstractTasklet( TaskFactory taskFactory, String userId, long taskId, Status status, List<String> flags, TaskletCorrection taskletCorrection ) {
+	public AbstractTasklet( TaskFactory taskFactory, String userId, TaskDef taskDef, Status status, List<String> flags, TaskletCorrection taskletCorrection, Map<String, String> properties ) {
 		this.taskFactory = taskFactory;
 		this.userId = userId;
-		this.taskId = taskId;
+		this.taskDef = taskDef;
 		this.status = status;
 		this.flags = flags;
 		this.taskletCorrection = taskletCorrection;
+		this.properties = properties;
 	}
 
 	/* (non-Javadoc)
@@ -64,7 +71,7 @@ public abstract class AbstractTasklet implements Tasklet {
 	 * @see de.thorstenberger.taskmodel.Tasklet#getTaskId()
 	 */
 	public long getTaskId() {
-		return taskId;
+		return taskDef.getId();
 	}
 
 	/* (non-Javadoc)
@@ -104,6 +111,15 @@ public abstract class AbstractTasklet implements Tasklet {
 			flags.remove( flag );
 	}
 
+	/**
+	 * Mandatory check whether the TaskDef is currently active.
+	 */
+	protected synchronized void checkActive() throws IllegalStateException{
+		if( !taskDef.isActive() )
+			throw new IllegalStateException( TaskHandlingConstants.NOT_ACTIVE );
+	}
+	
+	
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.Tasklet#assignToCorrector(java.lang.String)
 	 */
@@ -178,7 +194,31 @@ public abstract class AbstractTasklet implements Tasklet {
 	public void logPostData(String msg, Throwable throwable, String ip) {
 		taskFactory.logPostData( msg, throwable, this, ip );		
 	}
-	
-	
 
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.Tasklet#getProperty(java.lang.String)
+	 */
+	public String getProperty(String key) {
+		return properties.get( key );
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.Tasklet#setProperty(java.lang.String, java.lang.String)
+	 */
+	public void setProperty(String key, String value) {
+		if( value == null ){
+			if( properties.containsKey( key ) )
+				properties.remove( key );
+		}else
+			properties.put( key, value );
+			
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.Tasklet#getProperties()
+	 */
+	public Map<String, String> getProperties() {
+		return properties;
+	}
+	
 }

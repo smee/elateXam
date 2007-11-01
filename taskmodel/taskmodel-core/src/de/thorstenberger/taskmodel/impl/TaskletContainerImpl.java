@@ -54,7 +54,7 @@ public class TaskletContainerImpl implements TaskletContainer {
 		this.taskFactory = taskFactory;
 		
 		// TODO check for at least 512MB of free memory
-		System.out.println( Runtime.getRuntime().maxMemory() );
+//		System.out.println( Runtime.getRuntime().maxMemory() );
 		
 		try {
 			this.userObjectCache = JCS.getInstance( "taskmodel-core_userObjectCache" );
@@ -227,6 +227,27 @@ public class TaskletContainerImpl implements TaskletContainer {
 			throw new TaskModelPersistenceException( e );
 		}
 		
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.TaskletContainer#logPostData(java.lang.String, de.thorstenberger.taskmodel.Tasklet, java.lang.String)
+	 */
+	public void logPostData(String msg, Tasklet tasklet, String ip) {
+		taskFactory.logPostData(msg, tasklet, ip);
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.TaskletContainer#logPostData(java.lang.String, java.lang.Throwable, de.thorstenberger.taskmodel.Tasklet, java.lang.String)
+	 */
+	public void logPostData(String msg, Throwable throwable, Tasklet tasklet, String ip) {
+		taskFactory.logPostData(msg, throwable, tasklet, ip);
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.TaskletContainer#storeTasklet(de.thorstenberger.taskmodel.Tasklet)
+	 */
+	public void storeTasklet(Tasklet tasklet) throws TaskApiException {
+		taskFactory.storeTasklet(tasklet);
 	}
 
 	

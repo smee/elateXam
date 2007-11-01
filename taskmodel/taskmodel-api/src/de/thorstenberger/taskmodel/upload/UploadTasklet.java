@@ -31,6 +31,10 @@ import de.thorstenberger.taskmodel.Tasklet;
  */
 public interface UploadTasklet extends Tasklet {
 
+	public static final String PROP_UPLOAD_FILENAME = "upload_filename";
+	public static final String PROP_UPLOAD_CONTENTTYPE = "upload_contentType";
+	public static final String PROP_UPLOAD_REVISION = "upload_revision";
+	
 	public boolean uploaded();
 	
 	public boolean correctionUploaded();
@@ -59,12 +63,30 @@ public interface UploadTasklet extends Tasklet {
 	
 	public interface UploadFile{
 		
-		public InputStream getInputStream();
+		public InputStream getPersistenceStoreInputStream();
+		
+		/**
+		 * Just needed to persist the (uploaded) file in the persistence store. After persisting by the TaskFactory,
+		 * the content of the file can be retrieved by {@link #getPersistenceStoreInputStream()}.
+		 * @return
+		 */
+		public InputStream getTemporaryUploadInputStream();
 		
 		public String getFilename();
 		
 		public String getContentType();
 		
+		/**
+		 * Revision denotes the number of times a new file has been uploaded, starting with 0.
+		 * @return the file's revision, starting with 0.
+		 */
+		public int getRevision();
+		
+		/**
+		 * Allows the TaskFactory to inject the persistenceStoreInputStream after persisting.
+		 * @param is
+		 */
+		public void setPersistenceStoreInputStream( InputStream is );
 	}
 	
 }

@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 package de.thorstenberger.taskmodel;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -94,6 +95,26 @@ public interface Tasklet {
 
 	public void removeFlag( String flag );
 
+	/**
+	 * Gets a property of the tasklet identified by its key. The value is always non-null.
+	 * @param key
+	 * @return the string representation of the property's value or null if does not exist
+	 */
+	public String getProperty( String key );
+
+	/**
+	 * Sets a property of the tasklet. Remove by setting value == null.
+	 * @param key
+	 * @param value
+	 */
+	public void setProperty( String key, String value );
+	
+	/**
+	 * Returns the backing properties Map.
+	 * @return
+	 */
+	public Map<String, String> getProperties();
+	
 	/**
 	 * Assigns the tasklet to the mentioned corrector.
 	 * @param correctorId the corrector id/login

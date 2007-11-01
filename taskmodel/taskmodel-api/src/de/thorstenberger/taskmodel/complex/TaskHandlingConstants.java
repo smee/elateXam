@@ -75,5 +75,14 @@ public class TaskHandlingConstants {
 
 //	public static final String CANNOT_MANUALLY_CORRECT_SUBTASK = "task.complex.cannot_manually_correct_subtask";
 
+	/**
+	 * Determines that the user cannot upload his solution, because the Tasklet is in status "correcting.
+	 */
+	public static final String CANNOT_UPLOAD_CORRECTING_TASKLET = "task.cannot_upload_correcting_tasklet";
+	
+	/**
+	 * Determines that the user cannot upload his solution, because the Tasklet has already been corrected.
+	 */
+	public static final String CANNOT_UPLOAD_TASKLET_CORRECTED = "task.cannot_upload_tasklet_corrected";
 
 }

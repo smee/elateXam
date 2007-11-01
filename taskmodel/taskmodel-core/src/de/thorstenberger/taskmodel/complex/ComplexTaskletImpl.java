@@ -24,6 +24,7 @@ package de.thorstenberger.taskmodel.complex;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import de.thorstenberger.taskmodel.ManualCorrection;
 import de.thorstenberger.taskmodel.StudentAnnotation;
@@ -65,9 +66,9 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
 	 * @param taskletCorrection
 	 */
 	public ComplexTaskletImpl(TaskFactory taskFactory, ComplexTaskBuilder complexTaskBuilder, String userId,
-			long taskId, Tasklet.Status status, List<String> flags, TaskletCorrection taskletCorrection, TaskDef_Complex complexTaskDef, ComplexTaskHandlingDAO complexTaskHandlingDAO, InputStream complexTaskletIS ) {
+			TaskDef_Complex complexTaskDef, Tasklet.Status status, List<String> flags, TaskletCorrection taskletCorrection, ComplexTaskHandlingDAO complexTaskHandlingDAO, InputStream complexTaskletIS, Map<String, String> properties ) {
 
-		super(taskFactory, userId, taskId, status, flags, taskletCorrection );
+		super(taskFactory, userId, complexTaskDef, status, flags, taskletCorrection, properties );
 
 		this.complexTaskDef = complexTaskDef;
 		this.complexTaskDefRoot = complexTaskDef.getComplexTaskDefRoot();
@@ -111,8 +112,13 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
 		if( canContinueTry() )
 			return false;
 
-		return ( complexTaskHandlingRoot.getNumberOfTries() < complexTaskDefRoot.getTries() ) &&
-																			complexTaskDef.isActive();
+		try {
+			checkActive();
+		} catch (IllegalStateException e) {
+			return false;
+		}
+		
+		return complexTaskHandlingRoot.getNumberOfTries() < complexTaskDefRoot.getTries();
 	}
 
 	/* (non-Javadoc)
@@ -127,8 +133,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
 		}
 
 		// Status-Checks
-		if( !complexTaskDef.isActive() )
-			throw new IllegalStateException( TaskHandlingConstants.NOT_ACTIVE );
+		checkActive();
 		// Anzahl bereits abgesendeter Versuche:
 		if( complexTaskHandlingRoot.getNumberOfTries() >= complexTaskDefRoot.getTries() )
 			throw new IllegalStateException( TaskHandlingConstants.TRIES_SPENT );
@@ -162,6 +167,11 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
 	 * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#canContinueTry()
 	 */
 	public synchronized boolean canContinueTry() {
+		try {
+			checkActive();
+		} catch (IllegalStateException e) {
+			return false;
+		}
 		if( getStatus() == Status.INPROGRESS )
 			return true;
 		else
@@ -227,9 +237,10 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
 		// falls nicht in Bearbeitung, dann einfach abbrechen,
 		// d.h. wenn die Bearbeitung vorher schon automatisch wegen Zeitüberschreitung
 		// gestoppt (und korrigiert) wurde, wird dies dem Student mitgeteilt
-		if( !canContinueTry() )
+		if( getStatus() != Status.INPROGRESS)
 			throw new IllegalStateException( TaskHandlingConstants.TIME_EXCEEDED_AUTO_SUBMIT_MADE );
-
+		// don't call checkActive(), as this method could also be called by update later on
+		
 		setStatus( Status.SOLVED );
 
 		// FIXME: use dependency injection to get the corrector instance

@@ -212,11 +212,15 @@ public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTaskl
 	}
 
 	public String getBackgroundPictureString() {
+		if( paintSubTaskDef.getImages() == null )
+			return null;
 		String pic=paintSubTaskDef.getImages().getImmutableBackgroundImage();
 		return pic == null ? "" : pic;
 	}
 
 	public String getMutablePictureString() {
+		if( paintSubTaskDef.getImages() == null )
+			return null;
 		String pic=paintSubTaskDef.getImages().getMutableTemplateImage();
 		return pic == null ? "" : pic;
 	}

@@ -55,7 +55,7 @@ public class SubTaskView_Mapping extends SubTaskView {
 	 * @see de.thorstenberger.uebman.services.student.task.complex.SubTaskView#getRenderedHTML(int)
 	 */
 	public String getRenderedHTML(ViewContext context, int relativeTaskNumber) {
-		return getRenderedHTML( null, relativeTaskNumber, false );
+		return getRenderedHTML( context, relativeTaskNumber, false );
 	}
 
 	private String getRenderedHTML( ViewContext context, int relativeTaskNumber, boolean corrected ) {

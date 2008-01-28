@@ -57,7 +57,7 @@
         <dependency>
             <groupId>elate</groupId>
             <artifactId>drawtask</artifactId>
-            <version>1.0</version>
+            <version>1.0.1</version>
             <type>jar</type>
             <properties>
                 <war.bundle>false</war.bundle>

@@ -66,7 +66,7 @@ public class SubTaskView_Paint extends SubTaskView {
 				"    WIDTH = \"600\" HEIGHT = \"" + (corrected ? 355 : 395 ) + "\" NAME = \"drawTask_" + relativeTaskNumber + "\" >\r\n" +
 				"    <param name=\"code\" value=\"drawing/DrawingApplet.class\" >\r\n" +
 				"    <param name=\"codebase\" value=\"" + request.getContextPath() + "/drawTask\" >\r\n" +
-				"    <param name=\"archive\" value=\"drawtask-1.0.jar\" >\r\n" +
+				"    <param name=\"archive\" value=\"drawtask-1.0.1.jar\" >\r\n" +
 				"    <param name=\"name\" value=\"drawTask_" + relativeTaskNumber + "\" >\r\n" +
 				"    <param name=\"mayscript\" value=\"true\" >\r\n" +
 				"    <param name=\"type\" value=\"application/x-java-applet;version=1.5\">\r\n" +

@@ -18,7 +18,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 package de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.bind.JAXBException;
@@ -30,19 +29,11 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
 import de.thorstenberger.taskmodel.complex.complextaskdef.blocks.impl.GenericBlockImpl;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.ManualSubTaskletCorrection;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTaskletCorrection;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.correctionsubmitdata.TextCorrectionSubmitData;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.impl.ManualSubTaskletCorrectionImpl;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.impl.PageImpl;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.PaintSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Paint;
-import de.thorstenberger.taskmodel.complex.jaxb.AutoCorrectionType;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType;
 import de.thorstenberger.taskmodel.complex.jaxb.ManualCorrectionType;
-import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
 import de.thorstenberger.taskmodel.complex.jaxb.PaintSubTaskDef;
 import de.thorstenberger.taskmodel.complex.jaxb.SubTaskDefType;
 import de.thorstenberger.taskmodel.complex.jaxb.SubTaskType;
@@ -178,11 +169,24 @@ public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTaskl
 	}
 
 	public boolean isProcessed() {
-		if( paintSubTask.getPictureString() == null || paintSubTask.getPictureString().trim().length() == 0 )
-			return isTextuallyAnswerdByStudent();
-		else
-//			return !paintSubTask.getPictureString().equals( paintSubTaskDef.getImages() == null ? null : paintSubTaskDef.getImages().getMutableTemplateImage() );
-			return !paintSubTask.isResetted() || isTextuallyAnswerdByStudent();
+		
+		if( isTextuallyAnsweredByStudent() )
+			return true;
+		
+		if( isResetted() )
+			return false;
+		
+		if( paintSubTask.getPictureString() != null && paintSubTask.getPictureString().trim().length() > 0 ){
+			return !paintSubTask.getPictureString().equals( paintSubTaskDef.getImages().getMutableTemplateImage() );
+		}
+		
+		return false;
+		
+//		if( paintSubTask.getPictureString() == null || paintSubTask.getPictureString().trim().length() == 0 )
+//			return isTextuallyAnswerdByStudent();
+//		else
+////			return !paintSubTask.getPictureString().equals( paintSubTaskDef.getImages() == null ? null : paintSubTaskDef.getImages().getMutableTemplateImage() );
+//			return !paintSubTask.isResetted() || isTextuallyAnswerdByStudent();
 	}
 
 
@@ -197,7 +201,7 @@ public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTaskl
 		return answer == null? "":answer;
 	}
 
-	private boolean isTextuallyAnswerdByStudent(){
+	private boolean isTextuallyAnsweredByStudent(){
 		return paintSubTask.getTextAnswer() != null && paintSubTask.getTextAnswer().trim().length() != 0;
 	}
 

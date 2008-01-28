@@ -30,7 +30,7 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
 import de.thorstenberger.taskmodel.complex.complextaskdef.blocks.impl.GenericBlockImpl;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.correctionsubmitdata.TextCorrectionSubmitData;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.correctionsubmitdata.PaintCorrectionSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.PaintSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Paint;
 import de.thorstenberger.taskmodel.complex.jaxb.ManualCorrectionType;
@@ -89,17 +89,17 @@ public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTaskl
 		if( isAutoCorrected() )
 			throw new IllegalStateException( TaskHandlingConstants.SUBTASK_AUTO_CORRECTED );
 
-		TextCorrectionSubmitData tcsd = (TextCorrectionSubmitData) csd;
+		PaintCorrectionSubmitData pcsd = (PaintCorrectionSubmitData) csd;
 
-		if( tcsd.getPoints() < 0 || tcsd.getPoints() > paintTaskBlock.getConfig().getPointsPerTask() )
+		if( pcsd.getPoints() < 0 || pcsd.getPoints() > paintTaskBlock.getConfig().getPointsPerTask() )
 			return;
 
 		List<ManualCorrectionType> manualCorrections = paintSubTask.getManualCorrection();
 		if( complexTaskDefRoot.getCorrectionMode().getType() == ComplexTaskDefRoot.CorrectionModeType.MULTIPLECORRECTORS ){
 
 			for( ManualCorrectionType mc : manualCorrections ){
-				if( mc.getCorrector().equals( tcsd.getCorrector() ) ){
-					mc.setPoints( tcsd.getPoints() );
+				if( mc.getCorrector().equals( pcsd.getCorrector() ) ){
+					mc.setPoints( pcsd.getPoints() );
 					return;
 				}
 			}
@@ -110,8 +110,8 @@ public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTaskl
 			} catch (JAXBException e) {
 				throw new TaskModelPersistenceException( e );
 			}
-			mc.setCorrector( tcsd.getCorrector() );
-			mc.setPoints( tcsd.getPoints() );
+			mc.setCorrector( pcsd.getCorrector() );
+			mc.setPoints( pcsd.getPoints() );
 			manualCorrections.add( mc );
 
 		}else{
@@ -127,8 +127,8 @@ public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTaskl
 				}
 				manualCorrections.add( mc );
 			}
-			mc.setCorrector( tcsd.getCorrector() );
-			mc.setPoints( tcsd.getPoints() );
+			mc.setCorrector( pcsd.getCorrector() );
+			mc.setPoints( pcsd.getPoints() );
 		}
 
 	}

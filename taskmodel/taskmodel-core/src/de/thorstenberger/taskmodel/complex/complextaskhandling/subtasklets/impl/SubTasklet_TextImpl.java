@@ -171,13 +171,15 @@ public class SubTasklet_TextImpl extends AbstractSubTasklet implements SubTaskle
 
 
 	public boolean isProcessed(){
+		
+		if( textSubTask.getAnswer() == null || textSubTask.getAnswer().trim().length() == 0 )
+			return false;
+		
 		if( getInitialTextFieldValue() != null ){
-			if( getInitialTextFieldValue().equals( textSubTask.getAnswer() ) )
-				return false;
-			else
-				return true;
-		}else
-			return textSubTask.getAnswer() != null && textSubTask.getAnswer().length() > 0;
+			return !getInitialTextFieldValue().equals( textSubTask.getAnswer() );
+		}
+		
+		return true;
 	}
 
 	public int getTextFieldWidth(){

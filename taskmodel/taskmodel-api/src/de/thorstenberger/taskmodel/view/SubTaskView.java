@@ -75,9 +75,12 @@ public abstract class SubTaskView {
 		NumberFormat nF = NumberFormat.getNumberInstance();
 
 	    String points = "";
-	    if( subtasklet.isCorrected() && !subtasklet.isAutoCorrected() ){
-
-	    	points = nF.format( subtasklet.getPointsByCorrector( actualCorrector ) );
+	    if( !subtasklet.isAutoCorrected() ){
+	    	
+	    	if( subtasklet.isCorrectedByCorrector( actualCorrector ) )
+	    		points = nF.format( subtasklet.getPointsByCorrector( actualCorrector ) );
+	    	else
+	    		points = nF.format( 0 );
 
 		    return "<br><div align=\"right\">Punkte: " +
 		    		"<input type=\"text\" name=\"task[0]."+taskTypePrefix+"_points\" size=\"4\" value=\"" + points + "\"></div><br>";

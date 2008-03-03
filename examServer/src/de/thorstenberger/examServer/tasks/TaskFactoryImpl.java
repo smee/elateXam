@@ -27,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,6 +67,7 @@ import de.thorstenberger.taskmodel.Tasklet;
 import de.thorstenberger.taskmodel.TaskletCorrection;
 import de.thorstenberger.taskmodel.TaskmodelUtil;
 import de.thorstenberger.taskmodel.UserInfo;
+import de.thorstenberger.taskmodel.TaskManager.UserAttribute;
 import de.thorstenberger.taskmodel.complex.ComplexTaskBuilder;
 import de.thorstenberger.taskmodel.complex.ComplexTasklet;
 import de.thorstenberger.taskmodel.complex.ComplexTaskletImpl;
@@ -211,12 +213,12 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 				TaskDef_ComplexImpl tdci;
 				try {
 					tdci = new TaskDef_ComplexImpl( t.getId(), t.getTitle(),
-							t.getShortDescription(), t.getDeadline(), t.isStopped(), t.getFollowingTaskId(), complexTaskDefDAO, new FileInputStream( examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.TASKDEFS + File.separatorChar + t.getComplexTaskFile() ) );
+							t.getShortDescription(), t.getDeadline(), t.isStopped(), t.getFollowingTaskId(),complexTaskDefDAO,
+							new FileInputStream( examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.TASKDEFS + File.separatorChar + t.getComplexTaskFile() ),
+							t.isShowSolutionToStudents(), t.isVisible() );
 				} catch (FileNotFoundException e) {
 					throw new TaskModelPersistenceException( e );
 				}
-				tdci.setShowCorrectionToUsers( t.isShowSolutionToStudents() );
-				tdci.setVisible( t.isVisible() );
 				taskDefCache.add( tdci );
 				
 			}
@@ -290,8 +292,8 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 			throw new TaskModelPersistenceException( e );
 		}
 		ComplexTasklet tasklet =
-			new ComplexTaskletImpl( this, complexTaskBuilder, taskletVO.getLogin(), taskDefVO.getId(), 
-					TaskmodelUtil.getStatus( taskletVO.getStatus() ), taskletVO.getFlags(), correction, (TaskDef_Complex)getTaskDef( taskDefVO.getId() ), complexTaskHandlingDAO, fis );
+			new ComplexTaskletImpl( this, complexTaskBuilder, taskletVO.getLogin(), (TaskDef_Complex)getTaskDef( taskDefVO.getId() ), 
+					TaskmodelUtil.getStatus( taskletVO.getStatus() ), taskletVO.getFlags(), correction, complexTaskHandlingDAO, fis, new HashMap<String, String>() );
 		
 		return tasklet;
 			

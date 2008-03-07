@@ -18,30 +18,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 package junittask.subtasklet;
 
-import groovy.lang.GroovyClassLoader;
-import groovy.lang.GroovyCodeSource;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.util.Enumeration;
-
-import junit.framework.TestFailure;
-import junit.framework.TestResult;
-import junit.framework.TestSuite;
-import junit.textui.ResultPrinter;
-import junit.textui.TestRunner;
-import junittask.JavaTaskTester;
 import junittask.subtasklet.view.JUnitCorrectionSubmitData;
 import junittask.subtasklet.view.JUnitSubmitData;
 
 import org.apache.xerces.dom.CoreDocumentImpl;
-import org.codehaus.groovy.control.CompilationFailedException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import correction.junit.JUnitTestCorrector;
+import correction.junit.JUnitTestResult;
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
@@ -117,7 +104,12 @@ public class JUnitSubTaskletImpl extends AbstractAddonSubTasklet implements SubT
 	}
 	private JUnitSubtaskDummy justd;
 	private JUnitSubTaskDef justdd;
+	private JUnitTestCorrector taskCorrector;
 
+	public JUnitSubTaskletImpl(ComplexTaskDefRoot complexTaskDefRoot, Block block,SubTaskDefType subTaskDef, SubTaskType subTaskType, JUnitTestCorrector corrector) {
+		this(complexTaskDefRoot, block, subTaskDef, subTaskType);
+		this.taskCorrector=corrector;
+	}
 	public JUnitSubTaskletImpl(ComplexTaskDefRoot complexTaskDefRoot, Block block,SubTaskDefType subTaskDef, SubTaskType subTaskType) {
 		super(complexTaskDefRoot, block, subTaskDef, subTaskType);
 		this.justd=new JUnitSubtaskDummy((AddonSubTask) subTaskType);
@@ -130,53 +122,58 @@ public class JUnitSubTaskletImpl extends AbstractAddonSubTasklet implements SubT
 	}
 
 	public void doAutoCorrection() {
-		try {
+//		try {
 			//TODO in einer speziellen Sandbox-JVM ausführen!
-			SandboxClassLoader sbcl=new SandboxClassLoader(getClass().getClassLoader());
-			GroovyClassLoader gcl=new GroovyClassLoader(sbcl);
-			Class toTestInterface=gcl.parseClass(justdd.getInterfaceClassDef());
-			Class toTest=gcl.parseClass(new GroovyCodeSource(justd.getClassDef(),"studentClass","/restrictedGroovy"));//see catalina.policy at {tomcat}/conf
-			sbcl.setRestricted(false);
-			Class testClass=gcl.parseClass(justdd.getTestClassDef());
-			final TestSuite suite=new TestSuite(testClass);
-			for(Enumeration e=suite.tests();e.hasMoreElements();)
-				((JavaTaskTester)e.nextElement()).setTestObject(toTest.newInstance());
-
-			final StringBuilder sb=new StringBuilder();
-			final ResultPrinter rp=new ResultPrinter(new PrintStream(
-					new OutputStream() {
-						public void write(int b) throws IOException {
-							sb.append((char)b);
-						}})) {
-				protected void printDefectTrace(TestFailure booBoo) {
-					getWriter().println(booBoo.exceptionMessage());
-				};//skip stacktraces
-			};
-			Thread t=new Thread(new Runnable() {
-				public void run() {
-					TestRunner tr=new TestRunner(rp);
-					TestResult result=tr.doRun(suite);
-					setCorrection(result.wasSuccessful()?block.getPointsPerSubTask():0,sb.toString(),true);
-				}
-			});
-			t.start();
-			try {
-				t.join(justdd.getTimeout());
-			} catch (InterruptedException e) {
-			}
-			if(t.isAlive()) {
-				t.stop();
-				setCorrection(0, "Time limit exceeded!", true);
-			}
-
-		} catch (CompilationFailedException e) {
-			e.printStackTrace();
-			setCorrection(0,"compilation failed!",true);
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
+//			SandboxClassLoader sbcl=new SandboxClassLoader(getClass().getClassLoader());
+//			GroovyClassLoader gcl=new GroovyClassLoader(sbcl);
+//			Class toTestInterface=gcl.parseClass(justdd.getInterfaceClassDef());
+//			Class toTest=gcl.parseClass(new GroovyCodeSource(justd.getClassDef(),"studentClass","/restrictedGroovy"));//see catalina.policy at {tomcat}/conf
+//			sbcl.setRestricted(false);
+//			Class testClass=gcl.parseClass(justdd.getTestClassDef());
+//			final TestSuite suite=new TestSuite(testClass);
+//			for(Enumeration e=suite.tests();e.hasMoreElements();)
+//				((JavaTaskTester)e.nextElement()).setTestObject(toTest.newInstance());
+//
+//			final StringBuilder sb=new StringBuilder();
+//			final ResultPrinter rp=new ResultPrinter(new PrintStream(
+//					new OutputStream() {
+//						public void write(int b) throws IOException {
+//							sb.append((char)b);
+//						}})) {
+//				protected void printDefectTrace(TestFailure booBoo) {
+//					getWriter().println(booBoo.exceptionMessage());
+//				};//skip stacktraces
+//			};
+//			Thread t=new Thread(new Runnable() {
+//				public void run() {
+//					TestRunner tr=new TestRunner(rp);
+//					TestResult result=tr.doRun(suite);
+//					setCorrection(result.wasSuccessful()?block.getPointsPerSubTask():0,sb.toString(),true);
+//				}
+//			});
+//			t.start();
+//			try {
+//				t.join(justdd.getTimeout());
+//			} catch (InterruptedException e) {
+//			}
+//			if(t.isAlive()) {
+//				t.stop();
+//				setCorrection(0, "Time limit exceeded!", true);
+//			}
+//
+//		} catch (CompilationFailedException e) {
+//			e.printStackTrace();
+//			setCorrection(0,"compilation failed!",true);
+//		} catch (InstantiationException e) {
+//			e.printStackTrace();
+//		} catch (IllegalAccessException e) {
+//			e.printStackTrace();
+//		}
+			JUnitTestResult result=taskCorrector.runUnitTest( justdd.getInterfaceClassDef(), justd.getClassDef(), justdd.getTestClassDef(), justdd.getTimeout() );
+			if(result != null)
+				setCorrection(result.isCorrect()?block.getPointsPerSubTask():0,result.getResult(),true);
+			else
+				;//TODO needs manual correction
 	}
 	protected void setCorrection( float points, String result, boolean auto ){
 		if(auto)

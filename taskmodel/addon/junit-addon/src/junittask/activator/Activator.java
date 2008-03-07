@@ -23,26 +23,42 @@ import junittask.subtasklet.view.JUnitSubTaskViewFactory;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+
+import ch.ethz.iks.r_osgi.RemoteOSGiService;
+import ch.ethz.iks.r_osgi.URI;
 
 import de.thorstenberger.taskmodel.complex.addon.AddOnSubTaskletFactory;
 import de.thorstenberger.taskmodel.view.AddonSubTaskViewFactory;
 
 public class Activator implements BundleActivator{
 
+	private final String remoteUrl = "r-osgi://localhost:9999";
+	private RemoteOSGiService ros;
+
 	public void start(BundleContext context) throws Exception {
+
+		ServiceReference remoteserviceref = context.getServiceReference( RemoteOSGiService.class.getName() );
+	    if( remoteserviceref != null ) {
+	    	this.ros = (RemoteOSGiService) context.getService( remoteserviceref );
+	    }
+
+
 		context.registerService(
-				AddOnSubTaskletFactory.class.getName(), 
-				new JUnitAddOnSubTaskletFactoryImpl(),
+				AddOnSubTaskletFactory.class.getName(),
+				new JUnitAddOnSubTaskletFactoryImpl(context, remoteUrl),
 				null);
-		
+
 		context.registerService(
-				AddonSubTaskViewFactory.class.getName(), 
+				AddonSubTaskViewFactory.class.getName(),
 				new JUnitSubTaskViewFactory(),
 				null);
-		
+
 	}
 
 	public void stop(BundleContext context) throws Exception {
+		if( ros != null)
+			ros.disconnect(new URI(remoteUrl));
 	}
 
 }

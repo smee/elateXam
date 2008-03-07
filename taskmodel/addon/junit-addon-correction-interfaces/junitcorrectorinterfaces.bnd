@@ -1,0 +1,7 @@
+Bundle-Name: junit-addon-corrector-interfaces
+Bundle-SymbolicName: junit-addon-corrector-interfaces
+Extension-Name: junit-addon-corrector-interfaces
+Bundle-ManifestVersion: 2
+Export-Package: correction.junit
+
+

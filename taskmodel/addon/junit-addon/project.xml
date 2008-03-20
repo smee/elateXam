@@ -63,7 +63,7 @@
 	<dependency>
       <groupId>biz.aqute</groupId>
       <artifactId>bnd</artifactId>
-      <version>0.0.169</version>
+      <version>0.0.187</version>
 	  <type>jar</type>
       <properties>
         <classloader>root</classloader>

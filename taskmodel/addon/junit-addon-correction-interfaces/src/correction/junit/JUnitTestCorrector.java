@@ -19,6 +19,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 package correction.junit;
 
 public interface JUnitTestCorrector {
-
+	/**
+	 * Testet eine Java-Klasse mit Hilfe eines Unittests.
+	 * @param testInterfaceDef Interfacedefinition der zu testenden Klasse
+	 * @param classUnderTest Klassendefinition, die getestet werden soll
+	 * @param junitTestClass JUnit-Testklasse
+	 * @param timeOut Max. Berechnungszeit pro Unittest
+	 * @return Status des Unittests und Punktzahl
+	 */
 	public JUnitTestResult runUnitTest(String testInterfaceDef, String classUnderTest, String junitTestClass, long timeOut);
 }

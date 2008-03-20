@@ -102,6 +102,7 @@ public class JUnitSubTaskletImpl extends AbstractAddonSubTasklet implements SubT
 			return getText(memento,"interfaceClassDef",null);
 		}
 	}
+
 	private JUnitSubtaskDummy justd;
 	private JUnitSubTaskDef justdd;
 	private JUnitTestCorrector taskCorrector;
@@ -122,53 +123,6 @@ public class JUnitSubTaskletImpl extends AbstractAddonSubTasklet implements SubT
 	}
 
 	public void doAutoCorrection() {
-//		try {
-			//TODO in einer speziellen Sandbox-JVM ausführen!
-//			SandboxClassLoader sbcl=new SandboxClassLoader(getClass().getClassLoader());
-//			GroovyClassLoader gcl=new GroovyClassLoader(sbcl);
-//			Class toTestInterface=gcl.parseClass(justdd.getInterfaceClassDef());
-//			Class toTest=gcl.parseClass(new GroovyCodeSource(justd.getClassDef(),"studentClass","/restrictedGroovy"));//see catalina.policy at {tomcat}/conf
-//			sbcl.setRestricted(false);
-//			Class testClass=gcl.parseClass(justdd.getTestClassDef());
-//			final TestSuite suite=new TestSuite(testClass);
-//			for(Enumeration e=suite.tests();e.hasMoreElements();)
-//				((JavaTaskTester)e.nextElement()).setTestObject(toTest.newInstance());
-//
-//			final StringBuilder sb=new StringBuilder();
-//			final ResultPrinter rp=new ResultPrinter(new PrintStream(
-//					new OutputStream() {
-//						public void write(int b) throws IOException {
-//							sb.append((char)b);
-//						}})) {
-//				protected void printDefectTrace(TestFailure booBoo) {
-//					getWriter().println(booBoo.exceptionMessage());
-//				};//skip stacktraces
-//			};
-//			Thread t=new Thread(new Runnable() {
-//				public void run() {
-//					TestRunner tr=new TestRunner(rp);
-//					TestResult result=tr.doRun(suite);
-//					setCorrection(result.wasSuccessful()?block.getPointsPerSubTask():0,sb.toString(),true);
-//				}
-//			});
-//			t.start();
-//			try {
-//				t.join(justdd.getTimeout());
-//			} catch (InterruptedException e) {
-//			}
-//			if(t.isAlive()) {
-//				t.stop();
-//				setCorrection(0, "Time limit exceeded!", true);
-//			}
-//
-//		} catch (CompilationFailedException e) {
-//			e.printStackTrace();
-//			setCorrection(0,"compilation failed!",true);
-//		} catch (InstantiationException e) {
-//			e.printStackTrace();
-//		} catch (IllegalAccessException e) {
-//			e.printStackTrace();
-//		}
 			JUnitTestResult result=taskCorrector.runUnitTest( justdd.getInterfaceClassDef(), justd.getClassDef(), justdd.getTestClassDef(), justdd.getTimeout() );
 			if(result != null)
 				setCorrection(result.isCorrect()?block.getPointsPerSubTask():0,result.getResult(),true);

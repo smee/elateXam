@@ -79,6 +79,13 @@ public abstract class AbstractTaskDef implements TaskDef {
 	}
 
 	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.TaskDef#setShortDescription()
+	 */
+	public void setShortDescription(String sd) {
+		this.shortDescription=sd;
+	}
+
+	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.TaskDef#isStopped()
 	 */
 	public boolean isStopped() {

@@ -42,6 +42,8 @@ public interface TaskDef {
 
 	public String getShortDescription();
 
+	public void setShortDescription(String desc);
+
 	public boolean isStopped();
 
 	public void setStopped(boolean value);

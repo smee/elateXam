@@ -3,17 +3,19 @@
                                "http://jakarta.apache.org/struts/dtds/struts-config_1_2.dtd">
 <struts-config>
  <data-sources/>
- <!-- ========== Data Sources Definitions =================================== 
+ <!-- ========== Data Sources Definitions ===================================
 
     Define your Struts data sources in a file called struts-data-sources.xml and place
     it in your merge directory.
-  
+
  ========== Form Bean Definitions =================================== -->
  <form-beans>
   <form-bean name="roleForm" type="de.thorstenberger.examServer.webapp.form.RoleForm"/>
   <form-bean name="addressForm" type="de.thorstenberger.examServer.webapp.form.AddressForm"/>
   <form-bean name="userForm" type="de.thorstenberger.examServer.webapp.form.UserForm"/>
   <form-bean name="uploadForm" type="de.thorstenberger.examServer.webapp.form.UploadForm"/>
+  <form-bean name="taskForm" type="de.thorstenberger.examServer.webapp.form.TaskForm"/>
+  <form-bean name="taskUploadForm" type="de.thorstenberger.examServer.webapp.form.TaskDefUploadForm"/>
   <!--
          If you have non XDoclet forms, define them in a file called struts-forms.xml and
          place it in your merge directory.
@@ -105,16 +107,16 @@
   <action path="/studentMainMenu" type="de.thorstenberger.examServer.webapp.action.StudentMainAction">
    <forward name="success" path="/WEB-INF/pages/studentMainMenu.jsp"/>
   </action>
-   
+
   <action path="/tutorMainMenu" type="de.thorstenberger.examServer.webapp.action.TutorMainAction" roles="tutor,admin">
    <forward name="success" path="/WEB-INF/pages/tutorMainMenu.jsp"/>
   </action>
-   
+
   <action path="/TaskViewFactory" roles="student"
    type="de.thorstenberger.examServer.webapp.action.TaskViewFactoryAction">
    <forward name="complex" path="/ComplexTaskOverview.html" redirect="true"/>
    </action>
-   
+
   <action path="/ComplexTaskOverview" roles="student"
    type="de.thorstenberger.examServer.webapp.action.ComplexTaskOverviewAction">
 	   <forward name="success" path="/WEB-INF/pages/complexTask/index.jsp"/>
@@ -123,16 +125,16 @@
   <action path="/LoginConfig" type="de.thorstenberger.examServer.webapp.action.LoginConfigAction" name="loginConfigForm" validate="false" scope="request" roles="admin">
   	<forward name="loginConfig" path="/WEB-INF/pages/loginConfig.jsp"/>
   </action>
-  
+
   <action input="/LoginConfig" name="loginConfigForm" path="/saveLoginConfig" scope="request" roles="admin"
    type="de.thorstenberger.examServer.webapp.action.LoginConfigSubmitAction" validate="false">
 	<forward name="success" path="/LoginConfig.html"/>
   </action>
-   
+
   <action path="/SystemConfig" type="de.thorstenberger.examServer.webapp.action.SystemConfigAction" name="systemConfigForm" validate="false" scope="request" roles="admin">
   	<forward name="systemConfig" path="/WEB-INF/pages/systemConfig.jsp"/>
   </action>
-  
+
   <action input="/SystemConfig" name="systemConfigForm" path="/saveSystemConfig" scope="request" roles="admin"
    type="de.thorstenberger.examServer.webapp.action.SystemConfigSubmitAction" validate="false">
 	<forward name="success" path="/SystemConfig.html"/>
@@ -142,13 +144,43 @@
    type="de.thorstenberger.examServer.webapp.action.CorrectorFactoryAction">
    <!--forward name="complex" path="/ComplexTaskOverview.html" redirect="true"/-->
    </action>
-   
+
    <!-- The following action's purpose is to collect some information the students should submit on their Main Menu Page -->
   <action input="/studentMainMenu" path="/submitStudentsInfo" roles="student"
    type="de.thorstenberger.examServer.webapp.action.StudentsInfoSubmitAction" validate="false">
 	<forward name="success" path="/studentMainMenu.html"/>
   </action>
-   
+
+  <action path="/TaskConfigList" type="de.thorstenberger.examServer.webapp.action.TaskConfigMainAction">
+   <forward name="success" path="/WEB-INF/pages/taskList.jsp"/>
+  </action>
+
+  <action path="/removeTask" type="de.thorstenberger.examServer.webapp.action.RemoveTaskAction">
+   <forward name="success" path="/TaskConfigList.html" redirect="true"/>
+  </action>
+
+  <action path="/TaskConfig"
+  		  type="de.thorstenberger.examServer.webapp.action.TaskConfigAction"
+  		  name="taskForm" validate="false" scope="request" roles="admin">
+   <forward name="success" path="/WEB-INF/pages/taskConfig.jsp"/>
+   <forward name="noSelection" path="/TaskConfigList.html" redirect="true"/>
+  </action>
+
+  <action path="/saveTask"
+  		  type="de.thorstenberger.examServer.webapp.action.SaveTaskConfigAction"
+  		  name="taskForm" validate="false" scope="request" roles="admin">
+   <forward name="success" path="/TaskConfigList.html" redirect="true"/>
+   <forward name="noSelection" path="/TaskConfigList.html" redirect="true"/>
+  </action>
+
+  <action path="/storeNewTask"
+  		  type="de.thorstenberger.examServer.webapp.action.TaskUploadAction"
+  		  input="/WEB-INF/pages/taskList.jsp"
+  		  name="taskUploadForm" validate="false" scope="request" roles="admin">
+   <forward name="success" path="/TaskConfig.html" redirect="false"/>
+   <forward name="error" path="/WEB-INF/pages/taskUploadError.jsp"/>
+  </action>
+
  </action-mappings>
  <controller inputForward="true" maxFileSize="2M" nocache="true"/>
  <message-resources parameter="ApplicationResources"/>

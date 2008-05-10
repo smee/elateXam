@@ -11,6 +11,7 @@
 	        <Item name="LoginConfig" title="menu.admin.loginConfig" action="LoginConfig"/>
 	        <Item name="SystemConfig" title="menu.admin.systemConfig" action="SystemConfig"/>
             <Item name="ViewUsers" title="menu.admin.users" forward="viewUsers"/>
+            <Item name="TaskMenu" title="menu.admin.tasks" action="TaskConfigList"/>
             <Item name="ActiveUsers" title="mainMenu.activeUsers" action="activeUsers"/>
             <!--Item name="ReloadContext" title="menu.admin.reload" action="reload"/-->
             <!--Item name="FlushCache" title="menu.flushCache" action="flush"/-->

@@ -17,13 +17,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.examServer.model;
 
 /**
  * @author Thorsten Berger
  *
+ *@struts.form include-all="true" extends="BaseForm"
  */
 public class TaskDefVO {
 
@@ -35,11 +36,14 @@ public class TaskDefVO {
 	private Long deadline;
 	private boolean visible;
 	private Long followingTaskId;
-	
+
 	private boolean showSolutionToStudents;
 	private String complexTaskFile;
-	
-	
+
+
+	public TaskDefVO() {
+		this.id=-1; //marker for unused value as id==0 would be valid
+	}
 	/**
 	 * @return Returns the shortDescription.
 	 */
@@ -160,7 +164,7 @@ public class TaskDefVO {
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 	}
-	
-	
+
+
 
 }

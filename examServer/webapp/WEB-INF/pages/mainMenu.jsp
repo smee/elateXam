@@ -21,6 +21,10 @@
         <a href="<c:url value="/users.html"/>">Benutzer-Verwaltung</a>
     </li>
     <li>
+        <a href="<c:url value="/TaskConfigList.html"/>">Aufgaben-Verwaltung</a>
+    </li>
+
+    <li>
         <a href="<c:url value="/tutorMainMenu.html"/>">Aufgaben-Korrektur</a>
     </li>
 </ul>

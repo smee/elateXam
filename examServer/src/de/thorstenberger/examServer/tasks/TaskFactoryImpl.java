@@ -17,14 +17,17 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.examServer.tasks;
 
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -93,13 +96,17 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 	public static final String COMPLEX_TASKHANDLING_BACKUP_FILE_SUFFIX = ".bak";
 
 	public static final String USER_ATTRIBUTE_SEMESTER = "user.student-info.semester";
-	
+
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.TaskFactory#deleteTaskDef(long)
 	 */
-	public void deleteTaskDef(long id) throws MethodNotSupportedException {
-		// TODO Auto-generated method stub
-		
+	synchronized public void deleteTaskDef(long id) throws MethodNotSupportedException {
+		TaskDefVO tdvo = taskDefDao.getTaskDef( id );
+		if( tdvo != null ) {
+			tdvo.setVisible( false ); //make invisible rather than delete physically
+			taskDefDao.storeTaskDef( tdvo );
+			this.taskDefCache = null;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -115,50 +122,66 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 	 */
 	public void storeTaskCategory(TaskCategory category) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.TaskFactory#storeTaskDef(de.thorstenberger.taskmodel.TaskDef, long)
 	 */
-	public void storeTaskDef(TaskDef taskDef, long taskCategoryId) throws TaskApiException {
-		// TODO Auto-generated method stub
-		
+	synchronized public void storeTaskDef(TaskDef taskDef, long taskCategoryId) throws TaskApiException {
+		if(taskDef instanceof TaskDef_Complex) {
+			this.taskDefCache = null;
+
+			TaskDefVO tdvo=taskDefDao.getTaskDef( taskDef.getId() );
+			if(tdvo == null) {
+				tdvo = new TaskDefVO();
+				tdvo.setType( TaskContants.TYPE_COMPLEX );//FIXME
+				//tdvo.setComplexTaskFile( ??? );
+			}
+			tdvo.setId( taskDef.getId() );
+			tdvo.setTitle( taskDef.getTitle() );
+			tdvo.setStopped( taskDef.isStopped() );
+			tdvo.setShowSolutionToStudents( ((TaskDef_Complex) taskDef ).isShowCorrectionToUsers());
+			tdvo.setShortDescription( taskDef.getShortDescription() );
+			taskDefDao.storeTaskDef( tdvo );
+
+		}else
+			throw new TaskApiException("Unsupported task of type \""+taskDef.getType()+"\".");
 	}
 
 	private List<String> availableTypes;
-	
+
 	private ExamServerManager examServerManager;
 	private UserManager userManager;
-	
+
 	private TaskDefDao taskDefDao;
 	private TaskHandlingDao taskHandlingDao;
 	private ComplexTaskDefDAO complexTaskDefDAO;
 	private ComplexTaskHandlingDAO complexTaskHandlingDAO;
 	private ComplexTaskBuilder complexTaskBuilder;
-	
+
 	private Log log = LogFactory.getLog( "TaskLogger" );
-	
-	
+
+
 	private List<TaskDef> taskDefCache = null;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public TaskFactoryImpl( ExamServerManager examServerManager, UserManager userManager, TaskDefDao taskDefDao, TaskHandlingDao taskHandlingDao, ComplexTaskDefDAO complexTaskDefDAO, ComplexTaskHandlingDAO complexTaskHandlingDAO, ComplexTaskBuilder complexTaskBuilder ) {
 
 		this.examServerManager = examServerManager;
 		this.userManager = userManager;
-		
+
 		this.taskDefDao = taskDefDao;
 		this.complexTaskDefDAO = complexTaskDefDAO;
 		this.taskHandlingDao = taskHandlingDao;
 		this.complexTaskHandlingDAO = complexTaskHandlingDAO;
 		this.complexTaskBuilder = complexTaskBuilder;
-		
-		availableTypes = new ArrayList<String>(); 
+
+		availableTypes = new ArrayList<String>();
 		availableTypes.add( TaskContants.TYPE_COMPLEX );
-		
+
 	}
 
 	/* (non-Javadoc)
@@ -201,30 +224,30 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 	 * @see de.thorstenberger.taskmodel.TaskFactory#getTaskDefs()
 	 */
 	public synchronized List<TaskDef> getTaskDefs() {
-		
+
 		if( taskDefCache == null ){
-		
+
 			List<TaskDefVO> taskDefVOs = taskDefDao.getTaskDefs();
-			
+
 			taskDefCache = new ArrayList<TaskDef>();
-			
+
 			for( TaskDefVO t : taskDefVOs ){
-				
+
 				TaskDef_ComplexImpl tdci;
 				try {
 					tdci = new TaskDef_ComplexImpl( t.getId(), t.getTitle(),
 							t.getShortDescription(), t.getDeadline(), t.isStopped(), t.getFollowingTaskId(),complexTaskDefDAO,
-							new FileInputStream( examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.TASKDEFS + File.separatorChar + t.getComplexTaskFile() ),
+							new FileInputStream( createPath( t.getComplexTaskFile() ) ),
 							t.isShowSolutionToStudents(), t.isVisible() );
 				} catch (FileNotFoundException e) {
 					throw new TaskModelPersistenceException( e );
 				}
 				taskDefCache.add( tdci );
-				
+
 			}
-			
+
 		}
-		
+
 		return taskDefCache;
 	}
 
@@ -247,18 +270,18 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 		TaskDefVO taskDefVO = taskDefDao.getTaskDef( taskId );
 		if( taskDefVO == null )
 			throw new RuntimeException( "No corresponding taskDef found: " + taskId );
-		
+
 		File homeDir = new File( examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.HOME + File.separatorChar + userId );
 		File complexTaskHandlingFile = new File( homeDir.getAbsolutePath() + File.separatorChar +  COMPLEX_TASKHANDLING_FILE_PREFIX + taskId + COMPLEX_TASKHANDLING_FILE_SUFFIX );
-		
+
 		return instantiateTasklet( taskletVO, taskDefVO, complexTaskHandlingFile );
-		
+
 	}
-	
-	
-	
+
+
+
 	private Tasklet instantiateTasklet( TaskletVO taskletVO, TaskDefVO taskDefVO, File complexTaskHandlingFile ){
-		
+
 		// corrector annotations
 		List<CorrectorAnnotation> cas = new LinkedList<CorrectorAnnotation>();
 		List<CorrectorTaskletAnnotationVO> ctavos = taskletVO.getCorrectorAnnotations();
@@ -270,7 +293,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 		List<StudentAnnotation> studentAnnotations = new ArrayList<StudentAnnotation>();
 		for( StudentTaskletAnnotationVO tavo : taskletVO.getStudentAnnotations() )
 			studentAnnotations.add( new StudentAnnotationImpl( tavo.getText(), tavo.getDate(), tavo.isAcknowledged() ) );
-		
+
 		// manual corrections
 		List<ManualCorrection> mcs = new LinkedList<ManualCorrection>();
 		List<ManualCorrectionsVO> mcvos = taskletVO.getManualCorrections();
@@ -278,11 +301,11 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 			for( ManualCorrectionsVO mcvo : mcvos )
 				mcs.add( new ManualCorrectionImpl( mcvo.getCorrector(), mcvo.getPoints() ) );
 		}
-		
+
 		TaskletCorrection correction =
 			new TaskletCorrectionImpl( taskletVO.getAutoCorrectionPoints(), cas,
-										taskletVO.getCorrectorLogin(), taskletVO.getCorrectorHistory(), studentAnnotations, mcs );			
-			
+										taskletVO.getCorrectorLogin(), taskletVO.getCorrectorHistory(), studentAnnotations, mcs );
+
 		FileInputStream fis;
 		try {
 			if( !complexTaskHandlingFile.exists() )
@@ -292,12 +315,12 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 			throw new TaskModelPersistenceException( e );
 		}
 		ComplexTasklet tasklet =
-			new ComplexTaskletImpl( this, complexTaskBuilder, taskletVO.getLogin(), (TaskDef_Complex)getTaskDef( taskDefVO.getId() ), 
+			new ComplexTaskletImpl( this, complexTaskBuilder, taskletVO.getLogin(), (TaskDef_Complex)getTaskDef( taskDefVO.getId() ),
 					TaskmodelUtil.getStatus( taskletVO.getStatus() ), taskletVO.getFlags(), correction, complexTaskHandlingDAO, fis, new HashMap<String, String>() );
-		
+
 		return tasklet;
-			
-		
+
+
 	}
 
 	/* (non-Javadoc)
@@ -305,16 +328,16 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 	 */
 	public Tasklet createTasklet(String userId, long taskId)
 			throws TaskApiException {
-		
+
 		TaskletVO taskletVO = taskHandlingDao.getTasklet( taskId, userId );
 		TaskDefVO taskDefVO = taskDefDao.getTaskDef( taskId );
-		
+
 		if( taskDefVO == null )
 			throw new TaskApiException( "TaskDef " + taskId + " does not exist!" );
-		
+
 		if( taskletVO != null )
 			throw new TaskApiException( "Tasklet (" + userId + ", " + taskId + ") does already exist!" );
-		
+
 		taskletVO = new TaskletVO();
 		taskletVO.setLogin( userId );
 		taskletVO.setTaskDefId( taskId );
@@ -324,16 +347,16 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 		taskletVO.setStudentAnnotations( new LinkedList<StudentTaskletAnnotationVO>() );
 		taskletVO.setCorrectorAnnotations( new LinkedList<CorrectorTaskletAnnotationVO>() );
 		taskletVO.setManualCorrections( new LinkedList<ManualCorrectionsVO>() );
-		
+
 		File homeDir = new File( examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.HOME + File.separatorChar + userId );
 		if( !homeDir.exists() )
 			homeDir.mkdirs();
 		File complexTaskHandlingFile = new File( homeDir.getAbsolutePath() + File.separatorChar +  COMPLEX_TASKHANDLING_FILE_PREFIX + taskId + COMPLEX_TASKHANDLING_FILE_SUFFIX );
-		
+
 		taskHandlingDao.saveTasklet( taskletVO );
-		
+
 		return instantiateTasklet( taskletVO, taskDefVO, complexTaskHandlingFile );
-		
+
 	}
 
 	/* (non-Javadoc)
@@ -343,18 +366,18 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 		List<Tasklet> ret = new ArrayList<Tasklet>();
 		List<TaskletVO> taskletVOs = taskHandlingDao.getTasklets( taskId );
 		TaskDefVO taskDefVO = taskDefDao.getTaskDef( taskId );
-		
+
 		for( TaskletVO taskletVO : taskletVOs ){
-			
+
 			File homeDir = new File( examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.HOME + File.separatorChar + taskletVO.getLogin() );
 			File complexTaskHandlingFile = new File( homeDir.getAbsolutePath() + File.separatorChar +  COMPLEX_TASKHANDLING_FILE_PREFIX + taskId + COMPLEX_TASKHANDLING_FILE_SUFFIX );
-			
+
 			ret.add( instantiateTasklet( taskletVO, taskDefVO, complexTaskHandlingFile ) );
 		}
-		
+
 		return ret;
 	}
-	
+
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.impl.AbstractTaskFactory#getUserIdsOfAvailableTasklets(long)
@@ -376,54 +399,54 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 	 * @see de.thorstenberger.taskmodel.TaskFactory#storeTasklet(de.thorstenberger.taskmodel.Tasklet)
 	 */
 	public void storeTasklet(Tasklet tasklet) throws TaskApiException {
-		
+
 		TaskletVO taskletVO = taskHandlingDao.getTasklet( tasklet.getTaskId(), tasklet.getUserId() );
-		
+
 		boolean changed = false;
-		
+
 		if( taskletVO == null ){
 			// potential NPE, see lines below
 			// but has no influence due to createTasklet()
 			taskletVO = new TaskletVO();
 			changed = true;
 		}
-		
-		
+
+
 		if( taskletVO.getTaskDefId() != tasklet.getTaskId() ){
 			taskletVO.setTaskDefId( tasklet.getTaskId() );
 			changed = true;
 		}
-		
+
 		if( objectsDiffer( taskletVO.getLogin(), tasklet.getUserId() ) ){
 			taskletVO.setLogin( tasklet.getUserId() );
 			changed = true;
 		}
-		
+
 		if( objectsDiffer( taskletVO.getStatus(), tasklet.getStatus().getValue() ) ){
 			taskletVO.setStatus( tasklet.getStatus().getValue() );
 			changed = true;
 		}
-		
+
 		if( objectsDiffer( taskletVO.getCorrectorLogin(), tasklet.getTaskletCorrection().getCorrector() ) ){
 			taskletVO.setCorrectorLogin( tasklet.getTaskletCorrection().getCorrector() );
 			changed = true;
 		}
-		
+
 		if( objectsDiffer( taskletVO.getAutoCorrectionPoints(), tasklet.getTaskletCorrection().getAutoCorrectionPoints() ) ){
 			taskletVO.setAutoCorrectionPoints( tasklet.getTaskletCorrection().getAutoCorrectionPoints() );
 			changed = true;
 		}
-		
+
 		if( objectsDiffer( taskletVO.getCorrectorHistory(), tasklet.getTaskletCorrection().getCorrectorHistory() ) ){
 			taskletVO.setCorrectorHistory( tasklet.getTaskletCorrection().getCorrectorHistory() );
 			changed = true;
 		}
-		
+
 		if( objectsDiffer( taskletVO.getFlags(), tasklet.getFlags() ) ){
 			taskletVO.setFlags( tasklet.getFlags() );
 			changed = true;
 		}
-		
+
 		// student annotations
 		if( taskletVO.getStudentAnnotations().size() != tasklet.getTaskletCorrection().getStudentAnnotations().size() ){
 			taskletVO.setStudentAnnotations( copyStudentAnnotations( tasklet.getTaskletCorrection().getStudentAnnotations() ) );
@@ -437,9 +460,9 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 					changed = true;
 					break;
 				}
-			}		
+			}
 		}
-		
+
 		// corrector annotations
 		if( taskletVO.getCorrectorAnnotations().size() != tasklet.getTaskletCorrection().getCorrectorAnnotations().size() ){
 			taskletVO.setCorrectorAnnotations( copyCorrectorAnnotations( tasklet.getTaskletCorrection().getCorrectorAnnotations() ) );
@@ -455,7 +478,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 				}
 			}
 		}
-		
+
 		// manual corrections
 		if( taskletVO.getManualCorrections().size() != tasklet.getTaskletCorrection().getManualCorrections().size() ){
 			taskletVO.setManualCorrections( copyManualCorrections(taskletVO, tasklet.getTaskletCorrection().getManualCorrections() ) );
@@ -471,15 +494,15 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 				}
 			}
 		}
-		
-		
+
+
 		if( tasklet instanceof ComplexTasklet ){
-			
+
 			// get the taskHandling xml file!
 			File homeDir = new File( examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.HOME + File.separatorChar + tasklet.getUserId() );
 			String pathOfCTHfile = homeDir.getAbsolutePath() + File.separatorChar +  COMPLEX_TASKHANDLING_FILE_PREFIX + tasklet.getTaskId() + COMPLEX_TASKHANDLING_FILE_SUFFIX;
 			File complexTaskHandlingFile = new File( pathOfCTHfile );
-			
+
 			ComplexTasklet ct = (ComplexTasklet)tasklet;
 			try {
 				File backup = new File( pathOfCTHfile + COMPLEX_TASKHANDLING_BACKUP_FILE_SUFFIX );
@@ -491,26 +514,26 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 				throw new TaskModelPersistenceException( e );
 			}
 		}
-		
+
 		if( changed )
 			taskHandlingDao.saveTasklet( taskletVO );
 
 	}
-	
+
 	private List<StudentTaskletAnnotationVO> copyStudentAnnotations( List<StudentAnnotation> annotations ){
 		List<StudentTaskletAnnotationVO> ret = new LinkedList<StudentTaskletAnnotationVO>();
 		for( StudentAnnotation a : annotations )
 			ret.add( new StudentTaskletAnnotationVO( a.getText(), a.getDate(), a.isAcknowledged() ) );
 		return ret;
 	}
-	
+
 	private List<CorrectorTaskletAnnotationVO> copyCorrectorAnnotations( List<CorrectorAnnotation> annotations ){
 		List<CorrectorTaskletAnnotationVO> ret = new LinkedList<CorrectorTaskletAnnotationVO>();
 		for( CorrectorAnnotation a : annotations )
 			ret.add( new CorrectorTaskletAnnotationVO( a.getCorrector(), a.getText() ) );
 		return ret;
 	}
-	
+
 	private List<ManualCorrectionsVO> copyManualCorrections( TaskletVO taskletVO, List<ManualCorrection> manualCorrections ){
 		List<ManualCorrectionsVO> ret = new LinkedList<ManualCorrectionsVO>();
 		for( ManualCorrection mc : manualCorrections ){
@@ -526,14 +549,14 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 			throws TaskApiException {
 		throw new MethodNotSupportedException();
 	}
-	
-	
+
+
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.TaskFactory#logPostData(java.lang.String, de.thorstenberger.taskmodel.Tasklet, java.lang.String)
 	 */
 	public void logPostData(String msg, Tasklet tasklet, String ip) {
 		String prefix = tasklet.getUserId() + "@" + ip + ": ";
-		log.info( prefix + msg );		
+		log.info( prefix + msg );
 	}
 
 	/* (non-Javadoc)
@@ -543,30 +566,30 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 		String prefix = tasklet.getUserId() + "@" + ip + ": ";
 		log.info( prefix + msg, throwable );
 	}
-	
-	
+
+
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.TaskFactory#getUserInfo(java.lang.String)
 	 */
 	public UserInfo getUserInfo(String login) {
-		
+
 		User user;
-		
+
 		try {
 			user = userManager.getUserByUsername( login );
 		} catch (UsernameNotFoundException e) {
 			return null;
 		}
-		
+
 		UserInfoImpl ret = new UserInfoImpl();
 		ret.setLogin( user.getUsername() );
 		ret.setFirstName( user.getFirstName() );
 		ret.setName( user.getLastName() );
 		ret.setEMail( user.getEmail() );
 		ret.setUserAttribute( USER_ATTRIBUTE_SEMESTER, user.getPhoneNumber() );
-		
+
 		return ret;
-		
+
 	}
 
 	/* (non-Javadoc)
@@ -579,12 +602,12 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 		List<User> users = userManager.getUsers(uLookup);
 		uLookup = new User();
 		uLookup.addRole( new Role( RoleAndLookupDaoImpl.ADMIN ) );
-		
+
 		List<User> adminUsers = userManager.getUsers(uLookup);
 		for( User u : adminUsers )
 			if( !users.contains( u ) )
 				users.add( u );
-		
+
 		for( User u : users ){
 			UserInfoImpl ui = new UserInfoImpl();
 			ui.setLogin( u.getUsername() );
@@ -605,9 +628,9 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 		ret.add( new UserAttributeImpl( USER_ATTRIBUTE_SEMESTER, "Semester" ) ); // TODO externalize String
 		return ret;
 	}
-	
+
 	public class UserAttributeImpl implements UserAttribute{
-		
+
 		private String key;
 		private String name;
 		/**
@@ -631,7 +654,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 		public String getName( Locale locale ) {
 			return name;
 		}
-		
+
 	}
 
 	/* (non-Javadoc)
@@ -657,8 +680,63 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 			return true;
 		if( b == null && a != null )
 			return true;
-		
+
 		return !a.equals( b );
+	}
+	/**
+	 * Stores a new taskDef via DAO. Returns its id.
+	 * @param filename
+	 * @param fileContent
+	 * @throws TaskApiException
+	 */
+	synchronized public long storeNewTaskDef(String filename, byte[] fileContent) throws TaskApiException {
+		try{
+			this.taskDefCache = null;
+
+			//throw exception if the file is no valid taskDef
+			try{
+				ByteArrayInputStream bis = new ByteArrayInputStream(fileContent);
+				complexTaskDefDAO.getComplexTaskDefRoot( bis );
+			}catch( TaskApiException e ){
+				throw new TaskApiException("Invalid taskDef format.",e);
+			}
+
+			//write to file system
+			File file = new File( createPath( filename ));
+			int idx=0;
+			//if file exists, create a new unique name for it
+			while(file.exists()) {
+				file=new File( createPath( filename + "." + idx ));
+				idx++;
+			}
+			FileOutputStream fos = new FileOutputStream( file );
+			fos.write( fileContent );
+			fos.close();
+
+			TaskDefVO td = new TaskDefVO();
+			td.setComplexTaskFile( file.getName() );
+			td.setTitle( "[new task]" );
+			td.setType( TaskContants.TYPE_COMPLEX );
+			td.setStopped( true );
+			td.setVisible( true );
+			td.setShowSolutionToStudents( false );
+
+			return taskDefDao.storeTaskDef( td ).getId();
+
+		}catch( IOException e ){
+			log.error( "Error on persisting new taskDef.", e );
+			throw new TaskApiException("Error on persisting new taskDef", e);
+		}
+
+	}
+
+	/**
+	 * Creates pathname for taskDef files
+	 * @param filename
+	 * @return
+	 */
+	private String createPath( String filename ) {
+		return examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.TASKDEFS + File.separatorChar + filename;
 	}
 
 }

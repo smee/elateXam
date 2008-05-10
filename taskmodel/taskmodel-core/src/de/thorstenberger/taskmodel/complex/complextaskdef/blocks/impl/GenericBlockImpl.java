@@ -73,7 +73,7 @@ public class GenericBlockImpl implements Block{
 	private List getJaxbSubTaskDefOrChoice() {
 		Method[] methods=jaxbTaskBlock.getClass().getMethods();
 		for (Method method : methods) {
-			if(method.getName().endsWith("SubTaskDefOrChoice"))
+			if(method.getName().startsWith( "get" ) && method.getName().endsWith("SubTaskDefOrChoice"))
 				try {
 					return (List) method.invoke(jaxbTaskBlock);
 				} catch (Exception e) {

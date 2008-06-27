@@ -43,6 +43,14 @@ public interface ConfigManager {
 	
 	public void setStudentsLoginEnabled( boolean value );
 	
+	public String getHTTPAuthURL();
+	
+	public void setHTTPAuthURL( String url );
+	
+	public String getHTTPAuthMail();
+	
+	public void setHTTPAuthMail( String address ) ;
+	
 	public boolean isSetFlag( String flag );
 	
 }

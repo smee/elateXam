@@ -48,7 +48,9 @@ public class SystemConfigAction extends BaseAction {
 		
 		scf.setLoadJVMOnStartup( configManager.isLoadJVMOnStartup() );
 		scf.setRemoteUserManagerURL( configManager.getRemoteUserManagerURL() );
-		scf.setTitle( configManager.getTitle() );		
+		scf.setTitle( configManager.getTitle() );
+		scf.setHttpAuthURL( configManager.getHTTPAuthURL() );
+		scf.setHttpAuthMail( configManager.getHTTPAuthMail() );
 		
 		return mapping.findForward( "systemConfig" );
 	}

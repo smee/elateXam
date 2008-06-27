@@ -99,6 +99,7 @@
         <property name="providers">
             <list>
                 <ref local="daoAuthenticationProvider"/>
+                <ref local="httpauthAuthenticationProvider"/>
 	            <ref local="wsAuthenticationProvider"/>
                 <!--ref local="anonymousAuthenticationProvider"/-->
                 <!--ref local="rememberMeAuthenticationProvider"/-->
@@ -110,6 +111,12 @@
     	<constructor-arg ref="configManager"></constructor-arg>
     	<constructor-arg ref="userManager"></constructor-arg>
     	<constructor-arg ref="userDao"></constructor-arg>
+    	<constructor-arg ref="roleManager"></constructor-arg>
+    </bean>
+    
+    <bean id="httpauthAuthenticationProvider" class="de.thorstenberger.examServer.ws.remoteusermanager.HTTPAuthAuthenticationProvider">
+    	<constructor-arg ref="configManager"></constructor-arg>
+    	<constructor-arg ref="userManager"></constructor-arg>
     	<constructor-arg ref="roleManager"></constructor-arg>
     </bean>
     

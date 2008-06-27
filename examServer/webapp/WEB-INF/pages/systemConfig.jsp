@@ -9,7 +9,7 @@
 </head>
 
 <div class="separator">
-Hier konfigurieren Sie allgemeine Einstellungen des Prüfungsservers.
+Hier konfigurieren Sie allgemeine Einstellungen des Prï¿½fungsservers.
 </div>
 
 <br/><br/>
@@ -23,7 +23,13 @@ Hier konfigurieren Sie allgemeine Einstellungen des Prüfungsservers.
 <td>WebService-URL des RemoteUserManager: </td><td><html:text property="remoteUserManagerURL" size="60"/></td>
 </tr>
 <tr>
-<td>Java-Plugin bereits auf der Login-Seite starten </td><td><html:checkbox property="loadJVMOnStartup"/>&nbsp;&nbsp;Applet auf der Login-Seite startet das Java-Plugin und zeigt bei Erfolg ein Häkchen an</td>
+<td>Java-Plugin bereits auf der Login-Seite starten </td><td><html:checkbox property="loadJVMOnStartup"/>&nbsp;&nbsp;Applet auf der Login-Seite startet das Java-Plugin und zeigt bei Erfolg ein Hï¿½kchen an</td>
+</tr>
+<tr>
+<td>HTTP-Authentication-URL: </td><td><html:text property="httpAuthURL" size="60"/></td>
+</tr>
+<tr>
+<td>HTTP-Authentication-Mail-Suffix: </td><td><html:text property="httpAuthMail" size="60"/></td>
 </tr>
 </table>
 <br/><br/>

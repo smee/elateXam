@@ -161,7 +161,38 @@ public class ConfigManagerImpl implements ConfigManager {
 		config.setRemoteUserManagerURL( url );
 		save();
 	}
+	
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.examServer.service.ConfigManager#getHTTPAuthURL()
+	 */
+	public String getHTTPAuthURL() {
+		return config.getHTTPAuthURL();
+	}
 
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.examServer.service.ConfigManager#setHTTPAuthURL()
+	 */
+	public void setHTTPAuthURL( String url ) {
+		config.setHTTPAuthURL( url );
+		save();
+	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.examServer.service.ConfigManager#getHTTPAuthMail()
+	 */
+	public String getHTTPAuthMail() {
+		return config.getHTTPAuthMail();
+	}
+
+	
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.examServer.service.ConfigManager#setHTTPAuthMail()
+	 */
+	public void setHTTPAuthMail( String address ) {
+		config.setHTTPAuthMail( address );
+		save();
+	}
+	
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.examServer.service.ConfigManager#isStudentsLoginEnabled()
 	 */

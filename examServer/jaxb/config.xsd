@@ -6,6 +6,8 @@
 			<xs:sequence>
 				<xs:element name="title" type="xs:string" minOccurs="0"/>
 				<xs:element name="RemoteUserManagerURL" type="xs:string" minOccurs="0"/>
+				<xs:element name="HTTPAuthURL" type="xs:string" minOccurs="0"/>
+				<xs:element name="HTTPAuthMail" type="xs:string" minOccurs="0"/>
 				<xs:element name="studentsLoginEnabled" type="xs:boolean"/>
 				<xs:element name="loadJVMOnStartup" type="xs:boolean"/>
 				<xs:element name="flag" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>

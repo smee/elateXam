@@ -53,6 +53,8 @@ public class SystemConfigSubmitAction extends BaseAction {
 		configManager.setTitle( scf.getTitle() );
 		configManager.setRemoteUserManagerURL( scf.getRemoteUserManagerURL() );
 		configManager.setLoadJVMOnStartup( scf.isLoadJVMOnStartup() );
+		configManager.setHTTPAuthURL( scf.getHttpAuthURL() );
+		configManager.setHTTPAuthMail( scf.getHttpAuthMail() );
 		
 		messages.add(ActionMessages.GLOBAL_MESSAGE,	new ActionMessage( "systemConfig.saved" ) );
 		saveMessages( request, messages );			

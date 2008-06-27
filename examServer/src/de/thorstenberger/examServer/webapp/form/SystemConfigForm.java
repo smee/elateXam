@@ -30,6 +30,8 @@ public class SystemConfigForm extends BaseForm {
 	private String title;
 	private String remoteUserManagerURL;
 	private boolean loadJVMOnStartup;
+	private String httpAuthURL;
+	private String httpAuthMail;
 	
 	/**
 	 * @return Returns the loadJVMOnStartup.
@@ -66,6 +68,30 @@ public class SystemConfigForm extends BaseForm {
 	 */
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	/**
+	 * @return the httpAuthURL
+	 */
+	public String getHttpAuthURL() {
+		return httpAuthURL;
+	}
+	/**
+	 * @param httpAuthURL the httpAuthURL to set
+	 */
+	public void setHttpAuthURL(String httpAuthURL) {
+		this.httpAuthURL = httpAuthURL;
+	}
+	/**
+	 * @return the httpAuthMail
+	 */
+	public String getHttpAuthMail() {
+		return httpAuthMail;
+	}
+	/**
+	 * @param httpAuthMail the httpAuthMail to set
+	 */
+	public void setHttpAuthMail(String httpAuthMail) {
+		this.httpAuthMail = httpAuthMail;
 	}
 	
 	

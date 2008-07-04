@@ -198,8 +198,9 @@ public class SavePageAction extends Action {
 
 					int relativeTaskNo = getRelativeTaskNo( varName );
 
-					taskVarMaps[ relativeTaskNo ].
-						put( varName, request.getParameter( varName ) );
+					if(relativeTaskNo >= 0)//prohibit invalid taskNo, for example from corrected tasks
+						taskVarMaps[ relativeTaskNo ].
+						    put( varName, request.getParameter( varName ) );
 
 				}
 			}

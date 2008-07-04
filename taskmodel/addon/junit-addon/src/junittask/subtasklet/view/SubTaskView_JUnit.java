@@ -23,10 +23,7 @@ import java.text.ParseException;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import junittask.subtasklet.SubTasklet_JUnit;
-
 import de.thorstenberger.taskmodel.MethodNotSupportedException;
 import de.thorstenberger.taskmodel.complex.ParsingException;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.AddOnSubTasklet;
@@ -36,7 +33,7 @@ import de.thorstenberger.taskmodel.view.SubTaskView;
 import de.thorstenberger.taskmodel.view.ViewContext;
 
 public class SubTaskView_JUnit extends SubTaskView {
-
+	private static int CORRECTION_RTN = -1;
 	private SubTasklet_JUnit just;
 
 	public SubTaskView_JUnit(AddOnSubTasklet tasklet) {
@@ -50,30 +47,54 @@ public class SubTaskView_JUnit extends SubTaskView {
 	public String getRenderedHTML(int relativeTaskNumber, boolean corrected) {
 		StringBuffer ret = new StringBuffer();
 
+		String textAreaID="junitTextAreaId"+relativeTaskNumber;
+
+		if(!corrected)//enable syntax highlighting
+			ret.append("<script src=\"/taskmodel-core-view/codepress/codepress.js\" type=\"text/javascript\"></script>");
 
 		ret.append("<div align=\"center\">\n");
-		ret.append("<textarea name=\"task[" + relativeTaskNumber + "].junit\" cols=\"" +
-						just.getTextFieldWidth() + "\" rows=\"" + just.getTextFieldHeight() + "\" onChange=\"setModified()\"" +
-						( corrected ? "disabled=\"disabled\"" : "" ) + ">\n");
+		ret.append("<textarea" +
+				" id=\""+textAreaID+"\"");
+
+		if(!corrected)//enable syntax highlighting
+			ret.append(" class=\"codepress java linenumbers-on autocomplete-off\"");
+
+		ret.append(" name=\"task[" + relativeTaskNumber + "].junit\"" +
+				" cols=\"" + just.getTextFieldWidth() +
+				"\" rows=\"" + just.getTextFieldHeight() +
+				"\" onChange=\"setModified()" +
+				"\"" + ( corrected ? "disabled=\"disabled\"" : "" ) +
+		">\n");
+
 		ret.append( just.getClassDef() );
 		ret.append("</textarea></div>\n");
-		if(corrected) {
+
+		ret.append( "<input type=\"hidden\" id=\"task_" + relativeTaskNumber + ".code\" name=\"task[" + relativeTaskNumber + "].code\">\n" );
+
+		if(corrected) {//render correction results
 			ret.append("<div class=\"problem\">\n");
 			ret.append("JUnit-Ausgaben:<br><br>");
 			ret.append(escapeCR(escapeHTML(just.getJUnitResults())));//TODO escape html/xml
 			ret.append("</div><br>");
+		}else{//save code from code editor into hidden input
+			ret.append( "<script type=\"text/javascript\">\n" );
+			ret.append( " var preSave_task_" + relativeTaskNumber + " = function(){\n" );
+			ret.append( " document.getElementById(\"task_" + relativeTaskNumber + ".code\").value = "+textAreaID+".getCode();\n" );
+			ret.append( "};\n" );
+			ret.append( "preSaveManager.registerCallback( preSave_task_" + relativeTaskNumber + " );\n" );
+			ret.append( "</script>\n" );
 		}
 		return ret.toString();
 
 	}
 
 	public String getCorrectedHTML( ViewContext context, int relativeTaskNumber ){
-		return getRenderedHTML( -1, true );
+		return getRenderedHTML( CORRECTION_RTN, true );
 	}
 
 	public String getCorrectionHTML( String actualCorrector, ViewContext context ){
 	    StringBuffer ret = new StringBuffer();
-	    ret.append( getRenderedHTML( -1, true ) );
+	    ret.append( getRenderedHTML( CORRECTION_RTN, true ) );
 
 	    ret.append(getCorrectorPointsInputString(actualCorrector, "junit", just));
 

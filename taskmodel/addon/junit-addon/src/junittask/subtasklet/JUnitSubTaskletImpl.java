@@ -115,15 +115,16 @@ public class JUnitSubTaskletImpl extends AbstractAddonSubTasklet implements SubT
 		super(complexTaskDefRoot, block, subTaskDef, subTaskType);
 		this.justd=new JUnitSubtaskDummy((AddonSubTask) subTaskType);
 		this.justdd=new JUnitSubTaskDef((AddonSubTaskDef) subTaskDef);
+
 	}
 
 	public void doSave(SubmitData submitData) throws IllegalStateException {
 		JUnitSubmitData jsd=(JUnitSubmitData) submitData;
-		justd.setClassDef(jsd.getClassDef());//TODO CDATA, avoid "XML injection"?
+		justd.setClassDef(jsd.getClassDef());
 	}
 
 	public void doAutoCorrection() {
-			JUnitTestResult result=taskCorrector.runUnitTest( justdd.getInterfaceClassDef(), justd.getClassDef(), justdd.getTestClassDef(), justdd.getTimeout() );
+			JUnitTestResult result=taskCorrector.runUnitTest( justdd.getInterfaceClassDef(), this.getClassDef(), justdd.getTestClassDef(), justdd.getTimeout() );
 			if(result != null)
 				setCorrection(result.isCorrect()?block.getPointsPerSubTask():0,result.getResult(),true);
 			else

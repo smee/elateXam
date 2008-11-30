@@ -55,7 +55,8 @@ public class TaskletCorrectionImpl implements TaskletCorrection {
 		this.correctorHistory = correctorHistory;
 		this.studentAnnotations = studentAnnotations;
 		this.manualCorrections = manualCorrections;
-		Collections.sort( studentAnnotations );
+		if( studentAnnotations != null )
+			Collections.sort( studentAnnotations );
 	}
 
 	/* (non-Javadoc)

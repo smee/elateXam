@@ -37,6 +37,11 @@ public interface Try {
 	
 	public long getStartTime();
 	
+	/**
+	 * 
+	 * @param pageNo, the page number, starting with 1
+	 * @return
+	 */
 	public Page getPage( int pageNo );
 	
 	public List<Page> getPages();

@@ -67,6 +67,7 @@ public interface ComplexTasklet extends Tasklet {
 
 	/**
 	 * Gibt den letzten (nicht unbedingt aktiven) Versuch zur Korrektur und Einsichtnahme zurück.
+	 * TODO: rename method, the term "solution" is misleading in this case
 	 * @return
 	 */
 	public de.thorstenberger.taskmodel.complex.complextaskhandling.Try getSolutionOfLatestTry() throws IllegalStateException;

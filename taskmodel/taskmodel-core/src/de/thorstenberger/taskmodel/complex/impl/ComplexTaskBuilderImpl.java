@@ -47,7 +47,7 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.Try;
  */
 public class ComplexTaskBuilderImpl implements ComplexTaskBuilder {
 
-	private ComplexTaskFactory complexTaskFactory;
+	protected ComplexTaskFactory complexTaskFactory;
 	
 	public ComplexTaskBuilderImpl( ComplexTaskFactory complexTaskFactory ){
 		this.complexTaskFactory = complexTaskFactory;

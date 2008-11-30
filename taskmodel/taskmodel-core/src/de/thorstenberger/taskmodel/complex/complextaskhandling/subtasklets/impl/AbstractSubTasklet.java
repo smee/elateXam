@@ -27,6 +27,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
+import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskModelPersistenceException;
 import de.thorstenberger.taskmodel.complex.TaskHandlingConstants;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
@@ -258,4 +259,13 @@ public abstract class AbstractSubTasklet implements SubTasklet{
 		}
 		corr.setPoints( points );
 	}
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#buildPreview()
+	 */
+	public void buildPreview() throws TaskApiException {
+		// just forward to build(), override if special care is needed for preview purposes
+		build();
+	}
+	
+	
 }

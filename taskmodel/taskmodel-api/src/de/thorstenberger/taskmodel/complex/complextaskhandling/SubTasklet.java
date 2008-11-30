@@ -133,6 +133,15 @@ public interface SubTasklet {
 	 */
 	public void build() throws TaskApiException;
 
+	/**
+	 * Called on SubTasklet creation, but should initialize it for previewing purposes only, i.e.
+	 * to preview the SubTasklet in the editor. Usually, this should just forward to {@link #build()}.
+	 * In the case of a SubTasklet_MC, it'd make sense to append all answers in order to preview the
+	 * whole SubTasklet.
+	 * 
+	 * @throws TaskApiException
+	 */
+	public void buildPreview() throws TaskApiException;
 
 	// FIXME: move to SubTaskDef
 	/**

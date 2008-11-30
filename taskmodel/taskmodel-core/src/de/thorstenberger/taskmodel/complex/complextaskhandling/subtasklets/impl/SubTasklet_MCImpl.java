@@ -36,11 +36,9 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitD
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.McSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_MC;
-import de.thorstenberger.taskmodel.complex.jaxb.AutoCorrectionType;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType;
 import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDef;
 import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDefType;
-import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
 import de.thorstenberger.taskmodel.complex.jaxb.SubTaskDefType;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.McTaskBlock;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.McSubTask;
@@ -370,5 +368,19 @@ public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl.AbstractSubTasklet#buildPreview()
+	 */
+	@Override
+	public void buildPreview() throws TaskApiException {
+		SubTasklet_MCBuilder builder = new SubTasklet_MCBuilder();
+		try {
+			builder.constructPreviewAnswersForMCSubTask( mcSubTask, mcSubTaskDef );
+		} catch (JAXBException e) {
+			throw new TaskApiException( e );
+		}
+	}
+
+	
 
 }

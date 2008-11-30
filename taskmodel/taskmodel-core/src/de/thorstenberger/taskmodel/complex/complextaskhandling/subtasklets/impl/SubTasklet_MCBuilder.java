@@ -35,6 +35,8 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTa
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType;
 import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDefType;
 import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
+import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDefType.CorrectType;
+import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDefType.IncorrectType;
 
 /**
  * @author Thorsten Berger
@@ -144,6 +146,28 @@ public class SubTasklet_MCBuilder {
 			answers.add( toInsert[i] );
 		
 	}
+	
+	void constructPreviewAnswersForMCSubTask( ComplexTaskHandlingType.TryType.PageType.McSubTask newMcSubTask,
+			McSubTaskDefType mcSubTaskDef) throws JAXBException{
+		
+		List<CorrectType> correctAnswers = (List<CorrectType>)mcSubTaskDef.getCorrect();
+		List<IncorrectType> incorrectAnswers = (List<IncorrectType>)mcSubTaskDef.getIncorrect();
+		
+		// sicherheitshalber prüfen, dürfte aber schon durch XML-Schema ausgeschlossen sein
+		if( correctAnswers.size() == 0 || mcSubTaskDef.getDisplayedAnswers() == 0 ){
+			log.warn( "Aufgabe " + mcSubTaskDef.getId() + " enthält keine Antworten" );
+			return;
+		}
+		System.out.println( mcSubTaskDef.getId() );
+		
+		List answers = newMcSubTask.getAnswer();
+		for( CorrectType ct : correctAnswers )
+			answers.add( createAnswerType( ct ) );
+		for( IncorrectType ict : incorrectAnswers )
+			answers.add( createAnswerType( ict ) );
+		
+	}
+	
 	
 	/**
 	 * neuen AnswerType aus korrekter Antwort erstellen

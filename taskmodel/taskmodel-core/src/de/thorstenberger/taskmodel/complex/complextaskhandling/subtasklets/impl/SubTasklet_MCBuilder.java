@@ -158,7 +158,6 @@ public class SubTasklet_MCBuilder {
 			log.warn( "Aufgabe " + mcSubTaskDef.getId() + " enthält keine Antworten" );
 			return;
 		}
-		System.out.println( mcSubTaskDef.getId() );
 		
 		List answers = newMcSubTask.getAnswer();
 		for( CorrectType ct : correctAnswers )

@@ -14,7 +14,9 @@ Change Log:
 - 22.05.07 McSubTaskDef-Attribut "preserveOrderOfAnswers" (optional) hinzugefügt, mit der die Reihenfolge von Antworten beibehalten werden kann.
 - 22.05.07 Element "showHandlingHintsBeforeStart" hinzugefügt: bestimmt, ob allg. Bearbeitungshinweise/Hilfe auf der Übersichtsseite vor dem Start angezeigt werden sollen
 - 31.07.07 Attribut "trash" bei allen (Sub-)Aufgabentypen hinzugefügt: wenn true, dann wird (Sub-)Aufgabe nicht zur Aggregation verwendet
-
+- 26.11.08 Meta-Informationen "ID" und "revisions" hinzugefügt, die der näheren Beschreibung von Aufgabenpools dienen, aber keine weitere Relevanz für das TaskModel haben
+- 29.12.08 ClozeSubTaskDef erweitert: neues Element graphicalCloze für graphische Lückentexte
+- 04.01.09: Revisions: Element "revision" mit Attribut "date" erweitert (Zeitpunkt des Speicherns als Timestamp)
 
 TODO:
 - Inkonsistenzen bei MC-Kategorien zw. singleSelect und multipleSelect beseitigen (<cloze-config>@negativePoints; @minCorrectAnswers, @maxCorrectAnswers)
@@ -102,6 +104,11 @@ Every new try results in a random aggregation of subtasks (and possibly answer c
 						</xs:all>
 					</xs:complexType>
 				</xs:element>
+				<xs:element name="ID" type="xs:string" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>unique ID for identification reasons, should be defined by the editor and (for management purposes) organization-specific</xs:documentation>
+					</xs:annotation>
+				</xs:element>
 				<xs:element name="title" type="xs:string"/>
 				<xs:element name="description" type="xs:string"/>
 				<xs:element name="startText" type="xs:string" minOccurs="0"/>
@@ -119,51 +126,38 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 							<xs:element name="mcTaskBlock">
 								<xs:complexType>
 									<xs:complexContent>
-										<xs:extension
-											base="TaskBlockType">
+										<xs:extension base="TaskBlockType">
 											<xs:sequence>
-												<xs:element
-													name="mc-config">
+												<xs:element name="mc-config">
 													<xs:complexType>
 														<xs:choice>
-															<xs:element
-																name="regular">
+															<xs:element name="regular">
 																<xs:complexType>
 																	<xs:sequence>
-																		<xs:element
-																			name="negativePoints">
+																		<xs:element name="negativePoints">
 																			<xs:simpleType>
-																				<xs:restriction
-																					base="xs:float">
-																					<xs:minInclusive
-																						value="0" />
+																				<xs:restriction base="xs:float">
+																					<xs:minInclusive value="0"/>
 																				</xs:restriction>
 																			</xs:simpleType>
 																		</xs:element>
 																	</xs:sequence>
 																</xs:complexType>
 															</xs:element>
-															<xs:element
-																name="different">
+															<xs:element name="different">
 																<xs:complexType>
 																	<xs:sequence>
-																		<xs:element
-																			name="correctAnswerNegativePoints">
+																		<xs:element name="correctAnswerNegativePoints">
 																			<xs:simpleType>
-																				<xs:restriction
-																					base="xs:float">
-																					<xs:minInclusive
-																						value="0" />
+																				<xs:restriction base="xs:float">
+																					<xs:minInclusive value="0"/>
 																				</xs:restriction>
 																			</xs:simpleType>
 																		</xs:element>
-																		<xs:element
-																			name="incorrectAnswerNegativePoints">
+																		<xs:element name="incorrectAnswerNegativePoints">
 																			<xs:simpleType>
-																				<xs:restriction
-																					base="xs:float">
-																					<xs:minInclusive
-																						value="0" />
+																				<xs:restriction base="xs:float">
+																					<xs:minInclusive value="0"/>
 																				</xs:restriction>
 																			</xs:simpleType>
 																		</xs:element>
@@ -173,22 +167,17 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 														</xs:choice>
 													</xs:complexType>
 												</xs:element>
-												<xs:choice
-													maxOccurs="unbounded">
-													<xs:element
-														ref="mcSubTaskDef" />
-													<xs:element
-														name="choice">
+												<xs:choice maxOccurs="unbounded">
+													<xs:element ref="mcSubTaskDef"/>
+													<xs:element name="choice">
 														<xs:complexType>
 															<xs:sequence>
-																<xs:element
-																	ref="mcSubTaskDef" maxOccurs="unbounded" />
+																<xs:element ref="mcSubTaskDef" maxOccurs="unbounded"/>
 															</xs:sequence>
 														</xs:complexType>
 													</xs:element>
 												</xs:choice>
 											</xs:sequence>
-
 										</xs:extension>
 									</xs:complexContent>
 								</xs:complexType>
@@ -196,42 +185,31 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 							<xs:element name="clozeTaskBlock">
 								<xs:complexType>
 									<xs:complexContent>
-										<xs:extension
-											base="TaskBlockType">
+										<xs:extension base="TaskBlockType">
 											<xs:sequence>
-												<xs:element
-													name="cloze-config">
+												<xs:element name="cloze-config">
 													<xs:complexType>
-														<xs:attribute
-															name="negativePoints" use="required">
+														<xs:attribute name="negativePoints" use="required">
 															<xs:simpleType>
-																<xs:restriction
-																	base="xs:float">
-																	<xs:minInclusive
-																		value="0" />
+																<xs:restriction base="xs:float">
+																	<xs:minInclusive value="0"/>
 																</xs:restriction>
 															</xs:simpleType>
 														</xs:attribute>
-														<xs:attribute
-															name="ignoreCase" type="xs:boolean" use="optional" />
+														<xs:attribute name="ignoreCase" type="xs:boolean" use="optional"/>
 													</xs:complexType>
 												</xs:element>
-												<xs:choice
-													maxOccurs="unbounded">
-													<xs:element
-														ref="clozeSubTaskDef" />
-													<xs:element
-														name="choice">
+												<xs:choice maxOccurs="unbounded">
+													<xs:element ref="clozeSubTaskDef"/>
+													<xs:element name="choice">
 														<xs:complexType>
 															<xs:sequence>
-																<xs:element
-																	ref="clozeSubTaskDef" maxOccurs="unbounded" />
+																<xs:element ref="clozeSubTaskDef" maxOccurs="unbounded"/>
 															</xs:sequence>
 														</xs:complexType>
 													</xs:element>
 												</xs:choice>
 											</xs:sequence>
-
 										</xs:extension>
 									</xs:complexContent>
 								</xs:complexType>
@@ -239,26 +217,19 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 							<xs:element name="textTaskBlock">
 								<xs:complexType>
 									<xs:complexContent>
-										<xs:extension
-											base="TaskBlockType">
+										<xs:extension base="TaskBlockType">
 											<xs:sequence>
-
-												<xs:choice
-													maxOccurs="unbounded">
-													<xs:element
-														ref="textSubTaskDef" />
-													<xs:element
-														name="choice">
+												<xs:choice maxOccurs="unbounded">
+													<xs:element ref="textSubTaskDef"/>
+													<xs:element name="choice">
 														<xs:complexType>
 															<xs:sequence>
-																<xs:element
-																	ref="textSubTaskDef" maxOccurs="unbounded" />
+																<xs:element ref="textSubTaskDef" maxOccurs="unbounded"/>
 															</xs:sequence>
 														</xs:complexType>
 													</xs:element>
 												</xs:choice>
 											</xs:sequence>
-
 										</xs:extension>
 									</xs:complexContent>
 								</xs:complexType>
@@ -266,40 +237,30 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 							<xs:element name="mappingTaskBlock">
 								<xs:complexType>
 									<xs:complexContent>
-										<xs:extension
-											base="TaskBlockType">
+										<xs:extension base="TaskBlockType">
 											<xs:sequence>
-												<xs:element
-													name="mapping-config">
+												<xs:element name="mapping-config">
 													<xs:complexType>
-														<xs:attribute
-															name="negativePoints" use="required">
+														<xs:attribute name="negativePoints" use="required">
 															<xs:simpleType>
-																<xs:restriction
-																	base="xs:float">
-																	<xs:minInclusive
-																		value="0" />
+																<xs:restriction base="xs:float">
+																	<xs:minInclusive value="0"/>
 																</xs:restriction>
 															</xs:simpleType>
 														</xs:attribute>
 													</xs:complexType>
 												</xs:element>
-												<xs:choice
-													maxOccurs="unbounded">
-													<xs:element
-														ref="mappingSubTaskDef" />
-													<xs:element
-														name="choice">
+												<xs:choice maxOccurs="unbounded">
+													<xs:element ref="mappingSubTaskDef"/>
+													<xs:element name="choice">
 														<xs:complexType>
 															<xs:sequence>
-																<xs:element
-																	ref="mappingSubTaskDef" maxOccurs="unbounded" />
+																<xs:element ref="mappingSubTaskDef" maxOccurs="unbounded"/>
 															</xs:sequence>
 														</xs:complexType>
 													</xs:element>
 												</xs:choice>
 											</xs:sequence>
-
 										</xs:extension>
 									</xs:complexContent>
 								</xs:complexType>
@@ -307,25 +268,19 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 							<xs:element name="paintTaskBlock">
 								<xs:complexType>
 									<xs:complexContent>
-										<xs:extension
-											base="TaskBlockType">
+										<xs:extension base="TaskBlockType">
 											<xs:sequence>
-												<xs:choice
-													maxOccurs="unbounded">
-													<xs:element
-														ref="paintSubTaskDef" />
-													<xs:element
-														name="choice">
+												<xs:choice maxOccurs="unbounded">
+													<xs:element ref="paintSubTaskDef"/>
+													<xs:element name="choice">
 														<xs:complexType>
 															<xs:sequence>
-																<xs:element
-																	ref="paintSubTaskDef" maxOccurs="unbounded" />
+																<xs:element ref="paintSubTaskDef" maxOccurs="unbounded"/>
 															</xs:sequence>
 														</xs:complexType>
 													</xs:element>
 												</xs:choice>
 											</xs:sequence>
-
 										</xs:extension>
 									</xs:complexContent>
 								</xs:complexType>
@@ -333,27 +288,19 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 							<xs:element name="addonTaskBlock">
 								<xs:complexType>
 									<xs:complexContent>
-										<xs:extension
-											base="TaskBlockType">
+										<xs:extension base="TaskBlockType">
 											<xs:sequence>
-												<xs:choice
-													maxOccurs="unbounded">
-													<xs:element
-														ref="addonSubTaskDef">
-													</xs:element>
-													<xs:element
-														name="choice">
+												<xs:choice maxOccurs="unbounded">
+													<xs:element ref="addonSubTaskDef"/>
+													<xs:element name="choice">
 														<xs:complexType>
 															<xs:sequence>
-																<xs:element
-																	ref="addonSubTaskDef" maxOccurs="unbounded">
-																</xs:element>
+																<xs:element ref="addonSubTaskDef" maxOccurs="unbounded"/>
 															</xs:sequence>
 														</xs:complexType>
 													</xs:element>
 												</xs:choice>
 											</xs:sequence>
-
 										</xs:extension>
 									</xs:complexContent>
 								</xs:complexType>
@@ -372,6 +319,26 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 						</xs:attribute>
 					</xs:complexType>
 				</xs:element>
+				<xs:element name="revisions" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Tag should be used to track the editings of the whole ComplexTaskDef file, i.e.: Right before saving, the editor adds a new revision tag with an incremented serial number and the current author (derived from the OS user etc.)</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="revision" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:attribute name="serialNumber" type="xs:long" use="required"/>
+									<xs:attribute name="author" type="xs:string" use="required"/>
+									<xs:attribute name="date" type="xs:long" use="optional"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+					<xs:unique name="revisionNumbers">
+						<xs:selector xpath="./revision"/>
+						<xs:field xpath="@serialNumber"/>
+					</xs:unique>
+				</xs:element>
 			</xs:sequence>
 		</xs:complexType>
 		<xs:unique name="category_id">
@@ -384,57 +351,56 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 		</xs:unique>
 	</xs:element>
 	<xs:element name="mcSubTaskDef">
-		<xs:complexType><xs:complexContent><xs:extension base="SubTaskDefType">
-                    <xs:sequence>
-				<xs:element name="displayedAnswers">
-					<xs:simpleType>
-						<xs:restriction base="xs:int">
-							<xs:minInclusive value="1" />
-						</xs:restriction>
-					</xs:simpleType>
-				</xs:element>
-				<xs:element name="correct" maxOccurs="unbounded">
-					<xs:complexType>
-						<xs:simpleContent>
-							<xs:extension base="xs:string">
-								<xs:attribute name="id" type="xs:string" use="required" />
-							</xs:extension>
-						</xs:simpleContent>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="incorrect" minOccurs="0" maxOccurs="unbounded">
-					<xs:complexType>
-						<xs:simpleContent>
-							<xs:extension base="xs:string">
-								<xs:attribute name="id" type="xs:string" use="required" />
-							</xs:extension>
-						</xs:simpleContent>
-					</xs:complexType>
-				</xs:element>
-			</xs:sequence>
-
-
-                    <xs:attribute name="category" use="required">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:enumeration value="singleSelect" />
-						<xs:enumeration value="multipleSelect" />
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:attribute>
-
-                    <xs:attribute name="minCorrectAnswers" use="optional">
-				<xs:simpleType>
-					<xs:restriction base="xs:int">
-						<xs:minInclusive value="1" />
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:attribute>
-
-                    <xs:attribute name="maxCorrectAnswers" type="xs:int" use="optional" />
-                    <xs:attribute name="preserveOrderOfAnswers" type="xs:boolean" use="optional" default="false" />
-
-                </xs:extension></xs:complexContent></xs:complexType>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="SubTaskDefType">
+					<xs:sequence>
+						<xs:element name="displayedAnswers">
+							<xs:simpleType>
+								<xs:restriction base="xs:int">
+									<xs:minInclusive value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="correct" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="xs:string">
+										<xs:attribute name="id" type="xs:string" use="required"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="incorrect" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="xs:string">
+										<xs:attribute name="id" type="xs:string" use="required"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="category" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="singleSelect"/>
+								<xs:enumeration value="multipleSelect"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+					<xs:attribute name="minCorrectAnswers" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:int">
+								<xs:minInclusive value="1"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+					<xs:attribute name="maxCorrectAnswers" type="xs:int" use="optional"/>
+					<xs:attribute name="preserveOrderOfAnswers" type="xs:boolean" use="optional" default="false"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
 		<xs:unique name="answer_id">
 			<xs:selector xpath="./*"/>
 			<xs:field xpath="@id"/>
@@ -445,30 +411,22 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 			<xs:complexContent>
 				<xs:extension base="SubTaskDefType">
 					<xs:sequence>
-						<xs:element name="initialTextFieldValue"
-							type="xs:string" minOccurs="0" />
+						<xs:element name="initialTextFieldValue" type="xs:string" minOccurs="0"/>
 					</xs:sequence>
-
-
-					<xs:attribute name="textFieldWidth"
-						use="optional">
+					<xs:attribute name="textFieldWidth" use="optional">
 						<xs:simpleType>
 							<xs:restriction base="xs:int">
-								<xs:minInclusive value="1" />
+								<xs:minInclusive value="1"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
-
-					<xs:attribute name="textFieldHeight"
-						use="optional">
+					<xs:attribute name="textFieldHeight" use="optional">
 						<xs:simpleType>
 							<xs:restriction base="xs:int">
-								<xs:minInclusive value="1" />
+								<xs:minInclusive value="1"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
-
-
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
@@ -477,40 +435,54 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="SubTaskDefType">
-					<xs:sequence>
+					<xs:choice>
 						<xs:element name="cloze">
 							<xs:complexType mixed="false">
-								<xs:choice minOccurs="0"
-									maxOccurs="unbounded">
-									<xs:element name="text"
-										type="xs:string" />
+								<xs:choice minOccurs="0" maxOccurs="unbounded">
+									<xs:element name="text" type="xs:string"/>
 									<xs:element name="gap">
 										<xs:complexType>
 											<xs:sequence>
-												<xs:element
-													name="correct" type="xs:string" maxOccurs="unbounded" />
+												<xs:element name="correct" type="xs:string" maxOccurs="unbounded"/>
 											</xs:sequence>
-											<xs:attribute
-												name="inputLength" use="optional">
+											<xs:attribute name="inputLength" use="optional">
 												<xs:simpleType>
-													<xs:restriction
-														base="xs:int">
-														<xs:minInclusive
-															value="1" />
+													<xs:restriction base="xs:int">
+														<xs:minInclusive value="1"/>
 													</xs:restriction>
 												</xs:simpleType>
 											</xs:attribute>
-											<xs:attribute
-												name="ignoreCase" type="xs:boolean" use="optional" />
+											<xs:attribute name="ignoreCase" type="xs:boolean" use="optional"/>
 										</xs:complexType>
 									</xs:element>
 								</xs:choice>
 							</xs:complexType>
 						</xs:element>
-					</xs:sequence>
-
-
-
+						<xs:element name="graphicalCloze">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="backgroundImageBase64" type="xs:string"/>
+									<xs:element name="gap" minOccurs="0" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="correct" type="xs:string" maxOccurs="unbounded"/>
+											</xs:sequence>
+											<xs:attribute name="inputLength" use="optional">
+												<xs:simpleType>
+													<xs:restriction base="xs:int">
+														<xs:minInclusive value="1"/>
+													</xs:restriction>
+												</xs:simpleType>
+											</xs:attribute>
+											<xs:attribute name="ignoreCase" type="xs:boolean" use="optional"/>
+											<xs:attribute name="posX" type="xs:int" use="required"/>
+											<xs:attribute name="posY" type="xs:int" use="required"/>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:choice>
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
@@ -520,31 +492,21 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 			<xs:complexContent>
 				<xs:extension base="SubTaskDefType">
 					<xs:sequence>
-						<xs:element name="concept"
-							maxOccurs="unbounded">
+						<xs:element name="concept" maxOccurs="unbounded">
 							<xs:complexType>
 								<xs:sequence>
-									<xs:element
-										name="correctAssignmentID" type="xs:string"
-										maxOccurs="unbounded" />
+									<xs:element name="correctAssignmentID" type="xs:string" maxOccurs="unbounded"/>
 								</xs:sequence>
-								<xs:attribute name="name"
-									type="xs:string" use="required" />
+								<xs:attribute name="name" type="xs:string" use="required"/>
 							</xs:complexType>
 						</xs:element>
-						<xs:element name="assignment"
-							maxOccurs="unbounded">
+						<xs:element name="assignment" maxOccurs="unbounded">
 							<xs:complexType>
-								<xs:attribute name="id" type="xs:string"
-									use="required" />
-								<xs:attribute name="name"
-									type="xs:string" use="required" />
+								<xs:attribute name="id" type="xs:string" use="required"/>
+								<xs:attribute name="name" type="xs:string" use="required"/>
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
-
-
-
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
@@ -584,104 +546,72 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 						<xs:element name="images" minOccurs="0">
 							<xs:complexType>
 								<xs:sequence>
-									<xs:element
-										name="mutableTemplateImage" type="xs:string" minOccurs="0" />
-									<xs:element
-										name="immutableBackgroundImage" type="xs:string"
-										minOccurs="0" />
-									<xs:element
-										name="correctionTemplateImage" type="xs:string" minOccurs="0" />
+									<xs:element name="mutableTemplateImage" type="xs:string" minOccurs="0"/>
+									<xs:element name="immutableBackgroundImage" type="xs:string" minOccurs="0"/>
+									<xs:element name="correctionTemplateImage" type="xs:string" minOccurs="0"/>
 								</xs:sequence>
 							</xs:complexType>
 						</xs:element>
-						<xs:element name="textualAnswer"
-							minOccurs="0">
+						<xs:element name="textualAnswer" minOccurs="0">
 							<xs:complexType>
 								<xs:sequence>
-									<xs:element name="textFieldWidth"
-										minOccurs="0">
+									<xs:element name="textFieldWidth" minOccurs="0">
 										<xs:simpleType>
-											<xs:restriction
-												base="xs:int">
-												<xs:minInclusive
-													value="1" />
+											<xs:restriction base="xs:int">
+												<xs:minInclusive value="1"/>
 											</xs:restriction>
 										</xs:simpleType>
 									</xs:element>
-									<xs:element name="textFieldHeight"
-										minOccurs="0">
+									<xs:element name="textFieldHeight" minOccurs="0">
 										<xs:simpleType>
-											<xs:restriction
-												base="xs:int">
-												<xs:minInclusive
-													value="1" />
+											<xs:restriction base="xs:int">
+												<xs:minInclusive value="1"/>
 											</xs:restriction>
 										</xs:simpleType>
 									</xs:element>
 								</xs:sequence>
 							</xs:complexType>
 						</xs:element>
-						<xs:element name="colorChangeable"
-							type="xs:boolean" minOccurs="0" />
-						<xs:element name="strokewidthChangeable"
-							type="xs:boolean" minOccurs="0" />
+						<xs:element name="colorChangeable" type="xs:boolean" minOccurs="0"/>
+						<xs:element name="strokewidthChangeable" type="xs:boolean" minOccurs="0"/>
 					</xs:sequence>
-
-
-
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-
 	<xs:element name="addonSubTaskDef">
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="SubTaskDefType">
 					<xs:sequence>
-						<xs:element name="Memento" type="xs:anyType"
-							xjc:processContents="skip">
+						<xs:element name="Memento" type="xs:anyType" xjc:processContents="skip">
 							<xs:annotation>
 								<xs:appinfo>
-									<xjc:dom />
+									<xjc:dom/>
 								</xs:appinfo>
 							</xs:annotation>
 						</xs:element>
 					</xs:sequence>
-					<xs:attribute name="textFieldWidth" type="xs:int"
-						use="optional">
-					</xs:attribute>
-
-					<xs:attribute name="textFieldHeight" type="xs:int"
-						use="optional">
-					</xs:attribute>
-
-					<xs:attribute name="taskType"
-						type="xs:string" use="required">
-					</xs:attribute>
+					<xs:attribute name="textFieldWidth" type="xs:int" use="optional"/>
+					<xs:attribute name="textFieldHeight" type="xs:int" use="optional"/>
+					<xs:attribute name="taskType" type="xs:string" use="required"/>
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-
-
 	<xs:complexType name="SubTaskDefType" abstract="true">
 		<xs:sequence>
-			<xs:element name="problem" type="xs:string"></xs:element>
-			<xs:element name="hint" type="xs:string" minOccurs="0"></xs:element>
-			<xs:element name="correctionHint" type="xs:string" minOccurs="0"></xs:element>
+			<xs:element name="problem" type="xs:string"/>
+			<xs:element name="hint" type="xs:string" minOccurs="0"/>
+			<xs:element name="correctionHint" type="xs:string" minOccurs="0"/>
 		</xs:sequence>
-		<xs:attribute name="id" type="xs:string"></xs:attribute>
-		<xs:attribute name="interactiveFeedback" type="xs:boolean"
-			use="optional" default="false" />
-		<xs:attribute name="trash" type="xs:boolean" use="optional"
-			default="false" />
+		<xs:attribute name="id" type="xs:string"/>
+		<xs:attribute name="interactiveFeedback" type="xs:boolean" use="optional" default="false"/>
+		<xs:attribute name="trash" type="xs:boolean" use="optional" default="false"/>
 	</xs:complexType>
-
 	<xs:complexType name="TaskBlockType" abstract="true">
 		<xs:sequence>
-			<xs:element ref="config"></xs:element>
+			<xs:element ref="config"/>
 		</xs:sequence>
 	</xs:complexType>
-
 </xs:schema>

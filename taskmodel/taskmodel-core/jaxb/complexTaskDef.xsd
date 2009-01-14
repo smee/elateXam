@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSPY v5 U (http://www.xmlspy.com) by tb (ul) -->
-<xs:schema targetNamespace="http://complex.taskmodel.thorstenberger.de/complexTaskDef" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://complex.taskmodel.thorstenberger.de/complexTaskDef" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" elementFormDefault="qualified" attributeFormDefault="unqualified" jaxb:version="1.0" jaxb:extensionBindingPrefixes="xjc">
+<xs:schema targetNamespace="http://complex.taskmodel.thorstenberger.de/complexTaskDef" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns="http://complex.taskmodel.thorstenberger.de/complexTaskDef" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" jaxb:version="1.0" jaxb:extensionBindingPrefixes="xjc">
 	<!--
 Change Log:
 
@@ -17,6 +17,7 @@ Change Log:
 - 26.11.08 Meta-Informationen "ID" und "revisions" hinzugefügt, die der näheren Beschreibung von Aufgabenpools dienen, aber keine weitere Relevanz für das TaskModel haben
 - 29.12.08 ClozeSubTaskDef erweitert: neues Element graphicalCloze für graphische Lückentexte
 - 04.01.09: Revisions: Element "revision" mit Attribut "date" erweitert (Zeitpunkt des Speicherns als Timestamp)
+- 14.01.09: SubTaskDefType: optionales Attribut "inputLanguage" hinzugefügt, um die gewünschte Eingabesprache zu definieren (kann genutzt werden, um auf dem Client Codepages, Eingabehilfen etc. zu setzen)
 
 TODO:
 - Inkonsistenzen bei MC-Kategorien zw. singleSelect und multipleSelect beseitigen (<cloze-config>@negativePoints; @minCorrectAnswers, @maxCorrectAnswers)
@@ -608,6 +609,17 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 		<xs:attribute name="id" type="xs:string"/>
 		<xs:attribute name="interactiveFeedback" type="xs:boolean" use="optional" default="false"/>
 		<xs:attribute name="trash" type="xs:boolean" use="optional" default="false"/>
+		<xs:attribute name="inputLanguage" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="de"/>
+					<xs:enumeration value="en"/>
+					<xs:enumeration value="fr"/>
+					<xs:enumeration value="ru"/>
+					<xs:enumeration value="es"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 	</xs:complexType>
 	<xs:complexType name="TaskBlockType" abstract="true">
 		<xs:sequence>

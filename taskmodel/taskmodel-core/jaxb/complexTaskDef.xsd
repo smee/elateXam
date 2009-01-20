@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSPY v5 U (http://www.xmlspy.com) by tb (ul) -->
-<xs:schema targetNamespace="http://complex.taskmodel.thorstenberger.de/complexTaskDef" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns="http://complex.taskmodel.thorstenberger.de/complexTaskDef" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" jaxb:version="1.0" jaxb:extensionBindingPrefixes="xjc">
+<xs:schema targetNamespace="http://complex.taskmodel.thorstenberger.de/complexTaskDef" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://complex.taskmodel.thorstenberger.de/complexTaskDef" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" elementFormDefault="qualified" attributeFormDefault="unqualified" jaxb:version="1.0" jaxb:extensionBindingPrefixes="xjc">
 	<!--
 Change Log:
 
@@ -18,6 +18,7 @@ Change Log:
 - 29.12.08 ClozeSubTaskDef erweitert: neues Element graphicalCloze für graphische Lückentexte
 - 04.01.09: Revisions: Element "revision" mit Attribut "date" erweitert (Zeitpunkt des Speicherns als Timestamp)
 - 14.01.09: SubTaskDefType: optionales Attribut "inputLanguage" hinzugefügt, um die gewünschte Eingabesprache zu definieren (kann genutzt werden, um auf dem Client Codepages, Eingabehilfen etc. zu setzen)
+- 20.01.09 Attribut initialValue hinzugefügt in ClozeSubTaskDef->Cloze->Gap; gibt optional den Initialwert einer Lücke an, der entsprechend vom Bearbeiter geändert werden kann
 
 TODO:
 - Inkonsistenzen bei MC-Kategorien zw. singleSelect und multipleSelect beseitigen (<cloze-config>@negativePoints; @minCorrectAnswers, @maxCorrectAnswers)
@@ -454,6 +455,7 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 												</xs:simpleType>
 											</xs:attribute>
 											<xs:attribute name="ignoreCase" type="xs:boolean" use="optional"/>
+											<xs:attribute name="initialValue" type="xs:string" use="optional"/>
 										</xs:complexType>
 									</xs:element>
 								</xs:choice>
@@ -478,6 +480,7 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 											<xs:attribute name="ignoreCase" type="xs:boolean" use="optional"/>
 											<xs:attribute name="posX" type="xs:int" use="required"/>
 											<xs:attribute name="posY" type="xs:int" use="required"/>
+											<xs:attribute name="initialValue" type="xs:string" use="optional"/>
 										</xs:complexType>
 									</xs:element>
 								</xs:sequence>

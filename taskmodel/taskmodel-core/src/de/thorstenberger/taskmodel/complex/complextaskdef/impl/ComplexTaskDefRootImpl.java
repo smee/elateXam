@@ -172,9 +172,9 @@ public class ComplexTaskDefRootImpl implements ComplexTaskDefRoot {
 			if( complexTaskDef.getConfig().getCorrectionMode().isSetRegular() )
 				return new RegularCorrectionMode();
 			else if( complexTaskDef.getConfig().getCorrectionMode().isSetCorrectOnlyProcessedTasks() )
-				return new CorrectOnlyProcessedTasksCorrectionMode( complexTaskDef.getConfig().getCorrectionMode().getCorrectOnlyProcessedTasks() );
+				return new CorrectOnlyProcessedTasksCorrectionMode( complexTaskDef.getConfig().getCorrectionMode().getCorrectOnlyProcessedTasks().getNumberOfTasks() );
 			else if( complexTaskDef.getConfig().getCorrectionMode().isSetMultipleCorrectors() )
-				return new MultipleCorrectorsCorrectionMode( complexTaskDef.getConfig().getCorrectionMode().getMultipleCorrectors() );
+				return new MultipleCorrectorsCorrectionMode( complexTaskDef.getConfig().getCorrectionMode().getMultipleCorrectors().getNumberOfCorrectors() );
 			
 		}
 		

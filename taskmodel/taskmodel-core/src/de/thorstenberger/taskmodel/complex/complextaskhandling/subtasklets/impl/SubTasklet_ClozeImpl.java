@@ -576,7 +576,7 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 
 				ComplexTaskHandlingType.TryType.PageType.ClozeSubTaskType.GapType gap;
 				gap = objectFactory.createComplexTaskHandlingTypeTryTypePageTypeClozeSubTaskTypeGapType();
-				gap.setGapValue( ( ( ClozeSubTaskDefType.ClozeType.Gap ) token ).getInitialValue() != null ?
+				gap.setGapValue( ( ( ClozeSubTaskDefType.ClozeType.Gap ) token ).isSetInitialValue() ?
 					( ( ClozeSubTaskDefType.ClozeType.Gap ) token ).getInitialValue() : "");
 				newClozeSubTask.getGap().add( gap );
 

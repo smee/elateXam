@@ -19,7 +19,7 @@ Change Log:
 - 04.01.09: Revisions: Element "revision" mit Attribut "date" erweitert (Zeitpunkt des Speicherns als Timestamp)
 - 14.01.09: SubTaskDefType: optionales Attribut "inputLanguage" hinzugefügt, um die gewünschte Eingabesprache zu definieren (kann genutzt werden, um auf dem Client Codepages, Eingabehilfen etc. zu setzen)
 - 20.01.09 Attribut initialValue hinzugefügt in ClozeSubTaskDef->Cloze->Gap; gibt optional den Initialwert einer Lücke an, der entsprechend vom Bearbeiter geändert werden kann
-- 21.01.09: correctionMode: chandes simple elements to complex with attirbutes
+- 21.01.09: Element correctionMode: EMF XSD model importer konnte nicht mit einfachem Element <regular/> umgehen, daher Dummy-Attribut "value" eingefügt
 TODO:
 - Inkonsistenzen bei MC-Kategorien zw. singleSelect und multipleSelect beseitigen (<cloze-config>@negativePoints; @minCorrectAnswers, @maxCorrectAnswers)
 - preserveOrder der Antworten bei MC-Aufgaben: teilw. sinnlos, da richtige immer vor falschen angegeben werden müssen
@@ -92,7 +92,7 @@ Every new try results in a random aggregation of subtasks (and possibly answer c
 												<xs:attribute name="numberOfTasks" use="required">
 													<xs:simpleType>
 														<xs:restriction base="xs:int">
-															<xs:minInclusive value="1" />
+															<xs:minInclusive value="1"/>
 														</xs:restriction>
 													</xs:simpleType>
 												</xs:attribute>
@@ -103,10 +103,10 @@ Every new try results in a random aggregation of subtasks (and possibly answer c
 												<xs:documentation>In this correction mode, more than one (human) corrector proceed the correction of the Tasklet, in order to determine the overall result.</xs:documentation>
 											</xs:annotation>
 											<xs:complexType>
-												<xs:attribute name="numberOfCorrectors" use="required" >
+												<xs:attribute name="numberOfCorrectors" use="required">
 													<xs:simpleType>
 														<xs:restriction base="xs:int">
-															<xs:minInclusive value="2" />
+															<xs:minInclusive value="2"/>
 														</xs:restriction>
 													</xs:simpleType>
 												</xs:attribute>

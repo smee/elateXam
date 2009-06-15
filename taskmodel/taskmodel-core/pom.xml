@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>taskmodel</artifactId>
+    <groupId>de.elateportal</groupId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>taskmodel-core</artifactId>
+  <groupId>de.elateportal</groupId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+  <name>Taskmodel Default Implementation</name>
+  <description>The taskmodel core implementation for eTesting</description>
+
+  <scm>
+    <connection>scm:svn:https://elateportal.svn.sourceforge.net/svnroot/elateportal/trunk/taskmodel/taskmodel-core</connection>
+    <developerConnection>scm:svn:https://elateportal.svn.sourceforge.net/svnroot/elateportal/trunk/taskmodel/taskmodel-core</developerConnection>
+    <tag>HEAD</tag>
+    <url>http://elateportal.svn.sourceforge.net/viewvc/elateportal/trunk/taskmodel/taskmodel-core</url>
+  </scm>
+
+  <dependencies>
+    <dependency>
+      <groupId>de.elateportal</groupId>
+      <artifactId>taskmodel-api</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>de.elateportal</groupId>
+      <artifactId>taskmodel-schema</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>jcs</groupId>
+      <artifactId>jcs</artifactId>
+      <version>20030822.182132</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi</artifactId>
+      <version>3.2-FINAL</version>
+    </dependency>
+    <!-- Apache commons -->
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+    <!-- JMock Tests -->
+    <dependency>
+      <groupId>org.jmock</groupId>
+      <artifactId>jmock</artifactId>
+      <version>2.4.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.unitils</groupId>
+      <artifactId>unitils</artifactId>
+      <version>2.2</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- Mocking von Klassen -->
+    <dependency>
+      <groupId>org.jmock</groupId>
+      <artifactId>jmock-legacy</artifactId>
+      <version>2.4.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+    </dependency>
+  </dependencies>
+
+</project>

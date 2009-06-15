@@ -1,0 +1,62 @@
+# taskmodel-core_userObjectCache CACHE REGION
+
+jcs.region.taskmodel-core_userObjectCache=
+jcs.region.taskmodel-core_userObjectCache.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.taskmodel-core_userObjectCache.cacheattributes.MaxObjects=3000
+jcs.region.taskmodel-core_userObjectCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.taskmodel-core_userObjectCache.cacheattributes.UseMemoryShrinker=false
+jcs.region.taskmodel-core_userObjectCache.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.region.taskmodel-core_userObjectCache.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.region.taskmodel-core_userObjectCache.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.taskmodel-core_userObjectCache.elementattributes.IsEternal=false
+jcs.region.taskmodel-core_userObjectCache.elementattributes.MaxLifeSeconds=7200
+jcs.region.taskmodel-core_userObjectCache.elementattributes.IdleTime=3600
+jcs.region.taskmodel-core_userObjectCache.elementattributes.IsSpool=false
+jcs.region.taskmodel-core_userObjectCache.elementattributes.IsRemote=false
+jcs.region.taskmodel-core_userObjectCache.elementattributes.IsLateral=false  
+    
+
+## sets the default aux value for any non configured caches
+#jcs.default=DC,RFailover
+#jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+#jcs.default.cacheattributes.MaxObjects=1000
+#jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+#jcs.default.elementattributes.IsEternal=false
+#jcs.default.elementattributes.MaxLifeSeconds=3600
+#jcs.default.elementattributes.IdleTime=1800
+#jcs.default.elementattributes.IsSpool=true
+#jcs.default.elementattributes.IsRemote=true
+#jcs.default.elementattributes.IsLateral=true
+
+
+## CACHE REGIONS AVAILABLE
+
+# Regions preconfigured for caching
+#jcs.region.userManagerCache=DC,RFailover
+#jcs.region.userManagerCache.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+#jcs.region.userManagerCache.cacheattributes.MaxObjects=1200
+#jcs.region.userManagerCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+#jcs.region.userManagerCache.elementattributes.IsEternal=false
+#jcs.region.userManagerCache.elementattributes.MaxLifeSeconds=3600
+#jcs.region.userManagerCache.elementattributes.IdleTime=1800
+#jcs.region.userManagerCache.elementattributes.IsSpool=true
+#jcs.region.userManagerCache.elementattributes.IsRemote=true
+#jcs.region.userManagerCache.elementattributes.IsLateral=true
+
+## AUXILIARY CACHES AVAILABLE
+
+# Primary Disk Cache -- faster than the rest because of memory key storage
+#jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+#jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+#jcs.auxiliary.DC.attributes.DiskPath=/usr/opt/bookstore/raf
+#jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
+#jcs.auxiliary.DC.attributes.MaxKeySize=10000
+#jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=300000
+#jcs.auxiliary.DC.attributes.MaxRecycleBinSize=7500
+
+## Remote RMI Cache set up to failover
+#jcs.auxiliary.RFailover=org.apache.jcs.auxiliary.remote.RemoteCacheFactory
+#jcs.auxiliary.RFailover.attributes=org.apache.jcs.auxiliary.remote.RemoteCacheAttributes
+#jcs.auxiliary.RFailover.attributes.RemoteTypeName=LOCAL
+#jcs.auxiliary.RFailover.attributes.FailoverServers=scriptserver:1102
+#jcs.auxiliary.RFailover.attributes.GetOnly=false

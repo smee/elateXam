@@ -1,0 +1,9 @@
+Bundle-Name: junit-addon
+Bundle-Activator: junittask.activator.Activator
+Bundle-SymbolicName: junit-addon
+Extension-Name: junit-addon
+Bundle-ManifestVersion: 2
+Private-Package: junittask.*
+Import-Package: *;resolution:=optional
+Bundle-ClassPath: .,junit-3.8.1.jar, groovy-all-1.1-BETA-2.jar
+Include-Resource: target/lib/

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  
+    <parent>
+    <artifactId>taskmodel-addon</artifactId>
+    <groupId>de.elateportal</groupId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+  
+  <groupId>de.elateportal</groupId>
+  <artifactId>junit-addon</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <name>JUnit AddonTask</name>
+  <description>Provide java programming tasks</description>
+  <inceptionYear>2007</inceptionYear>
+  <packaging>bundle</packaging>
+  
+  <build>
+    <plugins>
+      <plugin> 
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <instructions>
+            <Bundle-Activator>junittask.activator.Activator</Bundle-Activator>
+	  <Embed-Dependency>*;scope=compile|runtime;inline=true</Embed-Dependency>   
+             <Import-Package>*;resolution:=optional</Import-Package> 
+	  </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  
+  <dependencies>
+    <dependency>
+      <groupId>de.elateportal</groupId>
+      <artifactId>taskmodel-api</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>de.elateportal</groupId>
+      <artifactId>taskmodel-core</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+ <!-- bundle dependencies -->
+        <dependency>
+            <groupId>de.elateportal</groupId>
+            <artifactId>junit-addon-correction-interfaces</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency> 
+<!-- osgi interfaces -->
+    <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <version>1.2.0</version>
+	  <scope>provided</scope>
+        </dependency>
+    <dependency>
+            <groupId>org.apache.felix</groupId>
+	  <artifactId>org.osgi.compendium</artifactId>
+            <version>1.2.0</version>
+	  <scope>provided</scope>
+        </dependency>	
+<!-- remote osgi -->
+        <!--  for remote services -->
+        <dependency>
+            <groupId>ch.ethz.iks.r-osgi</groupId>
+            <artifactId>remote</artifactId>
+            <version>1.0.0.RC3</version>
+	  <scope>provided</scope>	    
+        </dependency>
+        <dependency>
+            <groupId>ch.ethz.iks.slp</groupId>
+            <artifactId>jslp-osgi</artifactId>
+            <version>1.0.0.RC2</version>
+	  <scope>provided</scope>	    
+        </dependency>
+    <!-- provided webcontainer libs -->
+    <dependency>
+      <groupId>servletapi</groupId>
+      <artifactId>servletapi</artifactId>
+      <version>2.3</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xerces</artifactId>
+      <version>2.3.0</version>
+      <scope>provided</scope>
+    </dependency>
+<dependency>
+    <groupId>javax.xml.bind</groupId>
+    <artifactId>jaxb-api</artifactId>
+    <version>1.0</version>
+    <scope>provided</scope>
+</dependency>   
+</dependencies>
+</project>

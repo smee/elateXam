@@ -103,6 +103,9 @@ public class JUnitAddOnSubTaskletFactoryImpl implements
 		    	}catch(RemoteOSGiException ex) {
 		    		System.err.println("No remote connection: ");
 		    		ex.printStackTrace();
+		    	}catch(java.io.IOException ex) {
+		    		System.err.println("Error while creating remote connection: ");
+		    		ex.printStackTrace();
 		    	}
 		    }
 		}

@@ -234,12 +234,13 @@
         </configuration>
        </plugin>
      
-      <plugin> 
         <!-- 
 	  Stoppe den Build, wenn unterschiedliche Versionen derselben Dependency verwendet werden soll.
 	  Aufruf mit: mvn com.hexapixel.maven.plugins:maven-breakonversionclash-plugin:clash-detection 
 	  http://hexapixel.com/software/maven-version-clash-plugin
         -->
+<!--        
+	<plugin> 
         <groupId>com.hexapixel.maven.plugins</groupId> 
         <artifactId>maven-breakonversionclash-plugin</artifactId>
         <version>1.0.1</version>
@@ -248,7 +249,7 @@
           <depth>DEEP</depth> 
         </configuration>  
       </plugin>  
-      
+ -->      
     </plugins>
   </build>
 

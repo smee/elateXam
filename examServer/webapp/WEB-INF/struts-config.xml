@@ -51,7 +51,7 @@
   <action input="failure" name="uploadForm" path="/uploadFile"
    scope="request"
    type="de.thorstenberger.examServer.webapp.action.UploadAction" validate="true">
-   <set-property property="cancellable" value="true"/>
+   <!--<set-property property="cancellable" value="true"/>-->
    <forward name="failure" path="/WEB-INF/pages/uploadForm.jsp" redirect="false"/>
    <forward name="success" path="/WEB-INF/pages/uploadDisplay.jsp" redirect="false"/>
   </action>

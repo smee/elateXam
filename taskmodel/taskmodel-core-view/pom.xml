@@ -181,5 +181,33 @@
         </dependency>   
       </dependencies>
     </profile>
+    <profile>
+      <id>deployTomcat</id>
+      <!-- copy this war to ${tomcat}/webapps, remove the version from the war-file name
+      invoke via: 'mvn install -PdeployTomcat -Dtomcat.path=/path/to/local/tomcat' -->
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-antrun-plugin
+            </artifactId>
+            <executions>
+              <execution>
+                <phase>install</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <tasks>
+                    <copy verbose="true"
+                      file="${project.build.directory}/${project.build.finalName}.${project.packaging}"
+                      tofile="${tomcat.path}/webapps/${project.artifactId}.${project.packaging}" />
+                  </tasks>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 </project>

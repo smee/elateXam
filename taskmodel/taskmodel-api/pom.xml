@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -14,15 +15,50 @@
   <packaging>jar</packaging>
   <name>Taskmodel API</name>
   <description>The taskmodel API for eTesting</description>
-  
+
   <scm>
-    <connection>scm:svn:https://elateportal.svn.sourceforge.net/svnroot/elateportal/trunk/taskmodel/taskmodel-api</connection>
-    <developerConnection>scm:svn:https://elateportal.svn.sourceforge.net/svnroot/elateportal/trunk/taskmodel/taskmodel-api</developerConnection>
+    <connection>
+      scm:svn:https://elateportal.svn.sourceforge.net/svnroot/elateportal/trunk/taskmodel/taskmodel-api
+    </connection>
+    <developerConnection>
+      scm:svn:https://elateportal.svn.sourceforge.net/svnroot/elateportal/trunk/taskmodel/taskmodel-api
+    </developerConnection>
     <tag>HEAD</tag>
-    <url>http://elateportal.svn.sourceforge.net/viewvc/elateportal/trunk/taskmodel/taskmodel-api</url>
+    <url>
+      http://elateportal.svn.sourceforge.net/viewvc/elateportal/trunk/taskmodel/taskmodel-api
+    </url>
   </scm>
 
   <dependencies>
   </dependencies>
 
+  <profiles>
+    <profile>
+      <id>deployTomcat</id>
+      <!-- deploy the api to ${tomcat}/shared/lib -->
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-antrun-plugin
+            </artifactId>
+            <executions>
+              <execution>
+                <phase>install</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <tasks>
+                    <copy verbose="true"
+                      file="${project.build.directory}/${project.build.finalName}.${project.packaging}"
+                      todir="${tomcat.path}/shared/lib" />
+                  </tasks>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

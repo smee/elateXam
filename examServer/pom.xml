@@ -214,6 +214,14 @@
           <artifactId>spring-jdbc</artifactId>
           <groupId>org.springframework</groupId>
         </exclusion>
+        <exclusion>
+        	<artifactId>spring-remoting</artifactId>
+        	<groupId>org.springframework</groupId>
+        </exclusion>
+        <exclusion>
+        	<artifactId>spring-jdbc</artifactId>
+        	<groupId>org.springframework</groupId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
@@ -225,6 +233,12 @@
       <groupId>axis</groupId>
       <artifactId>axis</artifactId>
       <version>1.2.1</version>
+      <exclusions>
+      	<exclusion>
+      		<artifactId>wsdl4j</artifactId>
+      		<groupId>wsdl4j</groupId>
+      	</exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>axis</groupId>
@@ -280,6 +294,16 @@
       <groupId>commons-validator</groupId>
       <artifactId>commons-validator</artifactId>
       <version>1.2.0</version>
+      <exclusions>
+      	<exclusion>
+      		<artifactId>xml-apis</artifactId>
+      		<groupId>xml-apis</groupId>
+      	</exclusion>
+      	<exclusion>
+      		<artifactId>xml-apis</artifactId>
+      		<groupId>xml-apis</groupId>
+      	</exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>displaytag</groupId>
@@ -292,8 +316,12 @@
       <version>1.2.2</version>
       <exclusions>
         <exclusion>
-          <artifactId>hibernate</artifactId>
-          <groupId>net.sf.hibernate</groupId>
+        	<groupId>org.hibernate</groupId>
+        	<artifactId>hibernate</artifactId>
+        </exclusion>
+        <exclusion>
+        	<artifactId>hibernate</artifactId>
+        	<groupId>net.sf.hibernate</groupId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -356,6 +384,16 @@
       <groupId>struts</groupId>
       <artifactId>struts</artifactId>
       <version>1.2.9</version>
+      <exclusions>
+      	<exclusion>
+      		<groupId>antlr</groupId>
+      		<artifactId>antlr</artifactId>
+      	</exclusion>
+      	<exclusion>
+      		<artifactId>xalan</artifactId>
+      		<groupId>xalan</groupId>
+      	</exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>struts</groupId>
@@ -400,7 +438,8 @@
       <!--
         'mvn jetty:run -Pstandalone' won't work atm, jetty 6 gives
         confusing exceptions. Appfuse 1 was released during jetty 5
-        times, no support anymore :( see http://jira.codehaus.org/browse/JETTY-134
+        times, no support anymore :( see
+        http://jira.codehaus.org/browse/JETTY-134
       -->
       <id>standalone</id>
       <dependencies>
@@ -436,6 +475,34 @@
                       tofile="${tomcat.path}/webapps/${project.artifactId}.${project.packaging}" />
                   </tasks>
                 </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <!-- create virtual classpath to enable usage of javarebel for local development -->
+      <id>javarebel</id>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>zt-repo</id>
+          <name>Zero turnaround repo</name>
+          <url>dav:http://repos.zeroturnaround.com/maven2</url>
+        </pluginRepository>
+      </pluginRepositories>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.zeroturnaround</groupId>
+            <artifactId>javarebel-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>generate-rebel-xml</id>
+                <phase>process-resources</phase>
+                <goals>
+                  <goal>generate</goal>
+                </goals>
               </execution>
             </executions>
           </plugin>

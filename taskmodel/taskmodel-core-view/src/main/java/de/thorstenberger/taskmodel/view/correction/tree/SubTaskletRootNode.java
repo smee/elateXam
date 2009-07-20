@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ */
 package de.thorstenberger.taskmodel.view.correction.tree;
 
 import java.util.ArrayList;
@@ -24,98 +24,105 @@ import java.util.List;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 import de.thorstenberger.taskmodel.view.tree.DataNode;
 
-
 /**
  * @author Thorsten Berger
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * 
+ *         TODO To change the template for this generated type comment go to
+ *         Window - Preferences - Java - Code Style - Code Templates
  */
 public class SubTaskletRootNode implements DataNode {
 
-    private List<SubTasklet> subTasklets;
-    private String studentLogin;
-    private long taskId;
-    private String currentlySelectedSubtaskNum;
-    private String actualCorrector;
-    
+    private final List<SubTasklet> subTasklets;
+    private final String studentLogin;
+    private final long taskId;
+    private final String currentlySelectedSubtaskNum;
+    private final String actualCorrector;
+
     /**
      * 
      */
-    public SubTaskletRootNode( List<SubTasklet> subTasklets, String studentLogin, long taskId, String currentlySelectedSubtaskNum, String actualCorrector ) {
+    public SubTaskletRootNode(final List<SubTasklet> subTasklets, final String studentLogin, final long taskId,
+            final String currentlySelectedSubtaskNum, final String actualCorrector) {
         this.subTasklets = subTasklets;
         this.studentLogin = studentLogin;
         this.taskId = taskId;
         this.currentlySelectedSubtaskNum = currentlySelectedSubtaskNum;
         this.actualCorrector = actualCorrector;
     }
-    
-    
-    /* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.view.tree.DataNode#getName()
-	 */
-	public String getName() {
-		return "Aufgaben";
-	}
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.view.tree.DataNode#getName()
+     */
+    public String getName() {
+        return "Aufgaben";
+    }
 
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.view.tree.DataNode#getSubNodes()
-	 */
-	public List<DataNode> getSubNodes() {
-		
-		SubtaskletFolder uncorrected = new SubtaskletFolder( SubtaskletFolder.Type.UNCORRECTED );
-		SubtaskletFolder corrected = new SubtaskletFolder( SubtaskletFolder.Type.CORRECTED );
-		SubtaskletFolder needsManualCorrection = new SubtaskletFolder( SubtaskletFolder.Type.NEEDSMANUALCORRECTION );
-		
-		for( SubTasklet subTasklet : subTasklets ){
-			
-			if( subTasklet.isNeedsManualCorrection( actualCorrector ) ){
-				needsManualCorrection.addSubNode( new SubtaskletNode( subTasklet.getVirtualSubtaskNumber(),
-						studentLogin, taskId, subTasklet.getVirtualSubtaskNumber().equals( currentlySelectedSubtaskNum ) ) );
-			}else if( subTasklet.isCorrected() ){
-				corrected.addSubNode( new SubtaskletNode( subTasklet.getVirtualSubtaskNumber(),
-						studentLogin, taskId, subTasklet.getVirtualSubtaskNumber().equals( currentlySelectedSubtaskNum ) ) );
-			}else{
-				uncorrected.addSubNode( new SubtaskletNode( subTasklet.getVirtualSubtaskNumber(),
-					studentLogin, taskId, subTasklet.getVirtualSubtaskNumber().equals( currentlySelectedSubtaskNum ) ) );
-			}
-			
-		}
-		
-		List<DataNode> ret = new ArrayList<DataNode>();
-		ret.add( needsManualCorrection );
-		ret.add( corrected );
-		ret.add( uncorrected );
-		
-		return ret;
-		
-	}
+    /**
+     * @return Returns the studentLogin.
+     */
+    public String getStudentLogin() {
+        return studentLogin;
+    }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.view.tree.DataNode#getSubNodes()
+     */
+    public List<DataNode> getSubNodes() {
 
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.view.tree.DataNode#isFolder()
-	 */
-	public boolean isFolder() {
-		return true;
-	}
+        final SubtaskletFolder uncorrected = new SubtaskletFolder(SubtaskletFolder.Type.UNCORRECTED);
+        final SubtaskletFolder corrected = new SubtaskletFolder(SubtaskletFolder.Type.CORRECTED);
+        final SubtaskletFolder manuallyCorrected = new SubtaskletFolder(SubtaskletFolder.Type.MANUALLYCORRECTED);
+        final SubtaskletFolder needsManualCorrection = new SubtaskletFolder(SubtaskletFolder.Type.NEEDSMANUALCORRECTION);
 
+        for (final SubTasklet subTasklet : subTasklets) {
 
-	/**
-	 * @return Returns the studentLogin.
-	 */
-	public String getStudentLogin() {
-		return studentLogin;
-	}
+            final SubtaskletNode subtaskletNode = new SubtaskletNode(subTasklet.getVirtualSubtaskNumber(),
+                    studentLogin, taskId, subTasklet.getVirtualSubtaskNumber().equals(currentlySelectedSubtaskNum));
 
+            if (subTasklet.isNeedsManualCorrection(actualCorrector)) {
+                needsManualCorrection.addSubNode(subtaskletNode);
+            } else if (subTasklet.isCorrected()) {
 
-	/**
-	 * @return Returns the taskId.
-	 */
-	public long getTaskId() {
-		return taskId;
-	}
+                if (!subTasklet.isAutoCorrected()) {
+                    manuallyCorrected.addSubNode(subtaskletNode);
+                } else {
+                    corrected.addSubNode(subtaskletNode);
+                }
 
+            } else {
+                uncorrected.addSubNode(subtaskletNode);
+            }
 
+        }
+
+        final List<DataNode> ret = new ArrayList<DataNode>();
+        ret.add(needsManualCorrection);
+        ret.add(manuallyCorrected);
+        ret.add(corrected);
+        ret.add(uncorrected);
+
+        return ret;
+
+    }
+
+    /**
+     * @return Returns the taskId.
+     */
+    public long getTaskId() {
+        return taskId;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.view.tree.DataNode#isFolder()
+     */
+    public boolean isFolder() {
+        return true;
+    }
 
 }

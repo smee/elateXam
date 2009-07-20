@@ -41,11 +41,6 @@
             <version>1.0.0-SNAPSHOT</version>
 	   <scope>provided</scope> 
         </dependency>    	
-        <dependency>
-            <groupId>de.elateportal</groupId>
-            <artifactId>drawtask</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
-        </dependency> 
     <!-- Apache commons -->
     <dependency>
       <groupId>commons-logging</groupId>
@@ -164,7 +159,44 @@
               <Implementation-Build>${buildNumber}</Implementation-Build>
             </manifestEntries>
           </archive>
+          <webResources>
+            <resource>
+              <directory>${project.build.directory}/applet</directory>
+              <includes>
+                <include>**/*.jar</include>
+              </includes>
+              <targetPath>drawTask</targetPath>
+            </resource>
+          </webResources>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+                <artifactItems>
+                     <artifactItem>
+                     <groupId>de.elateportal</groupId>
+                     <artifactId>drawtask</artifactId>
+                     <version>1.0.2-SNAPSHOT</version>
+                     <type>jar</type>
+                     <overWrite>false</overWrite>
+                     <outputDirectory>${project.build.directory}/applet</outputDirectory>
+                     <destFileName>drawtask.jar</destFileName>
+                   </artifactItem>
+                 </artifactItems>
+               <overWriteReleases>false</overWriteReleases>
+               <overWriteSnapshots>true</overWriteSnapshots>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
@@ -209,5 +241,33 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <!-- create virtual classpath to enable usage of javarebel for local development -->
+      <id>javarebel</id>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>zt-repo</id>
+          <name>Zero turnaround repo</name>
+          <url>dav:http://repos.zeroturnaround.com/maven2</url>
+        </pluginRepository>
+      </pluginRepositories>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.zeroturnaround</groupId>
+            <artifactId>javarebel-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>generate-rebel-xml</id>
+                <phase>process-resources</phase>
+                <goals>
+                  <goal>generate</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>    
   </profiles>
 </project>

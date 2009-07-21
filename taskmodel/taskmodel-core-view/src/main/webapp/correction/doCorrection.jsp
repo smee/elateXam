@@ -30,6 +30,11 @@
 	<td valign="top" align="right"><html:link action="/showCorrectionToCorrector" name="Correction" property="loginAndTaskId"><img src="pics/magnifier.gif" border="0" hspace="5">Gesamtansicht</html:link>
 	</td>
   </tr>
+  <tr bgcolor="#F2F9FF"> 
+    <td valign="top"/>
+    <td valign="top" align="right"><html:link action="/showCorrectionToCorrector?exportToPdf=${Correction.taskId}-${Correction.userId}.pdf" name="Correction" property="loginAndTaskId"><img src="pics/magnifier.gif" border="0" hspace="5">Exportiere PDF</html:link>
+	</td>
+  </tr>
   <tr> 
     <td width="155" valign="top" bgcolor="#F2F9FF"> <fieldset><legend>Aufgaben</legend> 
       <img src="<%= request.getContextPath() %>/pics/pixel.gif" width="155" height="1"><br>

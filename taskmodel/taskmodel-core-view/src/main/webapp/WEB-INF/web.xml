@@ -16,8 +16,16 @@
    <param-value>false</param-value>
   </init-param>
  </filter>
+  <filter>
+  <filter-name>exportPdfFilter</filter-name>
+  <filter-class>de.thorstenberger.taskmodel.view.webapp.filter.ExportPDFFilter</filter-class>
+ </filter>
  <filter-mapping>
   <filter-name>SetCharacterEncodingFilter</filter-name>
+  <servlet-name>action</servlet-name>
+ </filter-mapping>
+  <filter-mapping>
+  <filter-name>exportPdfFilter</filter-name>
   <servlet-name>action</servlet-name>
  </filter-mapping>
  <listener>

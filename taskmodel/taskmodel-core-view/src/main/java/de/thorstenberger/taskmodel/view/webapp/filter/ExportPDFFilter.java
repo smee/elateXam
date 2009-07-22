@@ -120,7 +120,7 @@ public class ExportPDFFilter implements Filter {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         final Document xhtml = tidy.parseDOM(new ByteArrayInputStream(html.getBytes()), baos);
 
-        return stripScriptTags(xhtml, baos.toString());
+        return processDocument(xhtml, baos.toString());
     }
 
     /**
@@ -147,6 +147,56 @@ public class ExportPDFFilter implements Filter {
         final InputSource is = new InputSource(new BufferedReader(new StringReader(xhtml)));
         final Document dom = XMLResource.load(is).getDocument();
         return dom;
+    }
+
+    /**
+     * <ul>
+     * <li>Strip &lt;script&gt; elements, because xml characters within these
+     * tags lead to invalid xhtml.</li>
+     * <li>Xhtmlrenderer does not render form elements right (will probably
+     * support real PDF forms in the future), so we need to replace select boxes
+     * with simple strings: Replace each select box with a bold string
+     * containing the selected option.</li>
+     * </ul>
+     * 
+     * @param xhtml
+     *            xhtml as {@link Document}
+     * @param xhtmlText
+     *            string representation of the xhtml parameter
+     * @return
+     */
+    private String processDocument(final Document xhtml, final String xhtmlText) {
+        final StringWriter sw = new StringWriter();
+        final String xslt =
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n" +
+                "<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">\n" +
+                "<xsl:template match=\"@*|node()\">\n" +
+                "  <xsl:copy>\n" +
+                "    <xsl:apply-templates select=\"@*|node()\"/>\n" +
+                "  </xsl:copy>\n" +
+                "</xsl:template>\n" +
+                "<xsl:template match=\"script\"/>\n" +
+                "<xsl:template match=\"select\">\n" +
+                "  <b>" +
+                " <xsl:value-of select=\"./option[@selected='selected']\"/>" +
+                "</b>" +
+                "</xsl:template>\n" +
+                "</xsl:stylesheet>";
+        final Source xsltSource = new StreamSource(new StringReader(xslt));
+        try {
+            final Transformer transformer = TransformerFactory.newInstance().newTransformer(xsltSource);
+            transformer.transform(new DOMSource(xhtml), new StreamResult(sw));
+            return sw.toString();
+        } catch (final TransformerConfigurationException e) {
+            log.error("Internal: Wrong xslt configuration", e);
+        } catch (final TransformerFactoryConfigurationError e) {
+            log.error("Internal: Wrong xslt configuration", e);
+        } catch (final TransformerException e) {
+            log.error("Internal: Could not strip script tags from xhtml", e);
+            e.printStackTrace();
+        }
+        // fall through in error case: return untransformed xhtml
+        return xhtmlText;
     }
 
     /**
@@ -178,44 +228,5 @@ public class ExportPDFFilter implements Filter {
             // FIXME should we just return the original content?
             throw new IOException(e.getMessage());
         }
-    }
-
-    /**
-     * Strip <script> elements, because xml characters within these tags lead to
-     * invalid xhtml.
-     * 
-     * @param xhtml
-     *            xhtml as {@link Document}
-     * @param xhtmlText
-     *            string representation of the xhtml parameter
-     * @return
-     */
-    private String stripScriptTags(final Document xhtml, final String xhtmlText) {
-        final StringWriter sw = new StringWriter();
-        final String xslt =
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n" +
-                "<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">\n" +
-                "<xsl:template match=\"@*|node()\">\n" +
-                "  <xsl:copy>\n" +
-                "    <xsl:apply-templates select=\"@*|node()\"/>\n" +
-                "  </xsl:copy>\n" +
-                "</xsl:template>\n" +
-                "<xsl:template match=\"script\"/>\n" +
-                "</xsl:stylesheet>";
-        final Source xsltSource = new StreamSource(new StringReader(xslt));
-        try {
-            final Transformer transformer = TransformerFactory.newInstance().newTransformer(xsltSource);
-            transformer.transform(new DOMSource(xhtml), new StreamResult(sw));
-            return sw.toString();
-        } catch (final TransformerConfigurationException e) {
-            log.error("Internal: Wrong xslt configuration", e);
-        } catch (final TransformerFactoryConfigurationError e) {
-            log.error("Internal: Wrong xslt configuration", e);
-        } catch (final TransformerException e) {
-            log.error("Internal: Could not strip script tags from xhtml", e);
-            e.printStackTrace();
-        }
-        // fall through in error case: return untransformed xhtml
-        return xhtmlText;
     }
 }

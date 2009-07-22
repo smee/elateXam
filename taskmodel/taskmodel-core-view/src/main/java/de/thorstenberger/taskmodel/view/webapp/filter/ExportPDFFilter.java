@@ -23,6 +23,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -33,6 +34,15 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpUtils;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -105,10 +115,12 @@ public class ExportPDFFilter implements Filter {
          * wrap javascript in strings to prevent parsing errors later on
          */
         tidy.setWrapScriptlets(true);
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        tidy.parse(new ByteArrayInputStream(html.getBytes()), baos);
+        tidy.setBreakBeforeBR(true);// line wrap on br
 
-        return baos.toString();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final Document xhtml = tidy.parseDOM(new ByteArrayInputStream(html.getBytes()), baos);
+
+        return stripScriptTags(xhtml, baos.toString());
     }
 
     /**
@@ -166,5 +178,44 @@ public class ExportPDFFilter implements Filter {
             // FIXME should we just return the original content?
             throw new IOException(e.getMessage());
         }
+    }
+
+    /**
+     * Strip <script> elements, because xml characters within these tags lead to
+     * invalid xhtml.
+     * 
+     * @param xhtml
+     *            xhtml as {@link Document}
+     * @param xhtmlText
+     *            string representation of the xhtml parameter
+     * @return
+     */
+    private String stripScriptTags(final Document xhtml, final String xhtmlText) {
+        final StringWriter sw = new StringWriter();
+        final String xslt =
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n" +
+                "<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">\n" +
+                "<xsl:template match=\"@*|node()\">\n" +
+                "  <xsl:copy>\n" +
+                "    <xsl:apply-templates select=\"@*|node()\"/>\n" +
+                "  </xsl:copy>\n" +
+                "</xsl:template>\n" +
+                "<xsl:template match=\"script\"/>\n" +
+                "</xsl:stylesheet>";
+        final Source xsltSource = new StreamSource(new StringReader(xslt));
+        try {
+            final Transformer transformer = TransformerFactory.newInstance().newTransformer(xsltSource);
+            transformer.transform(new DOMSource(xhtml), new StreamResult(sw));
+            return sw.toString();
+        } catch (final TransformerConfigurationException e) {
+            log.error("Internal: Wrong xslt configuration", e);
+        } catch (final TransformerFactoryConfigurationError e) {
+            log.error("Internal: Wrong xslt configuration", e);
+        } catch (final TransformerException e) {
+            log.error("Internal: Could not strip script tags from xhtml", e);
+            e.printStackTrace();
+        }
+        // fall through in error case: return untransformed xhtml
+        return xhtmlText;
     }
 }

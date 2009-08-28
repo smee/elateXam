@@ -27,12 +27,13 @@
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.4</version>
+	        <scope>provided</scope>   
         </dependency>
         <dependency>
             <groupId>javax.servlet.jsp</groupId>
             <artifactId>jsp-api</artifactId>
             <version>2.0</version>
-	  <scope>provided</scope>   
+	        <scope>provided</scope>   
         </dependency>
         <!-- taskmodel dependencies -->
         <dependency>
@@ -156,7 +157,8 @@
         <dependency>
         	<groupId>com.lowagie</groupId>
         	<artifactId>itext</artifactId>
-        	<version>2.1.5</version>
+        	<version>2.0.8</version>
+          <!-- must not use version > 2.0.8, itext has changed a method signature, leads to binary incompatibility :( -->
         </dependency>
     </dependencies>
    <build>

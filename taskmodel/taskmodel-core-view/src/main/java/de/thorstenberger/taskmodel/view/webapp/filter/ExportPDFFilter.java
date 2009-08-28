@@ -181,6 +181,13 @@ public class ExportPDFFilter implements Filter {
                 " <xsl:value-of select=\"./option[@selected='selected']\"/>" +
                 "</b>" +
                 "</xsl:template>\n" +
+                "<xsl:template match=\"input[@type='checkbox']\">\n" +
+                "  <b>" +
+                "  <xsl:choose>\n" +
+                "   <xsl:when test=\"@checked\">[X]</xsl:when>\n" +
+                "   <xsl:otherwise>[ ]</xsl:otherwise>\n</xsl:choose>" +
+                "  </b>" +
+                "</xsl:template>\n" +
                 "</xsl:stylesheet>";
         final Source xsltSource = new StreamSource(new StringReader(xslt));
         try {

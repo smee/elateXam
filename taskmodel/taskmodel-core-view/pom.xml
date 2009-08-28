@@ -153,6 +153,11 @@
         	<artifactId>jtidy</artifactId>
         	<version>4aug2000r7-dev</version>
         </dependency>
+        <dependency>
+        	<groupId>com.lowagie</groupId>
+        	<artifactId>itext</artifactId>
+        	<version>2.1.5</version>
+        </dependency>
     </dependencies>
    <build>
      <plugins>

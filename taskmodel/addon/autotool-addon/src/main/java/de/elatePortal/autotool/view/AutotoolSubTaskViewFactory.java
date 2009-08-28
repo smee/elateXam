@@ -15,22 +15,29 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ */
 package de.elatePortal.autotool.view;
 
 import de.elatePortal.autotool.SubTasklet_Autotool;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.AddOnSubTasklet;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 import de.thorstenberger.taskmodel.view.AddonSubTaskViewFactory;
 import de.thorstenberger.taskmodel.view.SubTaskView;
 
 public class AutotoolSubTaskViewFactory implements AddonSubTaskViewFactory {
 
-	public SubTaskView getSubTaskView(AddOnSubTasklet subTasklet) {
-		return new SubTaskView_Autotool((SubTasklet_Autotool) subTasklet);
-	}
+    public String getAddonTaskType() {
+        return "autotool";
+    }
 
-	public String getAddonTaskType() {
-		return "autotool";
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.thorstenberger.taskmodel.view.SubTaskViewFactory#getSubTaskView(de
+     * .thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet)
+     */
+    public SubTaskView getSubTaskView(final SubTasklet subTasklet) {
+        return new SubTaskView_Autotool((SubTasklet_Autotool) subTasklet);
+    }
 
 }

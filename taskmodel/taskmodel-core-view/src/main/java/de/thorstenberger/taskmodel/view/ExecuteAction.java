@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ */
 
 package de.thorstenberger.taskmodel.view;
 
@@ -35,6 +35,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 
 import de.thorstenberger.taskmodel.TaskApiException;
+import de.thorstenberger.taskmodel.TaskModelServices;
 import de.thorstenberger.taskmodel.TaskModelViewDelegate;
 import de.thorstenberger.taskmodel.TaskModelViewDelegateObject;
 import de.thorstenberger.taskmodel.complex.ComplexTasklet;
@@ -43,191 +44,191 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Try.ProgressInformation;
 
 /**
- *
+ * 
  * @author Thorsten Berger
- *
+ * 
  */
 public class ExecuteAction extends org.apache.struts.action.Action {
 
-	private Log log = LogFactory.getLog( ExecuteAction.class );
+    private final Log log = LogFactory.getLog(ExecuteAction.class);
 
-	// TODO Locale dependance
-	private NumberFormat nf = NumberFormat.getPercentInstance();
-
+    // TODO Locale dependance
+    private final NumberFormat nf = NumberFormat.getPercentInstance();
 
     public ExecuteAction() {
     }
 
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    @Override
+    public ActionForward execute(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            final HttpServletResponse response) throws Exception {
 
-	   ActionMessages msgs = new ActionMessages();
-	   ActionMessages errors = new ActionMessages();
+        final ActionMessages msgs = new ActionMessages();
+        final ActionMessages errors = new ActionMessages();
 
-		int page;
-		long id;
-		try {
-			id = Long.parseLong( request.getParameter( "id" ) );
-			page = Integer.parseInt( request.getParameter("page")==null ? "1" : request.getParameter("page") );
-		} catch (NumberFormatException e) {
-			errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "invalid.parameter" ) );
-			saveErrors( request, errors );
-			return mapping.findForward( "error" );
-		}
+        int page;
+        long id;
+        try {
+            id = Long.parseLong(request.getParameter("id"));
+            page = Integer.parseInt(request.getParameter("page") == null ? "1" : request.getParameter("page"));
+        } catch (final NumberFormatException e) {
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("invalid.parameter"));
+            saveErrors(request, errors);
+            return mapping.findForward("error");
+        }
 
-		TaskModelViewDelegateObject delegateObject = (TaskModelViewDelegateObject)TaskModelViewDelegate.getDelegateObject( request.getSession().getId(), id );
+        final TaskModelViewDelegateObject delegateObject = (TaskModelViewDelegateObject) TaskModelViewDelegate.getDelegateObject(
+                request.getSession().getId(), id);
 
-		if( delegateObject == null ){
-			errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "no.session" ) );
-			saveErrors( request, errors );
-			return mapping.findForward( "error" );
-		}
-		request.setAttribute( "ReturnURL", delegateObject.getReturnURL() );
+        if (delegateObject == null) {
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("no.session"));
+            saveErrors(request, errors);
+            return mapping.findForward("error");
+        }
+        request.setAttribute("ReturnURL", delegateObject.getReturnURL());
 
-		TaskDef_Complex taskDef;
-		try {
-			taskDef = (TaskDef_Complex) delegateObject.getTaskDef();
-		} catch (ClassCastException e2) {
-			errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "only.complexTasks.supported" ) );
-			saveErrors( request, errors );
-			return mapping.findForward( "error" );
-		} catch (TaskApiException e3) {
-			errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "misc.error", e3.getMessage() ) );
-			saveErrors( request, errors );
-			log.error( e3 );
-			return mapping.findForward( "error" );
-		}
+        TaskDef_Complex taskDef;
+        try {
+            taskDef = (TaskDef_Complex) delegateObject.getTaskDef();
+        } catch (final ClassCastException e2) {
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("only.complexTasks.supported"));
+            saveErrors(request, errors);
+            return mapping.findForward("error");
+        } catch (final TaskApiException e3) {
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("misc.error", e3.getMessage()));
+            saveErrors(request, errors);
+            log.error(e3);
+            return mapping.findForward("error");
+        }
 
-		ComplexTaskInfoVO ctivo = new ComplexTaskInfoVO();
+        final ComplexTaskInfoVO ctivo = new ComplexTaskInfoVO();
 
-		ctivo.setLogin( delegateObject.getLogin() );
-		ctivo.setUserName( delegateObject.getUserName() );
-		ctivo.setReturnURL( delegateObject.getReturnURL() );
+        ctivo.setLogin(delegateObject.getLogin());
+        ctivo.setUserName(delegateObject.getUserName());
+        ctivo.setReturnURL(delegateObject.getReturnURL());
 
-		ComplexTasklet ct;
+        ComplexTasklet ct;
 
-		try {
-			ct = (ComplexTasklet) delegateObject.getTasklet();
-		} catch (ClassCastException e1) {
-			errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "only.complexTasks.supported" ) );
-			saveErrors( request, errors );
-			return mapping.findForward( "error" );
-		} catch (TaskApiException e3) {
-			errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "misc.error", e3.getMessage() ) );
-			saveErrors( request, errors );
-			log.error( e3 );
-			return mapping.findForward( "error" );
-		}
+        try {
+            ct = (ComplexTasklet) delegateObject.getTasklet();
+        } catch (final ClassCastException e1) {
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("only.complexTasks.supported"));
+            saveErrors(request, errors);
+            return mapping.findForward("error");
+        } catch (final TaskApiException e3) {
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("misc.error", e3.getMessage()));
+            saveErrors(request, errors);
+            log.error(e3);
+            return mapping.findForward("error");
+        }
 
+        if (!taskDef.isActive()) {
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("task.inactive"));
+            saveErrors(request, errors);
+            return mapping.findForward("error");
+        }
 
-		if( !taskDef.isActive() ){
-			errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "task.inactive" ) );
-			saveErrors( request, errors );
-			return mapping.findForward( "error" );
-		}
+        final String todo = request.getParameter("todo");
 
+        try {
 
-		String todo = request.getParameter( "todo" );
+            if ("new".equals(todo)) { // new try
+                ct.startNewTry(Integer.parseInt(request.getParameter("try")));
+                // TODO logging
+                log.info("Student starts new try.");
 
-		try {
+            } else if ("continue".equals(todo)) { // continue try
+                ct.continueLastTry();
+                log.info("Student continues the try.");
 
-			if( "new".equals( todo ) ){		// new try
-				ct.startNewTry( Integer.parseInt( request.getParameter( "try" ) ) );
-				// TODO logging
-				log.info("Student starts new try.");
+            } else {
+                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("invalid.parameter"));
+                saveErrors(request, errors);
+                return mapping.findForward("error");
+            }
 
-			}else if( "continue".equals( todo ) ){	// continue try
-				ct.continueLastTry();
-				log.info("Student continues the try.");
+        } catch (final IllegalStateException e) {
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(e.getMessage()));
+            saveErrors(request, errors);
+            log.info(e);
+            return mapping.findForward("error");
+        } catch (final NumberFormatException e1) {
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("invalid.parameter"));
+            saveErrors(request, errors);
+            return mapping.findForward("error");
+        }
 
-			}else{
-				errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "invalid.parameter" ) );
-				saveErrors( request, errors );
-				return mapping.findForward( "error" );
-			}
+        populateVO(ctivo, taskDef, ct, page);
+        request.setAttribute("Task", ctivo);
 
+        // add the navigation menu
+        final NavigationRootNode nrn = new NavigationRootNode(ct, id, page);
+        request.setAttribute("rootNode", nrn);
+        final NavigationNodeFormatter nnf = new NavigationNodeFormatter(id, request.getContextPath()
+                + mapping.findForward("execute").getPath(), request, response);
+        request.setAttribute("nodeFormatter", nnf);
+        request.setAttribute("expanded", true);
 
-		} catch (IllegalStateException e) {
-			errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( e.getMessage() ) );
-			saveErrors( request, errors );
-			log.info( e );
-			return mapping.findForward( "error" );
-		} catch (NumberFormatException e1) {
-			errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "invalid.parameter" ) );
-			saveErrors( request, errors );
-			return mapping.findForward( "error" );
-		}
+        final HtmlViewContext context = new HtmlViewContext(request);
+        // add the subtasklets
+        final List<SubTasklet> subtasklets = ct.getActiveTry().getPage(page).getSubTasklets();
+        final List<SubTaskletInfoVO> stivos = new ArrayList<SubTaskletInfoVO>();
+        int i = 0;
+        for (final SubTasklet subTasklet : subtasklets) {
+            final SubTaskletInfoVO stivo = new SubTaskletInfoVO();
+            stivo.setHint(subTasklet.getHint());
+            stivo.setProblem(ParserUtil.getProblem(subTasklet.getProblem()));
+            stivo.setReachablePoints(subTasklet.getReachablePoints());
+            stivo.setVirtualSubTaskletNumber(subTasklet.getVirtualSubtaskNumber());
+            stivo.setRenderedHTML(TaskModelServices.getInstance().getSubTaskView(subTasklet).getRenderedHTML(context, i++));
+            stivo.setCorrected(subTasklet.isCorrected());
+            if (subTasklet.isCorrected()) {
+                stivo.setCorrectedHTML(TaskModelServices.getInstance().getSubTaskView(subTasklet).getCorrectedHTML(context, i));
+            }
+            stivo.setInteractiveFeedback(subTasklet.isInteractiveFeedback());
+            stivos.add(stivo);
+        }
+        request.setAttribute("SubTasklets", stivos);
 
-		populateVO( ctivo, taskDef, ct, page );
-		request.setAttribute( "Task", ctivo );
-
-		// add the navigation menu
-		NavigationRootNode nrn = new NavigationRootNode( ct, id, page );
-		request.setAttribute( "rootNode", nrn );
-		NavigationNodeFormatter nnf = new NavigationNodeFormatter( id, request.getContextPath() + mapping.findForward( "execute" ).getPath(), request, response );
-		request.setAttribute( "nodeFormatter", nnf );
-		request.setAttribute( "expanded", true );
-
-		HtmlViewContext context=new HtmlViewContext(request);
-		// add the subtasklets
-		List<SubTasklet> subtasklets = ct.getActiveTry().getPage( page ).getSubTasklets();
-		List<SubTaskletInfoVO> stivos = new ArrayList<SubTaskletInfoVO>();
-		int i = 0;
-		for( SubTasklet subTasklet : subtasklets ){
-			SubTaskletInfoVO stivo = new SubTaskletInfoVO();
-			stivo.setHint( subTasklet.getHint() );
-			stivo.setProblem( ParserUtil.getProblem( subTasklet.getProblem() ) );
-			stivo.setReachablePoints( subTasklet.getReachablePoints() );
-			stivo.setVirtualSubTaskletNumber( subTasklet.getVirtualSubtaskNumber() );
-			stivo.setRenderedHTML( SubTaskViewFactory.getSubTaskView( subTasklet ).getRenderedHTML( context, i++ ) );
-			stivo.setCorrected( subTasklet.isCorrected() );
-			if(subTasklet.isCorrected())
-				stivo.setCorrectedHTML( SubTaskViewFactory.getSubTaskView(subTasklet).getCorrectedHTML(context, i));
-			stivo.setInteractiveFeedback( subTasklet.isInteractiveFeedback() );
-			stivos.add( stivo );
-		}
-		request.setAttribute( "SubTasklets", stivos );
-
-
-    	return mapping.findForward( "success" );
-
-    }
-
-
-    private void populateVO( ComplexTaskInfoVO ctivo, TaskDef_Complex ctd, ComplexTasklet ct, int page ){
-
-    	ctivo.setTitle( ctd.getTitle() );
-    	ctivo.setTaskId( ctd.getId() );
-
-		if( ct.getComplexTaskDefRoot().hasTimeRestriction() ){
-			long deadline = ct.getActiveTry().getStartTime() +
-								ct.getComplexTaskDefRoot().getTimeInMinutesWithoutKindnessExtensionTime() * 60 * 1000;
-			ctivo.setRemainingTimeMillis( deadline - System.currentTimeMillis() );
-		}else
-			ctivo.setRemainingTimeMillis( -1 );
-
-		ctivo.setTimeRestricted( ct.getComplexTaskDefRoot().hasTimeRestriction() );
-		ProgressInformation pi = ct.getActiveTry().getProgressInformation();
-		ctivo.setEverythingProcessed( pi.getProgressPercentage() == 1 );
-
-		ctivo.setPage( page );
-		ctivo.setNumOfPages( ct.getActiveTry().getNumberOfPages() );
-		ctivo.setActualTry( ct.getComplexTaskHandlingRoot().getNumberOfTries() );
-		ctivo.setNumOfTries( ctd.getComplexTaskDefRoot().getTries() );
-		ctivo.setTryStartTime( DateUtil.getStringFromMillis( ct.getActiveTry().getStartTime() ) );
-		ctivo.setProcessPercentage( nf.format( pi.getProgressPercentage() ) );
-		ctivo.setNumOfSubtasklets( pi.getNumOfSubtasklets() );
-		ctivo.setNumOfProcessedSubtasklets( pi.getNumOfProcessedSubtasklets() );
-
-		if( ct.getComplexTaskDefRoot().hasTimeRestriction() )
-			ctivo.setDeadline( DateUtil.getStringFromMillis(
-					ct.getActiveTry().getStartTime() + ct.getComplexTaskDefRoot().getTimeInMinutesWithoutKindnessExtensionTime() * 60 * 1000 ) );
-		else
-			ctivo.setDeadline( "-" );
-
-		ctivo.setHashCode( "" + ct.getActiveTry().getPage( page ).getHash() );
-
+        return mapping.findForward("success");
 
     }
 
+    private void populateVO(final ComplexTaskInfoVO ctivo, final TaskDef_Complex ctd, final ComplexTasklet ct, final int page) {
+
+        ctivo.setTitle(ctd.getTitle());
+        ctivo.setTaskId(ctd.getId());
+
+        if (ct.getComplexTaskDefRoot().hasTimeRestriction()) {
+            final long deadline = ct.getActiveTry().getStartTime() +
+                    ct.getComplexTaskDefRoot().getTimeInMinutesWithoutKindnessExtensionTime() * 60 * 1000;
+            ctivo.setRemainingTimeMillis(deadline - System.currentTimeMillis());
+        } else {
+            ctivo.setRemainingTimeMillis(-1);
+        }
+
+        ctivo.setTimeRestricted(ct.getComplexTaskDefRoot().hasTimeRestriction());
+        final ProgressInformation pi = ct.getActiveTry().getProgressInformation();
+        ctivo.setEverythingProcessed(pi.getProgressPercentage() == 1);
+
+        ctivo.setPage(page);
+        ctivo.setNumOfPages(ct.getActiveTry().getNumberOfPages());
+        ctivo.setActualTry(ct.getComplexTaskHandlingRoot().getNumberOfTries());
+        ctivo.setNumOfTries(ctd.getComplexTaskDefRoot().getTries());
+        ctivo.setTryStartTime(DateUtil.getStringFromMillis(ct.getActiveTry().getStartTime()));
+        ctivo.setProcessPercentage(nf.format(pi.getProgressPercentage()));
+        ctivo.setNumOfSubtasklets(pi.getNumOfSubtasklets());
+        ctivo.setNumOfProcessedSubtasklets(pi.getNumOfProcessedSubtasklets());
+
+        if (ct.getComplexTaskDefRoot().hasTimeRestriction()) {
+            ctivo.setDeadline(DateUtil.getStringFromMillis(
+                    ct.getActiveTry().getStartTime() + ct.getComplexTaskDefRoot().getTimeInMinutesWithoutKindnessExtensionTime()
+                    * 60 * 1000));
+        } else {
+            ctivo.setDeadline("-");
+        }
+
+        ctivo.setHashCode("" + ct.getActiveTry().getPage(page).getHash());
+
+    }
 
 }

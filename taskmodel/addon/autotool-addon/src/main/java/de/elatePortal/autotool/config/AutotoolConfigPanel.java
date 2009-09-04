@@ -20,6 +20,8 @@ package de.elatePortal.autotool.config;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -36,6 +38,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
@@ -163,7 +166,12 @@ public class AutotoolConfigPanel extends JPanel {
             jGenerateXmlButton.setText("Print XML");
             jGenerateXmlButton.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(final java.awt.event.ActionEvent e) {
-                    System.out.println(generateXML());
+                    final String xmlSnippet = generateXML();
+                    System.out.println(xmlSnippet);
+                    JOptionPane.showMessageDialog(AutotoolConfigPanel.this, xmlSnippet, "Copied to clipboard:",
+                            JOptionPane.PLAIN_MESSAGE);
+                    final StringSelection text = new StringSelection(xmlSnippet);
+                    Toolkit.getDefaultToolkit().getSystemClipboard().setContents(text, text);
                 }
             });
         }
@@ -233,16 +241,16 @@ public class AutotoolConfigPanel extends JPanel {
                                     return AutotoolConfigPanel.this.getConfigString();
                                     }
 
-                                    public String getDocumentation() {
+                                public String getDocumentation() {
                                     return "";
                                     }
 
-                                    public String getTaskType() {
+                                public String getTaskType() {
                                     return currentTaskType;
                                     }
 
-                                    public void setConfigString(final String arg0) {
-                                }
+                                public void setConfigString(final String arg0) {
+                                    }
                                                                 });
                             getJSignatureTF().setText(satc.getSignature());
                             getJGenerateXmlButton().setEnabled(true);
@@ -260,7 +268,7 @@ public class AutotoolConfigPanel extends JPanel {
                     handleChange();
                     }
 
-                    private void handleChange() {
+                private void handleChange() {
                     jVerifyButton.setEnabled(true);
                     jSignatureTF.setText("");
                     getJGenerateXmlButton().setEnabled(false);
@@ -270,7 +278,7 @@ public class AutotoolConfigPanel extends JPanel {
                     handleChange();
                     }
 
-                    public void removeUpdate(final DocumentEvent e) {
+                public void removeUpdate(final DocumentEvent e) {
                     handleChange();
                     }
                                 });
@@ -282,6 +290,7 @@ public class AutotoolConfigPanel extends JPanel {
                     }
 
             });
+            // ask autotool for task types automatically on gui creation
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     getRefreshButton().doClick();

@@ -157,6 +157,8 @@ public class ExportPDFFilter implements Filter {
      * support real PDF forms in the future), so we need to replace select boxes
      * with simple strings: Replace each select box with a bold string
      * containing the selected option.</li>
+     * <li>Replace every input checkbox with [ ] for unchecked or [X] for
+     * checked inputs.</li>
      * </ul>
      * 
      * @param xhtml

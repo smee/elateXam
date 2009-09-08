@@ -24,7 +24,10 @@ package de.thorstenberger.taskmodel.complex.complextaskdef;
 import java.util.List;
 import java.util.Map;
 
+import de.thorstenberger.taskmodel.complex.complextaskhandling.Try;
+
 /**
+ * This class is the complete task definition. Upon creating a new {@link Try} for a user, he get's a randomly choosen selection of {@link SubTaskDef} to process (@see )
  * @author Thorsten Berger
  *
  */

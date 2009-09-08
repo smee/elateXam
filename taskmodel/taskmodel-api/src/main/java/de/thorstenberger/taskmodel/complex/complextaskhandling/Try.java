@@ -24,10 +24,13 @@ package de.thorstenberger.taskmodel.complex.complextaskhandling;
 import java.util.List;
 
 import de.thorstenberger.taskmodel.TaskApiException;
+import de.thorstenberger.taskmodel.complex.ComplexTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Category;
+import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
 import de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef;
 
 /**
+ * Each {@link ComplexTasklet} might get processed by a user several times (according to the value of {@link ComplexTaskDefRoot#getTries()}). Each attempt is a {@link Try}.
  * @author Thorsten Berger
  *
  */
@@ -52,6 +55,9 @@ public interface Try {
 	
 	public SubTasklet lookupSubTasklet( SubTaskDef subTaskDef );
 	
+	/**
+	 * Informations about the processing state. If the user gave an answer, a {@link SubTasklet} is marked as processed (@see {@link SubTasklet#isProcessed()}.
+	 */
 	public static interface ProgressInformation{
 		
 		public int getNumOfSubtasklets();

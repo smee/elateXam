@@ -27,10 +27,12 @@ import de.thorstenberger.taskmodel.Tasklet;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.ComplexTaskHandlingRoot;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 
 /**
+ * A complex tasklet is a composite tasklet. It contains several {@link SubTasklet}s distributed on {@link Page}s.
  * @author Thorsten Berger
  *
  */

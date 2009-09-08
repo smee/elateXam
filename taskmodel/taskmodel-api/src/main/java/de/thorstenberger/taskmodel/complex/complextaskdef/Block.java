@@ -24,6 +24,7 @@ package de.thorstenberger.taskmodel.complex.complextaskdef;
 import java.util.List;
 
 /**
+ * Each block has {@link SubTaskDef}s and {@link Choice}s. The algorithm that creates the 
  * @author Thorsten Berger
  *
  */

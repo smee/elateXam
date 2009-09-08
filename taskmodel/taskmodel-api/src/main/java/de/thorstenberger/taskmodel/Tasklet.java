@@ -25,18 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
- *
- * The tasklet lifecycle is determined by its status:
- *
- * INITIALIZED: tasklet new instantiated and nothing done yet, student can start the tasklet
- * INPROGRESS: solving the tasklet is in progress
- * SOLVED: tasklet solved, no more progress
- * CORRECTING: a corrector or the system is currently correcting the tasklet, corrector may also annotate the student's solution
- * CORRECTED: the complete tasklet has been corrected, student may also annotate the corrector's marking
- * ANNOTATED: student annotated the corrector's marking
- * ANNOTATION_ACKNOWLEDGED: corrector acknowledged the student's annotation and possibly adjusted the marking
- *
+ * A tasklet resembles a {@link TaskDef} instance that a user is currently working on.
  *
  * @author Thorsten Berger
  *
@@ -44,6 +33,18 @@ import java.util.Map;
 public interface Tasklet {
 
 
+	/**
+	 * The tasklet lifecycle is determined by its status:
+	 *
+	 * INITIALIZED: tasklet new instantiated and nothing done yet, student can start the tasklet
+	 * INPROGRESS: solving the tasklet is in progress
+	 * SOLVED: tasklet solved, no more progress
+	 * CORRECTING: a corrector or the system is currently correcting the tasklet, corrector may also annotate the student's solution
+	 * CORRECTED: the complete tasklet has been corrected, student may also annotate the corrector's marking
+	 * ANNOTATED: student annotated the corrector's marking
+	 * ANNOTATION_ACKNOWLEDGED: corrector acknowledged the student's annotation and possibly adjusted the marking
+	 *
+	 */
 	public enum Status{
 
 		INITIALIZED( 0, "initialized" ),

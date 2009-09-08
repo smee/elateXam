@@ -28,7 +28,7 @@ import de.thorstenberger.taskmodel.TaskManager.UserAttribute;
 
 /**
  *
- * TaskFactory is responsible for retrieving and saving TaskDefs and Tasklets depending on a
+ * TaskFactory is responsible for retrieving and saving {@link TaskDef}s and {@link Tasklet}s depending on a
  * specific server and database implementation.
  *
  * @author Thorsten Berger

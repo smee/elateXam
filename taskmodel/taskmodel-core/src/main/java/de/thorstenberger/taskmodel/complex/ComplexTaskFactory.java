@@ -30,6 +30,7 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.Try;
 import de.thorstenberger.taskmodel.complex.jaxb.TaskBlockType;
 
 /**
+ * Instantiate model implementation classes from the jaxb persistence classes.
  * @author Thorsten Berger
  *
  */

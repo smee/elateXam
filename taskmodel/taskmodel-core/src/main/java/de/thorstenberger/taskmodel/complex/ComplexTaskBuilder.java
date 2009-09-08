@@ -30,6 +30,8 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Try;
 
 /**
+ * Create a customized subset of {@link SubTasklet}s from {@link ComplexTaskDefRoot} for each user and {@link Try}. The algorithm
+ * is implementation specific but gets driven by the configuration of {@link Category} and {@link Block}.
  * @author Thorsten Berger
  *
  */

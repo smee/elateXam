@@ -208,6 +208,10 @@ public class ExportPDFFilter implements Filter {
      * @return
      */
     private String readFile(final InputStream in) {
+        if (in == null) {
+            return NOOP_XSLT;
+        }
+
         final StringBuilder sb = new StringBuilder();
         final BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String line = null;

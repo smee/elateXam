@@ -22,6 +22,8 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -62,6 +64,18 @@ import com.lowagie.text.DocumentException;
  */
 public class ExportPDFFilter implements Filter {
     public static final String EXPORTFILENAME = "exportToPdf";
+    /**
+     * Default xslt that doesn't change anything.
+     */
+    private static final String NOOP_XSLT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">\n" +
+            "<!-- per default copy everything -->\n" +
+            "  <xsl:template match=\"@*|node()\">\n" +
+            "    <xsl:copy>\n" +
+            "      <xsl:apply-templates select=\"@*|node()\" />\n" +
+            "    </xsl:copy>\n" +
+            "  </xsl:template>\n" +
+            "</xsl:stylesheet>";
     /**
      * Logger.
      */
@@ -169,28 +183,7 @@ public class ExportPDFFilter implements Filter {
      */
     private String processDocument(final Document xhtml, final String xhtmlText) {
         final StringWriter sw = new StringWriter();
-        final String xslt =
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n" +
-                "<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">\n" +
-                "<xsl:template match=\"@*|node()\">\n" +
-                "  <xsl:copy>\n" +
-                "    <xsl:apply-templates select=\"@*|node()\"/>\n" +
-                "  </xsl:copy>\n" +
-                "</xsl:template>\n" +
-                "<xsl:template match=\"script\"/>\n" +
-                "<xsl:template match=\"select\">\n" +
-                "  <b>" +
-                " <xsl:value-of select=\"./option[@selected='selected']\"/>" +
-                "</b>" +
-                "</xsl:template>\n" +
-                "<xsl:template match=\"input[@type='checkbox']\">\n" +
-                "  <b>" +
-                "  <xsl:choose>\n" +
-                "   <xsl:when test=\"@checked\">[X]</xsl:when>\n" +
-                "   <xsl:otherwise>[ ]</xsl:otherwise>\n</xsl:choose>" +
-                "  </b>" +
-                "</xsl:template>\n" +
-                "</xsl:stylesheet>";
+        final String xslt = readFile(this.getClass().getResourceAsStream("adjustforpdfoutput.xslt"));
         final Source xsltSource = new StreamSource(new StringReader(xslt));
         try {
             final Transformer transformer = TransformerFactory.newInstance().newTransformer(xsltSource);
@@ -206,6 +199,27 @@ public class ExportPDFFilter implements Filter {
         }
         // fall through in error case: return untransformed xhtml
         return xhtmlText;
+    }
+
+    /**
+     * Read filecontents from the given stream.
+     * 
+     * @param resourceAsStream
+     * @return
+     */
+    private String readFile(final InputStream in) {
+        final StringBuilder sb = new StringBuilder();
+        final BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        String line = null;
+        try {
+            while ((line = br.readLine()) != null) {
+                sb.append(line).append('\n');
+            }
+        } catch (final IOException e) {
+            log.warn("Couldn't load xslt from classpath, can not transform xhtml!", e);
+            return NOOP_XSLT;
+        }
+        return sb.toString();
     }
 
     /**

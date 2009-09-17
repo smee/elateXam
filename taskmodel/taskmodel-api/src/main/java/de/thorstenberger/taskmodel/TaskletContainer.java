@@ -24,6 +24,8 @@ package de.thorstenberger.taskmodel;
 import java.util.List;
 
 /**
+ * A tasklet container manages the lifecycle of tasklets. It is exclusively responsible for creation, 
+ * updating and storage of tasklets.
  * @author Thorsten Berger
  *
  */
@@ -51,6 +53,12 @@ public interface TaskletContainer {
     public void reset();
     
     
+	/**
+	 * Store 
+	 * @param msg
+	 * @param tasklet
+	 * @param ip
+	 */
 	public void logPostData( String msg, Tasklet tasklet, String ip );
 
 	public void logPostData( String msg, Throwable throwable, Tasklet tasklet, String ip );

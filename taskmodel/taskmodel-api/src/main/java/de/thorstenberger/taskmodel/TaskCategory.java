@@ -24,17 +24,34 @@ package de.thorstenberger.taskmodel;
 import java.util.List;
 
 /**
+ * Arbitrary categorization of {@link TaskDef}s within a hostsystem. The matching of category and taskdef depends
+ * on the semantic contents of each.
  * @author Thorsten Berger
  *
  */
 public interface TaskCategory {
 
+	/**
+	 * Unique id within the host system.
+	 * @return
+	 */
 	public long getId();
 
+	/**
+	 * Name of this categoy.
+	 * @return
+	 */
 	public String getName();
 
+	/**
+	 * @param name
+	 */
 	public void setName(String name);
 
+	/**
+	 * Get all task definitions of this category.
+	 * @return
+	 */
 	public List<TaskDef> getTaskDefs();
 
 }

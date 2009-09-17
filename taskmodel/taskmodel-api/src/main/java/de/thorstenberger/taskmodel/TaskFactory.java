@@ -28,9 +28,10 @@ import de.thorstenberger.taskmodel.TaskManager.UserAttribute;
 
 /**
  *
- * TaskFactory is responsible for retrieving and saving {@link TaskDef}s and {@link Tasklet}s depending on a
+ * TaskFactory is responsible for retrieving and saving {@link TaskDef}s and {@link Tasklet}s depending on the
  * specific server and database implementation.
- *
+ * 
+ * This is the main integration point for external taskmodel hosts.
  * @author Thorsten Berger
  *
  */
@@ -42,6 +43,11 @@ public interface TaskFactory {
 	 */
 	public List<String> availableTypes();
 
+	/**
+	 * Get the corresponding task category.
+	 * @param id
+	 * @return
+	 */
 	public TaskCategory getCategory(long id);
 
 	public List<TaskCategory> getCategories();
@@ -64,7 +70,7 @@ public interface TaskFactory {
 
 	public void deleteTaskDef(long id) throws MethodNotSupportedException;
 	/**
-	 *
+	 * Get a persisted {@link Tasklet} from the host system. If there is none for this user and task, return null.
 	 * @param userId
 	 * @param taskId
 	 * @return the instantiated tasklet or null if not existant

@@ -328,7 +328,7 @@
     <dependency>
       <groupId>com.lowagie</groupId>
       <artifactId>itext</artifactId>
-      <version>1.4</version>
+      <version>2.1.5</version>
     </dependency>
     <dependency>
       <groupId>oro</groupId>
@@ -368,7 +368,7 @@
     <dependency>
       <groupId>opensymphony</groupId>
       <artifactId>sitemesh</artifactId>
-      <version>2.2.1</version>
+      <version>2.4.1</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>

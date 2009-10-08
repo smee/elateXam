@@ -57,8 +57,7 @@ import org.xml.sax.InputSource;
 import com.lowagie.text.DocumentException;
 
 /**
- * Adjusted from org.displaytag.filter.ResponseOverrideFilter. ServletFilter
- * that captures html, converts it to pdf.
+ * Adjusted from org.displaytag.filter.ResponseOverrideFilter. ServletFilter that captures html, converts it to pdf.
  * 
  * @author sdienst
  */
@@ -79,7 +78,7 @@ public class ExportPDFFilter implements Filter {
     /**
      * Logger.
      */
-    private Log log;
+    private static final Log log = LogFactory.getLog(ExportPDFFilter.class);;
 
     /**
      * {@inheritDoc}
@@ -141,7 +140,6 @@ public class ExportPDFFilter implements Filter {
      * {@inheritDoc}
      */
     public void init(final FilterConfig filterConfig) {
-        log = LogFactory.getLog(ExportPDFFilter.class);
         final String bufferParam = filterConfig.getInitParameter("buffer");
         if (log.isDebugEnabled()) {
             log.debug("bufferParam=" + bufferParam);
@@ -165,14 +163,11 @@ public class ExportPDFFilter implements Filter {
 
     /**
      * <ul>
-     * <li>Strip &lt;script&gt; elements, because xml characters within these
-     * tags lead to invalid xhtml.</li>
-     * <li>Xhtmlrenderer does not render form elements right (will probably
-     * support real PDF forms in the future), so we need to replace select boxes
-     * with simple strings: Replace each select box with a bold string
-     * containing the selected option.</li>
-     * <li>Replace every input checkbox with [ ] for unchecked or [X] for
-     * checked inputs.</li>
+     * <li>Strip &lt;script&gt; elements, because xml characters within these tags lead to invalid xhtml.</li>
+     * <li>Xhtmlrenderer does not render form elements right (will probably support real PDF forms in the future), so we
+     * need to replace select boxes with simple strings: Replace each select box with a bold string containing the
+     * selected option.</li>
+     * <li>Replace every input checkbox with [ ] for unchecked or [X] for checked inputs.</li>
      * </ul>
      * 
      * @param xhtml
@@ -227,8 +222,7 @@ public class ExportPDFFilter implements Filter {
     }
 
     /**
-     * Render the given xhtml document as pdf and write it to the response
-     * outputstream.
+     * Render the given xhtml document as pdf and write it to the response outputstream.
      * 
      * @param dom
      *            xhtml document
@@ -244,7 +238,7 @@ public class ExportPDFFilter implements Filter {
         renderer.layout();
 
         response.setContentType("application/pdf");
-        // set a appropriate filename
+        // set an appropriate filename
         ((HttpServletResponse) response).setHeader("Content-Disposition", "attachment; filename="
                 + request.getParameter(EXPORTFILENAME));
 

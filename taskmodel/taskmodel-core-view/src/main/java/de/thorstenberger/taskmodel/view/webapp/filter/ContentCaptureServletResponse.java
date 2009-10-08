@@ -21,7 +21,11 @@ package de.thorstenberger.taskmodel.view.webapp.filter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
@@ -43,6 +47,17 @@ public class ContentCaptureServletResponse extends HttpServletResponseWrapper {
         super(resp);
     }
 
+
+    /**
+     * @return
+     */
+    public byte[] getBinaryContent() {
+        if (writer != null) {
+            writer.flush();
+        }
+        return buffer.toByteArray();
+    }
+
     /**
      * @return
      */
@@ -52,6 +67,25 @@ public class ContentCaptureServletResponse extends HttpServletResponseWrapper {
         }
         // Flying saucer doesn't like thead or tbody, so let's just strip them
         return new String(buffer.toByteArray()).replaceAll("<thead>|</thead>|<tbody>|</tbody>", "");
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.servlet.ServletResponseWrapper#getOutputStream()
+     */
+    @Override
+    public ServletOutputStream getOutputStream() throws IOException {
+        if (buffer == null) {
+            buffer = new ByteArrayOutputStream();
+        }
+        return new ServletOutputStream() {
+
+            @Override
+            public void write(final int b) throws IOException {
+                buffer.write(b);
+            }
+        };
     }
 
     /*

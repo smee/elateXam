@@ -18,4 +18,7 @@
 		<display:column property="type" title="Typ&nbsp;&nbsp;&nbsp;" sortable="true"/>
 		<display:column property="shortDescription" title="Kurzbeschreibung&nbsp;&nbsp;&nbsp;" sortable="true"/>
 		<display:column property="numberOfOpenCorrections" title="Anzahl unkorrigierter Pr&uuml;fungen&nbsp;&nbsp;" sortable="true"/>
+		<display:column title="Archiv" sortable="true">
+			<html:link action="/BulkPdfExport" paramId="taskId" paramName="row" paramProperty="id">Alle PDFs</html:link>
+		</display:column>
 	</display:table>

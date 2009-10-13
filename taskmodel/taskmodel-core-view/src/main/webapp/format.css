@@ -60,12 +60,12 @@ a.MenuLink:hover {  font-family: Arial, Helvetica, sans-serif; font-size: 12px; 
 
 
 
-/* jetzt ein paar Definitionen für den TreeIncludeService */
+/* jetzt ein paar Definitionen fï¿½r den TreeIncludeService */
 
 /*--------------------------------------------------|
 | dTree 2.05 | www.destroydrop.com/javascript/tree/ |
 |---------------------------------------------------|
-| Copyright (c) 2002-2003 Geir Landrö               |
+| Copyright (c) 2002-2003 Geir Landrï¿½               |
 |--------------------------------------------------*/
 
 .dtree {
@@ -73,6 +73,8 @@ a.MenuLink:hover {  font-family: Arial, Helvetica, sans-serif; font-size: 12px; 
 	font-size: 11px;
 	color: #666;
 	white-space: nowrap;
+	overflow: auto;
+	max-width: 200px;
 }
 .dtree img {
 	border: 0px;
@@ -94,7 +96,9 @@ a.MenuLink:hover {  font-family: Arial, Helvetica, sans-serif; font-size: 12px; 
 	background-color: #c0d2ec;
 }
 .dtree .clip {
+	/*
 	overflow: hidden;
+	*/
 }
 
 .complexTaskNav {  border: dashed; border-width: 1px 0px 0px; border-color: #CCCCCC #EEEEEE}

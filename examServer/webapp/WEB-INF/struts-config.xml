@@ -45,6 +45,7 @@
   <forward name="selectFile" path="/selectFile.html"/>
   <!--forward name="loginConfig" path="/loginConfig.html"/-->
   <forward name="logout" path="/logout.jsp"/>
+  <forward name="error" path="/error.jsp"/>
  </global-forwards>
  <!-- ========== Action Mapping Definitions =================================== -->
  <action-mappings>

@@ -18,17 +18,24 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.examServer.webapp.action;
 
-import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.management.AttributeNotFoundException;
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanException;
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectInstance;
+import javax.management.ObjectName;
+import javax.management.ReflectionException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.struts.action.ActionForm;
@@ -82,7 +89,7 @@ public class PDFBulkExport extends BaseAction {
         }
         // we only know how to handle complextasks yet
         if (td.getType().equals(TaskContants.TYPE_COMPLEX)) {
-        // show an error message if tomcat isn't configured appropriately
+            // show an error message if tomcat isn't configured appropriately
             if (!isAvailableWithoutCertificate(request)) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("invalid.serverconfig"));
                 saveErrors(request, errors);
@@ -169,21 +176,35 @@ public class PDFBulkExport extends BaseAction {
     }
 
     private String getServerUrl(final HttpServletRequest request) {
-        // final StringBuilder url = new StringBuilder();
-        //
-        // final String scheme = request.getScheme();
-        // final int port = request.getServerPort();
-        //
-        // url.append(scheme).append("://");
-        // url.append(request.getServerName());
-        // // append port only if necessary
-        // if ((scheme.equals("http") && port != 80) || (scheme.equals("https") && port != 443)) {
-        // url.append(':');
-        // url.append(request.getServerPort());
-        // }
-        // return url.toString();
-        // FIXME don't use hardcoded port...
-        return "http://localhost:8080";
+        // use jmx, query catalina mbean to find non ssl connectors (-Dcom.sun.management.jmxremote)
+        // FIXME tomcat specific code
+        final MBeanServer beanServer = ManagementFactory.getPlatformMBeanServer();
+        try {
+            for (final Object mbean : beanServer.queryMBeans(new ObjectName("*:type=Connector,*"), null)) {
+                final ObjectInstance oi = (ObjectInstance) mbean;
+                final Boolean isSecure = (Boolean) beanServer.getAttribute(oi.getObjectName(), "secure");
+                final String protocol = (String) beanServer.getAttribute(oi.getObjectName(), "protocol");
+                final int port = (Integer) beanServer.getAttribute(oi.getObjectName(), "port");
+                if (!isSecure && protocol.startsWith("HTTP")) {
+                    log.debug(String.format("Using unsecured tomcat connector at port %d", port));
+                    return "http://localhost:" + port;
+                }
+            }
+            System.out.println("==================");
+        } catch (final MalformedObjectNameException e) {
+            log.warn("Could not access JMX mbeans.", e);
+        } catch (final NullPointerException e) {
+            log.warn("Could not access JMX mbeans.", e);
+        } catch (final AttributeNotFoundException e) {
+            log.warn("Could not access JMX mbeans.", e);
+        } catch (final InstanceNotFoundException e) {
+            log.warn("Could not access JMX mbeans.", e);
+        } catch (final MBeanException e) {
+            log.warn("Could not access JMX mbeans.", e);
+        } catch (final ReflectionException e) {
+            log.warn("Could not access JMX mbeans.", e);
+        }
+        return null;
     }
 
     /**
@@ -194,17 +215,6 @@ public class PDFBulkExport extends BaseAction {
      * @return
      */
     private boolean isAvailableWithoutCertificate(final HttpServletRequest request) {
-        final HttpClient http = new HttpClient();
-        final HttpMethod getMethod = new GetMethod(getServerUrl(request) + "/taskmodel-core-view/showSolution.do");
-        try {
-            http.executeMethod(getMethod);
-        } catch (final HttpException e) {
-            log.warn("Tomcat not configured for accessing contents locally without certificates!", e);
-            return false;
-        } catch (final IOException e) {
-            log.warn("Tomcat not configured for accessing contents locally without certificates!", e);
-            return false;
-        }
-        return true;
+        return getServerUrl(request) != null;
     }
 }

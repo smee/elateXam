@@ -18,6 +18,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.examServer.webapp.action;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -111,44 +113,11 @@ public class PDFBulkExport extends BaseAction {
             // write headers, start streaming to the client
             response.flushBuffer();
 
-            // create zip with all generated pdfs
-            final ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
-            // initialize web crawler
-            final HttpClient http = new HttpClient();
-            // use http GET request
-            final HttpMethod getPdfMethod = new GetMethod(getServerUrl(request) + "/taskmodel-core-view/showSolution.do");
-            // reuse our current session to make sure the view is able to receive our taskdef
-            getPdfMethod.setRequestHeader("Cookie", "JSESSIONID=" + getJSessionId(request.getCookies()));
-            // fetch pdf for every user/tasklet
+            // get all tasklets for the given taskdef
             final List<Tasklet> tasklets = tm.getTaskletContainer().getTasklets(taskId);
             log.info(String.format("Exporting %d pdfs for taskdef \"%s\"", tasklets.size(), ctd.getTitle()));
-            // render a pdf for every user that has a tasklet for the current task
-            for (final Tasklet tasklet : tasklets) {
-                final String userId = tasklet.getUserId();
-                log.trace("exporting pdf for " + userId);
 
-                // set delegate object
-                final User user = userManager.getUserByUsername(userId);
-                final TaskModelViewDelegateObject delegateObject = new TaskModelViewDelegateObjectImpl(taskId,
-                        tm,
-                        userId, user.getFirstName() + " " + user.getLastName(), "");
-                final String sessionId = request.getSession().getId();
-                TaskModelViewDelegate.storeDelegateObject(sessionId, taskId, delegateObject);
-                // add new zipentry (for next pdf)
-                final String filename = userId + ".pdf";
-                final ZipEntry ze = new ZipEntry(filename);
-                zos.putNextEntry(ze);
-                // fetch the generated pdf from taskmodel-core-view
-                // set request parameters
-                // TODO use client certificate, if there is any
-                getPdfMethod.setQueryString(String.format("id=%d&exportToPdf=%s", taskId, filename));
-                http.executeMethod(getPdfMethod);
-                zos.write(getPdfMethod.getResponseBody());
-                getPdfMethod.releaseConnection();
-                zos.closeEntry();
-            }
-            zos.close();
-
+            renderAllPdfs(tasklets, response.getOutputStream(), request, taskId, userManager, tm);
             return null;
         } else {
 
@@ -216,5 +185,60 @@ public class PDFBulkExport extends BaseAction {
      */
     private boolean isAvailableWithoutCertificate(final HttpServletRequest request) {
         return getServerUrl(request) != null;
+    }
+
+    /**
+     * Call the taskmodel-core-view application via http for every user, that has processed the given task. Streams a
+     * zip archive with all rendered pdf files to <code>os</code>.
+     * 
+     * @param tasklets
+     *            all tasklets to render
+     * @param os
+     *            the outputstream the zip shall be written to
+     * @param request
+     *            http request
+     * @param taskId
+     *            the id of the taskdef
+     * @param userManager
+     * @param tm
+     * @throws IOException
+     */
+    private void renderAllPdfs(final List<Tasklet> tasklets, final OutputStream os, final HttpServletRequest request, final long taskId, final UserManager userManager, final TaskManager tm) throws IOException {
+        // create zip with all generated pdfs
+        final ZipOutputStream zos = new ZipOutputStream(os);
+        // initialize web crawler
+        final HttpClient http = new HttpClient();
+        // use http GET request
+        final HttpMethod getPdfMethod = new GetMethod(getServerUrl(request) + "/taskmodel-core-view/showSolution.do");
+        // reuse our current session to make sure the view is able to receive our taskdef
+        getPdfMethod.setRequestHeader("Cookie", "JSESSIONID=" + getJSessionId(request.getCookies()));
+        // fetch pdf for every user/tasklet
+
+        // render a pdf for every user that has a tasklet for the current task
+        for (final Tasklet tasklet : tasklets) {
+            final String userId = tasklet.getUserId();
+            log.trace("exporting pdf for " + userId);
+
+            // set delegate object
+            final User user = userManager.getUserByUsername(userId);
+            final TaskModelViewDelegateObject delegateObject = new TaskModelViewDelegateObjectImpl(taskId,
+                    tm, userId, user.getFirstName() + " " + user.getLastName(), "");
+
+            final String sessionId = request.getSession().getId();
+            TaskModelViewDelegate.storeDelegateObject(sessionId, taskId, delegateObject);
+
+            // add new zipentry (for next pdf)
+            final String filename = userId + ".pdf";
+            final ZipEntry ze = new ZipEntry(filename);
+            zos.putNextEntry(ze);
+            // fetch the generated pdf from taskmodel-core-view
+            // set request parameters
+            getPdfMethod.setQueryString(String.format("id=%d&exportToPdf=%s", taskId, filename));
+            http.executeMethod(getPdfMethod);
+            zos.write(getPdfMethod.getResponseBody());
+            getPdfMethod.releaseConnection();
+            zos.closeEntry();
+        }
+        zos.close();
     }
 }

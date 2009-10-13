@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.examServer.webapp.action;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.struts.action.ActionForm;
@@ -80,6 +82,12 @@ public class PDFBulkExport extends BaseAction {
         }
         // we only know how to handle complextasks yet
         if (td.getType().equals(TaskContants.TYPE_COMPLEX)) {
+        // show an error message if tomcat isn't configured appropriately
+            if (!isAvailableWithoutCertificate(request)) {
+                errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("invalid.serverconfig"));
+                saveErrors(request, errors);
+                return mapping.findForward("error");
+            }
             // set response headers to declare pdf content type
             response.setContentType("application/pdf");
             response.setHeader("Content-Disposition", "attachment; filename=" + getBulkFilename(td));
@@ -125,6 +133,7 @@ public class PDFBulkExport extends BaseAction {
                 zos.putNextEntry(ze);
                 // fetch the generated pdf from taskmodel-core-view
                 // set request parameters
+                // TODO use client certificate, if there is any
                 getPdfMethod.setQueryString(String.format("id=%d&exportToPdf=%s", taskId, filename));
                 http.executeMethod(getPdfMethod);
                 zos.write(getPdfMethod.getResponseBody());
@@ -160,18 +169,42 @@ public class PDFBulkExport extends BaseAction {
     }
 
     private String getServerUrl(final HttpServletRequest request) {
-        final StringBuilder url = new StringBuilder();
+        // final StringBuilder url = new StringBuilder();
+        //
+        // final String scheme = request.getScheme();
+        // final int port = request.getServerPort();
+        //
+        // url.append(scheme).append("://");
+        // url.append(request.getServerName());
+        // // append port only if necessary
+        // if ((scheme.equals("http") && port != 80) || (scheme.equals("https") && port != 443)) {
+        // url.append(':');
+        // url.append(request.getServerPort());
+        // }
+        // return url.toString();
+        // FIXME don't use hardcoded port...
+        return "http://localhost:8080";
+    }
 
-        final String scheme = request.getScheme();
-        final int port = request.getServerPort();
-
-        url.append(scheme).append("://");
-        url.append(request.getServerName());
-        // append port only if necessary
-        if ((scheme.equals("http") && port != 80) || (scheme.equals("https") && port != 443)) {
-            url.append(':');
-            url.append(request.getServerPort());
+    /**
+     * Check if we can access taskmodel-core-view without https/client certificate. That means, make sure, that we are
+     * able to access the view application to render our pdfs.
+     * 
+     * @param request
+     * @return
+     */
+    private boolean isAvailableWithoutCertificate(final HttpServletRequest request) {
+        final HttpClient http = new HttpClient();
+        final HttpMethod getMethod = new GetMethod(getServerUrl(request) + "/taskmodel-core-view/showSolution.do");
+        try {
+            http.executeMethod(getMethod);
+        } catch (final HttpException e) {
+            log.warn("Tomcat not configured for accessing contents locally without certificates!", e);
+            return false;
+        } catch (final IOException e) {
+            log.warn("Tomcat not configured for accessing contents locally without certificates!", e);
+            return false;
         }
-        return url.toString();
+        return true;
     }
 }

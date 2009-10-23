@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.io.StringWriter;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -42,8 +41,8 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.logging.Log;
@@ -51,8 +50,6 @@ import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.tidy.Tidy;
 import org.xhtmlrenderer.pdf.ITextRenderer;
-import org.xhtmlrenderer.resource.XMLResource;
-import org.xml.sax.InputSource;
 
 import com.lowagie.text.DocumentException;
 
@@ -103,7 +100,7 @@ public class ExportPDFFilter implements Filter {
             // call the rest of the filter chain
             filterChain.doFilter(servletRequest, wrapper);
 
-            final Document dom = parseXhtml(getRenderedXhtml(wrapper.getContent()));
+            final Document dom = getRenderedXhtml(wrapper.getContent());
 
             // call flying saucer to render xHtml to pdf
             renderPdf(dom, (HttpServletRequest) servletRequest, servletResponse);
@@ -117,7 +114,7 @@ public class ExportPDFFilter implements Filter {
      *            html document
      * @return equivalent xhtml document
      */
-    public String getRenderedXhtml(final String html) {
+    public Document getRenderedXhtml(final String html) {
         // convert HTML to xHTML
 
         final Tidy tidy = new Tidy();
@@ -148,20 +145,6 @@ public class ExportPDFFilter implements Filter {
     }
 
     /**
-     * Parse valid xhtml.
-     * 
-     * @param xhtml
-     * @return
-     */
-    private Document parseXhtml(final String xhtml) {
-        // FIXME xhtmlrenderer crashes on '<' or '>' characters within
-        // CDATA, for example script tags
-        final InputSource is = new InputSource(new BufferedReader(new StringReader(xhtml)));
-        final Document dom = XMLResource.load(is).getDocument();
-        return dom;
-    }
-
-    /**
      * <ul>
      * <li>Strip &lt;script&gt; elements, because xml characters within these tags lead to invalid xhtml.</li>
      * <li>Xhtmlrenderer does not render form elements right (will probably support real PDF forms in the future), so we
@@ -176,14 +159,14 @@ public class ExportPDFFilter implements Filter {
      *            string representation of the xhtml parameter
      * @return
      */
-    private String processDocument(final Document xhtml, final String xhtmlText) {
-        final StringWriter sw = new StringWriter();
+    private Document processDocument(final Document xhtml, final String xhtmlText) {
         final String xslt = readFile(this.getClass().getResourceAsStream("adjustforpdfoutput.xslt"));
         final Source xsltSource = new StreamSource(new StringReader(xslt));
         try {
             final Transformer transformer = TransformerFactory.newInstance().newTransformer(xsltSource);
-            transformer.transform(new DOMSource(xhtml), new StreamResult(sw));
-            return sw.toString();
+            final DOMResult result = new DOMResult();
+            transformer.transform(new DOMSource(xhtml), result);
+            return (Document) result.getNode();
         } catch (final TransformerConfigurationException e) {
             log.error("Internal: Wrong xslt configuration", e);
         } catch (final TransformerFactoryConfigurationError e) {
@@ -193,7 +176,7 @@ public class ExportPDFFilter implements Filter {
             e.printStackTrace();
         }
         // fall through in error case: return untransformed xhtml
-        return xhtmlText;
+        return xhtml;
     }
 
     /**

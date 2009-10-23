@@ -98,7 +98,7 @@ public class PDFBulkExport extends BaseAction {
                 return mapping.findForward("error");
             }
             // set response headers to declare pdf content type
-            response.setContentType("application/pdf");
+            response.setContentType("application/zip");
             response.setHeader("Content-Disposition", "attachment; filename=" + getBulkFilename(td));
             // locate the taskdef
             TaskDef_Complex ctd;
@@ -159,7 +159,6 @@ public class PDFBulkExport extends BaseAction {
                     return "http://localhost:" + port;
                 }
             }
-            System.out.println("==================");
         } catch (final MalformedObjectNameException e) {
             log.warn("Could not access JMX mbeans.", e);
         } catch (final NullPointerException e) {

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+    <!-- Hibernate SessionFactory -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mappingResources">
+            <list>
+                <value>de/thorstenberger/examServer/model/Role.hbm.xml</value>
+                <value>de/thorstenberger/examServer/model/User.hbm.xml</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLInnoDBDialect</prop>
+                <prop key="hibernate.query.substitutions">true 'Y', false 'N'</prop>
+                <!-- Create/update the database tables automatically when the JVM starts up
+                <prop key="hibernate.hbm2ddl.auto">update</prop> -->
+                <!-- Turn batching off for better error messages under PostgreSQL 
+                <prop key="hibernate.jdbc.batch_size">0</prop> -->
+            </props>
+        </property>
+    </bean>
+
+    <!-- Transaction manager for a single Hibernate SessionFactory (alternative to JTA) -->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!-- Generic Dao - can be used when doing standard CRUD -->
+    <bean id="dao" class="de.thorstenberger.examServer.dao.hibernate.BaseDaoHibernate">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!-- LookupDao: Hibernate implementation -->
+    <bean id="lookupDao" class="de.thorstenberger.examServer.dao.hibernate.LookupDaoHibernate">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!-- UserDao: Hibernate implementation -->
+    <bean id="userDao" class="de.thorstenberger.examServer.dao.hibernate.UserDaoHibernate">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!-- RoleDao: Hibernate implementation -->
+    <bean id="roleDao" class="de.thorstenberger.examServer.dao.hibernate.RoleDaoHibernate">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!-- Add new Daos here -->
+
+</beans>

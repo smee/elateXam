@@ -1,0 +1,157 @@
+/* A CSS Framework by Mike Stenhouse of Content with Style */
+
+/* SITE SPECIFIC LAYOUT */
+    body {
+        margin: 0;
+        padding: 0;
+		background-color: #cccccc;
+        text-align: center;
+    }
+    div#page {
+        width: 1000px;
+        margin:  0 auto;
+        padding: 0;
+        text-align: center;
+    }
+
+    /* HEADER */
+        div#header {
+            margin: 0 0 0 0;
+            padding: 0px 0 0px 0px;
+            text-align: left;
+        }
+
+            div#switchLocale {
+                position: absolute;
+                right: 10px;
+            }
+
+        div#branding {
+            float: left;
+            width: 50%;
+            margin: 0;
+            padding: 10px 0 10px 30px;
+            text-align: left;
+        }
+        div#search {
+            float: right;
+            width: 49%;
+            margin: 0;
+            padding: 40px 40px 0 0;
+
+            text-align: right;
+        }
+    /* END HEADER */
+
+
+    /* CONTENT */
+        div#content {
+        }
+            body#error #content {
+                margin-top: 20px;
+            }
+        /* MAIN */
+            div#main {
+                padding-left: 15px;
+            }
+
+                div#main form ul li {
+                    list-style-type: none;
+                    margin-left: 0;
+                }
+        /* END MAIN */
+
+        /* SUB */
+            div#sub h2 {
+                margin-bottom: 5px;
+            }
+
+            div#sub ul {
+                margin: 0;
+            }
+
+            div#sub ul li {
+                list-style-type: none;
+                margin-left: -30px;
+                padding-bottom: 10px;
+            }
+
+                div#sub p.line {
+                    border-top: 1px dotted #ccc;
+                    margin: 15px 0;
+                }
+
+        /* END SUB */
+
+    /* END CONTENT */
+
+    /* FOOTER */
+        div#footer {
+        	margin: 0 0 0 0;
+            color: #444;
+            padding: 0 0px;
+            text-align: left;
+            font-size: 0.9em;
+        }
+
+            div#footer div#divider {
+                    margin: 0 0 4px 0;
+                    border-top: 1px solid #ccc;
+            }
+
+            div#footer div#divider div {
+                    margin: 1px 0 0 0;
+                    border-top: 6px solid #ebf5fc;
+            }
+
+            div#footer .left {
+                    float: left;
+            }
+
+            div#footer .right {
+                    float: right;
+            }
+    /* END FOOTER */
+/* END LAYOUT */
+
+
+/* BEGIN examServer taskhandling stuff */
+
+.tasks legend { color: #0046D5; font-weight: normal; /*padding-top: 5px; padding-bottom: 5px;*/ }
+.tasks fieldset { border: 1px #BFB8BF solid; -moz-border-radius: 15px; /*padding:10px;*/ background-color: #FFFFFF; }
+
+.copytext { color: #aaaaaa; font-size: 10px; font-family: Arial, Helvetica, Geneva, Verdana, sans-serif }
+.copytextlink { color: #777777; font-size: 10px; font-family: Arial, Helvetica, Geneva, Verdana, sans-serif }
+.inactivelink { color: #777777; font-size: 12px; font-family: Arial, Helvetica, Geneva, Verdana, sans-serif ; font-style: italic}
+.statusText { color: #ff9900; font-size: 12px; font-family: Arial, Helvetica, Geneva, Verdana, sans-serif }
+.headergruen { color: #009933; font-weight: bold; font-size: 13px }
+.headerblau { color: #003366; font-weight: bold; font-size: 13px }
+.headerblau2 { color: #6699CC; font-weight: bold; font-size: 14px }
+.headerweiss { color: #ffffff; font-weight: bold; font-size: 12px }
+.subheaderblau { color: #003366 }
+
+.copytextwhite { color: #ffffff; font-size: 12px; font-family: Arial, Helvetica, Geneva, Verdana, sans-serif }
+.copytextred { color: #ff9900; font-size: 12px; font-family: Arial, Helvetica, Geneva, Verdana, sans-serif }
+.forms { font-size: 10px; font-family: Arial, Helvetica, Geneva, Verdana, sans-serif }
+.header { color: #333333; font-weight: bold; font-size: 14px; font-family: Arial, Helvetica, Geneva, Verdana, sans-serif ; border: 1px #eeeeee dotted; padding:2px 2px; text-align: center; list-style-type: none}
+.links { color: #000000; font-size: 12px; font-family: Arial, Helvetica, Geneva, Verdana, sans-serif; text-decoration: none }
+.subheader { color: #000000; font-weight: bold; font-size: 12px; font-family: Arial, Helvetica, Geneva, Verdana, sans-serif }
+.subheaderred { color: #003366; font-weight: bold; font-size: 12px; font-family: Arial, Helvetica, Geneva, Verdana, sans-serif }
+.subheaderwhite { color: #ffffff; font-weight: bold; font-size: 12px; font-family: Arial, Helvetica, Geneva, Verdana, sans-serif }
+.subheaderblue { color: #6699CC; font-weight: bold; font-size: 12px; font-family: Arial, Helvetica, Geneva, Verdana, sans-serif }
+.allheader { color: #66CCFF; font-weight: bold; font-size: 24px; font-family: Arial, Helvetica, Geneva, Verdana, sans-serif }
+
+.FailureMessage {  font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-style: normal; font-weight: normal; color: #FF0000}
+legend {  font-family: "Times New Roman", Times, serif; font-size: 15px; color: #0046D5; font-weight: normal; padding-top: 5px; padding-bottom: 5px; }
+fieldset {  border: 1px #BFB8BF solid; -moz-border-radius: 15px; padding:10px; background-color: #FFFFFF; }
+
+a.MenuLink:link {  font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold; text-decoration: underline; color: #00327D; }
+a.MenuLink:visited {  font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold; text-decoration: underline; color: #00327D;}
+a.MenuLink:active {  font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold; text-decoration: underline; color: #00327D;}
+a.MenuLink:hover {  font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold; color: orange; text-decoration: none; }
+
+.listing { padding: 2px 2px; font-family: Arial, Helvetica, sans-serif; font-size: 12px; padding-left: 8px; padding-right: 8px;}
+.listinghead {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10px; font-weight: bold; padding-top: 2px; padding-right: 2px; padding-bottom: 2px; padding-left: 2px}
+.newsbody {  font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #000000; background-color: #FAFBFC; border-color: #BFB8BF black black; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; border-style: dotted; border-top-width: 1px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px}
+.newsheader {  font-family: Arial, Helvetica, sans-serif; font-size: 9px; color: #718EA5; padding-top: 5px}
+.fortune {  font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: #718EA5; border-color: black black orange; border-style: solid; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 1px; border-left-width: 0px}

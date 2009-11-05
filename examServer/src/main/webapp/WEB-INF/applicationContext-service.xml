@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+    <bean id="lookupManager" class="de.thorstenberger.examServer.service.impl.LookupManagerImpl">
+        <property name="lookupDao" ref="lookupDao"/>
+    </bean>
+        
+    <bean id="userManager" class="de.thorstenberger.examServer.service.impl.UserManagerImpl">
+		<property name="userDao" ref="userDao"/>
+    </bean>
+    <!-- TODO add interceptor -->
+
+    <!-- This interceptor insures that that users can only update themselves, not other users -->
+    <bean id="userSecurityInterceptor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+        <property name="advice" ref="userSecurityAdvice"/>
+        <property name="patterns" value=".*saveUser"/>
+    </bean>
+
+    <bean id="userSecurityAdvice" class="de.thorstenberger.examServer.service.UserSecurityAdvice">
+        <property name="userCache" ref="userCache"/>
+    </bean>
+
+    <bean id="userCache" class="org.acegisecurity.providers.dao.cache.EhCacheBasedUserCache">
+        <property name="cache">
+            <bean class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+                <property name="cacheManager">
+                    <bean class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"/>
+                </property>
+                <property name="cacheName" value="userCache"/>
+            </bean>
+        </property>
+    </bean>
+    
+    <bean id="roleManager" class="de.thorstenberger.examServer.service.impl.RoleManagerImpl">
+		<property name="roleDao" ref="roleDao"/>
+    </bean>
+     
+    <bean id="mailEngine" class="de.thorstenberger.examServer.service.MailEngine">
+        <property name="mailSender" ref="mailSender"/>
+        <property name="velocityEngine" ref="velocityEngine"/>
+    </bean>
+
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="${mail.host}"/>
+        <property name="username" value="${mail.username}"/>
+        <property name="password" value="${mail.password}"/>
+    </bean>
+
+    <!-- Configure Velocity for sending e-mail -->
+    <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+        <property name="velocityProperties">
+            <props>
+                <prop key="resource.loader">class</prop>
+                <prop key="class.resource.loader.class">
+                    org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+                </prop>
+                <prop key="velocimacro.library"></prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="mailMessage" class="org.springframework.mail.SimpleMailMessage" singleton="false">
+        <property name="from" value="${mail.default.from}"/>
+    </bean>
+    
+    
+    <bean id="examServerManager" class="de.thorstenberger.examServer.service.impl.ExamServerManagerImpl" init-method="init">
+    </bean>
+    
+    <bean id="configManager" class="de.thorstenberger.examServer.service.impl.ConfigManagerImpl">
+    	<constructor-arg>
+    		<ref bean="examServerManager"/>
+    	</constructor-arg>
+    </bean>
+    
+    <!-- Add new Managers here -->
+</beans>

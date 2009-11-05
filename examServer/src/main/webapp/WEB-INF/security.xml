@@ -101,10 +101,21 @@
                 <ref local="daoAuthenticationProvider"/>
                 <ref local="httpauthAuthenticationProvider"/>
 	            <ref local="wsAuthenticationProvider"/>
+                <ref local="${springbean.additionalprovider}"/>
                 <!--ref local="anonymousAuthenticationProvider"/-->
                 <!--ref local="rememberMeAuthenticationProvider"/-->
             </list>
         </property>
+    </bean>
+    
+    <bean id="donothingAuthenticationProvider" class="de.thorstenberger.examServer.ws.remoteusermanager.DoNothingAuthenticationProvider">
+    <description>Disallow any authentication. Effectively do nothing.</description>
+    </bean>
+    <bean id="freeForAllAuthenticationProvider" class="de.thorstenberger.examServer.ws.remoteusermanager.FreeForAllAuthenticationProvider">
+        <description>Allow all logins as students, create a new user if the username was unknown.</description>
+    	<constructor-arg ref="configManager"></constructor-arg>
+    	<constructor-arg ref="userManager"></constructor-arg>
+    	<constructor-arg ref="roleManager"></constructor-arg>
     </bean>
     
     <bean id="wsAuthenticationProvider" class="de.thorstenberger.examServer.ws.remoteusermanager.WSAuthenticationProvider">

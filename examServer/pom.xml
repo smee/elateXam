@@ -45,10 +45,9 @@
     </url>
   </scm>
   <build>
-    <sourceDirectory>src</sourceDirectory>
     <resources>
       <resource>
-        <directory>${basedir}/src</directory>
+        <directory>src/main/java</directory>
         <includes>
           <include>**/*.properties</include>
           <include>**/*.ser</include>
@@ -59,13 +58,46 @@
           <include>**/*.ccf</include>
         </includes>
       </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>**/*.properties</include>
+        </includes>
+      </resource>
     </resources>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <configuration>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
-          <warSourceDirectory>webapp</warSourceDirectory>
-        </configuration>
+          <attachClasses>true</attachClasses>
+          <archive>
+            <addMavenDescriptor>false</addMavenDescriptor>
+            <manifest>
+              <addClasspath>false</addClasspath>
+            </manifest>
+            <manifestEntries>
+              <Implementation-Version>${project.version}</Implementation-Version>
+              <Implementation-Build>${buildNumber}</Implementation-Build>
+            </manifestEntries>
+          </archive>
+              <webResources>
+                <resource>  
+                  <directory>${basedir}/src/main/webapp</directory>
+                  <filtering>true</filtering>
+                  <includes>
+                    <include>**/security.xml</include>
+                  </includes>
+                </resource>
+              </webResources>
+            </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin
@@ -103,8 +135,7 @@
       <!-- buildnumber -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
-        <artifactId>buildnumber-maven-plugin
-        </artifactId>
+        <artifactId>buildnumber-maven-plugin</artifactId>
         <executions>
           <execution>
             <id>make-buildnumber</id>
@@ -117,7 +148,7 @@
         <configuration>
           <doUpdate>false</doUpdate>
           <doCheck>false</doCheck>
-          <format>{0,date,yyyyMMdd}</format>
+          <format>{0,date,yyyyMMdd-HH:mm:ss}</format>
           <items>
             <item>timestamp</item>
           </items>
@@ -431,6 +462,11 @@
       <artifactId>commons-dbcp</artifactId>
       <version>1.2.1</version>
     </dependency>
+    <dependency>
+      <groupId>com.google.collections</groupId>
+      <artifactId>google-collections</artifactId>
+      <version>1.0-rc3</version>
+    </dependency>
   </dependencies>
 
   <profiles>
@@ -509,9 +545,20 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>preview-mode</id>
+      <!-- configure for exams preview, use a mock user database as well as a mock taskhandlingdao.
+           every user/password combination will be allowed, tasklets will only get cached in memory, not persisted. -->
+      <properties>
+        <springbean.additionalprovider>freeForAllAuthenticationProvider</springbean.additionalprovider>
+        <initialtitle>Bitte nutzen Sie eine beliebige Login/Passwort-Kombination.</initialtitle>
+      </properties>
+    </profile>
   </profiles>
 
   <properties>
     <encoding>UTF-8</encoding>
+    <springbean.additionalprovider>donothingAuthenticationProvider</springbean.additionalprovider>
+    <initialtitle></initialtitle>
   </properties>
 </project>

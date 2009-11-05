@@ -326,7 +326,7 @@ public class DrawingPanel extends JPanel implements MouseMotionListener, MouseLi
 	
 	public static void main(String[] args) {
 		final JFrame f=new JFrame();
-		CompleteDrawingPanel cdp=new CompleteDrawingPanel(600,350,false);
+		CompleteDrawingPanel cdp=new CompleteDrawingPanel(600,350,true);
 		cdp.setStrokeChangeable(true);
 		cdp.setColorChangeable(true);
 		f.add(cdp);

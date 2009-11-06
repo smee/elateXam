@@ -108,6 +108,7 @@ public abstract class AbstractTaskDef implements TaskDef {
 			return false;
 
 		Long deadline = getDeadline();
+		// TODO add configurable time extension for all, and for individual users
 		if( deadline != null )
 			return System.currentTimeMillis() < deadline;
 

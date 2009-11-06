@@ -105,6 +105,7 @@ public abstract class AbstractTasklet implements Tasklet {
      * Mandatory check whether the TaskDef is currently active.
      */
     protected synchronized void checkActive() throws IllegalStateException {
+        // TODO respect time extension for all/this individual user
         if (!taskDef.isActive()) {
             throw new IllegalStateException(TaskHandlingConstants.NOT_ACTIVE);
         }

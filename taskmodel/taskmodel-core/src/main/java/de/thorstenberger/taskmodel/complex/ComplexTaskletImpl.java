@@ -95,7 +95,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
 					return;
 				}
 			}
-
+			// TODO respect time extension for all/this individual user
 			if( !complexTaskDef.isActive() )
 				submit();
 
@@ -151,7 +151,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
 		super.getTaskletCorrection().reset();
 		setStatus( Status.INPROGRESS );
 
-		// und schließlich speichern
+		// und schlieï¿½lich speichern
 		try {
 			save();
 		} catch (TaskApiException e) {
@@ -159,7 +159,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
 			throw new TaskModelPersistenceException( e );
 		}
 
-		// TODO TRY zurückgeben
+		// TODO TRY zurï¿½ckgeben
 
 	}
 
@@ -186,7 +186,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
 			throw new IllegalStateException( TaskHandlingConstants.CANNOT_CONTINUE_TIME_EXCEEDED );
 
 
-		// TODO TRY zurückgeben
+		// TODO TRY zurï¿½ckgeben
 		// ok, mehr ist erstmal nicht zu tun
 	}
 
@@ -235,7 +235,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
 	 */
 	public synchronized void submit() throws IllegalStateException {
 		// falls nicht in Bearbeitung, dann einfach abbrechen,
-		// d.h. wenn die Bearbeitung vorher schon automatisch wegen Zeitüberschreitung
+		// d.h. wenn die Bearbeitung vorher schon automatisch wegen Zeitï¿½berschreitung
 		// gestoppt (und korrigiert) wurde, wird dies dem Student mitgeteilt
 		if( getStatus() != Status.INPROGRESS)
 			throw new IllegalStateException( TaskHandlingConstants.TIME_EXCEEDED_AUTO_SUBMIT_MADE );
@@ -247,7 +247,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
 		ComplexTaskletCorrector corrector = complexTaskBuilder.getComplexTaskFactory().getComplexTaskletCorrector();
 
 
-		// automatische Vor-Korrektur durchführen
+		// automatische Vor-Korrektur durchfï¿½hren
 //		List<de.thorstenberger.taskmodel.complex.complextaskhandling.Page> pages = getActiveTry().getPages();
 
 		ComplexTaskletCorrector.Result result = corrector.doCorrection( this, getSolutionOfLatestTry(), complexTaskDef.getComplexTaskDefRoot().getCorrectionMode().getType(), false );

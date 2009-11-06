@@ -21,6 +21,7 @@ package de.thorstenberger.examServer.ws.remoteusermanager;
 import org.acegisecurity.Authentication;
 import org.acegisecurity.AuthenticationException;
 import org.acegisecurity.AuthenticationServiceException;
+import org.acegisecurity.BadCredentialsException;
 import org.acegisecurity.providers.AuthenticationProvider;
 import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
 import org.acegisecurity.providers.dao.AbstractUserDetailsAuthenticationProvider;
@@ -92,11 +93,16 @@ public class FreeForAllAuthenticationProvider extends AbstractUserDetailsAuthent
         User user = null;
         try {
             user = userManager.getUserByUsername(authentication.getName());
+            // if we know this user, make sure the password matches
+            if (!user.getPassword().equals(StringUtil.encodePassword((String) authentication.getCredentials(), "SHA"))) {
+                throw new BadCredentialsException(messages.getMessage(
+                        "AbstractUserDetailsAuthenticationProvider.badCredentials", "Invalid username or password."));
+            }
         } catch (final UsernameNotFoundException e) {
             // doesn't matter, we'll create him in a second...
         }
         if (user == null) {
-            // create a new user
+            // create a new user with the entered username/password
             user = new User();
             user.setEnabled(true);
             final String name = authentication.getName();

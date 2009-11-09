@@ -15,29 +15,20 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ */
 /**
  * 
  */
 package de.thorstenberger.examServer.dao.xml;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.Validator;
 
 import org.acegisecurity.userdetails.UserDetails;
 import org.acegisecurity.userdetails.UserDetailsService;
@@ -60,307 +51,298 @@ import de.thorstenberger.examServer.util.StringUtil;
 
 /**
  * @author Thorsten Berger
- *
+ * 
  */
-public class UserDaoJAXB implements UserDao, UserDetailsService {
+public class UserDaoJAXB extends AbstractJAXBDao implements UserDao, UserDetailsService {
 
-	private ExamServerManager examServerManager;
-	private RoleDao roleDao;
-	private LookupDao lookupDao;
-	private JAXBContext jc;
-	private Users users;
-	private File userFile;
+    private final ExamServerManager examServerManager;
+    private final RoleDao roleDao;
+    private final LookupDao lookupDao;
+    private Users users;
 
-	private Log log = LogFactory.getLog( UserDaoJAXB.class );
-	
-	/**
+    private final Log log = LogFactory.getLog(UserDaoJAXB.class);
+
+    /**
 	 * 
 	 */
-	public UserDaoJAXB( ExamServerManager examServerManager, RoleDao roleDao, LookupDao lookupDao ) {
-		this.examServerManager = examServerManager;
-		this.roleDao = roleDao;
-		this.lookupDao = lookupDao;
-	
-		try { // JAXBException
+    public UserDaoJAXB(final ExamServerManager examServerManager, final RoleDao roleDao, final LookupDao lookupDao) {
+        super("de.thorstenberger.examServer.dao.xml.jaxb",
+                new File(examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.SYSTEM
+                + File.separatorChar + "users.xml"));
+        this.examServerManager = examServerManager;
+        this.roleDao = roleDao;
+        this.lookupDao = lookupDao;
 
-			jc = JAXBContext.newInstance( "de.thorstenberger.examServer.dao.xml.jaxb" );
+        try { // JAXBException
 
-			userFile = new File( examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.SYSTEM + File.separatorChar + "users.xml" );
+            if (!iofile.exists()) {
+                final ObjectFactory oF = new ObjectFactory();
+                users = oF.createUsers();
+                users.setIdCount(2);
+                final UserType user = oF.createUsersTypeUserType();
+                user.setUsername("admin");
+                user.setFirstName("");
+                user.setLastName("");
+                user.setVersion(0);
+                user.setAccountEnabled(true);
+                user.setId(1);
+                user.setPassword(StringUtil.encodePassword("admin", "SHA"));
+                user.setEmail("elatePortal@thorsten-berger.net");
+                user.setAccountExpired(false);
+                user.setAccountLocked(false);
+                user.setCredentialsExpired(false);
+                user.getRoleRef().add("admin");
+                users.getUser().add(user);
+                save(users);
+                return;
+            } else {
+                users = (Users) load();
+            }
 
-			if( !userFile.exists() ){
-				ObjectFactory oF = new ObjectFactory();
-				users = oF.createUsers();
-				users.setIdCount( 2 );
-				UserType user = oF.createUsersTypeUserType();
-				user.setUsername( "admin" );
-				user.setFirstName( "" );
-				user.setLastName( "" );
-				user.setVersion( 0 );
-				user.setAccountEnabled( true );
-				user.setId( 1 );
-				user.setPassword( StringUtil.encodePassword( "admin", "SHA" ) );
-				user.setEmail( "elatePortal@thorsten-berger.net" );
-				user.setAccountExpired( false );
-				user.setAccountLocked( false );
-				user.setCredentialsExpired( false );
-				user.getRoleRef().add( "admin" );
-				users.getUser().add( user );
-				save();
-				return;			    
-			}
+        } catch (final JAXBException e) {
+            throw new RuntimeException(e);
+        }
 
+    }
 
-			// wenn vorhanden, dann auslesen
-			Unmarshaller unmarshaller;
-			unmarshaller = jc.createUnmarshaller();
-			unmarshaller.setValidating( true );
-			BufferedInputStream bis = new BufferedInputStream( new FileInputStream( userFile ) );
-			users = (Users) unmarshaller.unmarshal( bis );
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.examServer.dao.Dao#getObject(java.lang.Class, java.io.Serializable)
+     */
+    public Object getObject(final Class clazz, final Serializable id) {
+        throw new UnsupportedOperationException();
+    }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.examServer.dao.Dao#getObjects(java.lang.Class)
+     */
+    public List getObjects(final Class clazz) {
+        throw new UnsupportedOperationException();
+    }
 
-		} catch (JAXBException e) {
-			throw new RuntimeException( e );
-		}catch (IOException e1){
-			throw new RuntimeException( e1 );
-		}
-		
-	}
-	
-	private void save(){
-		try {
-			
-			Marshaller marshaller = jc.createMarshaller();
-			Validator validator = jc.createValidator();
-			validator.validate( users );
-			marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true) );
-			BufferedOutputStream bos = new BufferedOutputStream( new FileOutputStream( this.userFile ) );
-			marshaller.marshal( users, bos );
-			
-			bos.close();
-			
-		} catch (JAXBException e) {
-			throw new RuntimeException( e );
-		} catch( IOException e1 ){
-			throw new RuntimeException( e1 );
-		}
-		
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.examServer.dao.UserDao#getUser(java.lang.Long)
+     */
+    public synchronized User getUser(final Long userId) {
 
-	private User populateUser( UserType u ){
-		User ret = new User();
-		ret.setAccountExpired( u.isAccountExpired() );
-		ret.setAccountLocked( u.isAccountLocked() );
-		
-		Address address = new Address();
-			address.setAddress( u.getAddress() );
-			address.setCity( u.getCity() );
-			address.setCountry( u.getCountry() );
-			address.setPostalCode( u.getPostalCode() );
-			address.setProvince( u.getProvince() );
-		ret.setAddress( address );
-		
-		ret.setCredentialsExpired( u.isCredentialsExpired() );
-		ret.setEmail( u.getEmail() );
-		ret.setEnabled( u.isAccountEnabled() );
-		ret.setFirstName( u.getFirstName() );
-		ret.setId( u.getId() );
-		ret.setLastName( u.getLastName() );
-		ret.setPassword( u.getPassword() );
-		ret.setPasswordHint( u.getPasswordHint() );
-		ret.setPhoneNumber( u.getPhoneNumber() );
-		ret.setUsername( u.getUsername() );
-		ret.setVersion( u.getVersion() );
-		ret.setWebsite( u.getWebsite() );
-		
-		List<String> roles = (List<String>)u.getRoleRef();
-		for( String role : roles )
-			ret.addRole( roleDao.getRoleByName( role ) );
-		
-		return ret;
-	}
-	
-	private UserType getUserType( long userId ){
-		List<UserType> usersList = (List<UserType>)users.getUser();
-		for( UserType user : usersList ){
-			if( user.getId() == userId )
-				return user;
-		}
-		return null;
-	}
-	
-	private UserType getUserTypeByUsername( String userName ){
-		List<UserType> usersList = (List<UserType>)users.getUser();
-		for( UserType user : usersList ){
-			if( user.getUsername().equals( userName ) )
-				return user;
-		}
-		return null;
-	}
-	
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.examServer.dao.UserDao#getUser(java.lang.Long)
-	 */
-	public synchronized User getUser(Long userId) {
-		
-		UserType u = getUserType( userId );
-		if( u != null )
-			return populateUser( u );
-		
-		log.warn("uh oh, user '" + userId + "' not found...");
-		throw new ObjectRetrievalFailureException(User.class, userId);
-	}
+        final UserType u = getUserType(userId);
+        if (u != null) {
+            return populateUser(u);
+        }
 
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.examServer.dao.UserDao#loadUserByUsername(java.lang.String)
-	 */
-	public synchronized UserDetails loadUserByUsername(String username)
-			throws UsernameNotFoundException {
-		
-		List<UserType> usersList = (List<UserType>)users.getUser();
-		for( UserType user : usersList ){
-			if( user.getUsername().equals( username) )
-				return populateUser( user );
-		}		
-		
-		throw new UsernameNotFoundException("user '" + username + "' not found...");
+        log.warn("uh oh, user '" + userId + "' not found...");
+        throw new ObjectRetrievalFailureException(User.class, userId);
+    }
 
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.examServer.dao.UserDao#getUsers(de.thorstenberger.examServer.model.User)
+     */
+    public synchronized List getUsers(final User user) {
 
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.examServer.dao.UserDao#getUsers(de.thorstenberger.examServer.model.User)
-	 */
-	public synchronized List getUsers(User user) {
+        final List<UserType> usersList = users.getUser();
+        final List<User> ret = new ArrayList<User>();
 
-		List<UserType> usersList = (List<UserType>)users.getUser();
-		List<User> ret = new ArrayList<User>();
-		
-		Set<Role> roles = (Set<Role>)user.getRoles();
-		boolean checkRoles = roles != null && !roles.isEmpty();
-		
-		for( UserType userType : usersList ){
-			boolean passed = true;
-			if( checkRoles ){
-				List<String> roleRefs = userType.getRoleRef();
-				for( Role role : roles ){
-					if( !roleRefs.contains( role.getName() ) )
-						passed = false;
-				}
-			}
-			
-			if( passed )
-				ret.add( populateUser( userType ) );
-		}
+        final Set<Role> roles = user.getRoles();
+        final boolean checkRoles = roles != null && !roles.isEmpty();
 
-		return ret;
-		
-	}
+        for (final UserType userType : usersList) {
+            boolean passed = true;
+            if (checkRoles) {
+                final List<String> roleRefs = userType.getRoleRef();
+                for (final Role role : roles) {
+                    if (!roleRefs.contains(role.getName())) {
+                        passed = false;
+                    }
+                }
+            }
 
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.examServer.dao.UserDao#saveUser(de.thorstenberger.examServer.model.User)
-	 */
-	public synchronized void saveUser(User user) {
+            if (passed) {
+                ret.add(populateUser(userType));
+            }
+        }
+
+        return ret;
+
+    }
+
+    private UserType getUserType(final long userId) {
+        final List<UserType> usersList = users.getUser();
+        for (final UserType user : usersList) {
+            if (user.getId() == userId) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    private UserType getUserTypeByUsername(final String userName) {
+        final List<UserType> usersList = users.getUser();
+        for (final UserType user : usersList) {
+            if (user.getUsername().equals(userName)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.examServer.dao.UserDao#loadUserByUsername(java.lang.String)
+     */
+    public synchronized UserDetails loadUserByUsername(final String username)
+            throws UsernameNotFoundException {
+
+        final List<UserType> usersList = users.getUser();
+        for (final UserType user : usersList) {
+            if (user.getUsername().equals(username)) {
+                return populateUser(user);
+            }
+        }
+
+        throw new UsernameNotFoundException("user '" + username + "' not found...");
+
+    }
+
+    private User populateUser(final UserType u) {
+        final User ret = new User();
+        ret.setAccountExpired(u.isAccountExpired());
+        ret.setAccountLocked(u.isAccountLocked());
+
+        final Address address = new Address();
+        address.setAddress(u.getAddress());
+        address.setCity(u.getCity());
+        address.setCountry(u.getCountry());
+        address.setPostalCode(u.getPostalCode());
+        address.setProvince(u.getProvince());
+        ret.setAddress(address);
+
+        ret.setCredentialsExpired(u.isCredentialsExpired());
+        ret.setEmail(u.getEmail());
+        ret.setEnabled(u.isAccountEnabled());
+        ret.setFirstName(u.getFirstName());
+        ret.setId(u.getId());
+        ret.setLastName(u.getLastName());
+        ret.setPassword(u.getPassword());
+        ret.setPasswordHint(u.getPasswordHint());
+        ret.setPhoneNumber(u.getPhoneNumber());
+        ret.setUsername(u.getUsername());
+        ret.setVersion(u.getVersion());
+        ret.setWebsite(u.getWebsite());
+
+        final List<String> roles = u.getRoleRef();
+        for (final String role : roles) {
+            ret.addRole(roleDao.getRoleByName(role));
+        }
+
+        return ret;
+    }
+
+    private void populateUserType(final UserType userType, final User user) {
+
+        userType.setAccountExpired(user.isAccountExpired());
+        userType.setAccountLocked(user.isAccountLocked());
+
+        final Address address = user.getAddress();
+        userType.setAddress(address.getAddress());
+        userType.setCity(address.getCity());
+        userType.setCountry(address.getCountry());
+        userType.setPostalCode(address.getPostalCode());
+        userType.setProvince(address.getProvince());
+
+        userType.setCredentialsExpired(user.isCredentialsExpired());
+        userType.setEmail(user.getEmail());
+        userType.setAccountEnabled(user.isEnabled());
+        userType.setFirstName(user.getFirstName());
+        userType.setId(user.getId());
+        userType.setLastName(user.getLastName());
+        userType.setPassword(user.getPassword());
+        userType.setPasswordHint(user.getPasswordHint());
+        userType.setPhoneNumber(user.getPhoneNumber());
+        userType.setUsername(user.getUsername());
+        userType.setVersion(user.getVersion());
+        userType.setWebsite(user.getWebsite());
+
+        final Iterator it = user.getRoles().iterator();
+        userType.getRoleRef().clear();
+        while (it.hasNext()) {
+            final Role role = (Role) it.next();
+            userType.getRoleRef().add(role.getName());
+        }
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.examServer.dao.Dao#removeObject(java.lang.Class, java.io.Serializable)
+     */
+    public void removeObject(final Class clazz, final Serializable id) {
+        throw new UnsupportedOperationException();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.examServer.dao.UserDao#removeUser(java.lang.Long)
+     */
+    public synchronized void removeUser(final Long userId) {
+        final UserType userType = getUserType(userId);
+        if (userType != null) {
+            users.getUser().remove(userType);
+            save(users);
+        }
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.examServer.dao.Dao#saveObject(java.lang.Object)
+     */
+    public void saveObject(final Object o) {
+        throw new UnsupportedOperationException();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.examServer.dao.UserDao#saveUser(de.thorstenberger.examServer.model.User)
+     */
+    public synchronized void saveUser(final User user) {
         if (log.isDebugEnabled()) {
             log.debug("user's id: " + user.getId());
         }
-        
-         UserType userType = getUserTypeByUsername( user.getUsername() );
-         if( userType == null ){
-        	 try {
-				userType = (new ObjectFactory()).createUsersTypeUserType();
-				users.getUser().add( userType );
-				userType.setId( users.getIdCount() );
-				user.setId( users.getIdCount() );
-				user.setVersion( 0 );
-				// FIXME overflow handling
-				users.setIdCount( users.getIdCount() + 1 );
-			} catch (JAXBException e) {
-				throw new RuntimeException( e );
-			}
-         }else{
-        	 // FIXME overflow handling
-        	 user.setVersion( user.getVersion() + 1 );
-         }
-         
-         populateUserType( userType, user );
-         
-         save();
-		
-	}
-	
-	private void populateUserType( UserType userType, User user ){
-		
-		userType.setAccountExpired( user.isAccountExpired() );
-		userType.setAccountLocked( user.isAccountLocked() );
-		
 
-		Address address = user.getAddress();
-			userType.setAddress( address.getAddress() );
-			userType.setCity( address.getCity() );
-			userType.setCountry( address.getCountry() );
-			userType.setPostalCode( address.getPostalCode() );
-			userType.setProvince( address.getProvince() );
+        UserType userType = getUserTypeByUsername(user.getUsername());
+        if (userType == null) {
+            try {
+                userType = (new ObjectFactory()).createUsersTypeUserType();
+                users.getUser().add(userType);
+                userType.setId(users.getIdCount());
+                user.setId(users.getIdCount());
+                user.setVersion(0);
+                // FIXME overflow handling
+                users.setIdCount(users.getIdCount() + 1);
+            } catch (final JAXBException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            // FIXME overflow handling
+            user.setVersion(user.getVersion() + 1);
+        }
 
-		
-		userType.setCredentialsExpired( user.isCredentialsExpired() );
-		userType.setEmail( user.getEmail() );
-		userType.setAccountEnabled( user.isEnabled() );
-		userType.setFirstName( user.getFirstName() );
-		userType.setId( user.getId() );
-		userType.setLastName( user.getLastName() );
-		userType.setPassword( user.getPassword() );
-		userType.setPasswordHint( user.getPasswordHint() );
-		userType.setPhoneNumber( user.getPhoneNumber() );
-		userType.setUsername( user.getUsername() );
-		userType.setVersion( user.getVersion() );
-		userType.setWebsite( user.getWebsite() );
-		
-		Iterator it = user.getRoles().iterator();
-		userType.getRoleRef().clear();
-		while( it.hasNext() ){
-			Role role = (Role)it.next();
-			userType.getRoleRef().add( role.getName() );
-		}
-		
-	}
+        populateUserType(userType, user);
 
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.examServer.dao.UserDao#removeUser(java.lang.Long)
-	 */
-	public synchronized void removeUser(Long userId) {
-		UserType userType = getUserType( userId );
-		if( userType != null ){
-			users.getUser().remove( userType );
-			save();
-		}
-		
-	}
+        save(users);
 
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.examServer.dao.Dao#getObjects(java.lang.Class)
-	 */
-	public List getObjects(Class clazz) {
-		throw new UnsupportedOperationException();
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.examServer.dao.Dao#getObject(java.lang.Class, java.io.Serializable)
-	 */
-	public Object getObject(Class clazz, Serializable id) {
-		throw new UnsupportedOperationException();
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.examServer.dao.Dao#saveObject(java.lang.Object)
-	 */
-	public void saveObject(Object o) {
-		throw new UnsupportedOperationException();
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.examServer.dao.Dao#removeObject(java.lang.Class, java.io.Serializable)
-	 */
-	public void removeObject(Class clazz, Serializable id) {
-		throw new UnsupportedOperationException();
-	}
+    }
 
 }

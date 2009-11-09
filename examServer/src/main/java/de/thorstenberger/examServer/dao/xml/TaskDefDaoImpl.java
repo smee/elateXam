@@ -21,23 +21,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.examServer.dao.xml;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.Validator;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.logging.Log;
@@ -58,12 +49,9 @@ import de.thorstenberger.examServer.service.ExamServerManager;
  * @author Thorsten Berger
  * 
  */
-public class TaskDefDaoImpl implements TaskDefDao {
+public class TaskDefDaoImpl extends AbstractJAXBDao implements TaskDefDao {
 
-    private final ExamServerManager examServerManager;
-    private JAXBContext jc;
     private TaskDefs taskDefs;
-    private File taskDefsFile;
     private AtomicLong crntId;
 
     private final Log log = LogFactory.getLog(TaskDefDaoImpl.class);
@@ -72,36 +60,25 @@ public class TaskDefDaoImpl implements TaskDefDao {
 	 *
 	 */
     public TaskDefDaoImpl(final ExamServerManager examServerManager) {
-
-        this.examServerManager = examServerManager;
+        super("de.thorstenberger.examServer.dao.xml.jaxb", new File(examServerManager.getRepositoryFile().getAbsolutePath()
+                + File.separatorChar
+                + ExamServerManager.SYSTEM + File.separatorChar + "taskdefs.xml"));
 
         try { // JAXBException
 
-            jc = JAXBContext.newInstance("de.thorstenberger.examServer.dao.xml.jaxb");
-
-            taskDefsFile = new File(examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar
-                    + ExamServerManager.SYSTEM + File.separatorChar + "taskdefs.xml");
-
-            if (!taskDefsFile.exists()) {
+            if (!iofile.exists()) {
                 final ObjectFactory oF = new ObjectFactory();
                 taskDefs = oF.createTaskDefs();
                 this.crntId = new AtomicLong(0);
-                save();
+                save(taskDefs);
                 return;
+            } else {
+                taskDefs = (TaskDefs) load();
+                this.crntId = new AtomicLong(findMostRecentId(taskDefs));
             }
-
-            // wenn vorhanden, dann auslesen
-            Unmarshaller unmarshaller;
-            unmarshaller = jc.createUnmarshaller();
-            unmarshaller.setValidating(true);
-            final BufferedInputStream bis = new BufferedInputStream(new FileInputStream(taskDefsFile));
-            taskDefs = (TaskDefs) unmarshaller.unmarshal(bis);
-            this.crntId = new AtomicLong(findMostRecentId(taskDefs));
 
         } catch (final JAXBException e) {
             throw new RuntimeException(e);
-        } catch (final IOException e1) {
-            throw new RuntimeException(e1);
         }
 
     }
@@ -189,26 +166,6 @@ public class TaskDefDaoImpl implements TaskDefDao {
 
     }
 
-    private void save() {
-        try {
-
-            final Marshaller marshaller = jc.createMarshaller();
-            final Validator validator = jc.createValidator();
-            validator.validate(taskDefs);
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
-            final BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(this.taskDefsFile));
-            marshaller.marshal(taskDefs, bos);
-
-            bos.close();
-
-        } catch (final JAXBException e) {
-            throw new RuntimeException(e);
-        } catch (final IOException e1) {
-            throw new RuntimeException(e1);
-        }
-
-    }
-
     public TaskDefVO storeTaskDef(final TaskDefVO td) {
         if (td.getId() >= 0) {
             // update
@@ -248,7 +205,7 @@ public class TaskDefDaoImpl implements TaskDefDao {
                 throw new RuntimeException(e);
             }
         }
-        save();
+        save(taskDefs);
         return td;
     }
 }

@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ */
 /**
  * 
  */
@@ -27,22 +27,22 @@ import de.thorstenberger.examServer.model.TaskletVO;
 
 /**
  * @author Thorsten Berger
- *
+ * 
  */
 public interface TaskHandlingDao {
 
-	public TaskletVO getTasklet( long taskId, String login );
-	
-	public void saveTasklet( TaskletVO taskletVO );
-	
-	public List<TaskletVO> getTasklets( String login );
-	
-	public List<TaskletVO> getTasklets( long taskId );
-	
-	public List<TaskletVO> getTasklets();
-	
-	public List<String> getUserIdsOfAvailableTasklets(long taskId);
-	
-	public List<String> getUserIdsOfTaskletsAssignedToCorrector( long taskId, String correctorId );
-	
+    public TaskletVO getTasklet(long taskId, String login);
+
+    public List<TaskletVO> getTasklets();
+
+    public List<TaskletVO> getTasklets(long taskId);
+
+    public List<TaskletVO> getTasklets(String login);
+
+    public List<String> getUserIdsOfAvailableTasklets(long taskId);
+
+    public List<String> getUserIdsOfTaskletsAssignedToCorrector(long taskId, String correctorId);
+
+    public void saveTasklet(TaskletVO taskletVO);
+
 }

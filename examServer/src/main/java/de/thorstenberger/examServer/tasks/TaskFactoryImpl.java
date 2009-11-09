@@ -15,19 +15,17 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ */
 /**
  *
  */
 package de.thorstenberger.examServer.tasks;
 
-import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -85,658 +83,738 @@ import de.thorstenberger.taskmodel.impl.TaskletCorrectionImpl;
 import de.thorstenberger.taskmodel.impl.UserInfoImpl;
 
 /**
- * @author Thorsten Berger
- * FIXME: move caching into TaskManagerImpl of Taskmodel-core
+ * @author Thorsten Berger FIXME: move caching into TaskManagerImpl of Taskmodel-core
  */
 public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory {
 
-	// the taskhandling file is saved under user's home directory
-	public static final String COMPLEX_TASKHANDLING_FILE_PREFIX = "complextask_";
-	public static final String COMPLEX_TASKHANDLING_FILE_SUFFIX = ".xml";
-	public static final String COMPLEX_TASKHANDLING_BACKUP_FILE_SUFFIX = ".bak";
+    public class UserAttributeImpl implements UserAttribute {
 
-	public static final String USER_ATTRIBUTE_SEMESTER = "user.student-info.semester";
+        private final String key;
+        private final String name;
 
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.TaskFactory#deleteTaskDef(long)
-	 */
-	synchronized public void deleteTaskDef(long id) throws MethodNotSupportedException {
-		TaskDefVO tdvo = taskDefDao.getTaskDef( id );
-		if( tdvo != null ) {
-			tdvo.setVisible( false ); //make invisible rather than delete physically
-			taskDefDao.storeTaskDef( tdvo );
-			this.taskDefCache = null;
-		}
-	}
+        /**
+         * @param key
+         * @param name
+         */
+        public UserAttributeImpl(final String key, final String name) {
+            super();
+            this.key = key;
+            this.name = name;
+        }
 
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.TaskFactory#getCategory(long)
-	 */
-	public TaskCategory getCategory(long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+        /**
+         * @return the key
+         */
+        public String getKey() {
+            return key;
+        }
 
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.TaskFactory#storeTaskCategory(de.thorstenberger.taskmodel.TaskCategory)
-	 */
-	public void storeTaskCategory(TaskCategory category) {
-		// TODO Auto-generated method stub
+        /**
+         * @return the name
+         */
+        public String getName(final Locale locale) {
+            return name;
+        }
 
-	}
+    }
 
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.TaskFactory#storeTaskDef(de.thorstenberger.taskmodel.TaskDef, long)
-	 */
-	synchronized public void storeTaskDef(TaskDef taskDef, long taskCategoryId) throws TaskApiException {
-		if(taskDef instanceof TaskDef_Complex) {
-			this.taskDefCache = null;
+    // the taskhandling file is saved under user's home directory
+    public static final String COMPLEX_TASKHANDLING_FILE_PREFIX = "complextask_";
+    public static final String COMPLEX_TASKHANDLING_FILE_SUFFIX = ".xml";
 
-			TaskDefVO tdvo=taskDefDao.getTaskDef( taskDef.getId() );
-			if(tdvo == null) {
-				tdvo = new TaskDefVO();
-				tdvo.setType( TaskContants.TYPE_COMPLEX );//FIXME
-				//tdvo.setComplexTaskFile( ??? );
-			}
-			tdvo.setId( taskDef.getId() );
-			tdvo.setTitle( taskDef.getTitle() );
-			tdvo.setStopped( taskDef.isStopped() );
-			tdvo.setShowSolutionToStudents( ((TaskDef_Complex) taskDef ).isShowCorrectionToUsers());
-			tdvo.setShortDescription( taskDef.getShortDescription() );
-			taskDefDao.storeTaskDef( tdvo );
+    public static final String COMPLEX_TASKHANDLING_BACKUP_FILE_SUFFIX = ".bak";
 
-		}else
-			throw new TaskApiException("Unsupported task of type \""+taskDef.getType()+"\".");
-	}
+    public static final String USER_ATTRIBUTE_SEMESTER = "user.student-info.semester";
 
-	private List<String> availableTypes;
+    private final List<String> availableTypes;
 
-	private ExamServerManager examServerManager;
-	private UserManager userManager;
+    private final ExamServerManager examServerManager;
 
-	private TaskDefDao taskDefDao;
-	private TaskHandlingDao taskHandlingDao;
-	private ComplexTaskDefDAO complexTaskDefDAO;
-	private ComplexTaskHandlingDAO complexTaskHandlingDAO;
-	private ComplexTaskBuilder complexTaskBuilder;
+    private final UserManager userManager;
 
-	private Log log = LogFactory.getLog( "TaskLogger" );
+    private final TaskDefDao taskDefDao;
 
+    private final TaskHandlingDao taskHandlingDao;
+    private final ComplexTaskDefDAO complexTaskDefDAO;
 
-	private List<TaskDef> taskDefCache = null;
+    private final ComplexTaskHandlingDAO complexTaskHandlingDAO;
+    private final ComplexTaskBuilder complexTaskBuilder;
+    private final Log log = LogFactory.getLog("TaskLogger");
+    private List<TaskDef> taskDefCache = null;
 
-	/**
+    /**
 	 *
 	 */
-	public TaskFactoryImpl( ExamServerManager examServerManager, UserManager userManager, TaskDefDao taskDefDao, TaskHandlingDao taskHandlingDao, ComplexTaskDefDAO complexTaskDefDAO, ComplexTaskHandlingDAO complexTaskHandlingDAO, ComplexTaskBuilder complexTaskBuilder ) {
-
-		this.examServerManager = examServerManager;
-		this.userManager = userManager;
-
-		this.taskDefDao = taskDefDao;
-		this.complexTaskDefDAO = complexTaskDefDAO;
-		this.taskHandlingDao = taskHandlingDao;
-		this.complexTaskHandlingDAO = complexTaskHandlingDAO;
-		this.complexTaskBuilder = complexTaskBuilder;
-
-		availableTypes = new ArrayList<String>();
-		availableTypes.add( TaskContants.TYPE_COMPLEX );
-
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.TaskFactory#availableTypes()
-	 */
-	public List<String> availableTypes() {
-		return availableTypes;
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.TaskFactory#getCategories()
-	 */
-	public List<TaskCategory> getCategories() {
-		throw new MethodNotSupportedException();
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.TaskFactory#getCategories(de.thorstenberger.taskmodel.CategoryFilter)
-	 */
-	public List<TaskCategory> getCategories(CategoryFilter categoryFilter) {
-		throw new MethodNotSupportedException();
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.TaskFactory#getTaskDef(long)
-	 */
-	public synchronized TaskDef getTaskDef(long taskId) {
-
-		List<TaskDef> taskDefs = getTaskDefs();
-		Iterator it = taskDefs.iterator();
-		while( it.hasNext() ){
-			TaskDef td = (TaskDef)it.next();
-			if( td.getId() == taskId )
-				return td;
-		}
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.TaskFactory#getTaskDefs()
-	 */
-	public synchronized List<TaskDef> getTaskDefs() {
-
-		if( taskDefCache == null ){
-
-			List<TaskDefVO> taskDefVOs = taskDefDao.getTaskDefs();
-
-			taskDefCache = new ArrayList<TaskDef>();
-
-			for( TaskDefVO t : taskDefVOs ){
-
-				TaskDef_ComplexImpl tdci;
-				try {
-					tdci = new TaskDef_ComplexImpl( t.getId(), t.getTitle(),
-							t.getShortDescription(), t.getDeadline(), t.isStopped(), t.getFollowingTaskId(),complexTaskDefDAO,
-							new FileInputStream( createPath( t.getComplexTaskFile() ) ),
-							t.isShowSolutionToStudents(), t.isVisible() );
-				} catch (FileNotFoundException e) {
-					throw new TaskModelPersistenceException( e );
-				}
-				taskDefCache.add( tdci );
-
-			}
-
-		}
-
-		return taskDefCache;
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.TaskFactory#getTaskDefs(de.thorstenberger.taskmodel.TaskFilter)
-	 */
-	public List<TaskDef> getTaskDefs(TaskFilter filter)
-			throws TaskFilterException {
-		throw new MethodNotSupportedException();
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.TaskFactory#getTasklet(java.lang.String, long)
-	 */
-	public Tasklet getTasklet(String userId, long taskId) {
-
-		TaskletVO taskletVO = taskHandlingDao.getTasklet( taskId, userId );
-		if( taskletVO == null )
-			return null;
-		TaskDefVO taskDefVO = taskDefDao.getTaskDef( taskId );
-		if( taskDefVO == null )
-			throw new RuntimeException( "No corresponding taskDef found: " + taskId );
-
-		File homeDir = new File( examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.HOME + File.separatorChar + userId );
-		File complexTaskHandlingFile = new File( homeDir.getAbsolutePath() + File.separatorChar +  COMPLEX_TASKHANDLING_FILE_PREFIX + taskId + COMPLEX_TASKHANDLING_FILE_SUFFIX );
-
-		return instantiateTasklet( taskletVO, taskDefVO, complexTaskHandlingFile );
-
-	}
-
-
-
-	private Tasklet instantiateTasklet( TaskletVO taskletVO, TaskDefVO taskDefVO, File complexTaskHandlingFile ){
-
-		// corrector annotations
-		List<CorrectorAnnotation> cas = new LinkedList<CorrectorAnnotation>();
-		List<CorrectorTaskletAnnotationVO> ctavos = taskletVO.getCorrectorAnnotations();
-		if( ctavos != null && ctavos.size() > 0 ){
-			for( CorrectorTaskletAnnotationVO ctavo : ctavos )
-				cas.add( new CorrectorAnnotationImpl( ctavo.getCorrector(), ctavo.getText() ) );
-		}
-		// student annotations
-		List<StudentAnnotation> studentAnnotations = new ArrayList<StudentAnnotation>();
-		for( StudentTaskletAnnotationVO tavo : taskletVO.getStudentAnnotations() )
-			studentAnnotations.add( new StudentAnnotationImpl( tavo.getText(), tavo.getDate(), tavo.isAcknowledged() ) );
-
-		// manual corrections
-		List<ManualCorrection> mcs = new LinkedList<ManualCorrection>();
-		List<ManualCorrectionsVO> mcvos = taskletVO.getManualCorrections();
-		if( mcvos != null && mcvos.size() > 0 ){
-			for( ManualCorrectionsVO mcvo : mcvos )
-				mcs.add( new ManualCorrectionImpl( mcvo.getCorrector(), mcvo.getPoints() ) );
-		}
-
-		TaskletCorrection correction =
-			new TaskletCorrectionImpl( taskletVO.getAutoCorrectionPoints(), cas,
-										taskletVO.getCorrectorLogin(), taskletVO.getCorrectorHistory(), studentAnnotations, mcs );
-
-		FileInputStream fis;
-		try {
-			if( !complexTaskHandlingFile.exists() )
-				complexTaskHandlingFile.createNewFile();
-			fis = new FileInputStream( complexTaskHandlingFile );
-		}catch( IOException e ){
-			throw new TaskModelPersistenceException( e );
-		}
-		ComplexTasklet tasklet =
-			new ComplexTaskletImpl( this, complexTaskBuilder, taskletVO.getLogin(), (TaskDef_Complex)getTaskDef( taskDefVO.getId() ),
-					TaskmodelUtil.getStatus( taskletVO.getStatus() ), taskletVO.getFlags(), correction, complexTaskHandlingDAO, fis, new HashMap<String, String>() );
-
-		return tasklet;
-
-
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.TaskFactory#createTasklet(java.lang.String, long)
-	 */
-	public Tasklet createTasklet(String userId, long taskId)
-			throws TaskApiException {
-
-		TaskletVO taskletVO = taskHandlingDao.getTasklet( taskId, userId );
-		TaskDefVO taskDefVO = taskDefDao.getTaskDef( taskId );
-
-		if( taskDefVO == null )
-			throw new TaskApiException( "TaskDef " + taskId + " does not exist!" );
-
-		if( taskletVO != null )
-			throw new TaskApiException( "Tasklet (" + userId + ", " + taskId + ") does already exist!" );
-
-		taskletVO = new TaskletVO();
-		taskletVO.setLogin( userId );
-		taskletVO.setTaskDefId( taskId );
-		taskletVO.setStatus( Tasklet.Status.INITIALIZED.getValue() );
-		taskletVO.setAutoCorrectionPoints( null );
-		taskletVO.setFlags( new LinkedList<String>() );
-		taskletVO.setStudentAnnotations( new LinkedList<StudentTaskletAnnotationVO>() );
-		taskletVO.setCorrectorAnnotations( new LinkedList<CorrectorTaskletAnnotationVO>() );
-		taskletVO.setManualCorrections( new LinkedList<ManualCorrectionsVO>() );
-
-		File homeDir = new File( examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.HOME + File.separatorChar + userId );
-		if( !homeDir.exists() )
-			homeDir.mkdirs();
-		File complexTaskHandlingFile = new File( homeDir.getAbsolutePath() + File.separatorChar +  COMPLEX_TASKHANDLING_FILE_PREFIX + taskId + COMPLEX_TASKHANDLING_FILE_SUFFIX );
-
-		taskHandlingDao.saveTasklet( taskletVO );
-
-		return instantiateTasklet( taskletVO, taskDefVO, complexTaskHandlingFile );
-
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.TaskFactory#getTasklets(long)
-	 */
-	public List<Tasklet> getTasklets(long taskId) {
-		List<Tasklet> ret = new ArrayList<Tasklet>();
-		List<TaskletVO> taskletVOs = taskHandlingDao.getTasklets( taskId );
-		TaskDefVO taskDefVO = taskDefDao.getTaskDef( taskId );
-
-		for( TaskletVO taskletVO : taskletVOs ){
-
-			File homeDir = new File( examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.HOME + File.separatorChar + taskletVO.getLogin() );
-			File complexTaskHandlingFile = new File( homeDir.getAbsolutePath() + File.separatorChar +  COMPLEX_TASKHANDLING_FILE_PREFIX + taskId + COMPLEX_TASKHANDLING_FILE_SUFFIX );
-
-			ret.add( instantiateTasklet( taskletVO, taskDefVO, complexTaskHandlingFile ) );
-		}
-
-		return ret;
-	}
-
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.impl.AbstractTaskFactory#getUserIdsOfAvailableTasklets(long)
-	 */
-	@Override
-	public List<String> getUserIdsOfAvailableTasklets(long taskId) {
-		return taskHandlingDao.getUserIdsOfAvailableTasklets( taskId );
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.impl.AbstractTaskFactory#getUserIdsOfTaskletsAssignedToCorrector(long, java.lang.String, boolean)
-	 */
-	@Override
-	public List<String> getUserIdsOfTaskletsAssignedToCorrector(long taskId, String correctorId) {
-		return taskHandlingDao.getUserIdsOfTaskletsAssignedToCorrector( taskId, correctorId );
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.TaskFactory#storeTasklet(de.thorstenberger.taskmodel.Tasklet)
-	 */
-	public void storeTasklet(Tasklet tasklet) throws TaskApiException {
-
-		TaskletVO taskletVO = taskHandlingDao.getTasklet( tasklet.getTaskId(), tasklet.getUserId() );
-
-		boolean changed = false;
-
-		if( taskletVO == null ){
-			// potential NPE, see lines below
-			// but has no influence due to createTasklet()
-			taskletVO = new TaskletVO();
-			changed = true;
-		}
-
-
-		if( taskletVO.getTaskDefId() != tasklet.getTaskId() ){
-			taskletVO.setTaskDefId( tasklet.getTaskId() );
-			changed = true;
-		}
-
-		if( objectsDiffer( taskletVO.getLogin(), tasklet.getUserId() ) ){
-			taskletVO.setLogin( tasklet.getUserId() );
-			changed = true;
-		}
-
-		if( objectsDiffer( taskletVO.getStatus(), tasklet.getStatus().getValue() ) ){
-			taskletVO.setStatus( tasklet.getStatus().getValue() );
-			changed = true;
-		}
-
-		if( objectsDiffer( taskletVO.getCorrectorLogin(), tasklet.getTaskletCorrection().getCorrector() ) ){
-			taskletVO.setCorrectorLogin( tasklet.getTaskletCorrection().getCorrector() );
-			changed = true;
-		}
-
-		if( objectsDiffer( taskletVO.getAutoCorrectionPoints(), tasklet.getTaskletCorrection().getAutoCorrectionPoints() ) ){
-			taskletVO.setAutoCorrectionPoints( tasklet.getTaskletCorrection().getAutoCorrectionPoints() );
-			changed = true;
-		}
-
-		if( objectsDiffer( taskletVO.getCorrectorHistory(), tasklet.getTaskletCorrection().getCorrectorHistory() ) ){
-			taskletVO.setCorrectorHistory( tasklet.getTaskletCorrection().getCorrectorHistory() );
-			changed = true;
-		}
-
-		if( objectsDiffer( taskletVO.getFlags(), tasklet.getFlags() ) ){
-			taskletVO.setFlags( tasklet.getFlags() );
-			changed = true;
-		}
-
-		// student annotations
-		if( taskletVO.getStudentAnnotations().size() != tasklet.getTaskletCorrection().getStudentAnnotations().size() ){
-			taskletVO.setStudentAnnotations( copyStudentAnnotations( tasklet.getTaskletCorrection().getStudentAnnotations() ) );
-			changed = true;
-		}else{
-			for( int i = 0; i < tasklet.getTaskletCorrection().getStudentAnnotations().size(); i++ ){
-				StudentAnnotation a = tasklet.getTaskletCorrection().getStudentAnnotations().get( i );
-				StudentTaskletAnnotationVO tavo = taskletVO.getStudentAnnotations().get( i );
-				if( objectsDiffer( a.getText(), tavo.getText() ) || objectsDiffer( a.getDate(), tavo.getDate() ) || objectsDiffer( a.isAcknowledged(), tavo.isAcknowledged() ) ){
-					taskletVO.setStudentAnnotations( copyStudentAnnotations( tasklet.getTaskletCorrection().getStudentAnnotations() ) );
-					changed = true;
-					break;
-				}
-			}
-		}
-
-		// corrector annotations
-		if( taskletVO.getCorrectorAnnotations().size() != tasklet.getTaskletCorrection().getCorrectorAnnotations().size() ){
-			taskletVO.setCorrectorAnnotations( copyCorrectorAnnotations( tasklet.getTaskletCorrection().getCorrectorAnnotations() ) );
-			changed = true;
-		}else{
-			for( int i = 0; i < tasklet.getTaskletCorrection().getCorrectorAnnotations().size(); i++ ){
-				CorrectorAnnotation a = tasklet.getTaskletCorrection().getCorrectorAnnotations().get( i );
-				CorrectorTaskletAnnotationVO tavo = taskletVO.getCorrectorAnnotations().get( i );
-				if( objectsDiffer( a.getText(), tavo.getText() ) || objectsDiffer( a.getCorrector(), tavo.getCorrector() ) ){
-					taskletVO.setCorrectorAnnotations( copyCorrectorAnnotations( tasklet.getTaskletCorrection().getCorrectorAnnotations() ) );
-					changed = true;
-					break;
-				}
-			}
-		}
-
-		// manual corrections
-		if( taskletVO.getManualCorrections().size() != tasklet.getTaskletCorrection().getManualCorrections().size() ){
-			taskletVO.setManualCorrections( copyManualCorrections(taskletVO, tasklet.getTaskletCorrection().getManualCorrections() ) );
-			changed = true;
-		}else{
-			for( int i = 0; i < tasklet.getTaskletCorrection().getManualCorrections().size(); i++ ){
-				ManualCorrection m = tasklet.getTaskletCorrection().getManualCorrections().get( i );
-				ManualCorrectionsVO mcvo = taskletVO.getManualCorrections().get( i );
-				if( objectsDiffer( m.getCorrector(), mcvo.getCorrector() ) || objectsDiffer( m.getCorrector(), m.getPoints() ) ){
-					taskletVO.setManualCorrections( copyManualCorrections( taskletVO, tasklet.getTaskletCorrection().getManualCorrections() ) );
-					changed = true;
-					break;
-				}
-			}
-		}
-
-
-		if( tasklet instanceof ComplexTasklet ){
-
-			// get the taskHandling xml file!
-			File homeDir = new File( examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.HOME + File.separatorChar + tasklet.getUserId() );
-			String pathOfCTHfile = homeDir.getAbsolutePath() + File.separatorChar +  COMPLEX_TASKHANDLING_FILE_PREFIX + tasklet.getTaskId() + COMPLEX_TASKHANDLING_FILE_SUFFIX;
-			File complexTaskHandlingFile = new File( pathOfCTHfile );
-
-			ComplexTasklet ct = (ComplexTasklet)tasklet;
-			try {
-				File backup = new File( pathOfCTHfile + COMPLEX_TASKHANDLING_BACKUP_FILE_SUFFIX );
-				backup.delete();
-				complexTaskHandlingFile.renameTo( backup );
-				complexTaskHandlingFile = new File( pathOfCTHfile );
-				complexTaskHandlingDAO.save( ct.getComplexTaskHandlingRoot(), new FileOutputStream( complexTaskHandlingFile ) );
-			} catch (FileNotFoundException e) {
-				throw new TaskModelPersistenceException( e );
-			}
-		}
-
-		if( changed )
-			taskHandlingDao.saveTasklet( taskletVO );
-
-	}
-
-	private List<StudentTaskletAnnotationVO> copyStudentAnnotations( List<StudentAnnotation> annotations ){
-		List<StudentTaskletAnnotationVO> ret = new LinkedList<StudentTaskletAnnotationVO>();
-		for( StudentAnnotation a : annotations )
-			ret.add( new StudentTaskletAnnotationVO( a.getText(), a.getDate(), a.isAcknowledged() ) );
-		return ret;
-	}
-
-	private List<CorrectorTaskletAnnotationVO> copyCorrectorAnnotations( List<CorrectorAnnotation> annotations ){
-		List<CorrectorTaskletAnnotationVO> ret = new LinkedList<CorrectorTaskletAnnotationVO>();
-		for( CorrectorAnnotation a : annotations )
-			ret.add( new CorrectorTaskletAnnotationVO( a.getCorrector(), a.getText() ) );
-		return ret;
-	}
-
-	private List<ManualCorrectionsVO> copyManualCorrections( TaskletVO taskletVO, List<ManualCorrection> manualCorrections ){
-		List<ManualCorrectionsVO> ret = new LinkedList<ManualCorrectionsVO>();
-		for( ManualCorrection mc : manualCorrections ){
-			ret.add( taskletVO.new ManualCorrectionsVO( mc.getCorrector(), mc.getPoints() ) );
-		}
-		return ret;
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.TaskFactory#removeTasklet(java.lang.String, long)
-	 */
-	public void removeTasklet(String userId, long taskId)
-			throws TaskApiException {
-		throw new MethodNotSupportedException();
-	}
-
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.TaskFactory#logPostData(java.lang.String, de.thorstenberger.taskmodel.Tasklet, java.lang.String)
-	 */
-	public void logPostData(String msg, Tasklet tasklet, String ip) {
-		String prefix = tasklet.getUserId() + "@" + ip + ": ";
-		log.info( prefix + msg );
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.TaskFactory#logPostData(java.lang.String, java.lang.Throwable, de.thorstenberger.taskmodel.Tasklet, java.lang.String)
-	 */
-	public void logPostData(String msg, Throwable throwable, Tasklet tasklet, String ip) {
-		String prefix = tasklet.getUserId() + "@" + ip + ": ";
-		log.info( prefix + msg, throwable );
-	}
-
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.TaskFactory#getUserInfo(java.lang.String)
-	 */
-	public UserInfo getUserInfo(String login) {
-
-		User user;
-
-		try {
-			user = userManager.getUserByUsername( login );
-		} catch (UsernameNotFoundException e) {
-			return null;
-		}
-
-		UserInfoImpl ret = new UserInfoImpl();
-		ret.setLogin( user.getUsername() );
-		ret.setFirstName( user.getFirstName() );
-		ret.setName( user.getLastName() );
-		ret.setEMail( user.getEmail() );
-		ret.setUserAttribute( USER_ATTRIBUTE_SEMESTER, user.getPhoneNumber() );
-
-		return ret;
-
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.TaskFactory#getCorrectors()
-	 */
-	public List<UserInfo> getCorrectors() {
-		List<UserInfo> ret = new LinkedList<UserInfo>();
-		User uLookup = new User();
-		uLookup.addRole( new Role( RoleAndLookupDaoImpl.TUTOR ) );
-		List<User> users = userManager.getUsers(uLookup);
-		uLookup = new User();
-		uLookup.addRole( new Role( RoleAndLookupDaoImpl.ADMIN ) );
-
-		List<User> adminUsers = userManager.getUsers(uLookup);
-		for( User u : adminUsers )
-			if( !users.contains( u ) )
-				users.add( u );
-
-		for( User u : users ){
-			UserInfoImpl ui = new UserInfoImpl();
-			ui.setLogin( u.getUsername() );
-			ui.setFirstName( u.getFirstName() );
-			ui.setName( u.getLastName() );
-			ui.setEMail( u.getEmail() );
-			ui.setUserAttribute( USER_ATTRIBUTE_SEMESTER, u.getPhoneNumber() );
-			ret.add( ui );
-		}
-		return ret;
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.TaskFactory#availableUserAttributeKeys()
-	 */
-	public List<UserAttribute> availableUserAttributes() {
-		List<UserAttribute> ret = new LinkedList<UserAttribute>();
-		ret.add( new UserAttributeImpl( USER_ATTRIBUTE_SEMESTER, "Semester" ) ); // TODO externalize String
-		return ret;
-	}
-
-	public class UserAttributeImpl implements UserAttribute{
-
-		private String key;
-		private String name;
-		/**
-		 * @param key
-		 * @param name
-		 */
-		public UserAttributeImpl(String key, String name) {
-			super();
-			this.key = key;
-			this.name = name;
-		}
-		/**
-		 * @return the key
-		 */
-		public String getKey() {
-			return key;
-		}
-		/**
-		 * @return the name
-		 */
-		public String getName( Locale locale ) {
-			return name;
-		}
-
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.TaskFactory#addTaskCategory(java.lang.String, java.lang.String)
-	 */
-	public TaskCategory addTaskCategory(String name, String description) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.taskmodel.TaskFactory#deleteTaskCategory(long)
-	 */
-	public void deleteTaskCategory(long id) throws MethodNotSupportedException {
-		// TODO Auto-generated method stub
-		throw new MethodNotSupportedException();
-	}
-
-	private boolean objectsDiffer( Object a, Object b ){
-		if( a == null && b == null )
-			return false;
-		if( a == null && b != null )
-			return true;
-		if( b == null && a != null )
-			return true;
-
-		return !a.equals( b );
-	}
-	/**
-	 * Stores a new taskDef via DAO. Returns its id.
-	 * @param filename
-	 * @param fileContent
-	 * @throws TaskApiException
-	 */
-	synchronized public long storeNewTaskDef(String filename, byte[] fileContent) throws TaskApiException {
-		try{
-			this.taskDefCache = null;
-
-			//throw exception if the file is no valid taskDef
-			try{
-				ByteArrayInputStream bis = new ByteArrayInputStream(fileContent);
-				complexTaskDefDAO.getComplexTaskDefRoot( bis );
-			}catch( TaskApiException e ){
-				throw new TaskApiException("Invalid taskDef format.",e);
-			}
-
-			//write to file system
-			File file = new File( createPath( filename ));
-			int idx=0;
-			//if file exists, create a new unique name for it
-			while(file.exists()) {
-				file=new File( createPath( filename + "." + idx ));
-				idx++;
-			}
-			FileOutputStream fos = new FileOutputStream( file );
-			fos.write( fileContent );
-			fos.close();
-
-			TaskDefVO td = new TaskDefVO();
-			td.setComplexTaskFile( file.getName() );
-			td.setTitle( "[new task]" );
-			td.setType( TaskContants.TYPE_COMPLEX );
-			td.setStopped( true );
-			td.setVisible( true );
-			td.setShowSolutionToStudents( false );
-
-			return taskDefDao.storeTaskDef( td ).getId();
-
-		}catch( IOException e ){
-			log.error( "Error on persisting new taskDef.", e );
-			throw new TaskApiException("Error on persisting new taskDef", e);
-		}
-
-	}
-
-	/**
-	 * Creates pathname for taskDef files
-	 * @param filename
-	 * @return
-	 */
-	private String createPath( String filename ) {
-		return examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.TASKDEFS + File.separatorChar + filename;
-	}
+    public TaskFactoryImpl(final ExamServerManager examServerManager, final UserManager userManager, final TaskDefDao taskDefDao,
+            final TaskHandlingDao taskHandlingDao, final ComplexTaskDefDAO complexTaskDefDAO,
+            final ComplexTaskHandlingDAO complexTaskHandlingDAO, final ComplexTaskBuilder complexTaskBuilder) {
+
+        this.examServerManager = examServerManager;
+        this.userManager = userManager;
+
+        this.taskDefDao = taskDefDao;
+        this.complexTaskDefDAO = complexTaskDefDAO;
+        this.taskHandlingDao = taskHandlingDao;
+        this.complexTaskHandlingDAO = complexTaskHandlingDAO;
+        this.complexTaskBuilder = complexTaskBuilder;
+
+        availableTypes = new ArrayList<String>();
+        availableTypes.add(TaskContants.TYPE_COMPLEX);
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.TaskFactory#addTaskCategory(java.lang.String, java.lang.String)
+     */
+    public TaskCategory addTaskCategory(final String name, final String description) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.TaskFactory#availableTypes()
+     */
+    public List<String> availableTypes() {
+        return availableTypes;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.TaskFactory#availableUserAttributeKeys()
+     */
+    public List<UserAttribute> availableUserAttributes() {
+        final List<UserAttribute> ret = new LinkedList<UserAttribute>();
+        ret.add(new UserAttributeImpl(USER_ATTRIBUTE_SEMESTER, "Semester")); // TODO externalize String
+        return ret;
+    }
+
+    private List<CorrectorTaskletAnnotationVO> copyCorrectorAnnotations(final List<CorrectorAnnotation> annotations) {
+        final List<CorrectorTaskletAnnotationVO> ret = new LinkedList<CorrectorTaskletAnnotationVO>();
+        for (final CorrectorAnnotation a : annotations) {
+            ret.add(new CorrectorTaskletAnnotationVO(a.getCorrector(), a.getText()));
+        }
+        return ret;
+    }
+
+    private List<ManualCorrectionsVO> copyManualCorrections(final TaskletVO taskletVO, final List<ManualCorrection> manualCorrections) {
+        final List<ManualCorrectionsVO> ret = new LinkedList<ManualCorrectionsVO>();
+        for (final ManualCorrection mc : manualCorrections) {
+            ret.add(taskletVO.new ManualCorrectionsVO(mc.getCorrector(), mc.getPoints()));
+        }
+        return ret;
+    }
+
+    private List<StudentTaskletAnnotationVO> copyStudentAnnotations(final List<StudentAnnotation> annotations) {
+        final List<StudentTaskletAnnotationVO> ret = new LinkedList<StudentTaskletAnnotationVO>();
+        for (final StudentAnnotation a : annotations) {
+            ret.add(new StudentTaskletAnnotationVO(a.getText(), a.getDate(), a.isAcknowledged()));
+        }
+        return ret;
+    }
+
+    /**
+     * Creates pathname for taskDef files
+     * 
+     * @param filename
+     * @return
+     */
+    private String createPath(final String filename) {
+        return examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.TASKDEFS
+                + File.separatorChar + filename;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.TaskFactory#createTasklet(java.lang.String, long)
+     */
+    public Tasklet createTasklet(final String userId, final long taskId)
+            throws TaskApiException {
+
+        TaskletVO taskletVO = taskHandlingDao.getTasklet(taskId, userId);
+        final TaskDefVO taskDefVO = taskDefDao.getTaskDef(taskId);
+
+        if (taskDefVO == null) {
+            throw new TaskApiException("TaskDef " + taskId + " does not exist!");
+        }
+
+        if (taskletVO != null) {
+            throw new TaskApiException("Tasklet (" + userId + ", " + taskId + ") does already exist!");
+        }
+
+        taskletVO = new TaskletVO();
+        taskletVO.setLogin(userId);
+        taskletVO.setTaskDefId(taskId);
+        taskletVO.setStatus(Tasklet.Status.INITIALIZED.getValue());
+        taskletVO.setAutoCorrectionPoints(null);
+        taskletVO.setFlags(new LinkedList<String>());
+        taskletVO.setStudentAnnotations(new LinkedList<StudentTaskletAnnotationVO>());
+        taskletVO.setCorrectorAnnotations(new LinkedList<CorrectorTaskletAnnotationVO>());
+        taskletVO.setManualCorrections(new LinkedList<ManualCorrectionsVO>());
+
+        final File homeDir = new File(examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar
+                + ExamServerManager.HOME + File.separatorChar + userId);
+        if (!homeDir.exists()) {
+            homeDir.mkdirs();
+        }
+        final File complexTaskHandlingFile = new File(homeDir.getAbsolutePath() + File.separatorChar
+                + COMPLEX_TASKHANDLING_FILE_PREFIX + taskId + COMPLEX_TASKHANDLING_FILE_SUFFIX);
+
+        taskHandlingDao.saveTasklet(taskletVO);
+
+        return instantiateTasklet(taskletVO, taskDefVO, complexTaskHandlingFile);
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.TaskFactory#deleteTaskCategory(long)
+     */
+    public void deleteTaskCategory(final long id) throws MethodNotSupportedException {
+        // TODO Auto-generated method stub
+        throw new MethodNotSupportedException();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.TaskFactory#deleteTaskDef(long)
+     */
+    synchronized public void deleteTaskDef(final long id) throws MethodNotSupportedException {
+        final TaskDefVO tdvo = taskDefDao.getTaskDef(id);
+        if (tdvo != null) {
+            tdvo.setVisible(false); // make invisible rather than delete physically
+            taskDefDao.storeTaskDef(tdvo);
+            this.taskDefCache = null;
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.TaskFactory#getCategories()
+     */
+    public List<TaskCategory> getCategories() {
+        throw new MethodNotSupportedException();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.TaskFactory#getCategories(de.thorstenberger.taskmodel.CategoryFilter)
+     */
+    public List<TaskCategory> getCategories(final CategoryFilter categoryFilter) {
+        throw new MethodNotSupportedException();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.TaskFactory#getCategory(long)
+     */
+    public TaskCategory getCategory(final long id) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.TaskFactory#getCorrectors()
+     */
+    public List<UserInfo> getCorrectors() {
+        final List<UserInfo> ret = new LinkedList<UserInfo>();
+        User uLookup = new User();
+        uLookup.addRole(new Role(RoleAndLookupDaoImpl.TUTOR));
+        final List<User> users = userManager.getUsers(uLookup);
+        uLookup = new User();
+        uLookup.addRole(new Role(RoleAndLookupDaoImpl.ADMIN));
+
+        final List<User> adminUsers = userManager.getUsers(uLookup);
+        for (final User u : adminUsers) {
+            if (!users.contains(u)) {
+                users.add(u);
+            }
+        }
+
+        for (final User u : users) {
+            final UserInfoImpl ui = new UserInfoImpl();
+            ui.setLogin(u.getUsername());
+            ui.setFirstName(u.getFirstName());
+            ui.setName(u.getLastName());
+            ui.setEMail(u.getEmail());
+            ui.setUserAttribute(USER_ATTRIBUTE_SEMESTER, u.getPhoneNumber());
+            ret.add(ui);
+        }
+        return ret;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.TaskFactory#getTaskDef(long)
+     */
+    public synchronized TaskDef getTaskDef(final long taskId) {
+
+        final List<TaskDef> taskDefs = getTaskDefs();
+        final Iterator it = taskDefs.iterator();
+        while (it.hasNext()) {
+            final TaskDef td = (TaskDef) it.next();
+            if (td.getId() == taskId) {
+                return td;
+            }
+        }
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.TaskFactory#getTaskDefs()
+     */
+    public synchronized List<TaskDef> getTaskDefs() {
+
+        if (taskDefCache == null) {
+
+            final List<TaskDefVO> taskDefVOs = taskDefDao.getTaskDefs();
+
+            taskDefCache = new ArrayList<TaskDef>();
+
+            for (final TaskDefVO t : taskDefVOs) {
+
+                TaskDef_ComplexImpl tdci;
+                try {
+                    tdci = new TaskDef_ComplexImpl(t.getId(), t.getTitle(),
+                            t.getShortDescription(), t.getDeadline(), t.isStopped(), t.getFollowingTaskId(), complexTaskDefDAO,
+                            new FileInputStream(createPath(t.getComplexTaskFile())),
+                            t.isShowSolutionToStudents(), t.isVisible());
+                } catch (final FileNotFoundException e) {
+                    throw new TaskModelPersistenceException(e);
+                }
+                taskDefCache.add(tdci);
+
+            }
+
+        }
+
+        return taskDefCache;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.TaskFactory#getTaskDefs(de.thorstenberger.taskmodel.TaskFilter)
+     */
+    public List<TaskDef> getTaskDefs(final TaskFilter filter)
+            throws TaskFilterException {
+        throw new MethodNotSupportedException();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.TaskFactory#getTasklet(java.lang.String, long)
+     */
+    public Tasklet getTasklet(final String userId, final long taskId) {
+
+        final TaskletVO taskletVO = taskHandlingDao.getTasklet(taskId, userId);
+        if (taskletVO == null) {
+            return null;
+        }
+        final TaskDefVO taskDefVO = taskDefDao.getTaskDef(taskId);
+        if (taskDefVO == null) {
+            throw new RuntimeException("No corresponding taskDef found: " + taskId);
+        }
+
+        final File homeDir = new File(examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar
+                + ExamServerManager.HOME + File.separatorChar + userId);
+        final File complexTaskHandlingFile = new File(homeDir.getAbsolutePath() + File.separatorChar
+                + COMPLEX_TASKHANDLING_FILE_PREFIX + taskId + COMPLEX_TASKHANDLING_FILE_SUFFIX);
+
+        return instantiateTasklet(taskletVO, taskDefVO, complexTaskHandlingFile);
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.TaskFactory#getTasklets(long)
+     */
+    public List<Tasklet> getTasklets(final long taskId) {
+        final List<Tasklet> ret = new ArrayList<Tasklet>();
+        final List<TaskletVO> taskletVOs = taskHandlingDao.getTasklets(taskId);
+        final TaskDefVO taskDefVO = taskDefDao.getTaskDef(taskId);
+
+        for (final TaskletVO taskletVO : taskletVOs) {
+
+            final File homeDir = new File(examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar
+                    + ExamServerManager.HOME + File.separatorChar + taskletVO.getLogin());
+            final File complexTaskHandlingFile = new File(homeDir.getAbsolutePath() + File.separatorChar
+                    + COMPLEX_TASKHANDLING_FILE_PREFIX + taskId + COMPLEX_TASKHANDLING_FILE_SUFFIX);
+
+            ret.add(instantiateTasklet(taskletVO, taskDefVO, complexTaskHandlingFile));
+        }
+
+        return ret;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.impl.AbstractTaskFactory#getUserIdsOfAvailableTasklets(long)
+     */
+    @Override
+    public List<String> getUserIdsOfAvailableTasklets(final long taskId) {
+        return taskHandlingDao.getUserIdsOfAvailableTasklets(taskId);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.impl.AbstractTaskFactory#getUserIdsOfTaskletsAssignedToCorrector(long,
+     * java.lang.String, boolean)
+     */
+    @Override
+    public List<String> getUserIdsOfTaskletsAssignedToCorrector(final long taskId, final String correctorId) {
+        return taskHandlingDao.getUserIdsOfTaskletsAssignedToCorrector(taskId, correctorId);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.TaskFactory#getUserInfo(java.lang.String)
+     */
+    public UserInfo getUserInfo(final String login) {
+
+        User user;
+
+        try {
+            user = userManager.getUserByUsername(login);
+        } catch (final UsernameNotFoundException e) {
+            return null;
+        }
+
+        final UserInfoImpl ret = new UserInfoImpl();
+        ret.setLogin(user.getUsername());
+        ret.setFirstName(user.getFirstName());
+        ret.setName(user.getLastName());
+        ret.setEMail(user.getEmail());
+        ret.setUserAttribute(USER_ATTRIBUTE_SEMESTER, user.getPhoneNumber());
+
+        return ret;
+
+    }
+
+    private Tasklet instantiateTasklet(final TaskletVO taskletVO, final TaskDefVO taskDefVO, final File complexTaskHandlingFile) {
+
+        // corrector annotations
+        final List<CorrectorAnnotation> cas = new LinkedList<CorrectorAnnotation>();
+        final List<CorrectorTaskletAnnotationVO> ctavos = taskletVO.getCorrectorAnnotations();
+        if (ctavos != null && ctavos.size() > 0) {
+            for (final CorrectorTaskletAnnotationVO ctavo : ctavos) {
+                cas.add(new CorrectorAnnotationImpl(ctavo.getCorrector(), ctavo.getText()));
+            }
+        }
+        // student annotations
+        final List<StudentAnnotation> studentAnnotations = new ArrayList<StudentAnnotation>();
+        for (final StudentTaskletAnnotationVO tavo : taskletVO.getStudentAnnotations()) {
+            studentAnnotations.add(new StudentAnnotationImpl(tavo.getText(), tavo.getDate(), tavo.isAcknowledged()));
+        }
+
+        // manual corrections
+        final List<ManualCorrection> mcs = new LinkedList<ManualCorrection>();
+        final List<ManualCorrectionsVO> mcvos = taskletVO.getManualCorrections();
+        if (mcvos != null && mcvos.size() > 0) {
+            for (final ManualCorrectionsVO mcvo : mcvos) {
+                mcs.add(new ManualCorrectionImpl(mcvo.getCorrector(), mcvo.getPoints()));
+            }
+        }
+
+        final TaskletCorrection correction =
+                new TaskletCorrectionImpl(taskletVO.getAutoCorrectionPoints(), cas,
+                taskletVO.getCorrectorLogin(), taskletVO.getCorrectorHistory(), studentAnnotations, mcs);
+
+        FileInputStream fis;
+        try {
+            if (!complexTaskHandlingFile.exists()) {
+                complexTaskHandlingFile.createNewFile();
+            }
+            fis = new FileInputStream(complexTaskHandlingFile);
+        } catch (final IOException e) {
+            throw new TaskModelPersistenceException(e);
+        }
+        final ComplexTasklet tasklet =
+                new ComplexTaskletImpl(this, complexTaskBuilder, taskletVO.getLogin(), (TaskDef_Complex) getTaskDef(taskDefVO.getId()),
+                TaskmodelUtil.getStatus(taskletVO.getStatus()), taskletVO.getFlags(), correction, complexTaskHandlingDAO, fis, new HashMap<String, String>());
+
+        return tasklet;
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.TaskFactory#logPostData(java.lang.String, de.thorstenberger.taskmodel.Tasklet,
+     * java.lang.String)
+     */
+    public void logPostData(final String msg, final Tasklet tasklet, final String ip) {
+        final String prefix = tasklet.getUserId() + "@" + ip + ": ";
+        log.info(prefix + msg);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.TaskFactory#logPostData(java.lang.String, java.lang.Throwable,
+     * de.thorstenberger.taskmodel.Tasklet, java.lang.String)
+     */
+    public void logPostData(final String msg, final Throwable throwable, final Tasklet tasklet, final String ip) {
+        final String prefix = tasklet.getUserId() + "@" + ip + ": ";
+        log.info(prefix + msg, throwable);
+    }
+
+    private boolean objectsDiffer(final Object a, final Object b) {
+        if (a == null && b == null) {
+            return false;
+        }
+        if (a == null && b != null) {
+            return true;
+        }
+        if (b == null && a != null) {
+            return true;
+        }
+
+        return !a.equals(b);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.TaskFactory#removeTasklet(java.lang.String, long)
+     */
+    public void removeTasklet(final String userId, final long taskId)
+            throws TaskApiException {
+        throw new MethodNotSupportedException();
+    }
+
+    /**
+     * Stores a new taskDef via DAO. Returns its id.
+     * 
+     * @param filename
+     * @param fileContent
+     * @throws TaskApiException
+     */
+    synchronized public long storeNewTaskDef(final String filename, final byte[] fileContent) throws TaskApiException {
+        try {
+            this.taskDefCache = null;
+
+            // throw exception if the file is no valid taskDef
+            try {
+                final ByteArrayInputStream bis = new ByteArrayInputStream(fileContent);
+                complexTaskDefDAO.getComplexTaskDefRoot(bis);
+            } catch (final TaskApiException e) {
+                throw new TaskApiException("Invalid taskDef format.", e);
+            }
+
+            // write to file system
+            File file = new File(createPath(filename));
+            int idx = 0;
+            // if file exists, create a new unique name for it
+            while (file.exists()) {
+                file = new File(createPath(filename + "." + idx));
+                idx++;
+            }
+            final FileOutputStream fos = new FileOutputStream(file);
+            fos.write(fileContent);
+            fos.close();
+
+            final TaskDefVO td = new TaskDefVO();
+            td.setComplexTaskFile(file.getName());
+            td.setTitle("[new task]");
+            td.setType(TaskContants.TYPE_COMPLEX);
+            td.setStopped(true);
+            td.setVisible(true);
+            td.setShowSolutionToStudents(false);
+
+            return taskDefDao.storeTaskDef(td).getId();
+
+        } catch (final IOException e) {
+            log.error("Error on persisting new taskDef.", e);
+            throw new TaskApiException("Error on persisting new taskDef", e);
+        }
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.TaskFactory#storeTaskCategory(de.thorstenberger.taskmodel.TaskCategory)
+     */
+    public void storeTaskCategory(final TaskCategory category) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.TaskFactory#storeTaskDef(de.thorstenberger.taskmodel.TaskDef, long)
+     */
+    synchronized public void storeTaskDef(final TaskDef taskDef, final long taskCategoryId) throws TaskApiException {
+        if (taskDef instanceof TaskDef_Complex) {
+            this.taskDefCache = null;
+
+            TaskDefVO tdvo = taskDefDao.getTaskDef(taskDef.getId());
+            if (tdvo == null) {
+                tdvo = new TaskDefVO();
+                tdvo.setType(TaskContants.TYPE_COMPLEX);// FIXME
+                // tdvo.setComplexTaskFile( ??? );
+            }
+            tdvo.setId(taskDef.getId());
+            tdvo.setTitle(taskDef.getTitle());
+            tdvo.setStopped(taskDef.isStopped());
+            tdvo.setShowSolutionToStudents(((TaskDef_Complex) taskDef).isShowCorrectionToUsers());
+            tdvo.setShortDescription(taskDef.getShortDescription());
+            taskDefDao.storeTaskDef(tdvo);
+
+        } else {
+            throw new TaskApiException("Unsupported task of type \"" + taskDef.getType() + "\".");
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.thorstenberger.taskmodel.TaskFactory#storeTasklet(de.thorstenberger.taskmodel.Tasklet)
+     */
+    public void storeTasklet(final Tasklet tasklet) throws TaskApiException {
+
+        TaskletVO taskletVO = taskHandlingDao.getTasklet(tasklet.getTaskId(), tasklet.getUserId());
+
+        boolean changed = false;
+
+        if (taskletVO == null) {
+            // potential NPE, see lines below
+            // but has no influence due to createTasklet()
+            taskletVO = new TaskletVO();
+            changed = true;
+        }
+
+        if (taskletVO.getTaskDefId() != tasklet.getTaskId()) {
+            taskletVO.setTaskDefId(tasklet.getTaskId());
+            changed = true;
+        }
+
+        if (objectsDiffer(taskletVO.getLogin(), tasklet.getUserId())) {
+            taskletVO.setLogin(tasklet.getUserId());
+            changed = true;
+        }
+
+        if (objectsDiffer(taskletVO.getStatus(), tasklet.getStatus().getValue())) {
+            taskletVO.setStatus(tasklet.getStatus().getValue());
+            changed = true;
+        }
+
+        if (objectsDiffer(taskletVO.getCorrectorLogin(), tasklet.getTaskletCorrection().getCorrector())) {
+            taskletVO.setCorrectorLogin(tasklet.getTaskletCorrection().getCorrector());
+            changed = true;
+        }
+
+        if (objectsDiffer(taskletVO.getAutoCorrectionPoints(), tasklet.getTaskletCorrection().getAutoCorrectionPoints())) {
+            taskletVO.setAutoCorrectionPoints(tasklet.getTaskletCorrection().getAutoCorrectionPoints());
+            changed = true;
+        }
+
+        if (objectsDiffer(taskletVO.getCorrectorHistory(), tasklet.getTaskletCorrection().getCorrectorHistory())) {
+            taskletVO.setCorrectorHistory(tasklet.getTaskletCorrection().getCorrectorHistory());
+            changed = true;
+        }
+
+        if (objectsDiffer(taskletVO.getFlags(), tasklet.getFlags())) {
+            taskletVO.setFlags(tasklet.getFlags());
+            changed = true;
+        }
+
+        // student annotations
+        if (taskletVO.getStudentAnnotations().size() != tasklet.getTaskletCorrection().getStudentAnnotations().size()) {
+            taskletVO.setStudentAnnotations(copyStudentAnnotations(tasklet.getTaskletCorrection().getStudentAnnotations()));
+            changed = true;
+        } else {
+            for (int i = 0; i < tasklet.getTaskletCorrection().getStudentAnnotations().size(); i++) {
+                final StudentAnnotation a = tasklet.getTaskletCorrection().getStudentAnnotations().get(i);
+                final StudentTaskletAnnotationVO tavo = taskletVO.getStudentAnnotations().get(i);
+                if (objectsDiffer(a.getText(), tavo.getText()) || objectsDiffer(a.getDate(), tavo.getDate())
+                        || objectsDiffer(a.isAcknowledged(), tavo.isAcknowledged())) {
+                    taskletVO.setStudentAnnotations(copyStudentAnnotations(tasklet.getTaskletCorrection().getStudentAnnotations()));
+                    changed = true;
+                    break;
+                }
+            }
+        }
+
+        // corrector annotations
+        if (taskletVO.getCorrectorAnnotations().size() != tasklet.getTaskletCorrection().getCorrectorAnnotations().size()) {
+            taskletVO.setCorrectorAnnotations(copyCorrectorAnnotations(tasklet.getTaskletCorrection().getCorrectorAnnotations()));
+            changed = true;
+        } else {
+            for (int i = 0; i < tasklet.getTaskletCorrection().getCorrectorAnnotations().size(); i++) {
+                final CorrectorAnnotation a = tasklet.getTaskletCorrection().getCorrectorAnnotations().get(i);
+                final CorrectorTaskletAnnotationVO tavo = taskletVO.getCorrectorAnnotations().get(i);
+                if (objectsDiffer(a.getText(), tavo.getText()) || objectsDiffer(a.getCorrector(), tavo.getCorrector())) {
+                    taskletVO.setCorrectorAnnotations(copyCorrectorAnnotations(tasklet.getTaskletCorrection().getCorrectorAnnotations()));
+                    changed = true;
+                    break;
+                }
+            }
+        }
+
+        // manual corrections
+        if (taskletVO.getManualCorrections().size() != tasklet.getTaskletCorrection().getManualCorrections().size()) {
+            taskletVO.setManualCorrections(copyManualCorrections(taskletVO, tasklet.getTaskletCorrection().getManualCorrections()));
+            changed = true;
+        } else {
+            for (int i = 0; i < tasklet.getTaskletCorrection().getManualCorrections().size(); i++) {
+                final ManualCorrection m = tasklet.getTaskletCorrection().getManualCorrections().get(i);
+                final ManualCorrectionsVO mcvo = taskletVO.getManualCorrections().get(i);
+                if (objectsDiffer(m.getCorrector(), mcvo.getCorrector()) || objectsDiffer(m.getCorrector(), m.getPoints())) {
+                    taskletVO.setManualCorrections(copyManualCorrections(taskletVO, tasklet.getTaskletCorrection().getManualCorrections()));
+                    changed = true;
+                    break;
+                }
+            }
+        }
+
+        if (tasklet instanceof ComplexTasklet) {
+            // TODO introduce transactions
+            // get the taskHandling xml file!
+            final File homeDir = new File(examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar
+                    + ExamServerManager.HOME + File.separatorChar + tasklet.getUserId());
+            final String pathOfCTHfile = homeDir.getAbsolutePath() + File.separatorChar + COMPLEX_TASKHANDLING_FILE_PREFIX
+                    + tasklet.getTaskId() + COMPLEX_TASKHANDLING_FILE_SUFFIX;
+            File complexTaskHandlingFile = new File(pathOfCTHfile);
+
+            final ComplexTasklet ct = (ComplexTasklet) tasklet;
+            try {
+                final File backup = new File(pathOfCTHfile + COMPLEX_TASKHANDLING_BACKUP_FILE_SUFFIX);
+                backup.delete();
+                complexTaskHandlingFile.renameTo(backup);
+                complexTaskHandlingFile = new File(pathOfCTHfile);
+                complexTaskHandlingDAO.save(ct.getComplexTaskHandlingRoot(), new FileOutputStream(complexTaskHandlingFile));
+            } catch (final FileNotFoundException e) {
+                throw new TaskModelPersistenceException(e);
+            }
+        }
+
+        if (changed) {
+            taskHandlingDao.saveTasklet(taskletVO);
+        }
+
+    }
 
 }

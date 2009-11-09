@@ -62,8 +62,7 @@ public class TaskHandlingDaoImpl extends AbstractJAXBDao implements TaskHandling
 	 */
     public TaskHandlingDaoImpl(final ExamServerManager examServerManager) {
         super("de.thorstenberger.examServer.dao.xml.jaxb",
-                new File(examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.SYSTEM
-                + File.separatorChar + "taskhandling.xml"));
+                new File(examServerManager.getSystemDir(), "taskhandling.xml"));
 
         try { // JAXBException
 

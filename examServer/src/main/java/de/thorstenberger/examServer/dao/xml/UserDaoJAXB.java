@@ -40,7 +40,6 @@ import org.springframework.orm.ObjectRetrievalFailureException;
 import de.thorstenberger.examServer.dao.LookupDao;
 import de.thorstenberger.examServer.dao.RoleDao;
 import de.thorstenberger.examServer.dao.UserDao;
-import de.thorstenberger.examServer.dao.xml.jaxb.ObjectFactory;
 import de.thorstenberger.examServer.dao.xml.jaxb.Users;
 import de.thorstenberger.examServer.dao.xml.jaxb.UsersType.UserType;
 import de.thorstenberger.examServer.model.Address;
@@ -67,8 +66,7 @@ public class UserDaoJAXB extends AbstractJAXBDao implements UserDao, UserDetails
 	 */
     public UserDaoJAXB(final ExamServerManager examServerManager, final RoleDao roleDao, final LookupDao lookupDao) {
         super("de.thorstenberger.examServer.dao.xml.jaxb",
-                new File(examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.SYSTEM
-                + File.separatorChar + "users.xml"));
+                new File(examServerManager.getSystemDir(), "users.xml"));
         this.examServerManager = examServerManager;
         this.roleDao = roleDao;
         this.lookupDao = lookupDao;
@@ -76,10 +74,9 @@ public class UserDaoJAXB extends AbstractJAXBDao implements UserDao, UserDetails
         try { // JAXBException
 
             if (!iofile.exists()) {
-                final ObjectFactory oF = new ObjectFactory();
-                users = oF.createUsers();
+                users = objectFactory.createUsers();
                 users.setIdCount(2);
-                final UserType user = oF.createUsersTypeUserType();
+                final UserType user = objectFactory.createUsersTypeUserType();
                 user.setUsername("admin");
                 user.setFirstName("");
                 user.setLastName("");
@@ -324,7 +321,7 @@ public class UserDaoJAXB extends AbstractJAXBDao implements UserDao, UserDetails
         UserType userType = getUserTypeByUsername(user.getUsername());
         if (userType == null) {
             try {
-                userType = (new ObjectFactory()).createUsersTypeUserType();
+                userType = objectFactory.createUsersTypeUserType();
                 users.getUser().add(userType);
                 userType.setId(users.getIdCount());
                 user.setId(users.getIdCount());

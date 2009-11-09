@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ */
 /**
  * 
  */
@@ -25,16 +25,18 @@ import java.io.File;
 
 /**
  * @author Thorsten Berger
- *
+ * 
  */
 public interface ExamServerManager {
 
-	public static final String HOME = "home";
-	public static final String TASKDEFS = "taskdefs";
-	public static final String SYSTEM = "system";
-	
-	public void init();
-	
-	public File getRepositoryFile();
-	
+    File getHomeDir();
+
+    File getRepositoryFile();
+
+    File getSystemDir();
+
+    File getTaskDefDir();
+
+    void init();
+
 }

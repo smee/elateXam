@@ -224,8 +224,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
      * @return
      */
     private String createPath(final String filename) {
-        return examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar + ExamServerManager.TASKDEFS
-                + File.separatorChar + filename;
+        return new File(examServerManager.getTaskDefDir(), filename).getAbsolutePath();
     }
 
     /*
@@ -257,13 +256,12 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
         taskletVO.setCorrectorAnnotations(new LinkedList<CorrectorTaskletAnnotationVO>());
         taskletVO.setManualCorrections(new LinkedList<ManualCorrectionsVO>());
 
-        final File homeDir = new File(examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar
-                + ExamServerManager.HOME + File.separatorChar + userId);
+        final File homeDir = new File(examServerManager.getHomeDir(), userId);
         if (!homeDir.exists()) {
             homeDir.mkdirs();
         }
-        final File complexTaskHandlingFile = new File(homeDir.getAbsolutePath() + File.separatorChar
-                + COMPLEX_TASKHANDLING_FILE_PREFIX + taskId + COMPLEX_TASKHANDLING_FILE_SUFFIX);
+        final File complexTaskHandlingFile = new File(homeDir, COMPLEX_TASKHANDLING_FILE_PREFIX + taskId
+                + COMPLEX_TASKHANDLING_FILE_SUFFIX);
 
         taskHandlingDao.saveTasklet(taskletVO);
 
@@ -432,10 +430,9 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
             throw new RuntimeException("No corresponding taskDef found: " + taskId);
         }
 
-        final File homeDir = new File(examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar
-                + ExamServerManager.HOME + File.separatorChar + userId);
-        final File complexTaskHandlingFile = new File(homeDir.getAbsolutePath() + File.separatorChar
-                + COMPLEX_TASKHANDLING_FILE_PREFIX + taskId + COMPLEX_TASKHANDLING_FILE_SUFFIX);
+        final File homeDir = new File(examServerManager.getHomeDir(), userId);
+        final File complexTaskHandlingFile = new File(homeDir, COMPLEX_TASKHANDLING_FILE_PREFIX + taskId
+                + COMPLEX_TASKHANDLING_FILE_SUFFIX);
 
         return instantiateTasklet(taskletVO, taskDefVO, complexTaskHandlingFile);
 
@@ -453,10 +450,9 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
         for (final TaskletVO taskletVO : taskletVOs) {
 
-            final File homeDir = new File(examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar
-                    + ExamServerManager.HOME + File.separatorChar + taskletVO.getLogin());
-            final File complexTaskHandlingFile = new File(homeDir.getAbsolutePath() + File.separatorChar
-                    + COMPLEX_TASKHANDLING_FILE_PREFIX + taskId + COMPLEX_TASKHANDLING_FILE_SUFFIX);
+            final File homeDir = new File(examServerManager.getHomeDir(), taskletVO.getLogin());
+            final File complexTaskHandlingFile = new File(homeDir, COMPLEX_TASKHANDLING_FILE_PREFIX + taskId
+                    + COMPLEX_TASKHANDLING_FILE_SUFFIX);
 
             ret.add(instantiateTasklet(taskletVO, taskDefVO, complexTaskHandlingFile));
         }
@@ -793,8 +789,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
         if (tasklet instanceof ComplexTasklet) {
             // TODO introduce transactions
             // get the taskHandling xml file!
-            final File homeDir = new File(examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar
-                    + ExamServerManager.HOME + File.separatorChar + tasklet.getUserId());
+            final File homeDir = new File(examServerManager.getHomeDir(), tasklet.getUserId());
             final String pathOfCTHfile = homeDir.getAbsolutePath() + File.separatorChar + COMPLEX_TASKHANDLING_FILE_PREFIX
                     + tasklet.getTaskId() + COMPLEX_TASKHANDLING_FILE_SUFFIX;
             File complexTaskHandlingFile = new File(pathOfCTHfile);

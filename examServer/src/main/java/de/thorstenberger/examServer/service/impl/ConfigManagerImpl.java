@@ -68,8 +68,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
             jc = JAXBContext.newInstance("de.thorstenberger.examServer.dao.xml.jaxb");
 
-            configFile = new File(examServerManager.getRepositoryFile().getAbsolutePath() + File.separatorChar
-                    + ExamServerManager.SYSTEM + File.separatorChar + "config.xml");
+            configFile = new File(examServerManager.getSystemDir(), "config.xml");
 
             if (!configFile.exists()) {
                 final ObjectFactory oF = new ObjectFactory();

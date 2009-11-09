@@ -35,7 +35,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import de.thorstenberger.examServer.dao.TaskDefDao;
-import de.thorstenberger.examServer.dao.xml.jaxb.ObjectFactory;
 import de.thorstenberger.examServer.dao.xml.jaxb.TaskDefs;
 import de.thorstenberger.examServer.dao.xml.jaxb.TaskDefsType.TaskDefType;
 import de.thorstenberger.examServer.dao.xml.jaxb.TaskDefsType.TaskDefType.ComplexTaskDefType;
@@ -60,15 +59,12 @@ public class TaskDefDaoImpl extends AbstractJAXBDao implements TaskDefDao {
 	 *
 	 */
     public TaskDefDaoImpl(final ExamServerManager examServerManager) {
-        super("de.thorstenberger.examServer.dao.xml.jaxb", new File(examServerManager.getRepositoryFile().getAbsolutePath()
-                + File.separatorChar
-                + ExamServerManager.SYSTEM + File.separatorChar + "taskdefs.xml"));
+        super("de.thorstenberger.examServer.dao.xml.jaxb", new File(examServerManager.getSystemDir(), "taskdefs.xml"));
 
         try { // JAXBException
 
             if (!iofile.exists()) {
-                final ObjectFactory oF = new ObjectFactory();
-                taskDefs = oF.createTaskDefs();
+                taskDefs = objectFactory.createTaskDefs();
                 this.crntId = new AtomicLong(0);
                 save(taskDefs);
                 return;
@@ -186,12 +182,11 @@ public class TaskDefDaoImpl extends AbstractJAXBDao implements TaskDefDao {
             // set new id
             td.setId(this.crntId.incrementAndGet());
             try {
-                final ObjectFactory oF = new ObjectFactory();
 
-                final TaskDefType tdt = oF.createTaskDefsTypeTaskDefType();
+                final TaskDefType tdt = objectFactory.createTaskDefsTypeTaskDefType();
                 BeanUtils.copyProperties(tdt, td);
 
-                final ComplexTaskDefType ctdt = oF.createTaskDefsTypeTaskDefTypeComplexTaskDefType();
+                final ComplexTaskDefType ctdt = objectFactory.createTaskDefsTypeTaskDefTypeComplexTaskDefType();
                 ctdt.setComplexTaskFile(td.getComplexTaskFile());
                 ctdt.setShowSolutionToStudents(td.isShowSolutionToStudents());
                 tdt.setComplexTaskDef(ctdt);

@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ */
 /**
  * 
  */
@@ -23,41 +23,37 @@ package de.thorstenberger.taskmodel.complex;
 
 /**
  * @author Thorsten Berger
- *
+ * 
  */
 public class ParsingException extends Exception {
 
-	/**
+    /**
 	 * 
 	 */
-	public ParsingException() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+    public ParsingException() {
+        super();
+    }
 
-	/**
-	 * @param message
-	 */
-	public ParsingException(String message) {
-		super(message);
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * @param message
+     */
+    public ParsingException(final String message) {
+        super(message);
+    }
 
-	/**
-	 * @param message
-	 * @param cause
-	 */
-	public ParsingException(String message, Throwable cause) {
-		super(message, cause);
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * @param message
+     * @param cause
+     */
+    public ParsingException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
 
-	/**
-	 * @param cause
-	 */
-	public ParsingException(Throwable cause) {
-		super(cause);
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * @param cause
+     */
+    public ParsingException(final Throwable cause) {
+        super(cause);
+    }
 
 }

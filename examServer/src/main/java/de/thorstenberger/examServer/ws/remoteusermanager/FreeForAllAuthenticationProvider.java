@@ -147,7 +147,6 @@ public class FreeForAllAuthenticationProvider extends AbstractUserDetailsAuthent
      */
     @Override
     protected UserDetails retrieveUser(final String arg0, final UsernamePasswordAuthenticationToken arg1) throws AuthenticationException {
-        // TODO Auto-generated method stub
         return null;
     }
 

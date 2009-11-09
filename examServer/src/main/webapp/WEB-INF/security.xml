@@ -73,6 +73,7 @@
                 /signup.html*=ROLE_ANONYMOUS,admin,user
                 /users.html*=admin
                 /loginConfig.html*=admin
+                /taskConfigList.html*=admin
                 /**/*.html*=admin,user,student,tutor
             </value>
         </property>

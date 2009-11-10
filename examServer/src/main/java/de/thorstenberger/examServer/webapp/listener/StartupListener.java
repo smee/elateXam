@@ -12,15 +12,17 @@ import org.acegisecurity.providers.AuthenticationProvider;
 import org.acegisecurity.providers.ProviderManager;
 import org.acegisecurity.providers.encoding.Md5PasswordEncoder;
 import org.acegisecurity.providers.rememberme.RememberMeAuthenticationProvider;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import de.thorstenberger.examServer.Constants;
-import de.thorstenberger.examServer.service.LookupManager;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import de.thorstenberger.examServer.Constants;
+import de.thorstenberger.examServer.service.LookupManager;
+import de.thorstenberger.examServer.tasks.HardWiredAddonFactory;
+import de.thorstenberger.taskmodel.TaskModelServices;
 
 /**
  * <p>StartupListener class used to initialize and database settings
@@ -40,6 +42,7 @@ public class StartupListener extends ContextLoaderListener
     
     private static final Log log = LogFactory.getLog(StartupListener.class);
 
+    @Override
     public void contextInitialized(ServletContextEvent event) {
         if (log.isDebugEnabled()) {
             log.debug("initializing context...");
@@ -85,6 +88,9 @@ public class StartupListener extends ContextLoaderListener
                 }
                 config.put(Constants.ENC_ALGORITHM, algorithm);
             }
+//            AddonSubtaskletFactoryPerOSGi addonFactory = (AddonSubtaskletFactoryPerOSGi) ctx.getBean("addonFactory");
+            // enable autotool addon subtasks
+            TaskModelServices.getInstance().setAddonSubtaskletFactory(new HardWiredAddonFactory());
         } catch (NoSuchBeanDefinitionException n) {
             // ignore, should only happen when testing
         }

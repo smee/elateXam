@@ -21,7 +21,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.examServer.dao.xml;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -61,12 +60,11 @@ public class TaskHandlingDaoImpl extends AbstractJAXBDao implements TaskHandling
 	 * 
 	 */
     public TaskHandlingDaoImpl(final ExamServerManager examServerManager) {
-        super("de.thorstenberger.examServer.dao.xml.jaxb",
-                new File(examServerManager.getSystemDir(), "taskhandling.xml"));
+        super("de.thorstenberger.examServer.dao.xml.jaxb", examServerManager.getSystemDir(), "taskhandling.xml");
 
         try { // JAXBException
 
-            if (!iofile.exists()) {
+            if (!existsWorkingFile()) {
                 taskHandling = objectFactory.createTaskHandling();
                 taskHandling.setIdCount(0);
                 save(taskHandling);

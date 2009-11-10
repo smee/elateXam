@@ -143,8 +143,8 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
     private List<TaskDef> taskDefCache = null;
 
     /**
-	 *
-	 */
+     *
+     */
     public TaskFactoryImpl(final ExamServerManager examServerManager, final UserManager userManager, final TaskDefDao taskDefDao,
             final TaskHandlingDao taskHandlingDao, final ComplexTaskDefDAO complexTaskDefDAO,
             final ComplexTaskHandlingDAO complexTaskHandlingDAO, final ComplexTaskBuilder complexTaskBuilder) {
@@ -233,7 +233,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
      * @see de.thorstenberger.taskmodel.TaskFactory#createTasklet(java.lang.String, long)
      */
     public Tasklet createTasklet(final String userId, final long taskId)
-            throws TaskApiException {
+    throws TaskApiException {
 
         TaskletVO taskletVO = taskHandlingDao.getTasklet(taskId, userId);
         final TaskDefVO taskDefVO = taskDefDao.getTaskDef(taskId);
@@ -410,7 +410,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
      * @see de.thorstenberger.taskmodel.TaskFactory#getTaskDefs(de.thorstenberger.taskmodel.TaskFilter)
      */
     public List<TaskDef> getTaskDefs(final TaskFilter filter)
-            throws TaskFilterException {
+    throws TaskFilterException {
         throw new MethodNotSupportedException();
     }
 
@@ -533,8 +533,8 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
         }
 
         final TaskletCorrection correction =
-                new TaskletCorrectionImpl(taskletVO.getAutoCorrectionPoints(), cas,
-                taskletVO.getCorrectorLogin(), taskletVO.getCorrectorHistory(), studentAnnotations, mcs);
+            new TaskletCorrectionImpl(taskletVO.getAutoCorrectionPoints(), cas,
+                    taskletVO.getCorrectorLogin(), taskletVO.getCorrectorHistory(), studentAnnotations, mcs);
 
         FileInputStream fis;
         try {
@@ -545,9 +545,13 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
         } catch (final IOException e) {
             throw new TaskModelPersistenceException(e);
         }
+        final TaskDef_Complex complexTaskDef = (TaskDef_Complex) getTaskDef(taskDefVO.getId());
         final ComplexTasklet tasklet =
-                new ComplexTaskletImpl(this, complexTaskBuilder, taskletVO.getLogin(), (TaskDef_Complex) getTaskDef(taskDefVO.getId()),
-                TaskmodelUtil.getStatus(taskletVO.getStatus()), taskletVO.getFlags(), correction, complexTaskHandlingDAO, fis, new HashMap<String, String>());
+                new ComplexTaskletImpl(this, complexTaskBuilder, taskletVO.getLogin(), complexTaskDef, complexTaskHandlingDAO.getComplexTaskHandlingRoot(fis, complexTaskDef.getComplexTaskDefRoot()), TaskmodelUtil.getStatus(taskletVO.getStatus()), taskletVO.getFlags(), correction, new HashMap<String, String>());
+        // new ComplexTaskletImpl(this, complexTaskBuilder, taskletVO.getLogin(), (TaskDef_Complex)
+        // getTaskDef(taskDefVO.getId()),
+        // TaskmodelUtil.getStatus(taskletVO.getStatus()), taskletVO.getFlags(), correction, complexTaskHandlingDAO,
+        // fis, new HashMap<String, String>());
 
         return tasklet;
 
@@ -595,7 +599,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
      * @see de.thorstenberger.taskmodel.TaskFactory#removeTasklet(java.lang.String, long)
      */
     public void removeTasklet(final String userId, final long taskId)
-            throws TaskApiException {
+    throws TaskApiException {
         throw new MethodNotSupportedException();
     }
 
@@ -791,7 +795,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
             // get the taskHandling xml file!
             final File homeDir = new File(examServerManager.getHomeDir(), tasklet.getUserId());
             final String pathOfCTHfile = homeDir.getAbsolutePath() + File.separatorChar + COMPLEX_TASKHANDLING_FILE_PREFIX
-                    + tasklet.getTaskId() + COMPLEX_TASKHANDLING_FILE_SUFFIX;
+            + tasklet.getTaskId() + COMPLEX_TASKHANDLING_FILE_SUFFIX;
             File complexTaskHandlingFile = new File(pathOfCTHfile);
 
             final ComplexTasklet ct = (ComplexTasklet) tasklet;

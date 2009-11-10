@@ -21,7 +21,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.examServer.dao.xml;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -65,15 +64,14 @@ public class UserDaoJAXB extends AbstractJAXBDao implements UserDao, UserDetails
 	 * 
 	 */
     public UserDaoJAXB(final ExamServerManager examServerManager, final RoleDao roleDao, final LookupDao lookupDao) {
-        super("de.thorstenberger.examServer.dao.xml.jaxb",
-                new File(examServerManager.getSystemDir(), "users.xml"));
+        super("de.thorstenberger.examServer.dao.xml.jaxb", examServerManager.getSystemDir(), "users.xml");
         this.examServerManager = examServerManager;
         this.roleDao = roleDao;
         this.lookupDao = lookupDao;
 
         try { // JAXBException
 
-            if (!iofile.exists()) {
+            if (!existsWorkingFile()) {
                 users = objectFactory.createUsers();
                 users.setIdCount(2);
                 final UserType user = objectFactory.createUsersTypeUserType();

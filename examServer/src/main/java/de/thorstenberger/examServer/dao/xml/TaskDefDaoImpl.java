@@ -21,7 +21,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.examServer.dao.xml;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -59,11 +58,11 @@ public class TaskDefDaoImpl extends AbstractJAXBDao implements TaskDefDao {
 	 *
 	 */
     public TaskDefDaoImpl(final ExamServerManager examServerManager) {
-        super("de.thorstenberger.examServer.dao.xml.jaxb", new File(examServerManager.getSystemDir(), "taskdefs.xml"));
+        super("de.thorstenberger.examServer.dao.xml.jaxb", examServerManager.getSystemDir(), "taskdefs.xml");
 
         try { // JAXBException
 
-            if (!iofile.exists()) {
+            if (!existsWorkingFile()) {
                 taskDefs = objectFactory.createTaskDefs();
                 this.crntId = new AtomicLong(0);
                 save(taskDefs);

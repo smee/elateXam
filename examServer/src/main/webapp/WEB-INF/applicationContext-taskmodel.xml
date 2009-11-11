@@ -55,6 +55,16 @@
 			<ref bean="ComplexTaskFactory"/>
 		</constructor-arg>
 	</bean>
+
+	<bean id="UserComplexTaskHandlingDAO"
+		class="de.thorstenberger.examServer.dao.xml.UserComplexTaskHandlingDAOImpl">
+		<constructor-arg>
+			<ref bean="examServerManager"/>
+		</constructor-arg>
+		<constructor-arg>
+			<ref bean="ComplexTaskHandlingDAO"/>
+		</constructor-arg>
+	</bean>
 		
 	<!-- Note: the following interface has to be implemented by the target server application. -->
 	<bean id="TaskFactory"
@@ -75,7 +85,7 @@
 			<ref bean="ComplexTaskDefDAO"/>
 		</constructor-arg>
 		<constructor-arg>
-			<ref bean="ComplexTaskHandlingDAO"/>
+			<ref bean="UserComplexTaskHandlingDAO"/>
 		</constructor-arg>
 		<constructor-arg>
 			<ref bean="ComplexTaskBuilder"/>

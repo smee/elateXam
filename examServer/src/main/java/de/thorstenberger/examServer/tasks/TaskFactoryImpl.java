@@ -40,6 +40,7 @@ import org.apache.commons.logging.LogFactory;
 
 import de.thorstenberger.examServer.dao.TaskDefDao;
 import de.thorstenberger.examServer.dao.TaskHandlingDao;
+import de.thorstenberger.examServer.dao.UserComplexTaskHandlingDAO;
 import de.thorstenberger.examServer.dao.xml.RoleAndLookupDaoImpl;
 import de.thorstenberger.examServer.model.CorrectorTaskletAnnotationVO;
 import de.thorstenberger.examServer.model.Role;
@@ -75,7 +76,6 @@ import de.thorstenberger.taskmodel.complex.ComplexTaskletImpl;
 import de.thorstenberger.taskmodel.complex.TaskDef_Complex;
 import de.thorstenberger.taskmodel.complex.TaskDef_ComplexImpl;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefDAO;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.ComplexTaskHandlingDAO;
 import de.thorstenberger.taskmodel.impl.AbstractTaskFactory;
 import de.thorstenberger.taskmodel.impl.ManualCorrectionImpl;
 import de.thorstenberger.taskmodel.impl.StudentAnnotationImpl;
@@ -118,12 +118,6 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     }
 
-    // the taskhandling file is saved under user's home directory
-    public static final String COMPLEX_TASKHANDLING_FILE_PREFIX = "complextask_";
-    public static final String COMPLEX_TASKHANDLING_FILE_SUFFIX = ".xml";
-
-    public static final String COMPLEX_TASKHANDLING_BACKUP_FILE_SUFFIX = ".bak";
-
     public static final String USER_ATTRIBUTE_SEMESTER = "user.student-info.semester";
 
     private final List<String> availableTypes;
@@ -137,17 +131,18 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
     private final TaskHandlingDao taskHandlingDao;
     private final ComplexTaskDefDAO complexTaskDefDAO;
 
-    private final ComplexTaskHandlingDAO complexTaskHandlingDAO;
     private final ComplexTaskBuilder complexTaskBuilder;
     private final Log log = LogFactory.getLog("TaskLogger");
     private List<TaskDef> taskDefCache = null;
+
+		private final UserComplexTaskHandlingDAO complexTaskHandlingDAO;
 
     /**
      *
      */
     public TaskFactoryImpl(final ExamServerManager examServerManager, final UserManager userManager, final TaskDefDao taskDefDao,
             final TaskHandlingDao taskHandlingDao, final ComplexTaskDefDAO complexTaskDefDAO,
-            final ComplexTaskHandlingDAO complexTaskHandlingDAO, final ComplexTaskBuilder complexTaskBuilder) {
+            final UserComplexTaskHandlingDAO complexTaskHandlingDAO, final ComplexTaskBuilder complexTaskBuilder) {
 
         this.examServerManager = examServerManager;
         this.userManager = userManager;
@@ -256,16 +251,9 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
         taskletVO.setCorrectorAnnotations(new LinkedList<CorrectorTaskletAnnotationVO>());
         taskletVO.setManualCorrections(new LinkedList<ManualCorrectionsVO>());
 
-        final File homeDir = new File(examServerManager.getHomeDir(), userId);
-        if (!homeDir.exists()) {
-            homeDir.mkdirs();
-        }
-        final File complexTaskHandlingFile = new File(homeDir, COMPLEX_TASKHANDLING_FILE_PREFIX + taskId
-                + COMPLEX_TASKHANDLING_FILE_SUFFIX);
-
         taskHandlingDao.saveTasklet(taskletVO);
 
-        return instantiateTasklet(taskletVO, taskDefVO, complexTaskHandlingFile);
+        return instantiateTasklet(taskletVO, taskDefVO, userId, taskId);
 
     }
 
@@ -430,11 +418,8 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
             throw new RuntimeException("No corresponding taskDef found: " + taskId);
         }
 
-        final File homeDir = new File(examServerManager.getHomeDir(), userId);
-        final File complexTaskHandlingFile = new File(homeDir, COMPLEX_TASKHANDLING_FILE_PREFIX + taskId
-                + COMPLEX_TASKHANDLING_FILE_SUFFIX);
 
-        return instantiateTasklet(taskletVO, taskDefVO, complexTaskHandlingFile);
+        return instantiateTasklet(taskletVO, taskDefVO, userId, taskId);
 
     }
 
@@ -449,12 +434,9 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
         final TaskDefVO taskDefVO = taskDefDao.getTaskDef(taskId);
 
         for (final TaskletVO taskletVO : taskletVOs) {
+        	  String userId = taskletVO.getLogin();
 
-            final File homeDir = new File(examServerManager.getHomeDir(), taskletVO.getLogin());
-            final File complexTaskHandlingFile = new File(homeDir, COMPLEX_TASKHANDLING_FILE_PREFIX + taskId
-                    + COMPLEX_TASKHANDLING_FILE_SUFFIX);
-
-            ret.add(instantiateTasklet(taskletVO, taskDefVO, complexTaskHandlingFile));
+            ret.add(instantiateTasklet(taskletVO, taskDefVO, userId, taskId));
         }
 
         return ret;
@@ -507,7 +489,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     }
 
-    private Tasklet instantiateTasklet(final TaskletVO taskletVO, final TaskDefVO taskDefVO, final File complexTaskHandlingFile) {
+    private Tasklet instantiateTasklet(final TaskletVO taskletVO, final TaskDefVO taskDefVO, final String userId, final long taskId) {
 
         // corrector annotations
         final List<CorrectorAnnotation> cas = new LinkedList<CorrectorAnnotation>();
@@ -536,18 +518,9 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
             new TaskletCorrectionImpl(taskletVO.getAutoCorrectionPoints(), cas,
                     taskletVO.getCorrectorLogin(), taskletVO.getCorrectorHistory(), studentAnnotations, mcs);
 
-        FileInputStream fis;
-        try {
-            if (!complexTaskHandlingFile.exists()) {
-                complexTaskHandlingFile.createNewFile();
-            }
-            fis = new FileInputStream(complexTaskHandlingFile);
-        } catch (final IOException e) {
-            throw new TaskModelPersistenceException(e);
-        }
         final TaskDef_Complex complexTaskDef = (TaskDef_Complex) getTaskDef(taskDefVO.getId());
         final ComplexTasklet tasklet =
-                new ComplexTaskletImpl(this, complexTaskBuilder, taskletVO.getLogin(), complexTaskDef, complexTaskHandlingDAO.getComplexTaskHandlingRoot(fis, complexTaskDef.getComplexTaskDefRoot()), TaskmodelUtil.getStatus(taskletVO.getStatus()), taskletVO.getFlags(), correction, new HashMap<String, String>());
+                new ComplexTaskletImpl(this, complexTaskBuilder, taskletVO.getLogin(), complexTaskDef, complexTaskHandlingDAO.load(userId, Long.toString(taskId), complexTaskDef.getComplexTaskDefRoot()), TaskmodelUtil.getStatus(taskletVO.getStatus()), taskletVO.getFlags(), correction, new HashMap<String, String>());
         // new ComplexTaskletImpl(this, complexTaskBuilder, taskletVO.getLogin(), (TaskDef_Complex)
         // getTaskDef(taskDefVO.getId()),
         // TaskmodelUtil.getStatus(taskletVO.getStatus()), taskletVO.getFlags(), correction, complexTaskHandlingDAO,
@@ -793,21 +766,10 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
         if (tasklet instanceof ComplexTasklet) {
             // TODO introduce transactions
             // get the taskHandling xml file!
-            final File homeDir = new File(examServerManager.getHomeDir(), tasklet.getUserId());
-            final String pathOfCTHfile = homeDir.getAbsolutePath() + File.separatorChar + COMPLEX_TASKHANDLING_FILE_PREFIX
-            + tasklet.getTaskId() + COMPLEX_TASKHANDLING_FILE_SUFFIX;
-            File complexTaskHandlingFile = new File(pathOfCTHfile);
-
+        	  String userId = tasklet.getUserId();
+        	  String taskId = Long.toString(tasklet.getTaskId());
             final ComplexTasklet ct = (ComplexTasklet) tasklet;
-            try {
-                final File backup = new File(pathOfCTHfile + COMPLEX_TASKHANDLING_BACKUP_FILE_SUFFIX);
-                backup.delete();
-                complexTaskHandlingFile.renameTo(backup);
-                complexTaskHandlingFile = new File(pathOfCTHfile);
-                complexTaskHandlingDAO.save(ct.getComplexTaskHandlingRoot(), new FileOutputStream(complexTaskHandlingFile));
-            } catch (final FileNotFoundException e) {
-                throw new TaskModelPersistenceException(e);
-            }
+                complexTaskHandlingDAO.save(userId,taskId,ct.getComplexTaskHandlingRoot());
         }
 
         if (changed) {

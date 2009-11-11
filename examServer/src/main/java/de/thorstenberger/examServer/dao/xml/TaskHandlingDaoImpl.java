@@ -74,7 +74,7 @@ public class TaskHandlingDaoImpl extends AbstractJAXBDao implements TaskHandling
             }
 
         } catch (final JAXBException e) {
-            throw new RuntimeException(e);
+            throw new TaskModelPersistenceException(e);
         }
 
     }

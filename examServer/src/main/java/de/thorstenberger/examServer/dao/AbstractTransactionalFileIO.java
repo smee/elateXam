@@ -29,6 +29,8 @@ import org.apache.commons.transaction.util.CommonsLoggingLogger;
 
 import com.google.common.collect.Maps;
 
+import de.thorstenberger.taskmodel.TaskModelPersistenceException;
+
 /**
  * Provide transactional file io functionality. Every access to any file within the directory specified in the
  * constructor has to happen via calls to the {@link FileResourceManager} returned by {@link #getFRM()}. No other ways
@@ -83,7 +85,7 @@ public class AbstractTransactionalFileIO {
             frm.commitTransaction(txId);
         } catch (final ResourceManagerException e) {
             rollback(txId, e);
-            throw new RuntimeException(e);
+            throw new TaskModelPersistenceException(e);
         }
 
     }
@@ -109,7 +111,7 @@ public class AbstractTransactionalFileIO {
             try {
                 resourceManagers.get(path).start();
             } catch (final ResourceManagerSystemException ex) {
-                throw new RuntimeException(ex);
+                throw new TaskModelPersistenceException(ex);
             }
         }
 
@@ -127,7 +129,7 @@ public class AbstractTransactionalFileIO {
         try {
             getFRM().rollbackTransaction(txId);
         } catch (final ResourceManagerException e1) {
-            throw new RuntimeException(e);
+            throw new TaskModelPersistenceException(e);
         }
     }
 
@@ -143,9 +145,9 @@ public class AbstractTransactionalFileIO {
             frm.startTransaction(txId);
             return txId;
         } catch (final ResourceManagerSystemException e) {
-            throw new RuntimeException("Could not start new transaction on directory " + workingPath, e);
+            throw new TaskModelPersistenceException("Could not start new transaction on directory " + workingPath, e);
         } catch (final ResourceManagerException e) {
-            throw new RuntimeException("Could not start new transaction on directory " + workingPath, e);
+            throw new TaskModelPersistenceException("Could not start new transaction on directory " + workingPath, e);
         }
     }
 

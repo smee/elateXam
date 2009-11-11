@@ -39,6 +39,7 @@ import de.thorstenberger.examServer.dao.xml.jaxb.TaskDefsType.TaskDefType;
 import de.thorstenberger.examServer.dao.xml.jaxb.TaskDefsType.TaskDefType.ComplexTaskDefType;
 import de.thorstenberger.examServer.model.TaskDefVO;
 import de.thorstenberger.examServer.service.ExamServerManager;
+import de.thorstenberger.taskmodel.TaskModelPersistenceException;
 
 /**
  * 
@@ -73,7 +74,7 @@ public class TaskDefDaoImpl extends AbstractJAXBDao implements TaskDefDao {
             }
 
         } catch (final JAXBException e) {
-            throw new RuntimeException(e);
+            throw new TaskModelPersistenceException(e);
         }
 
     }

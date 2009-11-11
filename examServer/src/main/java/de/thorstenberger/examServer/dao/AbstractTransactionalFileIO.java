@@ -53,6 +53,10 @@ import com.google.common.collect.Maps;
  */
 public class AbstractTransactionalFileIO {
     final Log log = LogFactory.getLog(AbstractTransactionalFileIO.class);
+    /**
+     * Map of directories to {@link FileResourceManager} instances. This way we have exactly one manager
+     * per directory.
+     */
     private static final Map<String, FileResourceManager> resourceManagers = Maps.newHashMap();
     protected final String workingPath;
 

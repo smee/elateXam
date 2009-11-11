@@ -30,7 +30,7 @@ public class FileTransactionTest {
 	    super(workingDirectory);
     }
 		public void append(byte b) {
-			getFRM().setDefaultTransactionTimeout(10000);
+			getFRM().setDefaultTransactionTimeout(30000);
 			String txId = startTransaction();
 			try {
 	      OutputStream os = getFRM().writeResource(txId, "file.txt",true);

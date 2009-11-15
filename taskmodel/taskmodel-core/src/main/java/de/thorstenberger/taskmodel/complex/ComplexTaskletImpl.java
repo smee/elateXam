@@ -110,21 +110,21 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
 
     }
 
+
     /* (non-Javadoc)
-     * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#updateStatus()
+     * @see de.thorstenberger.taskmodel.Tasklet#update()
      */
     public synchronized void update() {
 
         if( getStatus() == Status.INPROGRESS ){
 
             if( complexTaskDefRoot.hasTimeRestriction() ){
-                final long deadline = getActiveTry().getStartTime() + complexTaskDefRoot.getTimeInMinutesWithKindnessExtensionTime() * 60 * 1000;
+                final long deadline = getActiveTry().getStartTime() + getActiveTry().getTimeExtension() + complexTaskDefRoot.getTimeInMinutesWithKindnessExtensionTime() * 60 * 1000;
                 if( System.currentTimeMillis() > deadline ){
                     submit();
                     return;
                 }
             }
-            // TODO respect time extension for all/this individual user
             if( !complexTaskDef.isActive() ) {
                 submit();
             }

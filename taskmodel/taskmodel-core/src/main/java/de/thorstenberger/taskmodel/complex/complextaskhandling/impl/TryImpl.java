@@ -45,9 +45,9 @@ import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.
  */
 public class TryImpl implements Try {
 
-	private TryType tryType;
-	private ComplexTaskFactory complexTaskFactory;
-	private ComplexTaskDefRoot complexTaskDefRoot;
+	private final TryType tryType;
+	private final ComplexTaskFactory complexTaskFactory;
+	private final ComplexTaskDefRoot complexTaskDefRoot;
 	
 	/**
 	 * 
@@ -123,9 +123,9 @@ public class TryImpl implements Try {
 	
 	public static class ProgressInformationImpl implements ProgressInformation{
 
-		private int numOfSubtasks;
-		private int numOfProcessedSubtasks;
-		private float progressPercentage;
+		private final int numOfSubtasks;
+		private final int numOfProcessedSubtasks;
+		private final float progressPercentage;
 		
 		/**
 		 * @param numOfSubtasks
@@ -201,6 +201,23 @@ public class TryImpl implements Try {
 		// not found, happens if the subTaskDef has not been chosen by the (random) selection algorithms in ComplexTaskBuilder
 		return null;
 	}
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.Try#getTimeExtension()
+	 */
+	public long getTimeExtension() {
+	  return tryType.getExtensionTime();
+  }
+
+	/* (non-Javadoc)
+	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.Try#setTimeExtension(long)
+	 */
+	public void setTimeExtension(long msec) {
+		if(msec < 0)
+			throw new IllegalArgumentException("The extension time for a try must not be negative!");
+		
+		tryType.setExtensionTime(msec);
+  }
 	
 	
 

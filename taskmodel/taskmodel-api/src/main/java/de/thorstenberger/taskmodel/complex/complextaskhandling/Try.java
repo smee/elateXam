@@ -41,6 +41,17 @@ public interface Try {
 	public long getStartTime();
 	
 	/**
+	 * Get individual time extension for this try. 
+	 * @return a time in milliseconds
+	 */
+	public long getTimeExtension();
+	
+	/**
+	 * Extend the deadline for this try by <code>msec</code> milliseconds.
+	 * @param msec positive time in msec.
+	 */
+	public void setTimeExtension(long msec);
+	/**
 	 * 
 	 * @param pageNo, the page number, starting with 1
 	 * @return

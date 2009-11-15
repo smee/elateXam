@@ -200,6 +200,7 @@ public class ExecuteAction extends org.apache.struts.action.Action {
 
         if (ct.getComplexTaskDefRoot().hasTimeRestriction()) {
             final long deadline = ct.getActiveTry().getStartTime() +
+            				ct.getActiveTry().getTimeExtension() +
                     ct.getComplexTaskDefRoot().getTimeInMinutesWithoutKindnessExtensionTime() * 60 * 1000;
             ctivo.setRemainingTimeMillis(deadline - System.currentTimeMillis());
         } else {
@@ -221,7 +222,7 @@ public class ExecuteAction extends org.apache.struts.action.Action {
 
         if (ct.getComplexTaskDefRoot().hasTimeRestriction()) {
             ctivo.setDeadline(DateUtil.getStringFromMillis(
-                    ct.getActiveTry().getStartTime() + ct.getComplexTaskDefRoot().getTimeInMinutesWithoutKindnessExtensionTime()
+                    ct.getActiveTry().getStartTime() + ct.getActiveTry().getTimeExtension() + ct.getComplexTaskDefRoot().getTimeInMinutesWithoutKindnessExtensionTime()
                     * 60 * 1000));
         } else {
             ctivo.setDeadline("-");

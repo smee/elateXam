@@ -145,8 +145,7 @@ public class SavePageAction extends Action {
         try {
 
             final long hashCode = Long.parseLong(request.getParameter("hashCode"));
-            // dirty hack
-            ct.canSavePage(page, hashCode);
+
             // ...and the following too:
             final List<SubTasklet> subtasklets = ct.getComplexTaskHandlingRoot().getRecentTry().getPage(page).getSubTasklets();
 

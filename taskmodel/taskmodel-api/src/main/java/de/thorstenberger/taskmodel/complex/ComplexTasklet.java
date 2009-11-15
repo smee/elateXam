@@ -30,6 +30,7 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitD
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.Try;
 
 /**
  * A complex tasklet is a composite tasklet. It contains several {@link SubTasklet}s distributed on {@link Page}s.
@@ -48,6 +49,12 @@ public interface ComplexTasklet extends Tasklet {
 
 	public void canSavePage( int pageNo, long hashcode ) throws IllegalStateException;
 
+	/**
+	 * @param pageNo
+	 * @param submitData
+	 * @param hashcode
+	 * @throws IllegalStateException if the hashcode doesn't match of the 
+	 */
 	public void savePage( int pageNo, List<SubmitData> submitData, long hashcode ) throws IllegalStateException;
 
 	public void submit() throws IllegalStateException;
@@ -65,14 +72,14 @@ public interface ComplexTasklet extends Tasklet {
 	 * @return
 	 * @throws IllegalStateException falls gerade kein Versuch aktiv
 	 */
-	public de.thorstenberger.taskmodel.complex.complextaskhandling.Try getActiveTry() throws IllegalStateException;
+	public Try getActiveTry() throws IllegalStateException;
 
 	/**
 	 * Gibt den letzten (nicht unbedingt aktiven) Versuch zur Korrektur und Einsichtnahme zurück.
 	 * TODO: rename method, the term "solution" is misleading in this case
 	 * @return
 	 */
-	public de.thorstenberger.taskmodel.complex.complextaskhandling.Try getSolutionOfLatestTry() throws IllegalStateException;
+	public Try getSolutionOfLatestTry() throws IllegalStateException;
 
 	public boolean studentAnnotatesCorrection( String annotation ) throws IllegalStateException;
 

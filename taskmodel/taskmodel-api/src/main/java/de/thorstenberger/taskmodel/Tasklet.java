@@ -55,12 +55,13 @@ public interface Tasklet {
 		ANNOTATED( 5, "annotated" ),
 		ANNOTATION_ACKNOWLEDGED( 6, "annotation_acknowledged" );
 
-		private int order;
-		private String value;
+		private final int order;
+		private final String value;
 		public int getOrder(){
 			return order;
 		}
-		public String toString(){
+		@Override
+    public String toString(){
 			return value;
 		}
 		public String getValue(){
@@ -78,6 +79,10 @@ public interface Tasklet {
 	public static final String FLAG_HAS_STUDENT_ANNOTATION = "has_student_annotation";
 
 
+	/**
+	 * Check if this tasklet is still within the maximum allowed processing time. If not,
+	 * this tasklet gets submitted.
+	 */
 	public void update();
 
 	public String getUserId();

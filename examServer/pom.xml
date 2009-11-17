@@ -168,7 +168,31 @@
           <useProjectReferences>false</useProjectReferences>
         </configuration>
       </plugin>
-
+      <plugin>
+        <groupId>org.jvnet.jaxb1.maven2</groupId>
+        <artifactId>maven-jaxb1-plugin</artifactId>
+        <version>1.0-rc11</version>
+        <executions>
+          <execution>
+            <id>generateJaxbSources</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <schemaDirectory>src/main/jaxb</schemaDirectory>
+          <schemaIncludes>
+            <schemaInclude>examServer.xsd</schemaInclude>
+          </schemaIncludes>
+          <extension>true</extension>
+          <generatePackage>de.thorstenberger.examServer.dao.xml.jaxb</generatePackage>
+          <generateDirectory>${project.build.directory}/jaxb-source</generateDirectory>
+          <extension>true</extension>
+          <verbose>true</verbose>
+        </configuration>
+      </plugin>
       <!--
         <plugin> Stoppe den Build, wenn unterschiedliche Versionen
         derselben Dependency verwendet werden soll. Aufruf mit: mvn

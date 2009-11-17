@@ -48,8 +48,8 @@ public abstract class AbstractTasklet implements Tasklet {
     private final Map<String, String> properties;
 
     /**
-	 * 
-	 */
+     * 
+     */
     public AbstractTasklet(final TaskFactory taskFactory, final String userId, final TaskDef taskDef, final Status status,
             final List<String> flags, final TaskletCorrection taskletCorrection, final Map<String, String> properties) {
         this.taskFactory = taskFactory;
@@ -261,9 +261,15 @@ public abstract class AbstractTasklet implements Tasklet {
 
         getTaskletCorrection().setCorrector(null);
         // reset the status to solved
-        // TODO which status should be set, as the status prior to the current
-        // one is unknown!
-        // setStatus(Status.SOLVED);
+        // which status should be set, as the status prior to the current
+        // one is unknown!?
+        // TODO does this work with multiple corrections?
+        if (getTaskletCorrection().isCorrected()) {
+            // setStatus(Status.CORRECTING);
+            setStatus(Status.CORRECTED);
+        } else {
+            setStatus(Status.SOLVED);
+        }
         // don't forget to save
         save();
 

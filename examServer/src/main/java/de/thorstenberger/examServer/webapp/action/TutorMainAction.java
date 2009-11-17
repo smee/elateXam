@@ -46,18 +46,19 @@ import de.thorstenberger.taskmodel.Tasklet.Status;
 public class TutorMainAction extends BaseAction {
 
     /**
-     * Count all tasklets for the given taskdef id, that are solved but not
-     * corrected yet.
+     * Count all tasklets for the given taskdef id, that are solved but not corrected yet.
      * 
      * @param id
+     * @param tutorname
      * @param taskletContainer
      * @return
      * @throws TaskApiException
      */
-    private int countNumberOfUncorrectedTasks(final long id, final TaskletContainer tc) throws TaskApiException {
+    private int countNumberOfUncorrectedTasks(final long id, final TaskletContainer tc, final String tutorname) throws TaskApiException {
         int num = 0;
         for (final Tasklet t : tc.getTasklets(id)) {
-            if (t.getStatus() == Status.SOLVED) {
+            final boolean wasCorrectedByThisTutor = t.getTaskletCorrection().getCorrectorHistory().contains(tutorname);
+            if (t.getStatus() == Status.SOLVED || (!wasCorrectedByThisTutor && t.getStatus() == Status.CORRECTING)) {
                 num++;
             }
         }
@@ -96,7 +97,7 @@ public class TutorMainAction extends BaseAction {
             tdvo.setStopped(taskDef.isStopped());
             tdvo.setActive(taskDef.isActive());
             tdvo.setVisible(taskDef.isVisible());
-            tdvo.setNumberOfOpenCorrections(countNumberOfUncorrectedTasks(taskDef.getId(), taskletContainer));
+            tdvo.setNumberOfOpenCorrections(countNumberOfUncorrectedTasks(taskDef.getId(), taskletContainer, request.getUserPrincipal().getName()));
             tdvos.add(tdvo);
         }
 

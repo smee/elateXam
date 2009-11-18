@@ -58,21 +58,26 @@ public class UserComplexTaskHandlingDAOImpl extends AbstractTransactionalFileIO
 	 * @see de.thorstenberger.examServer.dao.UserComplexTaskHandlingDAO#load(java.lang.String, de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot)
 	 */
 	public ComplexTaskHandlingRoot load(String username,String taskId, ComplexTaskDefRoot complexTaskDefRoot) {
+		String txId = startTransaction();
 		try {
 			String resource = createResourceName(username, taskId);
-			if(!getFRM().resourceExists(resource))
-				return null;
+			// make sure, the file exists
+			if(!getFRM().resourceExists(resource)) {
+				getFRM().createResource(txId, resource);
+			}
 			
-	    InputStream inputStream = getFRM().readResource(resource);
+	    InputStream inputStream = getFRM().readResource(txId,resource);
 	    ComplexTaskHandlingRoot complexTaskHandlingRoot = cthDao.getComplexTaskHandlingRoot(inputStream, complexTaskDefRoot);
 	    inputStream.close();
-	    
+	   
+	    commitTransaction(txId);
 	    return complexTaskHandlingRoot;
     } catch (ResourceManagerException e) {
-	    throw new TaskModelPersistenceException(e);
+    	rollback(txId, e);
     } catch (IOException e) {
-    	throw new TaskModelPersistenceException(e);
+    	rollback(txId, e);
     }
+    return null;
 	}
 
 	private String createResourceName(String username, String taskId) {

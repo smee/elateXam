@@ -27,4 +27,7 @@
     <li>
         <a href="<c:url value="/tutorMainMenu.html"/>">Aufgaben-Korrektur</a>
     </li>
+    <li>
+        <a href="<c:url value="/activeTaskUsers.html"/>">Pr&uuml;fungszeitverl&auml;ngerung</a>
+    </li>
 </ul>

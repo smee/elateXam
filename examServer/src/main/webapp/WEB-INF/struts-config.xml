@@ -155,7 +155,15 @@
    type="de.thorstenberger.examServer.webapp.action.StudentsInfoSubmitAction" validate="false">
 	<forward name="success" path="/studentMainMenu.html"/>
   </action>
-
+  
+  <!-- show a table with all users that are currently working on a task. -->
+  <action path="/activeTaskUsers" roles="admin" type="de.thorstenberger.examServer.webapp.action.ActiveTaskUserListAction">
+	<forward name="success" path="/WEB-INF/pages/activeTaskUsers.jsp"/>
+  </action>
+   
+  <action path="/increaseTime" roles="admin" type="de.thorstenberger.examServer.webapp.action.IncreaseTimeExtensionAction">
+    <forward name="success" path="/activeTaskUsers.html" redirect="true"/>
+  </action>
   <action path="/TaskConfigList" type="de.thorstenberger.examServer.webapp.action.TaskConfigMainAction">
    <forward name="success" path="/WEB-INF/pages/taskList.jsp"/>
   </action>

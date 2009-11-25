@@ -88,8 +88,6 @@ public interface SubTasklet_Cloze extends SubTasklet {
 		
 		public String[] getCorrectValues();
 		
-		public String removeLeadingTrailingSpaces( String s );
-		
 	}
 	
 	public interface ManualGapCorrection{

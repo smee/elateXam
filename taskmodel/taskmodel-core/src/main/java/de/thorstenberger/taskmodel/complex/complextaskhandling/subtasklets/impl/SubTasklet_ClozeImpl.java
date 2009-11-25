@@ -27,6 +27,8 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.lang.StringUtils;
+
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskModelPersistenceException;
 import de.thorstenberger.taskmodel.complex.TaskHandlingConstants;
@@ -384,14 +386,16 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 		}
 
 		public boolean valueEqualsCorrectContent(){
-			List correct = gapDef.getCorrect();
-
-			for( int i=0; i<correct.size(); i++ ){
+			List<String> correct = gapDef.getCorrect();
+			final String gapValue = StringUtils.trim(getGapValue());
+			
+			for( String alternative: correct ){
+				final String correctAlternative = StringUtils.trim(alternative);
 				if( !isIgnoreCase() ){
-					if( removeLeadingTrailingSpaces( getGapValue() ).equals( removeLeadingTrailingSpaces( (String) correct.get( i ) ) ) )
+					if( gapValue.equals( correctAlternative ) )
 						return true;
 				}else{
-					if( removeLeadingTrailingSpaces( getGapValue() ).equalsIgnoreCase( removeLeadingTrailingSpaces( (String) correct.get( i ) ) ) )
+					if( gapValue.equalsIgnoreCase( correctAlternative ) )
 						return true;
 				}
 			}
@@ -533,26 +537,6 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 		    return ret;
 		}
 
-		public String removeLeadingTrailingSpaces( String s ){
-			if( s.length() == 0 )
-				return s;
-
-			int i;
-			for( i=0; i<s.length(); i++ ){
-				if( s.charAt( i ) != ' ' )
-					break;
-			}
-
-			int j;
-			for( j = s.length() - 1; j>=0; j-- ){
-				if( s.charAt( j ) != ' ' )
-					break;
-			}
-			if( i > j )
-				return "";
-
-			return s.substring( i, j + 1 );
-		}
 	}
 
 	/* (non-Javadoc)

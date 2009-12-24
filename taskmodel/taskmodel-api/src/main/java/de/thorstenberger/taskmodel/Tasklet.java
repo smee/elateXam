@@ -81,7 +81,7 @@ public interface Tasklet {
 
 	/**
 	 * Check if this tasklet is still within the maximum allowed processing time. If not,
-	 * this tasklet gets submitted.
+	 * this tasklet gets submitted. This prevents lurking around infinitely.
 	 */
 	public void update();
 

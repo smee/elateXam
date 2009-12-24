@@ -44,7 +44,7 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Try.ProgressInformation;
 
 /**
- * 
+ * TODO transactions that respects all changes to tasklets etc. per action
  * @author Thorsten Berger
  * 
  */

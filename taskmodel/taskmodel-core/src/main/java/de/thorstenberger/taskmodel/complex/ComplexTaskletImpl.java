@@ -47,7 +47,8 @@ import de.thorstenberger.taskmodel.impl.ManualCorrectionImpl;
 /**
  * @author Thorsten Berger
  *
- * TODO / FIXME : all lifecycle methods should move to the container for thread safety reasons
+ * TODO / FIXME : all lifecycle methods should move to the container for thread safety reasons (everything that changes the status)
+ * TODO make composite tasks explicit
  */
 public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTasklet {
 
@@ -108,6 +109,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
         this.complexTaskHandlingRoot = complexTaskHandlingRoot;
         this.complexTaskBuilder = complexTaskBuilder;
 
+        update();
     }
 
 

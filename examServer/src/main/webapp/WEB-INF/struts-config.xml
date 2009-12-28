@@ -149,6 +149,9 @@
   <action path="/BulkPdfExport" roles="tutor,admin"
    type="de.thorstenberger.examServer.webapp.action.PDFBulkExport">
   </action>
+  <action path="/ArchiveServer" roles="admin"
+   type="de.thorstenberger.examServer.webapp.action.ArchiveServerAction">
+  </action>
 
    <!-- The following action's purpose is to collect some information the students should submit on their Main Menu Page -->
   <action input="/studentMainMenu" path="/submitStudentsInfo" roles="student"

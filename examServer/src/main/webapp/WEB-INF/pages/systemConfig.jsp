@@ -35,3 +35,5 @@ Hier konfigurieren Sie allgemeine Einstellungen des Pr�fungsservers.
 <br/><br/>
 <html:submit>Speichern</html:submit>
 </html:form>
+<br/>
+Archivieren aller Serverdaten: <html:link action="/ArchiveServer">Archiv erstellen</html:link>

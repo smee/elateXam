@@ -24,9 +24,9 @@
   <modules>
     <module>taskmodel-schema</module>
     <module>taskmodel-api</module>
-   <module>taskmodel-core</module>
-    <module>taskmodel-core-view</module>
+    <module>taskmodel-core</module>
     <module>drawTask</module>
+    <module>taskmodel-core-view</module>
     <module>addon</module>
   </modules>
 

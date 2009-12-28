@@ -8,6 +8,14 @@
    <xsl:apply-templates/>
    </xsl:copy>
  </xsl:template>
+
+<xsl:template match="t:multipleCorrectors">
+ <xsl:copy>
+   <xsl:attribute name="numberOfCorrectors">
+        <xsl:value-of select="." />
+    </xsl:attribute>
+   </xsl:copy>
+</xsl:template>
  
  <xsl:template match="t:textSubTaskDef">
 <xsl:copy>

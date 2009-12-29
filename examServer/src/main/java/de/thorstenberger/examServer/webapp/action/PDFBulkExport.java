@@ -54,6 +54,7 @@ import de.thorstenberger.taskmodel.TaskManager;
 import de.thorstenberger.taskmodel.TaskModelViewDelegate;
 import de.thorstenberger.taskmodel.TaskModelViewDelegateObject;
 import de.thorstenberger.taskmodel.Tasklet;
+import de.thorstenberger.taskmodel.Tasklet.Status;
 import de.thorstenberger.taskmodel.complex.TaskDef_Complex;
 import de.thorstenberger.taskmodel.impl.TaskModelViewDelegateObjectImpl;
 
@@ -216,6 +217,11 @@ public class PDFBulkExport extends BaseAction {
         // render a pdf for every user that has a tasklet for the current task
         for (final Tasklet tasklet : tasklets) {
             final String userId = tasklet.getUserId();
+
+            if (!tasklet.hasOrPassedStatus(Status.INPROGRESS)) {
+            	log.info(String.format("Skipping PDF for user %s, last try has no contents.",userId));
+            	continue;
+            }
             log.trace("exporting pdf for " + userId);
 
             // set delegate object

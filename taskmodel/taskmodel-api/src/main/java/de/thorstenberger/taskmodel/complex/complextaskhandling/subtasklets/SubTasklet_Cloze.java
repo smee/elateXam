@@ -49,6 +49,14 @@ public interface SubTasklet_Cloze extends SubTasklet {
 		
 		public void setGapValue( String value );
 		
+    /**
+     * Return true if {@link #getGapValue()} returns a non-null value that does not equal the initial value of this gap,
+     * if existing.
+     * 
+     * @return
+     */
+    public boolean isProcessed();
+		
 		public boolean valueEqualsCorrectContent();
 		
 		public void setAutoCorrection( boolean correct );

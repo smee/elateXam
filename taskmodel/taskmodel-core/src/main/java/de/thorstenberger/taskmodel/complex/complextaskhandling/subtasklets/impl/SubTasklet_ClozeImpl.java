@@ -284,14 +284,14 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 //		return clozeSubTask.getCorrection().getPoints();
 //	}
 
-	public boolean isProcessed(){
-		Gap[] gaps = getGaps();
-		for( int i=0; i<gaps.length; i++ )
-			if( gaps[i].getGapValue()!=null && gaps[i].getGapValue().length()!=0 )
-				return true;
-
-		return false;
-	}
+  public boolean isProcessed(){
+    for (final Gap gap : getGaps()) {
+      if(gap.isProcessed()) {
+        return true;
+      }
+    }
+    return false;
+  }
 
 	private Gap[] getGaps(){
 		List gaps = clozeSubTask.getGap();
@@ -367,6 +367,11 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 			else
 				return 20;
 		}
+		
+    public boolean isProcessed() {
+      final String gapValue = getGapValue();
+      return gapValue != null && gapValue.length() != 0 && !gapValue.equals(gapDef.getInitialValue());
+    }
 
 		public String getGapValue(){
 			return gap.getGapValue();

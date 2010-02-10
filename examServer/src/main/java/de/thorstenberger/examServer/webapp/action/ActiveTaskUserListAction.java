@@ -38,6 +38,10 @@ import de.thorstenberger.taskmodel.Tasklet;
 import de.thorstenberger.taskmodel.TaskletContainer;
 import de.thorstenberger.taskmodel.Tasklet.Status;
 import de.thorstenberger.taskmodel.complex.ComplexTasklet;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.Try;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.Try.ProgressInformation;
 
 public class ActiveTaskUserListAction extends BaseAction {
 
@@ -66,7 +70,23 @@ public class ActiveTaskUserListAction extends BaseAction {
         	vo.setTaskTitle(manager.getTaskDef(tasklet.getTaskId()).getTitle());
         	vo.setUsername(tasklet.getUserId() );
         	if(tasklet instanceof ComplexTasklet) {        		
-        	    vo.setTimeExtension(((ComplexTasklet) tasklet).getActiveTry().getTimeExtension()/1000/60);
+        	    ComplexTasklet ct = (ComplexTasklet) tasklet;
+				Try activeTry = ct.getActiveTry();
+				
+				// count subtasklets
+				ProgressInformation progressInformation = activeTry.getProgressInformation();
+				int numSubtasklets = progressInformation.getNumOfSubtasklets();
+				int numProcessedSubtasklets = progressInformation.getNumOfProcessedSubtasklets();
+				vo.setStatus(numProcessedSubtasklets+"/"+numSubtasklets);
+				
+				if (ct.getComplexTaskDefRoot().hasTimeRestriction()) {
+		            final long deadline = ct.getActiveTry().getStartTime() + ct.getActiveTry().getTimeExtension() + ct.getComplexTaskDefRoot().getTimeInMinutesWithoutKindnessExtensionTime() * 60 * 1000;
+		            long remainingMillis = deadline - System.currentTimeMillis();
+		            vo.setRemainingMinutes(Long.toString(remainingMillis/60000));
+		        } 					
+        	}else{
+        		vo.setRemainingMinutes("-");
+        		vo.setStatus("aktiv");
         	}
         	vos.add(vo);
 		}

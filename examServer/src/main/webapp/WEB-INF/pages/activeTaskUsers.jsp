@@ -16,9 +16,10 @@
 <display:table name="ActiveUsers" id="user" cellspacing="0" cellpadding="0"
     defaultsort="1" class="table" pagesize="50" requestURI="">
   
-    <display:column property="username" escapeXml="true" style="width: 30%" titleKey="userForm.username" sortable="true"/>
-    <display:column property="taskTitle" escapeXml="true" style="width: 30%" titleKey="activeTaskUsers.taskttitle" sortable="true"/>
-    <display:column property="timeExtension" escapeXml="true" style="width: 30%" titleKey="activeTaskUsers.timeextension" sortable="true"/>
+    <display:column property="username" escapeXml="true" style="width: 20%" titleKey="userForm.username" sortable="true"/>
+    <display:column property="taskTitle" escapeXml="true" style="width: 25%" titleKey="activeTaskUsers.taskttitle" sortable="true"/>
+    <display:column property="status" escapeXml="true" style="width: 20%" titleKey="activeTaskUsers.status" sortable="true"/>
+    <display:column property="remainingMinutes" escapeXml="true" style="width: 20%" titleKey="activeTaskUsers.remainingminutes" sortable="true"/>
     <display:column titleKey="activeTaskUsers.increaseTime" sortable="true">
 		<html:link action="/increaseTime" name="user" property="loginAndTaskId"><fmt:message key="activeTaskUsers.increaseLink"/></html:link>
 	</display:column>

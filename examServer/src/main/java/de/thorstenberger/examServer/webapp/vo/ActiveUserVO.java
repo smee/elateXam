@@ -28,6 +28,13 @@ import java.util.Map;
 public class ActiveUserVO {
 	private String username;
 	private String taskTitle;
+	private String status;
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
 	private HashMap<String, String> loginAndTaskId;
 	
 	public String getTaskTitle() {
@@ -48,11 +55,11 @@ public class ActiveUserVO {
 	public void setTaskId(String taskId) {
   	this.taskId = taskId;
   }
-	public long getTimeExtension() {
-  	return timeExtension;
+	public String getRemainingMinutes() {
+  	return remainingMinutes;
   }
-	public void setTimeExtension(long milliseconds) {
-  	this.timeExtension = milliseconds;
+	public void setRemainingMinutes(String minutes) {
+  	this.remainingMinutes = minutes;
   }
 	public Map getLoginAndTaskId() {
 		if( loginAndTaskId == null ){
@@ -63,5 +70,5 @@ public class ActiveUserVO {
 		return loginAndTaskId;
 	}
 	private String taskId;
-	private long timeExtension;
+	private String remainingMinutes;
 }

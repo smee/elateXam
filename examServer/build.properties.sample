@@ -1,4 +1,0 @@
-catalina.home = d:/java_files/j2tomcat
-
-tomcat.deploy.war.dir = ${catalina.home}/webapps
-tomcat.shared.lib.dir = ${catalina.home}/shared/lib

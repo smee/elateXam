@@ -2,9 +2,12 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
     "http://www.springframework.org/dtd/spring-beans.dtd">
 
-<beans>
+<beans><!--
 
-    <!-- ======================== FILTER CHAIN ======================= -->
+  <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="location" value="classpath:authentication.properties"/>
+  </bean>
+    --><!-- ======================== FILTER CHAIN ======================= -->
     <bean id="filterChainProxy" class="org.acegisecurity.util.FilterChainProxy">
         <property name="filterInvocationDefinitionSource">
             <value>
@@ -102,21 +105,19 @@
                 <ref local="daoAuthenticationProvider"/>
                 <ref local="httpauthAuthenticationProvider"/>
 	            <ref local="wsAuthenticationProvider"/>
-                <ref local="${springbean.additionalprovider}"/>
+                <ref local="freeForAllAuthenticationProvider"/>
                 <!--ref local="anonymousAuthenticationProvider"/-->
                 <!--ref local="rememberMeAuthenticationProvider"/-->
             </list>
         </property>
     </bean>
     
-    <bean id="donothingAuthenticationProvider" class="de.thorstenberger.examServer.ws.remoteusermanager.DoNothingAuthenticationProvider">
-    <description>Disallow any authentication. Effectively do nothing.</description>
-    </bean>
     <bean id="freeForAllAuthenticationProvider" class="de.thorstenberger.examServer.ws.remoteusermanager.FreeForAllAuthenticationProvider">
         <description>Allow all logins as students, create a new user if the username was unknown.</description>
     	<constructor-arg ref="configManager"></constructor-arg>
     	<constructor-arg ref="userManager"></constructor-arg>
     	<constructor-arg ref="roleManager"></constructor-arg>
+      <property name="enabled" value="${additionalprovider}"/>
     </bean>
     
     <bean id="wsAuthenticationProvider" class="de.thorstenberger.examServer.ws.remoteusermanager.WSAuthenticationProvider">

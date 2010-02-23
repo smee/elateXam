@@ -8,6 +8,7 @@
         <property name="locations">
             <list>
                 <value>classpath:mail.properties</value>
+                <value>classpath:authentication.properties</value>
             </list>
         </property>
     </bean>

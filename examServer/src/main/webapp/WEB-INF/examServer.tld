@@ -9,13 +9,6 @@
 
    <description><![CDATA[Custom tag library for this application]]></description>
 
-   <listener>
-      <listener-class>de.thorstenberger.examServer.webapp.listener.StartupListener</listener-class>
-   </listener>
-   <listener>
-      <listener-class>de.thorstenberger.examServer.webapp.listener.UserCounterListener</listener-class>
-   </listener>
-
    <tag>
 
       <name>country</name>

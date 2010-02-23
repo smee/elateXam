@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
@@ -43,137 +44,142 @@ import de.thorstenberger.examServer.service.ExamServerManager;
  */
 public class ExamServerManagerImpl implements ExamServerManager, ApplicationContextAware {
 
-    static final String HOME = "home";
-    static final String TASKDEFS = "taskdefs";
-    static final String SYSTEM = "system";
+  static final String HOME = "home";
+  static final String TASKDEFS = "taskdefs";
+  static final String SYSTEM = "system";
 
-    private ApplicationContext ac;
-    private File repositoryFile;
+  private ApplicationContext ac;
+  private File repositoryFile;
 
-    /**
-	 * 
-	 */
-    public ExamServerManagerImpl() {
-        super();
-        // TODO Auto-generated constructor stub
+  /**
+   * 
+   */
+  public ExamServerManagerImpl() {
+    super();
+    // TODO Auto-generated constructor stub
+  }
+
+  private void configLogging(final File log4JConfigFile) {
+
+    final Properties p = new Properties();
+    try {
+      p.load(new FileInputStream(log4JConfigFile));
+    } catch (final FileNotFoundException e) {
+      throw new RuntimeException(e);
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
     }
+    p.setProperty("examServer.repository.path", repositoryFile.getAbsolutePath());
+    PropertyConfigurator.configure(p);
 
-    private void configLogging(final File log4JConfigFile) {
+  }
 
-        final Properties p = new Properties();
-        try {
-            p.load(new FileInputStream(log4JConfigFile));
-        } catch (final FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.thorstenberger.examServer.service.ExamServerManager#getHomeDir()
+   */
+  public File getHomeDir() {
+    return new File(repositoryFile, HOME);
+  }
+
+  /**
+   * @return Returns the repositoryFile.
+   */
+  public File getRepositoryFile() {
+    return repositoryFile;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.thorstenberger.examServer.service.ExamServerManager#getSystemDir()
+   */
+  public File getSystemDir() {
+    return new File(repositoryFile, SYSTEM);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.thorstenberger.examServer.service.ExamServerManager#getTaskDefDir()
+   */
+  public File getTaskDefDir() {
+    return new File(repositoryFile, TASKDEFS);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.thorstenberger.examServer.service.ExamServerManager#init()
+   */
+  public void init() {
+
+    String contextName = null;
+    ServletContext sc = null;
+
+    if (ac instanceof WebApplicationContext) {
+      sc = ((WebApplicationContext) ac).getServletContext();
+      final String path = sc.getRealPath("");
+      int pos = path.lastIndexOf('\\');
+      if (pos != -1) {
+        contextName = path.substring(pos + 1, path.length());
+      } else {
+        pos = path.lastIndexOf('/');
+        if (pos != -1) {
+          contextName = path.substring(pos + 1, path.length());
         }
-        p.setProperty("examServer.repository.path", repositoryFile.getAbsolutePath());
-        PropertyConfigurator.configure(p);
-
+      }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see de.thorstenberger.examServer.service.ExamServerManager#getHomeDir()
-     */
-    public File getHomeDir() {
-        return new File(repositoryFile, HOME);
+    final String repositoryPath = System.getProperty("user.home") + File.separatorChar +
+    "ExamServerRepository" + (contextName != null ? "_" + contextName : "");
+
+    repositoryFile = new File(repositoryPath);
+
+    // create if not exists
+    if (!repositoryFile.exists()) {
+      repositoryFile.mkdirs();
     }
 
-    /**
-     * @return Returns the repositoryFile.
-     */
-    public File getRepositoryFile() {
-        return repositoryFile;
+    // system dir
+    final File system = new File(repositoryPath + File.separatorChar + SYSTEM);
+    if (!system.exists()) {
+      system.mkdirs();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see de.thorstenberger.examServer.service.ExamServerManager#getSystemDir()
-     */
-    public File getSystemDir() {
-        return new File(repositoryFile, SYSTEM);
+    // homes dir
+    final File home = new File(repositoryPath + File.separatorChar + HOME);
+    if (!home.exists()) {
+      home.mkdirs();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see de.thorstenberger.examServer.service.ExamServerManager#getTaskDefDir()
-     */
-    public File getTaskDefDir() {
-        return new File(repositoryFile, TASKDEFS);
+    // taskDefs dir
+    final File taskDefs = new File(repositoryPath + File.separatorChar + TASKDEFS);
+    if (!taskDefs.exists()) {
+      taskDefs.mkdirs();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see de.thorstenberger.examServer.service.ExamServerManager#init()
-     */
-    public void init() {
-
-        String contextName = null;
-        ServletContext sc = null;
-
-        if (ac instanceof WebApplicationContext) {
-            sc = ((WebApplicationContext) ac).getServletContext();
-            final String path = sc.getRealPath("");
-            int pos = path.lastIndexOf('\\');
-            if (pos != -1) {
-                contextName = path.substring(pos + 1, path.length());
-            } else {
-                pos = path.lastIndexOf('/');
-                if (pos != -1) {
-                    contextName = path.substring(pos + 1, path.length());
-                }
-            }
-        }
-
-        final String repositoryPath = System.getProperty("user.home") + File.separatorChar +
-                "ExamServerRepository" + (contextName != null ? "_" + contextName : "");
-
-        repositoryFile = new File(repositoryPath);
-
-        // create if not exists
-        if (!repositoryFile.exists()) {
-            repositoryFile.mkdirs();
-        }
-
-        // system dir
-        final File system = new File(repositoryPath + File.separatorChar + SYSTEM);
-        if (!system.exists()) {
-            system.mkdirs();
-        }
-
-        // homes dir
-        final File home = new File(repositoryPath + File.separatorChar + HOME);
-        if (!home.exists()) {
-            home.mkdirs();
-        }
-
-        // taskDefs dir
-        final File taskDefs = new File(repositoryPath + File.separatorChar + TASKDEFS);
-        if (!taskDefs.exists()) {
-            taskDefs.mkdirs();
-        }
-
-        if (sc != null) {
-            final File log4j = new File(sc.getRealPath("/WEB-INF/classes/log4j.properties"));
-            configLogging(log4j);
-        }
-
+    if (sc != null) {
+      File log4j;
+      try {
+        log4j = new File(this.getClass().getClassLoader().getResource("log4j.properties").toURI());
+        configLogging(log4j);
+      } catch (final URISyntaxException e) {
+        throw new RuntimeException(e);
+      }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @seeorg.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.
-     * ApplicationContext)
-     */
-    public void setApplicationContext(final ApplicationContext ac) throws BeansException {
-        this.ac = ac;
-    }
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @seeorg.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.
+   * ApplicationContext)
+   */
+  public void setApplicationContext(final ApplicationContext ac) throws BeansException {
+    this.ac = ac;
+  }
 
 }

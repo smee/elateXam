@@ -8,4 +8,7 @@ taskmodel/taskmodel-api/target/
 taskmodel/taskmodel-core-view/target/
 taskmodel/taskmodel-core/target/
 taskmodel/taskmodel-schema/target/
+elateXam-integrationtest/target/
+elateXam-integrationtest/velocity.log
+examServer/velocity.log
 

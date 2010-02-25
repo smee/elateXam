@@ -103,9 +103,10 @@ function send(){
 
 function nutzeUhr()
 {
-	if (this.useTime)
+	if (this.useTime){
+		getElem( "id","UhrTop",null).style.display= "block";
 		timer1()
-	else return;
+	}else return;
 }
 
 function timer1()
@@ -113,18 +114,28 @@ function timer1()
 	var remaining_min = Math.floor( this.mseconds >= 0 ? this.mseconds / 60000 : 0 );
 	var remaining_sec = Math.floor( this.mseconds >= 0 ? this.mseconds / 1000 : 0 );
 	if ( remaining_min < 1 ){
-		var rt_late = "noch " + remaining_min + " min " + remaining_sec % 60 + " sec verbleibend";
+        
+		var rt_late = "noch " + format_time(remaining_min,remaining_sec%60)+ " verbleibend";
+        
 		setCont("id","Uhr",null,rt_late);
 		getElem( "id","Uhr",null).style.fontWeight = "bold";
 		getElem( "id","Uhr",null).style.visibility = "visible";
+		setCont("id","UhrTop",null,format_time(remaining_min,remaining_sec%60));
 	}else{
 		var rt = "noch " + remaining_min + " min verbleibend";
-		setCont("id","Uhr",null,rt);
+		setCont("id","Uhr",null,"noch "+remaining_min+" min verbleiben");
+		setCont("id","UhrTop",null,format_time(remaining_min,remaining_sec%60));
 	}
 
 	if( remaining_min < 5 ){
 		getElem( "id","Uhr",null).style.color = "red";
+		getElem( "id","UhrTop",null).style.color = "red";
 	}
+    if( remaining_min < 3){
+		getElem( "id","UhrTop",null).style.backgroundColor = "white";
+		getElem( "id","UhrTop",null).style.fontSize = "large";
+    }
+    
 
 	if( this.mseconds <= 0 ){
 		for( var i = 0; i<500; i++ ){
@@ -141,7 +152,16 @@ function timer1()
 
 	window.setTimeout('timer1()',1000);
 }
-
+function format_time(min,sec){
+ var val = "";
+ if(min<10)
+   val+="0";
+ val+=min+":"; 
+ if(sec<10)
+   val+="0";
+ val+=sec;
+ return val;
+}
 function checkedLink(name, target, linkClass)
 {
 	document.write("<a class=" +linkClass+ " href=javascript:leave('" +escape( target ) + "')>" +name+ "</a>");
@@ -170,7 +190,6 @@ function fenster(file,breite,hoehe) {
 </script>
 
 <br><br>
-
 <table border="0" cellspacing="0" cellpadding="5" width="790">
   <tr>
 
@@ -187,7 +206,7 @@ function fenster(file,breite,hoehe) {
 		</div>
     </td>
 
-    <td bgcolor="#F2F9FF" class="complexTaskNav">&nbsp;</td>
+    <td bgcolor="#F2F9FF" class="complexTaskNav"><div id="UhrTop" class="topwatch">&nbsp;</div></td>
 
     <td bgcolor="#F2F9FF" class="complexTaskNav">
       <div align="right">Seite ${Task.page}&nbsp;/&nbsp;${Task.numOfPages}&nbsp;&nbsp;<img src="<%= request.getContextPath() %>/pics/pages.gif" width="11" height="12" align="absmiddle"></div>
@@ -268,9 +287,6 @@ function fenster(file,breite,hoehe) {
           <input type="submit" name="submit" value="Abgeben">
         </div>
       </form>
-
-
-
     </td>
     <td width="20">&nbsp;</td>
     <td width="600" valign="top">

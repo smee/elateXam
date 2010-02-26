@@ -4,12 +4,12 @@
 
   <parent>
     <artifactId>taskmodel</artifactId>
-    <groupId>de.elateportal</groupId>
+    <groupId>de.elatexam</groupId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>taskmodel-core-view</artifactId>
-  <groupId>de.elateportal</groupId>
+  <groupId>de.elatexam</groupId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>war</packaging>
   <name>TaskModel Core View</name>

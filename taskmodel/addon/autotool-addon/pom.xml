@@ -5,11 +5,11 @@
   
     <parent>
     <artifactId>taskmodel-addon</artifactId>
-    <groupId>de.elateportal</groupId>
+    <groupId>de.elatexam</groupId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
   
-  <groupId>de.elateportal</groupId>
+  <groupId>de.elatexam</groupId>
   <artifactId>autotool-addon</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <name>Autotool AddonTask</name>

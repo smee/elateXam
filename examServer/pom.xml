@@ -3,7 +3,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
   xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>elate</groupId>
+  <groupId>de.elatexam</groupId>
   <artifactId>examServer</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>war</packaging>
@@ -44,6 +44,16 @@
       http://elateportal.svn.sourceforge.net/viewvc/elateportal/trunk/examServer
     </url>
   </scm>
+  
+  <distributionManagement>
+    <snapshotRepository>
+      <id>sonatype-nexus-snapshots</id>
+      <name>Sonatype Nexus Snapshots</name>
+      <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+  
+  
   <build>
     <resources>
       <resource>
@@ -634,6 +644,9 @@
       <id>preview-mode</id>
       <!-- configure for exams preview, use a mock user database as well as a mock taskhandlingdao.
            every user/password combination will be allowed, tasklets will only get cached in memory, not persisted. -->
+      <build>
+        <finalName>${artifactId}-preview-${version}</finalName>      
+      </build>
       <properties>
         <springbean.additionalprovider>true</springbean.additionalprovider>
         <initialtitle>Bitte nutzen Sie eine beliebige Login/Passwort-Kombination.</initialtitle>

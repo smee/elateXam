@@ -3,7 +3,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
   xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>elate</groupId>
+  <groupId>de.elatexam</groupId>
   <artifactId>elateXam-integrationtests</artifactId>
   <version>1.0</version>
   <packaging>jar</packaging>
@@ -63,7 +63,7 @@
             <timeout>600000</timeout>
             <dependencies>
               <dependency>
-                <groupId>de.elateportal</groupId>
+                <groupId>de.elatexam</groupId>
                 <artifactId>taskmodel-api</artifactId>
                 <type>jar</type>
               </dependency>
@@ -77,7 +77,7 @@
             </properties>
             <deployables>
               <deployable>
-                <groupId>elate</groupId>
+                <groupId>de.elatexam</groupId>
                 <artifactId>examServer</artifactId>
                 <type>war</type>
                 <properties>
@@ -86,7 +86,7 @@
                 <pingURL>http://localhost:${local.port}/examServer/login.jsp</pingURL>
               </deployable>
               <deployable>
-                <groupId>de.elateportal</groupId>
+                <groupId>de.elatexam</groupId>
                 <artifactId>taskmodel-core-view</artifactId>
                 <type>war</type>
                 <properties>
@@ -223,19 +223,19 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>de.elateportal</groupId>
+      <groupId>de.elatexam</groupId>
       <artifactId>taskmodel-core-view</artifactId>
       <version>1.0.0-SNAPSHOT</version>
       <type>war</type>
     </dependency>
     <dependency>
-      <groupId>elate</groupId>
+      <groupId>de.elatexam</groupId>
       <artifactId>examServer</artifactId>
       <version>1.0.0-SNAPSHOT</version>
       <type>war</type>
     </dependency>
     <dependency>
-      <groupId>de.elateportal</groupId>
+      <groupId>de.elatexam</groupId>
       <artifactId>taskmodel-api</artifactId>
       <version>1.0.0-SNAPSHOT</version>
       <type>jar</type>

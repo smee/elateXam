@@ -58,27 +58,30 @@ public class UserComplexTaskHandlingDAOImpl extends AbstractTransactionalFileIO
 	 * @see de.thorstenberger.examServer.dao.UserComplexTaskHandlingDAO#load(java.lang.String, de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot)
 	 */
 	public ComplexTaskHandlingRoot load(String username,String taskId, ComplexTaskDefRoot complexTaskDefRoot) {
-		String txId = startTransaction();
-		try {
-			String resource = createResourceName(username, taskId);
-			// make sure, the file exists
-			if(!getFRM().resourceExists(resource)) {
-				getFRM().createResource(txId, resource);
-			}
-			
-	    InputStream inputStream = getFRM().readResource(txId,resource);
-	    ComplexTaskHandlingRoot complexTaskHandlingRoot = cthDao.getComplexTaskHandlingRoot(inputStream, complexTaskDefRoot);
-	    inputStream.close();
-	   
-	    commitTransaction(txId);
-	    return complexTaskHandlingRoot;
-    } catch (ResourceManagerException e) {
-    	rollback(txId, e);
-    } catch (IOException e) {
-    	rollback(txId, e);
+    final String resource = createResourceName(username, taskId);
+    try {
+      // make sure, the file exists
+      if(!getFRM().resourceExists(resource)) {
+        final String txId = startTransaction();
+        getFRM().createResource(txId, resource);
+        commitTransaction(txId);
+      }
+    } catch (final ResourceManagerException e) {
+      throw new TaskModelPersistenceException(e);
     }
-    return null;
-	}
+    try {
+      final InputStream inputStream = getFRM().readResource(resource);
+      final ComplexTaskHandlingRoot complexTaskHandlingRoot = cthDao.getComplexTaskHandlingRoot(inputStream, complexTaskDefRoot);
+      inputStream.close();
+      return complexTaskHandlingRoot;
+
+    } catch (final ResourceManagerException e) {
+      throw new TaskModelPersistenceException(e);
+    } catch (final IOException e) {
+      throw new TaskModelPersistenceException(e);
+    }
+
+  }
 
 	private String createResourceName(String username, String taskId) {
 	  return username+"/"+COMPLEX_TASKHANDLING_FILE_PREFIX + taskId + COMPLEX_TASKHANDLING_FILE_SUFFIX;

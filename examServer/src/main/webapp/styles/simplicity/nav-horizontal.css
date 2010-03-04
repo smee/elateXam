@@ -132,7 +132,7 @@
                         border-right: 1px solid silver;
                     }
 
-                        ul#primary-nav li ul li a { padding: 3px 5px; text-align: left; width: 119px } /* Sub Menu Styles */
+                        ul#primary-nav li ul li a { padding: 3px 5px; text-align: left; width: 165px } /* Sub Menu Styles */
 
                         ul#primary-nav li:hover ul ul,
                         ul#primary-nav li:hover ul ul ul,

@@ -37,7 +37,7 @@
         </dependency>
         <!-- taskmodel dependencies -->
         <dependency>
-            <groupId>de.elateportal</groupId>
+            <groupId>de.elatexam</groupId>
             <artifactId>taskmodel-api</artifactId>
             <version>1.0.0-SNAPSHOT</version>
 	   <scope>provided</scope> 
@@ -206,7 +206,7 @@
             <configuration>
                 <artifactItems>
                      <artifactItem>
-                     <groupId>de.elateportal</groupId>
+                     <groupId>de.elatexam</groupId>
                      <artifactId>drawtask</artifactId>
                      <version>1.0.2-SNAPSHOT</version>
                      <type>jar</type>
@@ -229,7 +229,7 @@
       <id>standalone</id>
       <dependencies>
 	<dependency>
-            <groupId>de.elateportal</groupId>
+            <groupId>de.elatexam</groupId>
             <artifactId>taskmodel-api</artifactId>
             <version>1.0.0-SNAPSHOT</version>
 	   <scope>runtime</scope> 

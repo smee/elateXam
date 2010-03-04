@@ -37,20 +37,20 @@
   
   <dependencies>
     <dependency>
-      <groupId>de.elateportal</groupId>
+      <groupId>de.elatexam</groupId>
       <artifactId>taskmodel-api</artifactId>
       <version>1.0.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>de.elateportal</groupId>
+      <groupId>de.elatexam</groupId>
       <artifactId>taskmodel-core</artifactId>
       <version>1.0.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
  <!-- bundle dependencies -->
         <dependency>
-            <groupId>de.elateportal</groupId>
+            <groupId>de.elatexam</groupId>
             <artifactId>junit-addon-correction-interfaces</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency> 

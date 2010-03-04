@@ -25,12 +25,12 @@
 
   <dependencies>
     <dependency>
-      <groupId>de.elateportal</groupId>
+      <groupId>de.elatexam</groupId>
       <artifactId>taskmodel-api</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>de.elateportal</groupId>
+      <groupId>de.elatexam</groupId>
       <artifactId>taskmodel-schema</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>

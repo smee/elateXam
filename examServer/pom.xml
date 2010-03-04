@@ -70,16 +70,16 @@
       </resource>
       <resource>
         <directory>src/main/resources</directory>
-        <filtering>true</filtering>
+        <filtering>false</filtering>
         <includes>
-          <include>**/*.properties</include>
+          <include>**</include>
         </includes>
       </resource>
       <resource>
         <directory>src/main/resources</directory>
-        <filtering>false</filtering>
+        <filtering>true</filtering>
         <includes>
-          <include>**</include>
+          <include>**/*.properties</include>
         </includes>
       </resource>
     </resources>
@@ -173,8 +173,8 @@
       -->
       <plugin>
         <inherited>true</inherited>
-        <artifactId>maven-eclipse-plugin
-        </artifactId>
+        <artifactId>maven-eclipse-plugin</artifactId>
+        <version>2.6</version>
         <configuration>
           <downloadSources>true</downloadSources>
           <downloadJavadocs>true</downloadJavadocs>
@@ -234,13 +234,13 @@
   </repositories>
   <dependencies>
     <dependency>
-      <groupId>de.elateportal</groupId>
+      <groupId>de.elatexam</groupId>
       <artifactId>taskmodel-api</artifactId>
       <version>1.0.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>de.elateportal</groupId>
+      <groupId>de.elatexam</groupId>
       <artifactId>taskmodel-core</artifactId>
       <version>1.0.0-SNAPSHOT</version>
       <exclusions>
@@ -251,7 +251,7 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>de.elateportal</groupId>
+      <groupId>de.elatexam</groupId>
   	  <artifactId>autotool-addon</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
@@ -386,6 +386,12 @@
       <groupId>displaytag</groupId>
       <artifactId>displaytag</artifactId>
       <version>1.1</version>
+      <exclusions>
+      	<exclusion>
+      		<artifactId>itext</artifactId>
+      		<groupId>itext</groupId>
+      	</exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>net.sf.ehcache</groupId>
@@ -405,7 +411,7 @@
     <dependency>
       <groupId>com.lowagie</groupId>
       <artifactId>itext</artifactId>
-      <version>2.1.5</version>
+      <version>2.1.7</version>
     </dependency>
     <dependency>
       <groupId>oro</groupId>
@@ -526,7 +532,7 @@
       <id>standalone</id>
       <dependencies><!--
         <dependency>
-          <groupId>de.elateportal</groupId>
+          <groupId>de.elatexam</groupId>
           <artifactId>taskmodel-api</artifactId>
           <version>1.0.0-SNAPSHOT</version>
           <scope>runtime</scope>
@@ -564,7 +570,7 @@
             <configuration>
               <artifactItems>
                 <artifactItem>
-                  <groupId>de.elateportal</groupId>
+                  <groupId>de.elatexam</groupId>
                   <artifactId>taskmodel-core-view</artifactId>
                   <version>1.0.0-SNAPSHOT</version>
                   <type>war</type>
@@ -636,6 +642,18 @@
                 </goals>
               </execution>
             </executions>
+            <configuration>
+              <classpath>
+                <resources>
+                  <resource>
+                    <directory>src/main/resources</directory>
+                    <excludes>
+                      <exclude>authentication.properties</exclude>
+                    </excludes>                    
+                  </resource>
+                </resources>
+              </classpath>
+            </configuration>
           </plugin>
         </plugins>
       </build>

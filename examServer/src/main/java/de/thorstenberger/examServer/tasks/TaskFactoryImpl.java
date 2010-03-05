@@ -160,7 +160,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.TaskFactory#addTaskCategory(java.lang.String, java.lang.String)
      */
     public TaskCategory addTaskCategory(final String name, final String description) {
@@ -170,7 +170,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.TaskFactory#availableTypes()
      */
     public List<String> availableTypes() {
@@ -179,7 +179,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.TaskFactory#availableUserAttributeKeys()
      */
     public List<UserAttribute> availableUserAttributes() {
@@ -214,7 +214,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     /**
      * Creates pathname for taskDef files
-     * 
+     *
      * @param filename
      * @return
      */
@@ -224,7 +224,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.TaskFactory#createTasklet(java.lang.String, long)
      */
     public Tasklet createTasklet(final String userId, final long taskId)
@@ -259,7 +259,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.TaskFactory#deleteTaskCategory(long)
      */
     public void deleteTaskCategory(final long id) throws MethodNotSupportedException {
@@ -269,7 +269,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.TaskFactory#deleteTaskDef(long)
      */
     synchronized public void deleteTaskDef(final long id) throws MethodNotSupportedException {
@@ -283,7 +283,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.TaskFactory#getCategories()
      */
     public List<TaskCategory> getCategories() {
@@ -292,7 +292,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.TaskFactory#getCategories(de.thorstenberger.taskmodel.CategoryFilter)
      */
     public List<TaskCategory> getCategories(final CategoryFilter categoryFilter) {
@@ -301,7 +301,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.TaskFactory#getCategory(long)
      */
     public TaskCategory getCategory(final long id) {
@@ -311,7 +311,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.TaskFactory#getCorrectors()
      */
     public List<UserInfo> getCorrectors() {
@@ -343,7 +343,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.TaskFactory#getTaskDef(long)
      */
     public synchronized TaskDef getTaskDef(final long taskId) {
@@ -361,7 +361,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.TaskFactory#getTaskDefs()
      */
     public synchronized List<TaskDef> getTaskDefs() {
@@ -394,7 +394,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.TaskFactory#getTaskDefs(de.thorstenberger.taskmodel.TaskFilter)
      */
     public List<TaskDef> getTaskDefs(final TaskFilter filter)
@@ -404,7 +404,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.TaskFactory#getTasklet(java.lang.String, long)
      */
     public Tasklet getTasklet(final String userId, final long taskId) {
@@ -425,26 +425,41 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.TaskFactory#getTasklets(long)
      */
     public List<Tasklet> getTasklets(final long taskId) {
-        final List<Tasklet> ret = new ArrayList<Tasklet>();
-        final List<TaskletVO> taskletVOs = taskHandlingDao.getTasklets(taskId);
-        final TaskDefVO taskDefVO = taskDefDao.getTaskDef(taskId);
+    return getTasklets(taskId, null);
+  }
 
-        for (final TaskletVO taskletVO : taskletVOs) {
-        	  String userId = taskletVO.getLogin();
+  /*
+   * (non-Javadoc)
+   *
+   * @see de.thorstenberger.taskmodel.TaskFactory#getTasklets(long, de.thorstenberger.taskmodel.Tasklet.Status)
+   */
+  public List<Tasklet> getTasklets(final long taskId, final Tasklet.Status status) {
+    final List<Tasklet> ret = new ArrayList<Tasklet>();
+    final List<TaskletVO> taskletVOs = taskHandlingDao.getTasklets(taskId);
+    final TaskDefVO taskDefVO = taskDefDao.getTaskDef(taskId);
 
-            ret.add(instantiateTasklet(taskletVO, taskDefVO, userId, taskId));
-        }
+    for (final TaskletVO taskletVO : taskletVOs) {
+      // filter tasklets by status if there is one given
+      if (status != null && TaskmodelUtil.getStatus(taskletVO.getStatus()) != status) {
+        continue;
+      }
 
-        return ret;
+      final String userId = taskletVO.getLogin();
+
+      ret.add(instantiateTasklet(taskletVO, taskDefVO, userId, taskId));
     }
+
+    return ret;
+  }
+
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.impl.AbstractTaskFactory#getUserIdsOfAvailableTasklets(long)
      */
     @Override
@@ -454,7 +469,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.impl.AbstractTaskFactory#getUserIdsOfTaskletsAssignedToCorrector(long,
      * java.lang.String, boolean)
      */
@@ -465,7 +480,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.TaskFactory#getUserInfo(java.lang.String)
      */
     public UserInfo getUserInfo(final String login) {
@@ -532,7 +547,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.TaskFactory#logPostData(java.lang.String, de.thorstenberger.taskmodel.Tasklet,
      * java.lang.String)
      */
@@ -543,7 +558,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.TaskFactory#logPostData(java.lang.String, java.lang.Throwable,
      * de.thorstenberger.taskmodel.Tasklet, java.lang.String)
      */
@@ -568,7 +583,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.TaskFactory#removeTasklet(java.lang.String, long)
      */
     public void removeTasklet(final String userId, final long taskId)
@@ -578,7 +593,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     /**
      * Stores a new taskDef via DAO. Returns its id.
-     * 
+     *
      * @param filename
      * @param fileContent
      * @throws TaskApiException
@@ -626,7 +641,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.TaskFactory#storeTaskCategory(de.thorstenberger.taskmodel.TaskCategory)
      */
     public void storeTaskCategory(final TaskCategory category) {
@@ -636,7 +651,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.TaskFactory#storeTaskDef(de.thorstenberger.taskmodel.TaskDef, long)
      */
     synchronized public void storeTaskDef(final TaskDef taskDef, final long taskCategoryId) throws TaskApiException {
@@ -663,12 +678,14 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.TaskFactory#storeTasklet(de.thorstenberger.taskmodel.Tasklet)
      */
     public void storeTasklet(final Tasklet tasklet) throws TaskApiException {
 
         TaskletVO taskletVO = taskHandlingDao.getTasklet(tasklet.getTaskId(), tasklet.getUserId());
+
+        onStoreTasklet(tasklet,taskletVO);
 
         boolean changed = false;
 
@@ -766,8 +783,8 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
         if (tasklet instanceof ComplexTasklet) {
             // TODO introduce transactions
             // get the taskHandling xml file!
-        	  String userId = tasklet.getUserId();
-        	  String taskId = Long.toString(tasklet.getTaskId());
+        	  final String userId = tasklet.getUserId();
+        	  final String taskId = Long.toString(tasklet.getTaskId());
             final ComplexTasklet ct = (ComplexTasklet) tasklet;
                 complexTaskHandlingDAO.save(userId,taskId,ct.getComplexTaskHandlingRoot());
         }
@@ -775,6 +792,16 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
         if (changed) {
             taskHandlingDao.saveTasklet(taskletVO);
         }
+
+    }
+
+    /**
+     * Hook for subclasses to react on calls to {@link #storeTasklet(Tasklet)}.
+     *
+     * @param tasklet tasklet to store
+     * @param taskletVO old value object (unmodified)
+     */
+    protected void onStoreTasklet(final Tasklet tasklet, final TaskletVO taskletVO) {
 
     }
 

@@ -30,4 +30,6 @@
         <property name="removeAbandoned" value="true"/>
         <property name="removeAbandonedTimeout" value="60"/>
     </bean>
+
+    <bean id="signatureInfos" class="de.thorstenberger.examServer.pdf.signature.SignatureInfos"/>
 </beans>

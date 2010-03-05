@@ -1,4 +1,4 @@
- <?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
   xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -70,16 +70,16 @@
       </resource>
       <resource>
         <directory>src/main/resources</directory>
-        <filtering>false</filtering>
+        <filtering>true</filtering>
         <includes>
-          <include>**</include>
+          <include>**/*.properties</include>
         </includes>
       </resource>
       <resource>
         <directory>src/main/resources</directory>
-        <filtering>true</filtering>
+        <filtering>false</filtering>
         <includes>
-          <include>**/*.properties</include>
+          <include>**</include>
         </includes>
       </resource>
     </resources>
@@ -361,6 +361,12 @@
       <groupId>commons-transaction</groupId>
       <artifactId>commons-transaction</artifactId>
       <version>1.2</version>
+      <exclusions>
+      	<exclusion>
+      		<artifactId>log4j</artifactId>
+      		<groupId>log4j</groupId>
+      	</exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>javax.transaction</groupId>
@@ -431,7 +437,7 @@
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
-      <version>1.2.11</version>
+      <version>1.2.15</version>
     </dependency>
     <dependency>
       <groupId>javax.mail</groupId>
@@ -447,6 +453,12 @@
       <groupId>poi</groupId>
       <artifactId>poi</artifactId>
       <version>2.5.1</version>
+      <exclusions>
+      	<exclusion>
+      		<artifactId>log4j</artifactId>
+      		<groupId>log4j</groupId>
+      	</exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>opensymphony</groupId>
@@ -619,7 +631,7 @@
       </build>
     </profile>
     <profile>
-      <!-- create virtual classpath to enable usage of javarebel for local development -->
+      <!-- create virtual classpath to enable usage of javarebel for local development. See http://www.zeroturnaround.com for details -->
       <id>javarebel</id>
       <pluginRepositories>
         <pluginRepository>
@@ -649,6 +661,7 @@
                     <directory>src/main/resources</directory>
                     <excludes>
                       <exclude>authentication.properties</exclude>
+                      <exclude>signature.properties</exclude>
                     </excludes>                    
                   </resource>
                 </resources>
@@ -660,8 +673,8 @@
     </profile>
     <profile>
       <id>preview-mode</id>
-      <!-- configure for exams preview, use a mock user database as well as a mock taskhandlingdao.
-           every user/password combination will be allowed, tasklets will only get cached in memory, not persisted. -->
+      <!-- configure for exams preview.
+           every user/password combination will be allowed. -->
       <build>
         <finalName>${artifactId}-preview-${version}</finalName>      
       </build>
@@ -676,5 +689,17 @@
     <encoding>UTF-8</encoding>
     <springbean.additionalprovider>false</springbean.additionalprovider>
     <initialtitle></initialtitle>
+  
+    <!-- default settings for signing pdfs, change them during the build
+    by specifying values via '-Dsignature...=newValue' -->
+    <signature.certificate.alias>tomcat</signature.certificate.alias>
+    <signature.key.alias>tomcat</signature.key.alias>
+    <signature.timestampurl>http://zeitstempel.dfn.de</signature.timestampurl>
+    <signature.contact>nobody@nowhere.org</signature.contact>
+    <signature.keystore.password></signature.keystore.password>
+    <signature.key.password></signature.key.password>
+    <signature.location>Leipzig</signature.location>
+    <signature.reason>Just to make sure...</signature.reason>
+    <signature.keystore.file>${user.home}/.keystore</signature.keystore.file>
   </properties>
 </project>

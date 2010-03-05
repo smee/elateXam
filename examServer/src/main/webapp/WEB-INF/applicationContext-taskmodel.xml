@@ -68,7 +68,7 @@
 		
 	<!-- Note: the following interface has to be implemented by the target server application. -->
 	<bean id="TaskFactory"
-		class="de.thorstenberger.examServer.tasks.TaskFactoryImpl">
+		class="de.thorstenberger.examServer.pdf.EnhancedTaskFactoryImpl">
 		<constructor-arg>
 			<ref bean="examServerManager"/>
 		</constructor-arg>

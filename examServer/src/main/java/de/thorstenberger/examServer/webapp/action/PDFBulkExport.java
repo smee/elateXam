@@ -84,9 +84,8 @@ public class PDFBulkExport extends BaseAction {
     }
     // we only know how to handle complextasks yet
     if (td.getType().equals(TaskContants.TYPE_COMPLEX)) {
-      final String sessionId = request.getSession().getId();
       // initialize web crawler
-      final PDFExporter pdfExporter = new PDFExporter(sessionId, userManager, tm);
+      final PDFExporter pdfExporter = new PDFExporter(userManager, tm);
 
       // show an error message if tomcat isn't configured appropriately
       if (!pdfExporter.isAvailableWithoutCertificate()) {
@@ -104,11 +103,6 @@ public class PDFBulkExport extends BaseAction {
       } catch (final ClassCastException e) {
         throw new RuntimeException("invalid type: \"" + td.getType() + "\", " + e.getMessage());
       }
-      final boolean origFlag = ctd.isShowCorrectionToUsers();
-      try {
-        // make sure the core-view really prints the task
-        ctd.setShowCorrectionToUsers(true);
-
         // write headers, start streaming to the client
         response.flushBuffer();
 
@@ -118,14 +112,8 @@ public class PDFBulkExport extends BaseAction {
 
         renderAllPdfs(tasklets, response.getOutputStream(), pdfExporter);
         return null;
-      } finally {
-        // make sure we reset the flag no matter what happens!
-        ctd.setShowCorrectionToUsers(origFlag);
-      }
     } else {
-
       throw new RuntimeException("unsupported type: \"" + td.getType() + "\"");
-
     }
 
   }

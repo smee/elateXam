@@ -94,7 +94,7 @@
       	</exclusion>
       	<exclusion>
       		<artifactId>jms</artifactId>
-      		<groupId>jms</groupId>
+      		<groupId>javax.jms</groupId>
       	</exclusion>
       </exclusions>
     </dependency>	
@@ -152,7 +152,7 @@
         <dependency>
             <groupId>poi</groupId>
             <artifactId>poi</artifactId>
-            <version>2.5.1</version>
+            <version>2.5.1-final-20040804</version>
         </dependency>
         <dependency>
             <groupId>jdom</groupId>

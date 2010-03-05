@@ -20,6 +20,8 @@
     <li>
         <a href="<c:url value="/users.html"/>">Benutzer-Verwaltung</a>
     </li>
+</ul>
+<ul class="glassList">    
     <li>
         <a href="<c:url value="/TaskConfigList.html"/>">Aufgaben-Verwaltung</a>
     </li>

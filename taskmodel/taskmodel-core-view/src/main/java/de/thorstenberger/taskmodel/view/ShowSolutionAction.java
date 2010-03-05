@@ -54,7 +54,7 @@ import de.thorstenberger.taskmodel.view.SubTaskletInfoVO.Correction;
 
 /**
  * @author Thorsten Berger
- * 
+ *
  */
 public class ShowSolutionAction extends Action {
 
@@ -96,15 +96,18 @@ public class ShowSolutionAction extends Action {
         try {
             id = Long.parseLong(request.getParameter("id"));
         } catch (final NumberFormatException e) {
+            log.warn("missing taskid");
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("invalid.parameter"));
             saveErrors(request, errors);
             return mapping.findForward("error");
         }
 
-        final TaskModelViewDelegateObject delegateObject = (TaskModelViewDelegateObject) TaskModelViewDelegate.getDelegateObject(
-                request.getSession().getId(), id);
+        final String sessionId = getSessionId(request);
+
+        final TaskModelViewDelegateObject delegateObject = (TaskModelViewDelegateObject) TaskModelViewDelegate.getDelegateObject( sessionId, id);
 
         if (delegateObject == null) {
+            log.warn(String.format("Could not find a DelegateObject for sessionId=%s and taskId=%d!",sessionId,id));
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("no.session"));
             saveErrors(request, errors);
             return mapping.findForward("error");
@@ -115,6 +118,7 @@ public class ShowSolutionAction extends Action {
         try {
             taskDef = (TaskDef_Complex) delegateObject.getTaskDef();
         } catch (final ClassCastException e2) {
+            log.warn("DelegateObject has no taskdef!");
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("only.complexTasks.supported"));
             saveErrors(request, errors);
             return mapping.findForward("error");
@@ -125,7 +129,8 @@ public class ShowSolutionAction extends Action {
             return mapping.findForward("error");
         }
 
-        if (!taskDef.isShowCorrectionToUsers()) {
+        if (!taskDef.isShowCorrectionToUsers() && request.getParameter("mockSessionId")==null) {
+            log.warn("Trying to render taskdef solution that must not be shown to users!");
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("solutions.not.shown"));
             saveErrors(request, errors);
             return mapping.findForward("error");
@@ -230,5 +235,19 @@ public class ShowSolutionAction extends Action {
         return mapping.findForward("success");
 
     }
+
+  /**
+   * XXX ugly hack to be able to call this action without a current session.
+   *
+   * @param request
+   * @return
+   */
+  private String getSessionId(final HttpServletRequest request) {
+    String sessionId = request.getParameter("mockSessionId");
+    if (sessionId == null) {
+      sessionId = request.getSession().getId();
+    }
+    return sessionId;
+  }
 
 }

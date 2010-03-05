@@ -449,7 +449,7 @@
         </exclusion>
         <exclusion>
           <artifactId>jms</artifactId>
-          <groupId>jms</groupId>
+          <groupId>javax.jms</groupId>
         </exclusion>
       </exclusions>
     </dependency>

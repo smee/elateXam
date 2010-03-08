@@ -105,7 +105,7 @@ public class RenderAndSignPDF implements Runnable {
       File destFile = new File(directory, filename);
       int counter = 0;
       while (destFile.exists()) {
-        destFile = new File(directory, "version" + (counter) + filename);
+        destFile = new File(directory, String.format("version-%d-%s", counter, filename));
         counter++;
       }
       log.info("Using filename " + destFile.getName());

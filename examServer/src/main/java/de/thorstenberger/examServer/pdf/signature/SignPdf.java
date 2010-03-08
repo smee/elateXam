@@ -38,6 +38,8 @@ import java.security.cert.X509Certificate;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import com.lowagie.text.DocumentException;
@@ -62,7 +64,7 @@ import com.lowagie.text.pdf.TSAClientBouncyCastle;
  *
  */
 public class SignPdf {
-
+  protected final static Log log = LogFactory.getLog(SignPdf.class);
 
   public static void main(final String[] args) throws IOException, SignatureException, KeyStoreException, DocumentException {
     final SignatureInfos infos = new SignatureInfos();
@@ -192,9 +194,13 @@ public class SignPdf {
       pkcs7.setExternalDigest(signature, hash, "RSA");
       final PdfDictionary dic = new PdfDictionary();
 
-      // retrieve a timestamp and combine it with our signature into a single blob of data, formatted as PKCS7 signed
-      // message
-      final byte[] ssig = pkcs7.getEncodedPKCS7(null, null, new TSAClientBouncyCastle(tsaAddress), null);
+      byte[] ssig = pkcs7.getEncodedPKCS7();
+      try {
+        // try to retrieve cryptographic timestamp from configured tsa server
+        ssig = pkcs7.getEncodedPKCS7(null, null, new TSAClientBouncyCastle(tsaAddress), null);
+      } catch (final RuntimeException e) {
+        log.error("Could not retrieve timestamp from server.", e);
+      }
       System.arraycopy(ssig, 0, outc, 0, ssig.length);
 
       // add the timestamped signature

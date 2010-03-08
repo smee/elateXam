@@ -266,14 +266,14 @@ span.pagelinks {
 div.topwatch {
   position: fixed;
   top: 30%;
-  left: 1%;
-  background-color: #cccccc;
+  background-color: white;
   color:black;
   opacity: 1;
-  border: 1px #AFA8AF solid; 
-  -moz-border-radius: 10px;
+  border: 1px solid black;
+  border-right:none; 
+  -moz-border-radius: 10px 0 0 10px;
   display: none;
-  padding: 5px;
+  padding: 10px 0px 10px 10px;
   font-size: 1em;
 }
 

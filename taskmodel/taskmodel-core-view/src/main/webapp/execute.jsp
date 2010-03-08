@@ -129,11 +129,15 @@ function timer1()
 
 	if( remaining_min < 5 ){
 		getElem( "id","Uhr",null).style.color = "red";
-		getElem( "id","UhrTop",null).style.color = "red";
+        var uhrTop = getElem( "id","UhrTop",null);
+        uhrTop.style.color = "red";
+        uhrTop.style.borderLeftColor = "red";
+        uhrTop.style.borderTopColor = "red";
+        uhrTop.style.borderBottomColor = "red";
+        
 	}
     if( remaining_min < 3){
 		getElem( "id","UhrTop",null).style.backgroundColor = "white";
-		getElem( "id","UhrTop",null).style.fontSize = "large";
     }
     
 
@@ -206,7 +210,7 @@ function fenster(file,breite,hoehe) {
 		</div>
     </td>
 
-    <td bgcolor="#F2F9FF" class="complexTaskNav"><div id="UhrTop" class="topwatch">&nbsp;</div></td>
+    <td bgcolor="#F2F9FF" class="complexTaskNav">&nbsp;</div></td>
 
     <td bgcolor="#F2F9FF" class="complexTaskNav">
       <div align="right">Seite ${Task.page}&nbsp;/&nbsp;${Task.numOfPages}&nbsp;&nbsp;<img src="<%= request.getContextPath() %>/pics/pages.gif" width="11" height="12" align="absmiddle"></div>

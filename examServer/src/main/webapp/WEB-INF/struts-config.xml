@@ -49,20 +49,9 @@
  </global-forwards>
  <!-- ========== Action Mapping Definitions =================================== -->
  <action-mappings>
-  <action input="failure" name="uploadForm" path="/uploadFile"
-   scope="request"
-   type="de.thorstenberger.examServer.webapp.action.UploadAction" validate="true">
-   <!--<set-property property="cancellable" value="true"/>-->
-   <forward name="failure" path="/WEB-INF/pages/uploadForm.jsp" redirect="false"/>
-   <forward name="success" path="/WEB-INF/pages/uploadDisplay.jsp" redirect="false"/>
-  </action>
   <action path="/reload" roles="admin"
    type="de.thorstenberger.examServer.webapp.action.ReloadAction" validate="false"/>
-  <action input="failure" name="userForm" path="/signup" scope="request"
-   type="de.thorstenberger.examServer.webapp.action.SignupAction" validate="false">
-   <forward name="failure" path="/WEB-INF/pages/signup.jsp" redirect="false"/>
-   <forward name="success" path="/mainMenu.html" redirect="true"/>
-  </action>
+   
   <action input="mainMenu" name="userForm" parameter="method"
    path="/users" roles="admin" scope="request"
    type="de.thorstenberger.examServer.webapp.action.UserAction" validate="false">

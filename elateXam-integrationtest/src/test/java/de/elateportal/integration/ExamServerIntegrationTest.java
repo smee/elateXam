@@ -29,6 +29,21 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
     tr.addListener(new CompleteScreenshotListener(outputDirectory, screenshotTaker));
   }
 
+  @Test(dependsOnMethods = { "testAddStudent", "testEnableLogins", "testAddComplextaskDefinition" })
+  public void testCoreviewShowsErrorTexts() throws Exception {
+    // log in
+    selenium.open("/examServer/login.jsp");
+    assertEquals(selenium.getTitle(), "Login");
+    selenium.type("j_password", "admin");
+    selenium.type("j_username", "admin");
+    selenium.click("//input[@name='login']");
+    selenium.waitForPageToLoad("30000");
+    // open invalid taskmodel-core-view page
+    selenium.open("/taskmodel-core-view/execute.do?id=5&todo=new&try=1");
+    selenium.waitForPageToLoad("30000");
+    verifyTrue(selenium.isTextPresent("Session-Fehler! Der Server kann Ihre Sitzung nicht weiterverfolgen. Bitte überprüfen Sie, ob Cookies aktiviert sind."));
+
+  }
   @Test
   public void testAddComplextaskDefinition() throws Exception {
     selenium.open("/examServer/login.jsp");

@@ -187,7 +187,8 @@ public class ExportPDFFilter implements Filter {
      */
     private String readFile(final InputStream in) {
         if (in == null) {
-            return NOOP_XSLT;
+          log.warn("Could not read xslt transformation instruction from classpath! Won't transform the xhtml.");
+          return NOOP_XSLT;
         }
 
         final StringBuilder sb = new StringBuilder();

@@ -35,6 +35,8 @@ public class User extends BaseObject implements Serializable, UserDetails {
     protected String firstName;                   // required
     protected String lastName;                    // required
     protected String email;                       // required; unique
+    protected String matrikel;
+    protected String semester;
     protected String phoneNumber;
     protected String website;
     protected Address address = new Address();
@@ -76,6 +78,33 @@ public class User extends BaseObject implements Serializable, UserDetails {
      */
     public String getPassword() {
         return password;
+    }
+    /**
+     * @return the matrikel
+     */
+    public String getMatrikel() {
+      return matrikel;
+    }
+
+    /**
+     * @param matrikel the matrikel to set
+     */
+    public void setMatrikel(String matrikel) {
+      this.matrikel = matrikel;
+    }
+
+    /**
+     * @return the semester
+     */
+    public String getSemester() {
+      return semester;
+    }
+
+    /**
+     * @param semester the semester to set
+     */
+    public void setSemester(String semester) {
+      this.semester = semester;
     }
 
     /**

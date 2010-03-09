@@ -32,6 +32,10 @@ public class UserForm
     protected String email;
 
     protected String phoneNumber;
+    
+    protected String matrikel;
+    
+    protected String semester;
 
     protected String website;
 
@@ -377,6 +381,34 @@ public class UserForm
      * @param roles
      */
     public void setUserRoles(String[] roles) {}
+
+    /**
+     * @return the matrikel
+     */
+    public String getMatrikel() {
+      return matrikel;
+    }
+
+    /**
+     * @param matrikel the matrikel to set
+     */
+    public void setMatrikel(String matrikel) {
+      this.matrikel = matrikel;
+    }
+
+    /**
+     * @return the semester
+     */
+    public String getSemester() {
+      return semester;
+    }
+
+    /**
+     * @param semester the semester to set
+     */
+    public void setSemester(String semester) {
+      this.semester = semester;
+    }
 
     /**
      * @see org.apache.struts.action.ActionForm#reset(org.apache.struts.action.ActionMapping,

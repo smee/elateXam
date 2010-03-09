@@ -80,7 +80,7 @@ public class StudentMainAction extends BaseAction {
 			UserManager userManager = (UserManager)getBean( "userManager" );
 			User user = userManager.getUserByUsername( request.getUserPrincipal().getName() );
 			request.setAttribute( "askForSemester", Boolean.TRUE );
-			request.setAttribute( "semester", user.getPhoneNumber() );
+			request.setAttribute( "semester", user.getSemester() );
 		}
 		return mapping.findForward( "success" );
 	}

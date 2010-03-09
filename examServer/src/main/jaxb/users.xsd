@@ -24,6 +24,8 @@
 						<xs:attribute name="first_name" type="xs:string" use="optional"/>
 						<xs:attribute name="last_name" type="xs:string" use="optional"/>
 						<xs:attribute name="email" type="xs:string" use="optional"/>
+						<xs:attribute name="semester" type="xs:string" use="optional"/>
+						<xs:attribute name="matrikel" type="xs:string" use="optional"/>
 						<xs:attribute name="phone_number" type="xs:string" use="optional"/>
 						<xs:attribute name="website" type="xs:string" use="optional"/>
 						<xs:attribute name="address" type="xs:string" use="optional"/>

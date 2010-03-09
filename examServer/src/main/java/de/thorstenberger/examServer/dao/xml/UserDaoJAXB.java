@@ -231,7 +231,8 @@ public class UserDaoJAXB extends AbstractJAXBDao implements UserDao, UserDetails
         ret.setUsername(u.getUsername());
         ret.setVersion(u.getVersion());
         ret.setWebsite(u.getWebsite());
-
+        ret.setMatrikel(u.getMatrikel());
+        ret.setSemester(u.getSemester());
         final List<String> roles = u.getRoleRef();
         for (final String role : roles) {
             ret.addRole(roleDao.getRoleByName(role));
@@ -264,7 +265,9 @@ public class UserDaoJAXB extends AbstractJAXBDao implements UserDao, UserDetails
         userType.setUsername(user.getUsername());
         userType.setVersion(user.getVersion());
         userType.setWebsite(user.getWebsite());
-
+        userType.setSemester(user.getSemester());
+        userType.setMatrikel(user.getMatrikel());
+        
         final Iterator it = user.getRoles().iterator();
         userType.getRoleRef().clear();
         while (it.hasNext()) {

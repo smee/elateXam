@@ -50,7 +50,7 @@ public class StudentsInfoSubmitAction extends BaseAction {
 		UserManager userManager = (UserManager)getBean( "userManager" );
 		User user = userManager.getUserByUsername( request.getUserPrincipal().getName() );
 		if( request.getParameter( "semester" ) != null ){
-			user.setPhoneNumber( request.getParameter( "semester" ) );
+			user.setSemester( request.getParameter( "semester" ) );
 			userManager.saveUser( user );
 			messages.add(ActionMessages.GLOBAL_MESSAGE,	new ActionMessage( "studentsInfo.semester.saved" ) );
 		}

@@ -55,6 +55,20 @@
         <html:errors property="username"/>
         <html:text styleClass="text large" property="username" styleId="username"/>
     </li>
+    <li>
+        <div>
+            <div class="left">
+                <examServer:label styleClass="desc" key="userForm.firstName"/>
+                <html:errors property="firstName"/>
+                <html:text styleClass="text medium" property="firstName" styleId="firstName" maxlength="50"/>
+            </div>
+            <div>
+                <examServer:label styleClass="desc" key="userForm.lastName"/>
+                <html:errors property="lastName"/>
+                <html:text styleClass="text medium" property="lastName" styleId="lastName" maxlength="50"/>
+            </div>
+        </div>
+    </li>
     <c:if test="${cookieLogin != 'true'}">
     <li>
         <div>
@@ -72,44 +86,33 @@
         </div>
     </li>
     </c:if>
+    <!-- 
     <li>
         <examServer:label styleClass="desc" key="userForm.passwordHint"/>
         <html:errors property="passwordHint"/>
         <html:text styleClass="text large" property="passwordHint" styleId="passwordHint"/>
     </li>
+     -->
     <li>
         <div>
             <div class="left">
-                <examServer:label styleClass="desc" key="userForm.firstName"/>
-                <html:errors property="firstName"/>
-                <html:text styleClass="text medium" property="firstName" styleId="firstName" maxlength="50"/>
+                <examServer:label styleClass="desc" key="userForm.matrikel"/>
+                <html:errors property="matrikel"/>
+                <html:text styleClass="text medium" property="matrikel" styleId="matrikel"/>
             </div>
             <div>
-                <examServer:label styleClass="desc" key="userForm.lastName"/>
-                <html:errors property="lastName"/>
-                <html:text styleClass="text medium" property="lastName" styleId="lastName" maxlength="50"/>
+                <examServer:label styleClass="desc" key="userForm.semester"/>
+                <html:errors property="semester"/>
+                <html:text styleClass="text medium" property="semester" styleId="semester"/>
             </div>
         </div>
     </li>
     <li>
-        <div>
-            <div class="left">
                 <examServer:label styleClass="desc" key="userForm.email"/>
                 <html:errors property="email"/>
-                <html:text styleClass="text medium" property="email" styleId="email"/>
-            </div>
-            <div>
-                <examServer:label styleClass="desc" key="userForm.phoneNumber"/>
-                <html:errors property="phoneNumber"/>
-                <html:text styleClass="text medium" property="phoneNumber" styleId="phoneNumber"/>
-            </div>
-        </div>
+                <html:text styleClass="text large" property="email" styleId="email"/>
     </li>
-    <li>
-        <examServer:label styleClass="desc" key="userForm.website"/>
-        <html:errors property="website"/>
-        <html:text styleClass="text large" property="website" styleId="website"/>
-    </li>
+    <!-- 
     <li>
         <label class="desc"><fmt:message key="userForm.addressForm.address"/></label>
         <div class="group">
@@ -149,6 +152,7 @@
             </div>
         </div>
     </li>
+     -->
 <c:choose>
     <c:when test="${param.from == 'list' or param.method == 'Add'}">
     <li>

@@ -136,7 +136,24 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
     assertEquals(selenium.getTitle(), "Login");
   }
 
-  @Test(dependsOnMethods={"testEnableLogins","testAddStudent","testAddComplextaskDefinition"})
+  @Test
+  public void testCompletePersonalDetails() throws Exception {
+    selenium.open("/examServer/login.jsp");
+    assertEquals(selenium.getTitle(), "Login");
+    selenium.type("j_username", "studi");
+    selenium.type("j_password", "test");
+    selenium.click("//input[@name='login']");
+    selenium.waitForPageToLoad("30000");
+    assertEquals(selenium.getTitle(), "Hauptmenü");
+    verifyTrue(selenium.isTextPresent("Bitte vervollständigen Sie Ihre Daten und klicken Sie auf OK!"));
+    selenium.type("matrikel", "111000");
+    selenium.type("semester", "15");
+    selenium.click("OK");
+    assertEquals(selenium.getTitle(), "Hauptmenü");
+    verifyTrue(selenium.isTextPresent("In der folgenden Liste finden Sie alle verfügbaren Aufgaben."));
+  }
+
+  @Test(dependsOnMethods = { "testEnableLogins", "testAddStudent", "testAddComplextaskDefinition", "testCompletePersonalDetails" })
   public void testStudentRunsExam() throws Exception {
     selenium.open("/examServer/login.jsp");
     assertEquals(selenium.getTitle(), "Login");

@@ -15,9 +15,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ */
 /**
- * 
+ *
  */
 package de.thorstenberger.examServer.webapp.action;
 
@@ -32,6 +32,7 @@ import org.apache.struts.action.ActionMessages;
 
 import de.thorstenberger.examServer.model.User;
 import de.thorstenberger.examServer.service.UserManager;
+import de.thorstenberger.examServer.webapp.form.StudentDetailsForm;
 
 /**
  * @author Thorsten Berger
@@ -39,25 +40,38 @@ import de.thorstenberger.examServer.service.UserManager;
  */
 public class StudentsInfoSubmitAction extends BaseAction {
 
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.examServer.webapp.action.BaseAction#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ActionMessages messages = new ActionMessages();
-		
+  /*
+   * (non-Javadoc)
+   *
+   * @see de.thorstenberger.examServer.webapp.action.BaseAction#execute(org.apache.struts.action.ActionMapping,
+   * org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+   */
+  @Override
+  public ActionForward execute(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+    final ActionMessages messages = new ActionMessages();
 
-		UserManager userManager = (UserManager)getBean( "userManager" );
-		User user = userManager.getUserByUsername( request.getUserPrincipal().getName() );
-		if( request.getParameter( "semester" ) != null ){
-			user.setSemester( request.getParameter( "semester" ) );
-			userManager.saveUser( user );
-			messages.add(ActionMessages.GLOBAL_MESSAGE,	new ActionMessage( "studentsInfo.semester.saved" ) );
-		}
-		
-		saveMessages( request, messages );			
-		
-		return mapping.findForward( "success" );
-	}
+    final UserManager userManager = (UserManager) getBean("userManager");
+    final User user = userManager.getUserByUsername(request.getUserPrincipal().getName());
+
+    final StudentDetailsForm userForm = (StudentDetailsForm) form;
+
+    // run validation rules on this form
+    final ActionMessages errors = form.validate(mapping, request);
+    if (!errors.isEmpty()) {
+      saveErrors(request, errors);
+      return mapping.findForward("failure");
+    }
+
+    user.setFirstName(userForm.getFirstName());
+    user.setLastName(userForm.getLastName());
+    user.setSemester(userForm.getSemester());
+    user.setMatrikel(userForm.getMatrikel());
+    userManager.saveUser(user);
+    messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("studentsInfo.saved"));
+
+    saveMessages(request, messages);
+
+    return mapping.findForward("success");
+  }
 
 }

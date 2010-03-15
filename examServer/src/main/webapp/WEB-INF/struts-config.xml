@@ -13,6 +13,7 @@
   <form-bean name="roleForm" type="de.thorstenberger.examServer.webapp.form.RoleForm"/>
   <form-bean name="addressForm" type="de.thorstenberger.examServer.webapp.form.AddressForm"/>
   <form-bean name="userForm" type="de.thorstenberger.examServer.webapp.form.UserForm"/>
+  <form-bean name="studentDetailsForm" type="de.thorstenberger.examServer.webapp.form.StudentDetailsForm"/>
   <form-bean name="uploadForm" type="de.thorstenberger.examServer.webapp.form.UploadForm"/>
   <form-bean name="taskForm" type="de.thorstenberger.examServer.webapp.form.TaskForm"/>
   <form-bean name="taskUploadForm" type="de.thorstenberger.examServer.webapp.form.TaskDefUploadForm"/>
@@ -94,9 +95,25 @@
   <!-- Forward to view Active Users -->
   <action parameter="/WEB-INF/pages/activeUsers.jsp" path="/activeUsers"
    roles="admin" type="org.apache.struts.actions.ForwardAction"/>
-  <action path="/studentMainMenu" type="de.thorstenberger.examServer.webapp.action.StudentMainAction">
+  
+  <action path="/studentMainMenu" input="/studentMainMenu" type="de.thorstenberger.examServer.webapp.action.StudentMainAction" 
+    validate="false" roles="student">
    <forward name="success" path="/WEB-INF/pages/studentMainMenu.jsp"/>
+   <forward name="askForSemester" path="/askForSemester.html"/>
   </action>
+  
+  <action path="/askForSemester" input="/WEB-INF/pages/completeStudentDetails.jsp" name="studentDetailsForm" 
+    type="de.thorstenberger.examServer.webapp.action.StudentDetailsMainAction" roles="student" validate="false">
+   <forward name="success" path="/WEB-INF/pages/completeStudentDetails.jsp"/>  
+  </action>
+  
+   <!-- The following action's purpose is to collect some informations the students should submit on their Main Menu Page -->
+  <action name="studentDetailsForm" path="/submitStudentsInfo" roles="student"
+   type="de.thorstenberger.examServer.webapp.action.StudentsInfoSubmitAction" validate="false">
+  <forward name="success" path="/studentMainMenu.html"  redirect="true"/>
+  <forward name="failure" path="/askForSemester.html"/>
+  </action>
+  
 
   <action path="/tutorMainMenu" type="de.thorstenberger.examServer.webapp.action.TutorMainAction" roles="tutor,admin">
    <forward name="success" path="/WEB-INF/pages/tutorMainMenu.jsp"/>
@@ -140,12 +157,6 @@
   </action>
   <action path="/ArchiveServer" roles="admin"
    type="de.thorstenberger.examServer.webapp.action.ArchiveServerAction">
-  </action>
-
-   <!-- The following action's purpose is to collect some information the students should submit on their Main Menu Page -->
-  <action input="/studentMainMenu" path="/submitStudentsInfo" roles="student"
-   type="de.thorstenberger.examServer.webapp.action.StudentsInfoSubmitAction" validate="false">
-	<forward name="success" path="/studentMainMenu.html"/>
   </action>
   
   <!-- show a table with all users that are currently working on a task. -->

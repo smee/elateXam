@@ -63,6 +63,28 @@ PUBLIC "-//Apache Software Foundation//DTD Commons Validator Rules Configuration
                   </var>
               </field>
       </form>
+      <form name="studentDetailsForm">
+              <field property="firstName"
+                     depends="required">
+
+                  <arg0 key="userForm.firstName"/>
+              </field>
+              <field property="lastName"
+                     depends="required">
+
+                  <arg0 key="userForm.lastName"/>
+              </field>
+                            <field property="semester"
+                     depends="integer,required">
+
+                  <arg0 key="userForm.semester"/>
+              </field>
+              <field property="matrikel"
+                     depends="integer,required">
+
+                  <arg0 key="userForm.matrikel"/>
+              </field>
+      </form>
       <form name="userForm">
               <field property="username"
                      depends="required">
@@ -107,6 +129,16 @@ PUBLIC "-//Apache Software Foundation//DTD Commons Validator Rules Configuration
                      depends="email">
 
                   <arg0 key="userForm.email"/>
+              </field>
+              <field property="semester"
+                     depends="integer">
+
+                  <arg0 key="userForm.semester"/>
+              </field>
+              <field property="matrikel"
+                     depends="integer">
+
+                  <arg0 key="userForm.matrikel"/>
               </field>
               <field property="phoneNumber"
                      depends="mask">

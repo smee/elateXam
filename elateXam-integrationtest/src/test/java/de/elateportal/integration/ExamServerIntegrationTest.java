@@ -16,10 +16,10 @@ import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import com.thoughtworks.selenium.Selenium;
 
 public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
-  @Override
+
   @BeforeSuite
   @Parameters( { "selenium.host", "selenium.port" })
-  public void attachScreenshotListener(@Optional("localhost") final String host, @Optional("4444") final String port, final ITestContext context) {
+  public void attachCompleteScreenshotListener(@Optional("localhost") final String host, @Optional("4444") final String port, final ITestContext context) {
     if (!("localhost".equals(host))) {
       return;
     }
@@ -149,6 +149,7 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
     selenium.type("matrikel", "111000");
     selenium.type("semester", "15");
     selenium.click("OK");
+    selenium.waitForPageToLoad("30000");
     assertEquals(selenium.getTitle(), "Hauptmenü");
     verifyTrue(selenium.isTextPresent("In der folgenden Liste finden Sie alle verfügbaren Aufgaben."));
   }

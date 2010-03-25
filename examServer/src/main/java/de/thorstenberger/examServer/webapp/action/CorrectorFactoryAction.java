@@ -21,6 +21,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.examServer.webapp.action;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -28,13 +32,16 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import de.thorstenberger.examServer.model.Role;
 import de.thorstenberger.examServer.model.User;
 import de.thorstenberger.examServer.service.UserManager;
 import de.thorstenberger.taskmodel.CorrectorDelegateObject;
 import de.thorstenberger.taskmodel.TaskContants;
 import de.thorstenberger.taskmodel.TaskDef;
+import de.thorstenberger.taskmodel.TaskFactory;
 import de.thorstenberger.taskmodel.TaskManager;
 import de.thorstenberger.taskmodel.TaskModelViewDelegate;
+import de.thorstenberger.taskmodel.UserInfo;
 import de.thorstenberger.taskmodel.complex.TaskDef_Complex;
 import de.thorstenberger.taskmodel.impl.CorrectorDelegateObjectImpl;
 
@@ -83,7 +90,7 @@ public class CorrectorFactoryAction extends BaseAction {
 
 			boolean privileged = request.isUserInRole( "admin" );
 			
-			CorrectorDelegateObject delegateObject = new CorrectorDelegateObjectImpl( login, user.getFirstName() + " " + user.getLastName(), tm, ctd, privileged, returnURL );
+			CorrectorDelegateObject delegateObject = new CorrectorDelegateObjectImpl( login, user.getFirstName() + " " + user.getLastName(), tm, ctd, privileged, returnURL, getAllCorrectors() );
 			String sessionId = request.getSession().getId();
 			TaskModelViewDelegate.storeDelegateObject( sessionId, taskId, delegateObject );
 			
@@ -97,5 +104,19 @@ public class CorrectorFactoryAction extends BaseAction {
 			
 		}
 	}
+
+  /**
+   * Find the login names of all correctors that are allowed to manually correct tasklets. See {@link TaskFactory#getCorrectors()}.
+   * @return
+   */
+  private String[] getAllCorrectors() {
+    TaskFactory factory =(TaskFactory) getBean("TaskFactory");
+    List<String> correctors = new ArrayList<String>();
+    for(UserInfo uinfo:factory.getCorrectors()){
+      correctors.add(uinfo.getLogin());
+    }
+    Collections.sort(correctors);
+    return correctors.toArray(new String[correctors.size()]);
+  }
 
 }

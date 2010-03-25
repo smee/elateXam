@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.impl;
 
@@ -32,12 +32,13 @@ import de.thorstenberger.taskmodel.TaskManager;
  */
 public class CorrectorDelegateObjectImpl implements CorrectorDelegateObject {
 
-	private String correctorLogin;
-	private String correctorUserName;
-	private TaskManager taskManager;
-	private TaskDef taskDef;
-	private boolean privileged;
-	private String returnURL;
+	private final String correctorLogin;
+	private final String correctorUserName;
+	private final TaskManager taskManager;
+	private final TaskDef taskDef;
+	private final boolean privileged;
+	private final String returnURL;
+  private final String[] allCorrectors;
 
 	/**
 	 * @param correctorLogin
@@ -46,12 +47,14 @@ public class CorrectorDelegateObjectImpl implements CorrectorDelegateObject {
 	 * @param taskDef
 	 * @param returnURL
 	 */
-	public CorrectorDelegateObjectImpl(String correctorLogin, String correctorUserName, TaskManager taskManager, TaskDef taskDef, boolean privileged, String returnURL) {
+  public CorrectorDelegateObjectImpl(final String correctorLogin, final String correctorUserName, final TaskManager taskManager,
+      final TaskDef taskDef, final boolean privileged, final String returnURL, final String[] allCorrectors) {
 		this.correctorLogin = correctorLogin;
 		this.correctorUserName = correctorUserName;
 		this.taskManager = taskManager;
 		this.taskDef = taskDef;
 		this.privileged = privileged;
+    this.allCorrectors = allCorrectors;
 		this.returnURL = returnURL;
 	}
 
@@ -96,6 +99,14 @@ public class CorrectorDelegateObjectImpl implements CorrectorDelegateObject {
 	public boolean isPrivileged() {
 		return privileged;
 	}
+
+  public String[] getAllCorrectorNames() {
+    if (!isPrivileged()) {
+      return new String[0];
+    } else {
+      return allCorrectors;
+    }
+  }
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.DelegateObject#getReturnURL()

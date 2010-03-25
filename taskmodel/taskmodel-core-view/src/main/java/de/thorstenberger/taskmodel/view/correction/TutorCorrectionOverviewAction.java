@@ -120,6 +120,8 @@ public class TutorCorrectionOverviewAction extends Action {
 				
 			}
 			
+			CorrectorsForm cform = (CorrectorsForm) form;
+			cform.setAvailableCorrectors(delegateObject.getAllCorrectorNames());
 			
 			tsivo.setAssignedCorrectedTasklets( assignedCorrectedTasklets );
 			tsivo.setAssignedUncorrectedTasklets( assignedUncorrectedTasklets );

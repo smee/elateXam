@@ -328,8 +328,12 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
                 users.add(u);
             }
         }
-
+        
         for (final User u : users) {
+            // ignore invalid/locked tutors
+            if(u.isAccountExpired() || u.isAccountLocked())
+              continue;
+          
             final UserInfoImpl ui = new UserInfoImpl();
             ui.setLogin(u.getUsername());
             ui.setFirstName(u.getFirstName());

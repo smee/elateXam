@@ -3,7 +3,9 @@
                                "http://struts.apache.org/dtds/struts-config_1_2.dtd">
 <struts-config>
  <data-sources/>
- <form-beans/>
+ <form-beans>
+ <form-bean name="correctorsForm" type="de.thorstenberger.taskmodel.view.correction.CorrectorsForm"></form-bean>
+ </form-beans>
  <global-exceptions/>
  <global-forwards>
   <forward name="error" path="/error.jsp"/>
@@ -22,12 +24,15 @@
   <action path="/showSolution" type="de.thorstenberger.taskmodel.view.ShowSolutionAction">
    <forward name="success" path="/showCorrection.jsp"/>
   </action>
-  <action path="/tutorCorrectionOverview" type="de.thorstenberger.taskmodel.view.correction.TutorCorrectionOverviewAction">
+  <action path="/tutorCorrectionOverview" name="correctorsForm" validate="false" type="de.thorstenberger.taskmodel.view.correction.TutorCorrectionOverviewAction">
    <forward name="success" path="/correction/tutorCorrectionOverview.jsp"/>
   </action>
   <action path="/assignTasklet" type="de.thorstenberger.taskmodel.view.correction.AssignTaskletAction">
    <forward name="success" path="/tutorCorrectionOverview.do"/>
    <forward name="successToCorrection" path="/doCorrection.do"/>
+  </action>
+  <action path="/bulkAssignTasklets" name="correctorsForm" validate="false" type="de.thorstenberger.taskmodel.view.correction.BulkAssignTaskletsAction">
+   <forward name="success" path="/tutorCorrectionOverview.do"/>
   </action>
   <action path="/doCorrection" type="de.thorstenberger.taskmodel.view.correction.DoCorrectionAction">
    <forward name="success" path="/correction/doCorrection.jsp"/>

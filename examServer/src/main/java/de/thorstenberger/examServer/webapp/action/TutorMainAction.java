@@ -32,6 +32,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import de.thorstenberger.examServer.webapp.vo.TaskDefVO;
+import de.thorstenberger.taskmodel.ManualCorrection;
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskDef;
 import de.thorstenberger.taskmodel.TaskManager;
@@ -57,12 +58,25 @@ public class TutorMainAction extends BaseAction {
     private int countNumberOfUncorrectedTasks(final long id, final TaskletContainer tc, final String tutorname) throws TaskApiException {
         int num = 0;
         for (final Tasklet t : tc.getTasklets(id)) {
-            final boolean wasCorrectedByThisTutor = t.getTaskletCorrection().getCorrectorHistory().contains(tutorname);
+            final boolean wasCorrectedByThisTutor = wasCorrectedBy(t,tutorname);
             if (t.getStatus() == Status.SOLVED || (!wasCorrectedByThisTutor && t.getStatus() == Status.CORRECTING)) {
                 num++;
             }
         }
         return num;
+    }
+
+    /**
+     * @param t
+     * @param tutorname
+     * @return
+     */
+    private boolean wasCorrectedBy(Tasklet t, String tutorname) {
+      for(ManualCorrection mc:t.getTaskletCorrection().getManualCorrections()){
+        if(mc.getCorrector().equals(tutorname))
+          return true;
+      }
+      return false;
     }
 
     /*

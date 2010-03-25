@@ -1,5 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
+<%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
+<%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://displaytag.sf.net" prefix="display"%>
 
@@ -20,6 +22,7 @@ function selectAll(x) {
 
 
 <jsp:include page="../header.jsp" />
+
 <div class="correction">
 
 <p class="header">Korrektur - &Uuml;bersicht</p>
@@ -131,6 +134,35 @@ function selectAll(x) {
 </form>
 
 </fieldset> <br>
+
+<c:if test="${Solutions.privileged}">
+  <fieldset>
+    <legend>Korrekturen verteilen auf</legend>
+
+    <html:messages message="true" id="msg" header="messages.header" footer="messages.footer">
+      <%=pageContext.getAttribute("msg")%>
+    </html:messages>
+    
+	<html:form action="/bulkAssignTasklets">
+		<input type="hidden" name="taskId" value="${Solutions.taskId}"/>
+        <table>
+          <tr>
+            <logic:iterate id="item" name="correctorsForm" property="availableCorrectors" indexId="counter">
+              <td>
+              <html:multibox property="selectedCorrectors">
+                <bean:write name="item"/>
+              </html:multibox>
+              <bean:write name="item"/>
+              </td>
+              <c:if test="${(counter%3) == 2}"></tr><tr></c:if>
+            </logic:iterate>
+          </tr>
+        </table>
+      <html:submit value="Zuordnen"/>
+    </html:form>
+  </fieldset>
+</c:if>
+
 <fieldset><legend>fertige Korrekturen</legend>
 
 	<form method="post" name="unassignForm2" action="<html:rewrite action="/unassignTaskletFromCorrector"/>">
@@ -199,10 +231,10 @@ function selectAll(x) {
 <c:if test="${Solutions.privileged}">
 	<fieldset><legend>Administrationsfunktionen</legend>
 	<ul>
-	  <li><html:link action="/viewAllTasklets" paramId="taskId" paramName="Solutions" paramProperty="taskId">Gesamtliste</html:link><br><br>
-	  <li><img src="<%= request.getContextPath() %>/pics/excel.gif" align="bottom"> <html:link href="excelReport/report_${Solutions.taskId}.xls">Gesamtliste als Excel-Datei</html:link><br><br>
-	  <li><html:link action="/complexTaskStructure" paramId="taskId" paramName="Solutions" paramProperty="taskId">Strukturübersicht mit Detailauswertung</html:link><br><br>
-	  <li><html:link action="/correctionSettings" paramId="taskId" paramName="Solutions" paramProperty="taskId">Korrektur-Einstellungen/Funktionen</html:link>
+	  <li><html:link action="/viewAllTasklets" paramId="taskId" paramName="Solutions" paramProperty="taskId">Gesamtliste</html:link><br><br></li>
+	  <li><img src="<%= request.getContextPath() %>/pics/excel.gif" align="bottom"> <html:link href="excelReport/report_${Solutions.taskId}.xls">Gesamtliste als Excel-Datei</html:link><br><br></li>
+	  <li><html:link action="/complexTaskStructure" paramId="taskId" paramName="Solutions" paramProperty="taskId">Strukturübersicht mit Detailauswertung</html:link><br><br></li>
+	  <li><html:link action="/correctionSettings" paramId="taskId" paramName="Solutions" paramProperty="taskId">Korrektur-Einstellungen/Funktionen</html:link></li>
 	</ul>
 
 	</fieldset><br/>

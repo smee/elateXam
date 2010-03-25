@@ -176,9 +176,13 @@ public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTaskl
 		if( isResetted() )
 			return false;
 		
-		if( paintSubTask.getPictureString() != null && paintSubTask.getPictureString().trim().length() > 0 ){
-			return !paintSubTask.getPictureString().equals( paintSubTaskDef.getImages().getMutableTemplateImage() );
-		}
+    if( paintSubTask.getPictureString() != null && paintSubTask.getPictureString().trim().length() > 0 ){
+      String templateImage = "";
+      if (paintSubTaskDef.isSetImages()) {
+        templateImage = paintSubTaskDef.getImages().getMutableTemplateImage();
+      }
+      return !paintSubTask.getPictureString().equals(templateImage);
+    }
 		
 		return false;
 		

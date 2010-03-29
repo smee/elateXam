@@ -113,6 +113,31 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
   }
 
   @Test
+  public void testEnableAskForSemester() throws Exception {
+    selenium.open("/examServer/login.jsp");
+    assertEquals(selenium.getTitle(), "Login");
+    selenium.type("j_username", "admin");
+    selenium.type("j_password", "admin");
+    selenium.click("//input[@name='login']");
+    selenium.waitForPageToLoad("30000");
+    assertEquals(selenium.getTitle(), "Hauptmenü");
+    selenium.click("link=System-Konfiguration");
+    selenium.waitForPageToLoad("30000");
+    assertEquals(selenium.getTitle(), "System-Konfiguration");
+    selenium.click("askForStudentDetails");
+    selenium.click("//input[@value='Speichern']");
+    selenium.waitForPageToLoad("30000");
+    assertEquals(selenium.getTitle(), "System-Konfiguration");
+    verifyTrue(selenium.isElementPresent("//div[@id='successMessages']"));
+    verifyTrue(selenium.isElementPresent("//img[@alt='Information' and @class='icon']"));
+    verifyTrue(selenium.isTextPresent("Ihre Einstellungen wurden gespeichert."));
+    verifyEquals(selenium.getValue("askForStudentDetails"), "on");
+    selenium.click("link=Logout");
+    selenium.waitForPageToLoad("30000");
+    assertEquals(selenium.getTitle(), "Login");
+  }
+
+  @Test
   public void testEnableLogins() throws Exception {
     selenium.open("/examServer/login.jsp");
     assertEquals(selenium.getTitle(), "Login");
@@ -136,7 +161,7 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
     assertEquals(selenium.getTitle(), "Login");
   }
 
-  @Test
+  @Test(dependsOnMethods = { "testEnableAskForSemester", "testEnableLogins", "testAddStudent" })
   public void testCompletePersonalDetails() throws Exception {
     selenium.open("/examServer/login.jsp");
     assertEquals(selenium.getTitle(), "Login");
@@ -154,7 +179,7 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
     verifyTrue(selenium.isTextPresent("In der folgenden Liste finden Sie alle verfügbaren Aufgaben."));
   }
 
-  @Test(dependsOnMethods = { "testEnableLogins", "testAddStudent", "testAddComplextaskDefinition", "testCompletePersonalDetails" })
+  @Test(dependsOnMethods = { "testCompletePersonalDetails", "testAddComplextaskDefinition" })
   public void testStudentRunsExam() throws Exception {
     selenium.open("/examServer/login.jsp");
     assertEquals(selenium.getTitle(), "Login");

@@ -30,6 +30,7 @@ public class SystemConfigForm extends BaseForm {
 	private String title;
 	private String remoteUserManagerURL;
 	private boolean loadJVMOnStartup;
+	private boolean askForStudentDetails;
 	private String httpAuthURL;
 	private String httpAuthMail;
 	
@@ -93,6 +94,18 @@ public class SystemConfigForm extends BaseForm {
 	public void setHttpAuthMail(String httpAuthMail) {
 		this.httpAuthMail = httpAuthMail;
 	}
+  /**
+   * @param askForStudentDetails the askForStudentDetails to set
+   */
+  public void setAskForStudentDetails(boolean askForStudentDetails) {
+    this.askForStudentDetails = askForStudentDetails;
+  }
+  /**
+   * @return the askForStudentDetails
+   */
+  public boolean isAskForStudentDetails() {
+    return askForStudentDetails;
+  }
 	
 	
 

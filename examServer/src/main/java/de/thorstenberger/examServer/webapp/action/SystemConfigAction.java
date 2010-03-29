@@ -51,7 +51,7 @@ public class SystemConfigAction extends BaseAction {
 		scf.setTitle( configManager.getTitle() );
 		scf.setHttpAuthURL( configManager.getHTTPAuthURL() );
 		scf.setHttpAuthMail( configManager.getHTTPAuthMail() );
-		
+		scf.setAskForStudentDetails( configManager.isSetFlag("askForSemester") );
 		return mapping.findForward( "systemConfig" );
 	}
 

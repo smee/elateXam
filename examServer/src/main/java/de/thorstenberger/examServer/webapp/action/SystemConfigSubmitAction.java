@@ -56,6 +56,7 @@ public class SystemConfigSubmitAction extends BaseAction {
 		configManager.setHTTPAuthURL( scf.getHttpAuthURL() );
 		configManager.setHTTPAuthMail( scf.getHttpAuthMail() );
 		
+		configManager.toggleFlag( "askForSemester", scf.isAskForStudentDetails() );
 		messages.add(ActionMessages.GLOBAL_MESSAGE,	new ActionMessage( "systemConfig.saved" ) );
 		saveMessages( request, messages );			
 		

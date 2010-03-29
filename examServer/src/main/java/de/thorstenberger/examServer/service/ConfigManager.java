@@ -53,4 +53,6 @@ public interface ConfigManager {
 
     public void setTitle(String title);
 
+    public void toggleFlag(String flagName, boolean state);
+
 }

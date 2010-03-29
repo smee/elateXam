@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /**
- * 
+ *
  */
 package de.thorstenberger.examServer.service.impl;
 
@@ -28,6 +28,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
 import javax.xml.bind.JAXBContext;
@@ -46,7 +47,7 @@ import de.thorstenberger.examServer.service.ExamServerManager;
 
 /**
  * @author Thorsten Berger
- * 
+ *
  */
 public class ConfigManagerImpl implements ConfigManager {
 
@@ -58,7 +59,7 @@ public class ConfigManagerImpl implements ConfigManager {
     private final Log log = LogFactory.getLog(ConfigManagerImpl.class);
 
     /**
-	 * 
+	 *
 	 */
     public ConfigManagerImpl(final ExamServerManager examServerManager) {
 
@@ -102,7 +103,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.examServer.service.ConfigManager#getHTTPAuthMail()
      */
     public String getHTTPAuthMail() {
@@ -111,7 +112,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.examServer.service.ConfigManager#getHTTPAuthURL()
      */
     public String getHTTPAuthURL() {
@@ -120,7 +121,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.examServer.service.ConfigManager#getRemoteUserMangerURL()
      */
     public String getRemoteUserManagerURL() {
@@ -129,7 +130,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.examServer.service.ConfigManager#getTitle()
      */
     public String getTitle() {
@@ -138,7 +139,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.examServer.service.ConfigManager#isLoadJVMOnStartup()
      */
     public boolean isLoadJVMOnStartup() {
@@ -147,7 +148,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.examServer.service.ConfigManager#isSetFlag(java.lang.String)
      */
     public boolean isSetFlag(final String flag) {
@@ -163,7 +164,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.examServer.service.ConfigManager#isStudentsLoginEnabled()
      */
     public boolean isStudentsLoginEnabled() {
@@ -192,7 +193,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.examServer.service.ConfigManager#setHTTPAuthMail()
      */
     public void setHTTPAuthMail(final String address) {
@@ -202,7 +203,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.examServer.service.ConfigManager#setHTTPAuthURL()
      */
     public void setHTTPAuthURL(final String url) {
@@ -212,7 +213,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.examServer.service.ConfigManager#setLoadJVMOnStartup(boolean)
      */
     public void setLoadJVMOnStartup(final boolean value) {
@@ -222,7 +223,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.examServer.service.ConfigManager#setRemoteUserManagerURL()
      */
     public void setRemoteUserManagerURL(final String url) {
@@ -232,7 +233,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.examServer.service.ConfigManager#setStudentsLoginEnabled(boolean)
      */
     public void setStudentsLoginEnabled(final boolean value) {
@@ -242,12 +243,25 @@ public class ConfigManagerImpl implements ConfigManager {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.examServer.service.ConfigManager#setTitle(java.lang.String)
      */
     public void setTitle(final String title) {
         config.setTitle(title);
         save();
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see de.thorstenberger.examServer.service.ConfigManager#toggleFlag(java.lang.String, boolean)
+     */
+    public void toggleFlag(final String flagName, final boolean state) {
+      final List<String> flags = config.getFlag();
+      flags.remove(flagName);
+      if (state) {
+        flags.add(flagName);
+      }
     }
 
 }

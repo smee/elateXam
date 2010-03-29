@@ -31,6 +31,9 @@ Hier konfigurieren Sie allgemeine Einstellungen des Pr�fungsservers.
 <tr>
 <td>HTTP-Authentication-Mail-Suffix: </td><td><html:text property="httpAuthMail" size="60"/></td>
 </tr>
+<tr>
+<td>Studentendaten abfragen </td><td><html:checkbox property="askForStudentDetails"/>&nbsp;&nbsp;Fragt nach Namen, Matrikelnummer und Fachsemester, falls diese Daten unvollst&auml;ndig sind</td>
+</tr>
 </table>
 <br/><br/>
 <html:submit>Speichern</html:submit>

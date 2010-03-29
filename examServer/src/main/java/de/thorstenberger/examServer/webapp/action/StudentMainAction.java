@@ -35,6 +35,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import de.thorstenberger.examServer.model.User;
+import de.thorstenberger.examServer.service.ConfigManager;
 import de.thorstenberger.examServer.service.UserManager;
 import de.thorstenberger.examServer.webapp.vo.TaskDefVO;
 import de.thorstenberger.taskmodel.TaskDef;
@@ -81,16 +82,21 @@ public class StudentMainAction extends BaseAction {
 
     request.setAttribute("TaskDefs", tdvos);
 
-    // redirect if needed (incomplete student details)
-    final UserManager userManager = (UserManager) getBean("userManager");
-    final User user = userManager.getUserByUsername(request.getUserPrincipal().getName());
 
-    final boolean noFirstname = isEmpty(user.getFirstName());
-    final boolean noLastname = isEmpty(user.getLastName());
-    final boolean noSemester = isEmpty(user.getSemester()) || !isNumeric(user.getSemester());
-    final boolean noMatrikel = isEmpty(user.getMatrikel()) || !isNumeric(user.getMatrikel());
-    if (noFirstname || noLastname || noSemester || noMatrikel) {
-      return mapping.findForward("askForSemester");
+    // redirect if needed (incomplete student details)
+    final ConfigManager config = (ConfigManager) getBean("configManager");
+    if (config.isSetFlag("askForSemester")) {
+      final UserManager userManager = (UserManager) getBean("userManager");
+      final User user = userManager.getUserByUsername(request.getUserPrincipal().getName());
+
+      final boolean noFirstname = isEmpty(user.getFirstName());
+      final boolean noLastname = isEmpty(user.getLastName());
+      final boolean noSemester = isEmpty(user.getSemester()) || !isNumeric(user.getSemester());
+      final boolean noMatrikel = isEmpty(user.getMatrikel()) || !isNumeric(user.getMatrikel());
+
+      if (noFirstname || noLastname || noSemester || noMatrikel) {
+        return mapping.findForward("askForSemester");
+      }
     }
     return mapping.findForward("success");
   }

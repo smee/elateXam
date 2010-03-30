@@ -72,11 +72,13 @@ public class CorrectionSettingsAction extends Action {
 			saveErrors( request, errors );
 			return mapping.findForward( "error" );
 		}
-	
 		
-		TaskDef_Complex tdc = (TaskDef_Complex)delegateObject.getTaskDef();
+    final CorrectorsForm cform = (CorrectorsForm) form;
+    cform.setAvailableCorrectors(delegateObject.getAllCorrectorNames());
+		
 		
 		request.setAttribute( "taskId", id );
+		request.setAttribute( "privileged", delegateObject.isPrivileged() );
 					
 		return mapping.findForward( "success" );
 		

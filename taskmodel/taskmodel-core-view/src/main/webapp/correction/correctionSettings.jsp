@@ -1,6 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
+<%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
 
 <html:html>
 <head>
@@ -81,6 +83,35 @@
 
     
 	</fieldset><br>
+  
+ <c:if test="${privileged}">
+  <fieldset>
+    <legend>Korrekturen verteilen auf</legend>
+
+    <html:messages message="true" id="msg" header="messages.header" footer="messages.footer">
+      <%=pageContext.getAttribute("msg")%>
+    </html:messages>
+    
+  <html:form action="/bulkAssignTasklets">
+    <input type="hidden" name="taskId" value="${taskId}"/>
+        <table>
+          <tr>
+            <logic:iterate id="item" name="correctorsForm" property="availableCorrectors" indexId="counter">
+              <td>
+              <html:multibox property="selectedCorrectors">
+                <bean:write name="item"/>
+              </html:multibox>
+              <bean:write name="item"/>
+              </td>
+              <c:if test="${(counter%3) == 2}"></tr><tr></c:if>
+            </logic:iterate>
+          </tr>
+        </table>
+      <html:submit value="Zuordnen"/>
+    </html:form>
+  </fieldset>
+</c:if>
+  
 	</td>
   </tr>
   

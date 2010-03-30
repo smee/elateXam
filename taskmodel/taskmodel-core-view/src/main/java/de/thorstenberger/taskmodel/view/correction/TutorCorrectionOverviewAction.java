@@ -52,20 +52,20 @@ public class TutorCorrectionOverviewAction extends Action {
 	 * @see org.apache.struts.action.Action#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
-	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward execute(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request, final HttpServletResponse response) throws Exception {
 		
-		   ActionMessages errors = new ActionMessages();
+		   final ActionMessages errors = new ActionMessages();
 
 			long id;
 			try {
 				id = Long.parseLong( request.getParameter( "taskId" ) );
-			} catch (NumberFormatException e) {
+			} catch (final NumberFormatException e) {
 				errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "invalid.parameter" ) );
 				saveErrors( request, errors );
 				return mapping.findForward( "error" );
 			}
 			
-			CorrectorDelegateObject delegateObject = (CorrectorDelegateObject)TaskModelViewDelegate.getDelegateObject( request.getSession().getId(), id );
+			final CorrectorDelegateObject delegateObject = (CorrectorDelegateObject)TaskModelViewDelegate.getDelegateObject( request.getSession().getId(), id );
 
 			if( delegateObject == null ){
 				errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "no.session" ) );
@@ -74,22 +74,24 @@ public class TutorCorrectionOverviewAction extends Action {
 			}
 			request.setAttribute( "ReturnURL", delegateObject.getReturnURL() );
 
-			TaskStatistics taskStatistics = delegateObject.getTaskManager().getTaskletContainer().calculateStatistics( id );
-			TutorSolutionsInfoVO tsivo = new TutorSolutionsInfoVO();
+			final TaskStatistics taskStatistics = delegateObject.getTaskManager().getTaskletContainer().calculateStatistics( id );
+			final TutorSolutionsInfoVO tsivo = new TutorSolutionsInfoVO();
 			
 			tsivo.setTaskId( id );
 			tsivo.setCount( taskStatistics.getNumOfSolutions() );
 			tsivo.setCorrectedCount( taskStatistics.getNumOfCorrectedSolutions() );
 			tsivo.setAssignedCount( taskStatistics.getNumOfAssignedSolutions() );
-			if( taskStatistics.getNumOfSolutions() == 0 )
-				tsivo.setCorrectedCountPercent( NumberFormat.getPercentInstance().format( 0 ) );
-			else tsivo.setCorrectedCountPercent( NumberFormat.getPercentInstance().format(
-					(double) taskStatistics.getNumOfCorrectedSolutions() / 
-					(double) taskStatistics.getNumOfSolutions() ) );
+			if( taskStatistics.getNumOfSolutions() == 0 ) {
+        tsivo.setCorrectedCountPercent( NumberFormat.getPercentInstance().format( 0 ) );
+      } else {
+        tsivo.setCorrectedCountPercent( NumberFormat.getPercentInstance().format(
+        		(double) taskStatistics.getNumOfCorrectedSolutions() / 
+        		(double) taskStatistics.getNumOfSolutions() ) );
+      }
 			
-			List<Tasklet> assignedTasklets = delegateObject.getTaskManager().getTaskletContainer().getTaskletsAssignedToCorrector( id, delegateObject.getCorrectorLogin() );
-			List<TaskletInfoVO> assignedUncorrectedTasklets = new ArrayList<TaskletInfoVO>();
-			List<TaskletInfoVO> assignedCorrectedTasklets = new ArrayList<TaskletInfoVO>();
+			final List<Tasklet> assignedTasklets = delegateObject.getTaskManager().getTaskletContainer().getTaskletsAssignedToCorrector( id, delegateObject.getCorrectorLogin() );
+			final List<TaskletInfoVO> assignedUncorrectedTasklets = new ArrayList<TaskletInfoVO>();
+			final List<TaskletInfoVO> assignedCorrectedTasklets = new ArrayList<TaskletInfoVO>();
 			
 			
 			// for the list we need the same number of corrections (columns) in every row, so
@@ -97,31 +99,31 @@ public class TutorCorrectionOverviewAction extends Action {
 			int maxManualCorrections = 0;
 			boolean expandSome = false;
 			
-			for( Tasklet tasklet : assignedTasklets ){
-				TaskletInfoVO tivo = getTIVO( tasklet );
+			for( final Tasklet tasklet : assignedTasklets ){
+				final TaskletInfoVO tivo = getTIVO( tasklet );
 				if( tivo.getCorrections().size() > maxManualCorrections ){
 					maxManualCorrections = tivo.getCorrections().size();
 					expandSome = true;
 				}
-				if( tasklet.hasOrPassedStatus( Tasklet.Status.CORRECTED ) )
-					assignedCorrectedTasklets.add( tivo );
-				else
-					assignedUncorrectedTasklets.add( tivo );
+				if( tasklet.hasOrPassedStatus( Tasklet.Status.CORRECTED ) ) {
+          assignedCorrectedTasklets.add( tivo );
+        } else {
+          assignedUncorrectedTasklets.add( tivo );
+        }
 			}
 			if( expandSome ){
-				for( TaskletInfoVO tivo : assignedCorrectedTasklets ){
-					for( int i = tivo.getCorrections().size(); i < maxManualCorrections; i++ )
-						tivo.getCorrections().add( new TaskletInfoVO.ManualCorrectionVO( null, null ) );
+				for( final TaskletInfoVO tivo : assignedCorrectedTasklets ){
+					for( int i = tivo.getCorrections().size(); i < maxManualCorrections; i++ ) {
+            tivo.getCorrections().add( new TaskletInfoVO.ManualCorrectionVO( null, null ) );
+          }
 				}
-				for( TaskletInfoVO tivo : assignedUncorrectedTasklets ){
-					for( int i = tivo.getCorrections().size(); i < maxManualCorrections; i++ )
-						tivo.getCorrections().add( new TaskletInfoVO.ManualCorrectionVO( null, null ) );
+				for( final TaskletInfoVO tivo : assignedUncorrectedTasklets ){
+					for( int i = tivo.getCorrections().size(); i < maxManualCorrections; i++ ) {
+            tivo.getCorrections().add( new TaskletInfoVO.ManualCorrectionVO( null, null ) );
+          }
 				}
 				
 			}
-			
-			CorrectorsForm cform = (CorrectorsForm) form;
-			cform.setAvailableCorrectors(delegateObject.getAllCorrectorNames());
 			
 			tsivo.setAssignedCorrectedTasklets( assignedCorrectedTasklets );
 			tsivo.setAssignedUncorrectedTasklets( assignedUncorrectedTasklets );
@@ -133,20 +135,20 @@ public class TutorCorrectionOverviewAction extends Action {
 		
 	}
 
-	public static TaskletInfoVO getTIVO( Tasklet tasklet ){
+	public static TaskletInfoVO getTIVO( final Tasklet tasklet ){
 		
-		TaskletInfoVO tivo = new TaskletInfoVO();
+		final TaskletInfoVO tivo = new TaskletInfoVO();
 		tivo.setTaskId( tasklet.getTaskId() );
 		tivo.setLogin( tasklet.getUserId() );
 		
 		
 		// set points
-		List<TaskletInfoVO.ManualCorrectionVO> taskletCorrections = new LinkedList<TaskletInfoVO.ManualCorrectionVO>();
+		final List<TaskletInfoVO.ManualCorrectionVO> taskletCorrections = new LinkedList<TaskletInfoVO.ManualCorrectionVO>();
 		if( tasklet.getTaskletCorrection().isCorrected() ){
-			if( tasklet.getTaskletCorrection().isAutoCorrected() )
-				tivo.setAutoCorrectionPoints( tasklet.getTaskletCorrection().getAutoCorrectionPoints() );
-			else{
-				for( ManualCorrection mc : tasklet.getTaskletCorrection().getManualCorrections() ){
+			if( tasklet.getTaskletCorrection().isAutoCorrected() ) {
+        tivo.setAutoCorrectionPoints( tasklet.getTaskletCorrection().getAutoCorrectionPoints() );
+      } else{
+				for( final ManualCorrection mc : tasklet.getTaskletCorrection().getManualCorrections() ){
 					taskletCorrections.add( new TaskletInfoVO.ManualCorrectionVO( mc.getCorrector(), mc.getPoints() ) );
 				}
 			}

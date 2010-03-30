@@ -31,7 +31,6 @@ public class CorrectorsForm extends ActionForm {
 
   private String[] availableCorrectors;
   private String[] selectedCorrectors;
-
   /**
    * @param availableCorrectors
    *          the availableCorrectors to set
@@ -68,4 +67,5 @@ public class CorrectorsForm extends ActionForm {
     this.availableCorrectors = new String[0];
     super.reset(mapping, request);
   }
+
 }

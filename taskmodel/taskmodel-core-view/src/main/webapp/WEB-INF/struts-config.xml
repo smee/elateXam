@@ -24,7 +24,7 @@
   <action path="/showSolution" type="de.thorstenberger.taskmodel.view.ShowSolutionAction">
    <forward name="success" path="/showCorrection.jsp"/>
   </action>
-  <action path="/tutorCorrectionOverview" name="correctorsForm" validate="false" type="de.thorstenberger.taskmodel.view.correction.TutorCorrectionOverviewAction">
+  <action path="/tutorCorrectionOverview" type="de.thorstenberger.taskmodel.view.correction.TutorCorrectionOverviewAction">
    <forward name="success" path="/correction/tutorCorrectionOverview.jsp"/>
   </action>
   <action path="/assignTasklet" type="de.thorstenberger.taskmodel.view.correction.AssignTaskletAction">
@@ -32,7 +32,7 @@
    <forward name="successToCorrection" path="/doCorrection.do"/>
   </action>
   <action path="/bulkAssignTasklets" name="correctorsForm" validate="false" type="de.thorstenberger.taskmodel.view.correction.BulkAssignTaskletsAction">
-   <forward name="success" path="/tutorCorrectionOverview.do"/>
+   <forward name="success" path="/correctionSettings.do"/>
   </action>
   <action path="/doCorrection" type="de.thorstenberger.taskmodel.view.correction.DoCorrectionAction">
    <forward name="success" path="/correction/doCorrection.jsp"/>
@@ -64,7 +64,7 @@
    <forward name="tutorListSuccess" path="/tutorCorrectionOverview.do"/>
    <forward name="successToAllTaskletsList" path="/viewAllTasklets.do"/>
   </action>
-  <action path="/correctionSettings" type="de.thorstenberger.taskmodel.view.correction.CorrectionSettingsAction">
+  <action path="/correctionSettings" name="correctorsForm" validate="false" type="de.thorstenberger.taskmodel.view.correction.CorrectionSettingsAction">
    <forward name="success" path="/correction/correctionSettings.jsp"/>
   </action>
   <action path="/ajaxAutoReCorrection" type="de.thorstenberger.taskmodel.view.correction.AutoReCorrectionAjaxAction">

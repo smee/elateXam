@@ -297,7 +297,7 @@
       <version>1.0</version>
       <!-- use dependency from local directory to prevent need for custom maven repository -->
       <scope>system</scope>
-      <systemPath>${basedir}/etc/tinyradius-1.0.jar</systemPath>
+      <systemPath>${basedir}/etc/TinyRadius-1.0.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>javax.activation</groupId>

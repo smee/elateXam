@@ -209,6 +209,7 @@
           <verbose>false</verbose>
         </configuration>
       </plugin>
+      
       <!--
         <plugin> Stoppe den Build, wenn unterschiedliche Versionen
         derselben Dependency verwendet werden soll. Aufruf mit: mvn
@@ -297,7 +298,7 @@
       <version>1.0</version>
       <!-- use dependency from local directory to prevent need for custom maven repository -->
       <scope>system</scope>
-      <systemPath>${basedir}/etc/TinyRadius-1.0.jar</systemPath>
+      <systemPath>${basedir}/src/main/webapp/WEB-INF/lib/TinyRadius-1.0.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>javax.activation</groupId>

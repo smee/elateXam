@@ -1,6 +1,6 @@
 /*
 
-Copyright (C) 2006 Thorsten Berger
+Copyright (C) 2009 Steffen Dienst
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -52,14 +52,14 @@ import de.thorstenberger.examServer.util.StringUtil;
 import de.thorstenberger.examServer.ws.remoteusermanager.client.UserBean;
 
 /**
- * Authenticate against a http authentification, e.g. an .htaccess secured url.
+ * Rudimentary start of a shibboleth client implementation. Misses verification of the shibboleth response atm. NOT
+ * WORKING YET!
  *
- * @author Thorsten Berger
  * @author Steffen Dienst
  *
  */
-public class HTTPAuthAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider implements AuthenticationProvider, MessageSourceAware {
-    private final Log log = LogFactory.getLog(HTTPAuthAuthenticationProvider.class);
+public class ShibbolethAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider implements AuthenticationProvider, MessageSourceAware {
+    private final Log log = LogFactory.getLog(ShibbolethAuthenticationProvider.class);
 
     private MessageSourceAccessor messageSourceAccessor;
     private final ConfigManager configManager;
@@ -71,7 +71,7 @@ public class HTTPAuthAuthenticationProvider extends AbstractUserDetailsAuthentic
     /**
      *
      */
-    public HTTPAuthAuthenticationProvider( final ConfigManager configManager, final UserManager userManager, final RoleManager roleManager ) {
+    public ShibbolethAuthenticationProvider( final ConfigManager configManager, final UserManager userManager, final RoleManager roleManager ) {
         this.configManager = configManager;
         this.userManager = userManager;
         this.roleManager = roleManager;
@@ -187,14 +187,48 @@ public class HTTPAuthAuthenticationProvider extends AbstractUserDetailsAuthentic
 
         authget.setDoAuthentication(true);
 
+        String response = null;
         try {
             final int status = client.executeMethod( authget );
 
             // check if successful
-            return  status == 200;
+            if ( status == 200 )
+            {
+                response = authget.getResponseBodyAsString();
+
+                return isValidAuthentication(extractSAMLResponse(response));
+            }
         } finally {
             // release any connection resources used by the method
             authget.releaseConnection();
+        }
+
+        return false;
+    }
+
+    /**
+     * Verify the signed SAMLResponse xml file using the signature within.
+     *
+     * @param samlXml
+     *            SAMLResponse
+     * @return true if this authentication is valid
+     */
+    private boolean isValidAuthentication(final String samlXml) {
+        // TODO Auto-generated method stub
+        // log.warn("Invalid IdP authentication: "+samlXml);
+        return true;
+    }
+
+    /**
+     * @param xml
+     * @return
+     */
+    private String extractSAMLResponse(final String html) {
+        if (html == null) {
+            throw new AuthenticationServiceException("Invalid authentication response from the shibboleth IdP!");
+        } else {
+
+            return null;
         }
     }
 
@@ -219,6 +253,8 @@ public class HTTPAuthAuthenticationProvider extends AbstractUserDetailsAuthentic
      */
     @Override
     protected void additionalAuthenticationChecks(final UserDetails arg0, final UsernamePasswordAuthenticationToken arg1) throws AuthenticationException {
+        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -226,6 +262,7 @@ public class HTTPAuthAuthenticationProvider extends AbstractUserDetailsAuthentic
      */
     @Override
     protected UserDetails retrieveUser(final String arg0, final UsernamePasswordAuthenticationToken arg1) throws AuthenticationException {
+        // TODO Auto-generated method stub
         return null;
     }
 

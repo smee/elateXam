@@ -17,13 +17,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /**
- * 
+ *
  */
 package de.thorstenberger.examServer.service;
 
+
 /**
  * @author Thorsten Berger
- * 
+ *
  */
 public interface ConfigManager {
 
@@ -54,5 +55,21 @@ public interface ConfigManager {
     public void setTitle(String title);
 
     public void toggleFlag(String flagName, boolean state);
+
+  /**
+   * Url for a Radius server to authenticate against (RFC 2865).
+   *
+   * @return
+   */
+    String getRadiusHost();
+    void setRadiusHost(String host);
+
+  /**
+   * Shared secret for a Radius server to authenticate against (see RFC 2865).
+   *
+   * @return
+   */
+    String getRadiusSharedSecret();
+    void setRadiusSharedSecret(String secret);
 
 }

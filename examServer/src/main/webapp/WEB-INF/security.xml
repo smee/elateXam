@@ -106,6 +106,7 @@
                 <ref local="httpauthAuthenticationProvider"/>
 	            <ref local="wsAuthenticationProvider"/>
                 <ref local="freeForAllAuthenticationProvider"/>
+                <ref local="radiusAuthenticationProvider"/>
                 <!--ref local="anonymousAuthenticationProvider"/-->
                 <!--ref local="rememberMeAuthenticationProvider"/-->
             </list>
@@ -128,6 +129,11 @@
     </bean>
     
     <bean id="httpauthAuthenticationProvider" class="de.thorstenberger.examServer.ws.remoteusermanager.HTTPAuthAuthenticationProvider">
+    	<constructor-arg ref="configManager"></constructor-arg>
+    	<constructor-arg ref="userManager"></constructor-arg>
+    	<constructor-arg ref="roleManager"></constructor-arg>
+    </bean>
+    <bean id="radiusAuthenticationProvider" class="de.thorstenberger.examServer.ws.remoteusermanager.RadiusAuthenticationProvider">
     	<constructor-arg ref="configManager"></constructor-arg>
     	<constructor-arg ref="userManager"></constructor-arg>
     	<constructor-arg ref="roleManager"></constructor-arg>

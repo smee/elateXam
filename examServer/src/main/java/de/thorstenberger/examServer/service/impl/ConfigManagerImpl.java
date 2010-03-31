@@ -264,4 +264,35 @@ public class ConfigManagerImpl implements ConfigManager {
       }
     }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see de.thorstenberger.examServer.service.ConfigManager#getRadiusHost()
+   */
+  @Override
+  public String getRadiusHost() {
+    return config.getRadiusHost();
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see de.thorstenberger.examServer.service.ConfigManager#getRadiusSharedSecret()
+   */
+  @Override
+  public String getRadiusSharedSecret() {
+    return config.getRadiusSharedSecret();
+  }
+
+  @Override
+  public void setRadiusHost(final String host) {
+    config.setRadiusHost(host);
+    save();
+  }
+
+  @Override
+  public void setRadiusSharedSecret(final String secret) {
+    config.setRadiusSharedSecret(secret);
+    save();
+  }
 }

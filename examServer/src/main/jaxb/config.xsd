@@ -11,6 +11,8 @@
 				<xs:element name="studentsLoginEnabled" type="xs:boolean"/>
 				<xs:element name="loadJVMOnStartup" type="xs:boolean"/>
 				<xs:element name="flag" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="radiusHost" type="xs:string" minOccurs="0"/>
+				<xs:element name="radiusSharedSecret" type="xs:string" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>

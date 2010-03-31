@@ -125,8 +125,8 @@
         <artifactId>maven-compiler-plugin
         </artifactId>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>1.6</source>
+          <target>1.6</target>
           <encoding>UTF8</encoding>
           <maxmem>300M</maxmem>
           <fork>true</fork>
@@ -290,6 +290,14 @@
         	<groupId>org.springframework</groupId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.tinyradius</groupId>
+      <artifactId>tinyradius</artifactId>
+      <version>1.0</version>
+      <!-- use dependency from local directory to prevent need for custom maven repository -->
+      <scope>system</scope>
+      <systemPath>${basedir}/etc/tinyradius-1.0.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>javax.activation</groupId>

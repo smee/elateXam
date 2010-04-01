@@ -33,8 +33,33 @@ public class SystemConfigForm extends BaseForm {
 	private boolean askForStudentDetails;
 	private String httpAuthURL;
 	private String httpAuthMail;
-	
+	private String radiusHost;
+	private String radiusSharedSecret;
 	/**
+   * @return the radiusHost
+   */
+  public String getRadiusHost() {
+    return radiusHost;
+  }
+  /**
+   * @param radiusHost the radiusHost to set
+   */
+  public void setRadiusHost(String radiusHost) {
+    this.radiusHost = radiusHost;
+  }
+  /**
+   * @return the radiusSharedSecret
+   */
+  public String getRadiusSharedSecret() {
+    return radiusSharedSecret;
+  }
+  /**
+   * @param radiusSharedSecret the radiusSharedSecret to set
+   */
+  public void setRadiusSharedSecret(String radiusSharedSecret) {
+    this.radiusSharedSecret = radiusSharedSecret;
+  }
+  /**
 	 * @return Returns the loadJVMOnStartup.
 	 */
 	public boolean isLoadJVMOnStartup() {

@@ -1,5 +1,10 @@
 <%@ include file="/common/taglibs.jsp"%>
-
+<%
+  org.springframework.context.ApplicationContext ctx = 
+    org.springframework.web.context.support.WebApplicationContextUtils.getRequiredWebApplicationContext( application );
+  de.thorstenberger.examServer.service.ConfigManager configManager = (de.thorstenberger.examServer.service.ConfigManager) ctx.getBean( "configManager" );
+  pageContext.setAttribute( "usernamePostfix", "@"+configManager.getHTTPAuthMail() );
+%>
 <form method="post" id="loginForm" action="<c:url value="/j_security_check"/>"
     onsubmit="saveUsername(this);return validateForm(this)">
 <fieldset>
@@ -17,6 +22,7 @@
             <fmt:message key="label.username"/> <span class="req">*</span>
         </label>
         <input type="text" class="text medium" name="j_username" id="j_username" tabindex="1" />
+        <b style="white-space: nowrap;"><c:out value="${usernamePostfix}"></c:out></b>
     </li>
 
     <li>

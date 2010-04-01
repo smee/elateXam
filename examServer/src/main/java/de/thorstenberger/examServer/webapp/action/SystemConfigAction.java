@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.examServer.webapp.action;
 
@@ -41,20 +41,22 @@ public class SystemConfigAction extends BaseAction {
 	 * @see de.thorstenberger.examServer.webapp.action.BaseAction#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
-	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, final HttpServletResponse response) throws Exception {
+
 		SystemConfigForm scf = (SystemConfigForm)form;
 		ConfigManager configManager = (ConfigManager)getBean( "configManager" );
-		
+
 		scf.setLoadJVMOnStartup( configManager.isLoadJVMOnStartup() );
 		scf.setRemoteUserManagerURL( configManager.getRemoteUserManagerURL() );
 		scf.setTitle( configManager.getTitle() );
 		scf.setHttpAuthURL( configManager.getHTTPAuthURL() );
 		scf.setHttpAuthMail( configManager.getHTTPAuthMail() );
 		scf.setAskForStudentDetails( configManager.isSetFlag("askForSemester") );
+    scf.setRadiusHost(configManager.getRadiusHost());
+    scf.setRadiusSharedSecret(configManager.getRadiusSharedSecret());
 		return mapping.findForward( "systemConfig" );
 	}
 
-	
+
 
 }

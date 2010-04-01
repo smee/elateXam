@@ -55,6 +55,8 @@ public class SystemConfigSubmitAction extends BaseAction {
 		configManager.setLoadJVMOnStartup( scf.isLoadJVMOnStartup() );
 		configManager.setHTTPAuthURL( scf.getHttpAuthURL() );
 		configManager.setHTTPAuthMail( scf.getHttpAuthMail() );
+		configManager.setRadiusHost( scf.getRadiusHost() );
+		configManager.setRadiusSharedSecret( scf.getRadiusSharedSecret() );
 		
 		configManager.toggleFlag( "askForSemester", scf.isAskForStudentDetails() );
 		messages.add(ActionMessages.GLOBAL_MESSAGE,	new ActionMessage( "systemConfig.saved" ) );

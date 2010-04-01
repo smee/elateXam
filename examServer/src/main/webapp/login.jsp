@@ -20,7 +20,6 @@
 <br/><br/>
 <%-- Include the login form --%>
 <jsp:include page="/WEB-INF/pages/loginForm.jsp"/>
-
 <br/><br/><br/>
 
 

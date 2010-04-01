@@ -32,6 +32,12 @@ Hier konfigurieren Sie allgemeine Einstellungen des Pr�fungsservers.
 <td>HTTP-Authentication-Mail-Suffix: </td><td><html:text property="httpAuthMail" size="60"/></td>
 </tr>
 <tr>
+<td>Radius-Authentication-Host: </td><td><html:text property="radiusHost" size="60"/></td>
+</tr>
+<tr>
+<td>Radius-Shared-Secret: </td><td><html:password property="radiusSharedSecret" size="60"/></td>
+</tr>
+<tr>
 <td>Studentendaten abfragen </td><td><html:checkbox property="askForStudentDetails"/>&nbsp;&nbsp;Fragt nach Namen, Matrikelnummer und Fachsemester, falls diese Daten unvollst&auml;ndig sind</td>
 </tr>
 </table>

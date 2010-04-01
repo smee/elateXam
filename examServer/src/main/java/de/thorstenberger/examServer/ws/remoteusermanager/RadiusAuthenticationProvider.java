@@ -152,17 +152,38 @@ public class RadiusAuthenticationProvider extends AbstractUserDetailsAuthenticat
     final boolean auth = authenticateUser(login, pwd);
     if (auth) {
       // now we know that at least login and password are correct, so we create the user bean
-      final UserBean bean = new UserBean(login, login, null, pwd, "student", null);
+      String email = login;
+      if (!login.contains("@")) {
+        email = login+"@"+configManager.getHTTPAuthMail();
+      }
+      final UserBean bean = new UserBean(email, login, null, pwd, "student", null);
       return bean;
     } else {
+      log.warn("Wrong radius authentication for " + login);
       throw new AuthenticationServiceException("Invalid username/password!");
     }
   }
 
+  /**
+   * Send authentication request to the radius server. Concatenates <code>login</code> with <code>@mailsuffix</code> if
+   * such a suffix is configured at {@link ConfigManager#getHTTPAuthMail()}.
+   *
+   * @param login
+   * @param pwd
+   * @return
+   */
   private boolean authenticateUser(final String login, final String pwd) {
+    // if there is a configured mail suffix, construct the username
+    // to send to the radius server: login@mailsuffix
+    String username = login;
+    final String mailSuffix = configManager.getHTTPAuthMail();
+    if (!StringUtils.isEmpty(mailSuffix) && !login.contains("@")) {
+      username = login + "@" + mailSuffix;
+    }
+    log.debug(String.format("Trying to authenticate user '%s' against radius server at %s", username, configManager.getRadiusHost()));
     final RadiusClient radiusClient = new RadiusClient(configManager.getRadiusHost(), configManager.getRadiusSharedSecret());
     try {
-      return radiusClient.authenticate(login, pwd);
+      return radiusClient.authenticate(username, pwd);
     } catch (final IOException e) {
       throw new AuthenticationServiceException("Could not authenticate user!", e);
     } catch (final RadiusException e) {

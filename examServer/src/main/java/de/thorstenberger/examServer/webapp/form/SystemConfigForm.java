@@ -17,9 +17,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.examServer.webapp.form;
+
+import de.thorstenberger.examServer.pdf.signature.SignatureInfos;
 
 /**
  * @author Thorsten Berger
@@ -35,7 +37,26 @@ public class SystemConfigForm extends BaseForm {
 	private String httpAuthMail;
 	private String radiusHost;
 	private String radiusSharedSecret;
+  private SignatureInfos si = new SignatureInfos();
+
+  private String todo;
+
 	/**
+   * @return name of the submit button pressed
+   */
+  public String getTodo() {
+    return todo;
+  }
+
+  /**
+   * @param todo
+   *          name of the submit button pressed
+   */
+  public void setTodo(final String todo) {
+    this.todo = todo;
+  }
+
+  /**
    * @return the radiusHost
    */
   public String getRadiusHost() {
@@ -44,7 +65,7 @@ public class SystemConfigForm extends BaseForm {
   /**
    * @param radiusHost the radiusHost to set
    */
-  public void setRadiusHost(String radiusHost) {
+  public void setRadiusHost(final String radiusHost) {
     this.radiusHost = radiusHost;
   }
   /**
@@ -56,7 +77,7 @@ public class SystemConfigForm extends BaseForm {
   /**
    * @param radiusSharedSecret the radiusSharedSecret to set
    */
-  public void setRadiusSharedSecret(String radiusSharedSecret) {
+  public void setRadiusSharedSecret(final String radiusSharedSecret) {
     this.radiusSharedSecret = radiusSharedSecret;
   }
   /**
@@ -68,7 +89,7 @@ public class SystemConfigForm extends BaseForm {
 	/**
 	 * @param loadJVMOnStartup The loadJVMOnStartup to set.
 	 */
-	public void setLoadJVMOnStartup(boolean loadJVMOnStartup) {
+	public void setLoadJVMOnStartup(final boolean loadJVMOnStartup) {
 		this.loadJVMOnStartup = loadJVMOnStartup;
 	}
 	/**
@@ -80,7 +101,7 @@ public class SystemConfigForm extends BaseForm {
 	/**
 	 * @param remoteUserManagerURL The remoteUserManagerURL to set.
 	 */
-	public void setRemoteUserManagerURL(String remoteUserManagerURL) {
+	public void setRemoteUserManagerURL(final String remoteUserManagerURL) {
 		this.remoteUserManagerURL = remoteUserManagerURL;
 	}
 	/**
@@ -92,7 +113,7 @@ public class SystemConfigForm extends BaseForm {
 	/**
 	 * @param title The title to set.
 	 */
-	public void setTitle(String title) {
+	public void setTitle(final String title) {
 		this.title = title;
 	}
 	/**
@@ -104,7 +125,7 @@ public class SystemConfigForm extends BaseForm {
 	/**
 	 * @param httpAuthURL the httpAuthURL to set
 	 */
-	public void setHttpAuthURL(String httpAuthURL) {
+	public void setHttpAuthURL(final String httpAuthURL) {
 		this.httpAuthURL = httpAuthURL;
 	}
 	/**
@@ -116,13 +137,13 @@ public class SystemConfigForm extends BaseForm {
 	/**
 	 * @param httpAuthMail the httpAuthMail to set
 	 */
-	public void setHttpAuthMail(String httpAuthMail) {
+	public void setHttpAuthMail(final String httpAuthMail) {
 		this.httpAuthMail = httpAuthMail;
 	}
   /**
    * @param askForStudentDetails the askForStudentDetails to set
    */
-  public void setAskForStudentDetails(boolean askForStudentDetails) {
+  public void setAskForStudentDetails(final boolean askForStudentDetails) {
     this.askForStudentDetails = askForStudentDetails;
   }
   /**
@@ -131,7 +152,22 @@ public class SystemConfigForm extends BaseForm {
   public boolean isAskForStudentDetails() {
     return askForStudentDetails;
   }
-	
-	
+
+  /**
+   * @param si
+   *          the si to set
+   */
+  public void setSignatureSettings(final SignatureInfos si) {
+    this.si = si;
+  }
+
+  /**
+   * @return the si
+   */
+  public SignatureInfos getSignatureSettings() {
+    return si;
+  }
+
+
 
 }

@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -37,11 +38,14 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.Validator;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import de.thorstenberger.examServer.dao.xml.jaxb.Config;
 import de.thorstenberger.examServer.dao.xml.jaxb.ObjectFactory;
+import de.thorstenberger.examServer.dao.xml.jaxb.ConfigType.PdfSignatureSettingsType;
+import de.thorstenberger.examServer.pdf.signature.SignatureInfos;
 import de.thorstenberger.examServer.service.ConfigManager;
 import de.thorstenberger.examServer.service.ExamServerManager;
 
@@ -76,7 +80,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 config = oF.createConfig();
                 config.setStudentsLoginEnabled(false);
                 config.setLoadJVMOnStartup(false);
-
+                setPDFSignatureInfos(new SignatureInfos());
                 // load initial title from filesystem
                 final Properties prop = new Properties();
                 prop.load(this.getClass().getClassLoader().getResourceAsStream("initialTitle.properties"));
@@ -295,4 +299,54 @@ public class ConfigManagerImpl implements ConfigManager {
     config.setRadiusSharedSecret(secret);
     save();
   }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see de.thorstenberger.examServer.service.ConfigManager#getPDFSignatureInfos()
+   */
+  @Override
+  public SignatureInfos getPDFSignatureInfos() {
+    if (!config.isSetPdfSignatureSettings()) {
+      return new SignatureInfos();
+    } else {
+      final SignatureInfos si = new SignatureInfos();
+      try {
+        BeanUtils.copyProperties(si, config.getPdfSignatureSettings());
+      } catch (final IllegalAccessException e) {
+        log.warn("Could not read settings for pdf signatures!", e);
+      } catch (final InvocationTargetException e) {
+        log.warn("Could not read settings for pdf signatures!", e);
+      }
+      return si;
+    }
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * de.thorstenberger.examServer.service.ConfigManager#setPDFSignatureInfos(de.thorstenberger.examServer.pdf.signature
+   * .SignatureInfos)
+   */
+  @Override
+  public void setPDFSignatureInfos(final SignatureInfos si) {
+    if (!config.isSetPdfSignatureSettings()) {
+      try {
+        config.setPdfSignatureSettings(new ObjectFactory().createConfigTypePdfSignatureSettingsType());
+      } catch (final JAXBException e) {
+        log.warn("Could not store settings for pdf signatures!", e);
+      }
+    }
+    try {
+      final PdfSignatureSettingsType pdfSettings = config.getPdfSignatureSettings();
+      BeanUtils.copyProperties(pdfSettings, si);
+      save();
+    } catch (final IllegalAccessException e) {
+      log.warn("Could not copy all properties from SignatureInfos into PDF!", e);
+    } catch (final InvocationTargetException e) {
+      log.warn("Could not copy all properties from SignatureInfos into PDF!", e);
+    }
+  }
+
 }

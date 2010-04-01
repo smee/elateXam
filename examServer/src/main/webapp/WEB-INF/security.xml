@@ -102,11 +102,11 @@
     <bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
         <property name="providers">
             <list>
+                <ref local="radiusAuthenticationProvider"/>
                 <ref local="daoAuthenticationProvider"/>
                 <ref local="httpauthAuthenticationProvider"/>
 	            <ref local="wsAuthenticationProvider"/>
                 <ref local="freeForAllAuthenticationProvider"/>
-                <ref local="radiusAuthenticationProvider"/>
                 <!--ref local="anonymousAuthenticationProvider"/-->
                 <!--ref local="rememberMeAuthenticationProvider"/-->
             </list>

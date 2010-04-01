@@ -68,7 +68,6 @@ public class SignPdf {
 
   public static void main(final String[] args) throws IOException, SignatureException, KeyStoreException, DocumentException {
     final SignatureInfos infos = new SignatureInfos();
-    infos.save(new File("signature.properties"));
 
     signAndTimestamp(new File("d:/temp/pki.pdf"),
         new File("d:/temp/pki_timestamp.pdf"));
@@ -89,7 +88,7 @@ public class SignPdf {
    * @throws DocumentException
    */
   public static void signAndTimestamp(final InputStream originalPdf, final OutputStream targetPdf, final SignatureInfos infos) throws SignatureException, KeyStoreException, IOException, DocumentException {
-    signAndTimestamp(originalPdf, targetPdf, infos.getPrivateKey(), infos.getCertificateChain(), null, infos.getTimeStampServerUrl(), infos.getSignatureReason(), infos.getSignatureLocation(), infos.getSignatureContact());
+    signAndTimestamp(originalPdf, targetPdf, infos.getPrivateKey(), infos.getCertificateChain(), null, infos.getTimestampServerUrl(), infos.getSignatureReason(), infos.getSignatureLocation(), infos.getSignatureContact());
   }
 
   private static void signAndTimestamp(final File fIn, final File fOut) throws SignatureException, KeyStoreException, FileNotFoundException, IOException, DocumentException {

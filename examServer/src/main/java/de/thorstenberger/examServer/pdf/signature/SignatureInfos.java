@@ -1,6 +1,6 @@
 /*
 
-Copyright (C) 2009 Steffen Dienst
+Copyright (C) 2010 Steffen Dienst
 
 This program is free software, you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,9 +21,9 @@ package de.thorstenberger.examServer.pdf.signature;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -32,7 +32,6 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -55,80 +54,174 @@ import org.apache.commons.logging.LogFactory;
  */
 public class SignatureInfos {
   protected final static Log log = LogFactory.getLog(SignatureInfos.class);
-  /**
-   * Keys for infos to fetch via {@link SignatureInfos#get(Attr)}.
-   *
-   */
-  private enum Attr {
+  private String
     keystoreFile,
     keystorePassword, privateKeyPassword,
     keyAlias,
     certificateChainAlias,
     timestampServerUrl,
-    signatureReason, signatureLocation, signatureContact}
-
-  private final Properties prop;
+    signatureReason, signatureLocation, signatureContact;
 
   /**
-   * Load SignatureInfos from a properties file.
-   *
-   * @param propertyFile
-   * @throws FileNotFoundException
-   * @throws IOException
+   * @param keystoreFile
+   *          the keystoreFile to set
    */
-  public SignatureInfos(final File propertyFile) throws FileNotFoundException, IOException {
-    this(new Properties());
-    prop.load(new FileInputStream(propertyFile));
-  }
-
-  private SignatureInfos(final Properties prop2) {
-    this.prop = prop2;
+  public void setKeystoreFile(final String keystoreFile) {
+    this.keystoreFile = keystoreFile;
   }
 
   /**
-   * Load default settings from classpath file 'signature.properties'.
+   * @param keystorePassword
+   *          the keystorePassword to set
    */
-  public SignatureInfos() {
-    this.prop = getDefaultSettings().prop;
+  public void setKeystorePassword(final String keystorePassword) {
+    this.keystorePassword = keystorePassword;
+  }
 
-    final InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("signature.properties");
-    if (inputStream != null) {
-      try {
-        prop.load(inputStream);
-        inputStream.close();
-      } catch (final IOException e) {
-        log.warn("Could not load default settings for pdf signatures from classpath!", e);
-      }
+  /**
+   * @param privateKeyPassword
+   *          the privateKeyPassword to set
+   */
+  public void setPrivateKeyPassword(final String privateKeyPassword) {
+    this.privateKeyPassword = privateKeyPassword;
+  }
+
+  /**
+   * @param keyAlias
+   *          the keyAlias to set
+   */
+  public void setKeyAlias(final String keyAlias) {
+    this.keyAlias = keyAlias;
+  }
+
+  /**
+   * @param certificateChainAlias
+   *          the certificateChainAlias to set
+   */
+  public void setCertificateChainAlias(final String certificateChainAlias) {
+    this.certificateChainAlias = certificateChainAlias;
+  }
+
+  /**
+   * @param timestampServerUrl
+   *          the timestampServerUrl to set
+   */
+  public void setTimestampServerUrl(final String timestampServerUrl) {
+    this.timestampServerUrl = timestampServerUrl;
+  }
+
+  /**
+   * @param signatureReason
+   *          the signatureReason to set
+   */
+  public void setSignatureReason(final String signatureReason) {
+    this.signatureReason = signatureReason;
+  }
+
+  /**
+   * @param signatureLocation
+   *          the signatureLocation to set
+   */
+  public void setSignatureLocation(final String signatureLocation) {
+    this.signatureLocation = signatureLocation;
+  }
+
+  /**
+   * @param signatureContact
+   *          the signatureContact to set
+   */
+  public void setSignatureContact(final String signatureContact) {
+    this.signatureContact = signatureContact;
+  }
+
+  /**
+   * @return the keystoreFile
+   */
+  public String getKeystoreFile() {
+    return keystoreFile;
+  }
+
+  /**
+   * @return the keystorePassword
+   */
+  public String getKeystorePassword() {
+    return keystorePassword;
+  }
+
+  /**
+   * @return the privateKeyPassword
+   */
+  public String getPrivateKeyPassword() {
+    return privateKeyPassword;
+  }
+
+  /**
+   * @return the keyAlias
+   */
+  public String getKeyAlias() {
+    return keyAlias;
+  }
+
+  /**
+   * @return the certificateChainAlias
+   */
+  public String getCertificateChainAlias() {
+    return certificateChainAlias;
+  }
+
+  /**
+   * @return the timestampServerUrl
+   */
+  public String getTimestampServerUrl() {
+    return timestampServerUrl;
+  }
+
+  /**
+   * @return the signatureReason
+   */
+  public String getSignatureReason() {
+    return signatureReason;
+  }
+
+  /**
+   * @return the signatureLocation
+   */
+  public String getSignatureLocation() {
+    return signatureLocation;
+  }
+
+  /**
+   * @return the signatureContact
+   */
+  public String getSignatureContact() {
+    return signatureContact;
+  }
+
+  public SignatureInfos(){
+    this.keystoreFile=System.getProperty("user.home") + File.separatorChar + ".keystore";
+    this.keystorePassword="";
+    this.privateKeyPassword="";
+    this.certificateChainAlias="tomcat";
+    this.keyAlias="tomcat";
+    this.timestampServerUrl="http://zeitstempel.dfn.de";
+    this.signatureLocation=getHostname();
+    this.signatureContact = "admin@" + signatureLocation;
+    this.signatureReason = "Evidence of document integrity";
+  }
+
+  /**
+   * @return hostname of the current server
+   */
+  private String getHostname() {
+    try {
+      final InetAddress addr = InetAddress.getLocalHost();
+      return addr.getHostName();
+    } catch (final UnknownHostException e) {
+      return "localhost";
     }
+
   }
 
-  /**
-   * Default settings. Assumes an existing default keystore file at the user's home with no password and an alias of
-   * 'key' as well as a certificate chain alias 'certificate'.
-   */
-  public static SignatureInfos getDefaultSettings() {
-    final Properties prop = new Properties();
-    prop.setProperty(Attr.keystoreFile.name(), System.getProperty("user.home") + File.separatorChar + ".keystore");
-    prop.setProperty(Attr.keystorePassword.name(), "tomcat");
-    prop.setProperty(Attr.privateKeyPassword.name(), "tomcat");
-    prop.setProperty(Attr.keyAlias.name(), "tomcat");
-    prop.setProperty(Attr.certificateChainAlias.name(), "tomcat");
-    prop.setProperty(Attr.timestampServerUrl.name(), "http://zeitstempel.dfn.de");
-    prop.setProperty(Attr.signatureReason.name(), "unknown reason");
-    prop.setProperty(Attr.signatureLocation.name(), "unknown place");
-    prop.setProperty(Attr.signatureContact.name(), "unknown@unknown.org");
-    return new SignatureInfos(prop);
-  }
-
-  /**
-   * Lookup property.
-   *
-   * @param key
-   * @return
-   */
-  private String get(final Attr key) {
-    return prop.getProperty(key.name());
-  }
 
   /**
    * @return
@@ -137,7 +230,7 @@ public class SignatureInfos {
   public PrivateKey getPrivateKey() throws KeyStoreException {
     try {
 
-      return (PrivateKey) getKeystore().getKey(get(Attr.keyAlias), get(Attr.privateKeyPassword).toCharArray());
+      return (PrivateKey) getKeystore().getKey(getKeyAlias(), getPrivateKeyPassword().toCharArray());
 
     } catch (final NoSuchAlgorithmException e) {
       throw new KeyStoreException(e);
@@ -151,7 +244,7 @@ public class SignatureInfos {
    * @throws KeyStoreException
    */
   public X509Certificate[] getCertificateChain() throws KeyStoreException {
-    final Certificate[] chain = getKeystore().getCertificateChain(get(Attr.certificateChainAlias));
+    final Certificate[] chain = getKeystore().getCertificateChain(getCertificateChainAlias());
 
     final X509Certificate[] xchain = new X509Certificate[chain.length];
     System.arraycopy(chain, 0, xchain, 0, chain.length);
@@ -162,7 +255,7 @@ public class SignatureInfos {
   private KeyStore getKeystore() throws KeyStoreException {
     try {
       final KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
-      ks.load(new FileInputStream(get(Attr.keystoreFile)), get(Attr.keystorePassword).toCharArray());
+      ks.load(new FileInputStream(getKeystoreFile()), getKeystorePassword().toCharArray());
       return ks;
     } catch (final NoSuchAlgorithmException e) {
       throw new KeyStoreException(e);
@@ -175,31 +268,5 @@ public class SignatureInfos {
     }
   }
 
-  /**
-   * @param file
-   * @throws IOException
-   */
-  public void save(final File file) throws IOException {
-    prop.store(new FileOutputStream(file), "");
 
-  }
-
-  /**
-   * @return
-   */
-  public String getTimeStampServerUrl() {
-    return get(Attr.timestampServerUrl);
-  }
-
-  public String getSignatureContact() {
-    return get(Attr.signatureContact);
-  }
-
-  public String getSignatureLocation() {
-    return get(Attr.signatureLocation);
-  }
-
-  public String getSignatureReason() {
-    return get(Attr.signatureReason);
-  }
 }

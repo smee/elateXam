@@ -684,7 +684,6 @@
                     <directory>src/main/resources</directory>
                     <excludes>
                       <exclude>authentication.properties</exclude>
-                      <exclude>signature.properties</exclude>
                     </excludes>                    
                   </resource>
                 </resources>
@@ -712,17 +711,5 @@
     <encoding>UTF-8</encoding>
     <springbean.additionalprovider>false</springbean.additionalprovider>
     <initialtitle></initialtitle>
-  
-    <!-- default settings for signing pdfs, change them during the build
-    by specifying values via '-Dsignature...=newValue' -->
-    <signature.certificate.alias>tomcat</signature.certificate.alias>
-    <signature.key.alias>tomcat</signature.key.alias>
-    <signature.timestampurl>http://zeitstempel.dfn.de</signature.timestampurl>
-    <signature.contact>nobody@nowhere.org</signature.contact>
-    <signature.keystore.password></signature.keystore.password>
-    <signature.key.password></signature.key.password>
-    <signature.location>Leipzig</signature.location>
-    <signature.reason>Just to make sure...</signature.reason>
-    <signature.keystore.file>${user.home}/.keystore</signature.keystore.file>
   </properties>
 </project>

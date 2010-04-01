@@ -13,6 +13,21 @@
 				<xs:element name="flag" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
 				<xs:element name="radiusHost" type="xs:string" minOccurs="0"/>
 				<xs:element name="radiusSharedSecret" type="xs:string" minOccurs="0"/>
+                <xs:element name="pdfSignatureSettings" minOccurs="0">
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="keystoreFile" type="xs:string"/>
+                      <xs:element name="keystorePassword" type="xs:string"/>
+                      <xs:element name="keyAlias" type="xs:string"/>
+                      <xs:element name="privateKeyPassword" type="xs:string"/>
+                      <xs:element name="certificateChainAlias" type="xs:string"/>
+                      <xs:element name="timestampServerUrl" type="xs:string"/>
+                      <xs:element name="signatureReason" type="xs:string"/>
+                      <xs:element name="signatureLocation" type="xs:string"/>
+                      <xs:element name="signatureContact" type="xs:string"/>
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>

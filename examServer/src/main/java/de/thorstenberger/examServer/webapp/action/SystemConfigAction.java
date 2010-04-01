@@ -54,6 +54,8 @@ public class SystemConfigAction extends BaseAction {
 		scf.setAskForStudentDetails( configManager.isSetFlag("askForSemester") );
     scf.setRadiusHost(configManager.getRadiusHost());
     scf.setRadiusSharedSecret(configManager.getRadiusSharedSecret());
+    scf.setSignatureSettings( configManager.getPDFSignatureInfos() );
+    
 		return mapping.findForward( "systemConfig" );
 	}
 

@@ -21,6 +21,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.examServer.service;
 
+import de.thorstenberger.examServer.pdf.signature.SignatureInfos;
+
 
 /**
  * @author Thorsten Berger
@@ -72,4 +74,12 @@ public interface ConfigManager {
     String getRadiusSharedSecret();
     void setRadiusSharedSecret(String secret);
 
+  /**
+   * Settings for signing and timestamping PDF files.
+   * 
+   * @return
+   */
+  SignatureInfos getPDFSignatureInfos();
+
+  void setPDFSignatureInfos(SignatureInfos si);
 }

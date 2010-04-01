@@ -9,7 +9,7 @@
 </head>
 
 <div class="separator">
-Hier konfigurieren Sie allgemeine Einstellungen des Pr�fungsservers.
+Hier konfigurieren Sie allgemeine Einstellungen des Pr&uuml;fungsservers.
 </div>
 
 <br/><br/>

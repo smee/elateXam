@@ -3,7 +3,11 @@
   org.springframework.context.ApplicationContext ctx = 
     org.springframework.web.context.support.WebApplicationContextUtils.getRequiredWebApplicationContext( application );
   de.thorstenberger.examServer.service.ConfigManager configManager = (de.thorstenberger.examServer.service.ConfigManager) ctx.getBean( "configManager" );
-  pageContext.setAttribute( "usernamePostfix", "@"+configManager.getHTTPAuthMail() );
+  String mailSuffix=configManager.getHTTPAuthMail();
+  if(mailSuffix!=null && mailSuffix.length()>0 && mailSuffix.charAt(0)!='@'){
+    mailSuffix="@"+mailSuffix;
+  }
+  pageContext.setAttribute( "usernamePostfix", mailSuffix);
 %>
 <form method="post" id="loginForm" action="<c:url value="/j_security_check"/>"
     onsubmit="saveUsername(this);return validateForm(this)">

@@ -47,6 +47,7 @@ public class LoginConfigAction extends BaseAction {
 		ConfigManager configManager = (ConfigManager)getBean( "configManager" );
 		
 		((LoginConfigForm)form).setStudentsLoginEnabled( configManager.isStudentsLoginEnabled() );
+		((LoginConfigForm)form).setAskForStudentDetails( configManager.isSetFlag("askForSemester") );
 		
 		return mapping.findForward( "loginConfig" );
 		

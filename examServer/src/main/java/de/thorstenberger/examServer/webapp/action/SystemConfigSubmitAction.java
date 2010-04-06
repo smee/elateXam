@@ -72,8 +72,6 @@ public class SystemConfigSubmitAction extends BaseAction {
 		configManager.setRadiusSharedSecret( scf.getRadiusSharedSecret() );
 		configManager.setPDFSignatureInfos( scf.getSignatureSettings() );
 
-		configManager.toggleFlag( "askForSemester", scf.isAskForStudentDetails() );
-
     if ("Signatur testen".equals(scf.getTodo())) {
       return createSignedPDF(mapping, request, response, configManager);
     }

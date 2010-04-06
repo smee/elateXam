@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.examServer.webapp.action;
 
@@ -43,23 +43,30 @@ public class LoginConfigSubmitAction extends BaseAction {
 	 * @see de.thorstenberger.examServer.webapp.action.BaseAction#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
-	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
-		ActionMessages messages = new ActionMessages();
-		
-		
-		ConfigManager configManager = (ConfigManager)getBean( "configManager" );
-		LoginConfigForm loginConfigForm = (LoginConfigForm)form;
-		
+	public ActionForward execute(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+
+		final ActionMessages messages = new ActionMessages();
+
+
+		final ConfigManager configManager = (ConfigManager)getBean( "configManager" );
+		final LoginConfigForm loginConfigForm = (LoginConfigForm)form;
+
 		configManager.setStudentsLoginEnabled( loginConfigForm.isStudentsLoginEnabled() );
-		
-		if( loginConfigForm.isStudentsLoginEnabled() )
-			messages.add(ActionMessages.GLOBAL_MESSAGE,	new ActionMessage( "loginConfig.setEnabled" ) );
-		else
-			messages.add(ActionMessages.GLOBAL_MESSAGE,	new ActionMessage( "loginConfig.setDisabled" ) );
-		
-		saveMessages( request, messages );			
-		
+		configManager.toggleFlag("askForSemester", loginConfigForm.isAskForStudentDetails() );
+
+    if (loginConfigForm.isAskForStudentDetails()) {
+      messages.add(ActionMessages.GLOBAL_MESSAGE,	new ActionMessage( "loginConfig.personalDetailsEnabled" ) );
+    } else {
+      messages.add(ActionMessages.GLOBAL_MESSAGE,	new ActionMessage( "loginConfig.personalDetailsDisabled" ) );
+    }
+		if( loginConfigForm.isStudentsLoginEnabled() ) {
+      messages.add(ActionMessages.GLOBAL_MESSAGE,	new ActionMessage( "loginConfig.setEnabled" ) );
+    } else {
+      messages.add(ActionMessages.GLOBAL_MESSAGE,	new ActionMessage( "loginConfig.setDisabled" ) );
+    }
+
+		saveMessages( request, messages );
+
 		return mapping.findForward("success");
 	}
 

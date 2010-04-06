@@ -15,7 +15,8 @@ Hier schalten Sie den Zugang zum Prüfungsserver für Studenten frei. Bitte verges
 <br/><br/>
 
 <html:form action="saveLoginConfig">
-<html:checkbox property="studentsLoginEnabled"/>&nbsp;&nbsp;<b>Studenten-Login aktiv</b>
+<html:checkbox property="studentsLoginEnabled"/>&nbsp;&nbsp;<b>Studenten-Login aktiv</b><br/>
+<html:checkbox property="askForStudentDetails"/>&nbsp;&nbsp;<b>Fragt nach Namen, Matrikelnummer und Fachsemester, falls diese Daten unvollst&auml;ndig sind</b>
 <br/><br/>
 <html:submit>Speichern</html:submit>
 </html:form>

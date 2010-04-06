@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.examServer.webapp.form;
 
@@ -29,7 +29,7 @@ package de.thorstenberger.examServer.webapp.form;
 public class LoginConfigForm extends BaseForm {
 
 	private boolean studentsLoginEnabled;
-
+  private boolean askForStudentDetails;
 	/**
 	 * @return Returns the studentsLoginEnabled.
 	 */
@@ -40,10 +40,24 @@ public class LoginConfigForm extends BaseForm {
 	/**
 	 * @param studentsLoginEnabled The studentsLoginEnabled to set.
 	 */
-	public void setStudentsLoginEnabled(boolean studentsLoginEnabled) {
+	public void setStudentsLoginEnabled(final boolean studentsLoginEnabled) {
 		this.studentsLoginEnabled = studentsLoginEnabled;
 	}
 
-	
-	
+  /**
+   * @param askForStudentDetails
+   *          the askForStudentDetails to set
+   */
+  public void setAskForStudentDetails(final boolean askForStudentDetails) {
+    this.askForStudentDetails = askForStudentDetails;
+  }
+
+  /**
+   * @return the askForStudentDetails
+   */
+  public boolean isAskForStudentDetails() {
+    return askForStudentDetails;
+  }
+
+
 }

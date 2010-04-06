@@ -41,17 +41,16 @@ public class SystemConfigAction extends BaseAction {
 	 * @see de.thorstenberger.examServer.webapp.action.BaseAction#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
-	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	public ActionForward execute(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request, final HttpServletResponse response) throws Exception {
 
-		SystemConfigForm scf = (SystemConfigForm)form;
-		ConfigManager configManager = (ConfigManager)getBean( "configManager" );
+		final SystemConfigForm scf = (SystemConfigForm)form;
+		final ConfigManager configManager = (ConfigManager)getBean( "configManager" );
 
 		scf.setLoadJVMOnStartup( configManager.isLoadJVMOnStartup() );
 		scf.setRemoteUserManagerURL( configManager.getRemoteUserManagerURL() );
 		scf.setTitle( configManager.getTitle() );
 		scf.setHttpAuthURL( configManager.getHTTPAuthURL() );
 		scf.setHttpAuthMail( configManager.getHTTPAuthMail() );
-		scf.setAskForStudentDetails( configManager.isSetFlag("askForSemester") );
     scf.setRadiusHost(configManager.getRadiusHost());
     scf.setRadiusSharedSecret(configManager.getRadiusSharedSecret());
     scf.setSignatureSettings( configManager.getPDFSignatureInfos() );

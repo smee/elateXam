@@ -37,9 +37,6 @@ Hier konfigurieren Sie allgemeine Einstellungen des Pr&uuml;fungsservers.
 <tr>
 <td>Radius-Shared-Secret: </td><td><html:password property="radiusSharedSecret" size="60"/></td>
 </tr>
-<tr>
-<td>Studentendaten abfragen </td><td><html:checkbox property="askForStudentDetails"/>&nbsp;&nbsp;Fragt nach Namen, Matrikelnummer und Fachsemester, falls diese Daten unvollst&auml;ndig sind</td>
-</tr>
 </table>
 <h3>PDF-Einstellungen</h3>
 <div class="separator">

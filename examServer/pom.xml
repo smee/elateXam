@@ -654,46 +654,6 @@
       </build>
     </profile>
     <profile>
-      <!-- create virtual classpath to enable usage of javarebel for local development. See http://www.zeroturnaround.com for details -->
-      <id>javarebel</id>
-      <pluginRepositories>
-        <pluginRepository>
-          <id>zt-repo</id>
-          <name>Zero turnaround repo</name>
-          <url>dav:http://repos.zeroturnaround.com/maven2</url>
-        </pluginRepository>
-      </pluginRepositories>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.zeroturnaround</groupId>
-            <artifactId>javarebel-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>generate-rebel-xml</id>
-                <phase>process-resources</phase>
-                <goals>
-                  <goal>generate</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <classpath>
-                <resources>
-                  <resource>
-                    <directory>src/main/resources</directory>
-                    <excludes>
-                      <exclude>authentication.properties</exclude>
-                    </excludes>                    
-                  </resource>
-                </resources>
-              </classpath>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
       <id>preview-mode</id>
       <!-- configure for exams preview.
            every user/password combination will be allowed. -->

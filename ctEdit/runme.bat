@@ -1,1 +1,0 @@
-javaw.exe -jar target/ctedit-1.0-app.jar

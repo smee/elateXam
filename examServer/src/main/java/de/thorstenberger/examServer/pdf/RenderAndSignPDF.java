@@ -29,12 +29,14 @@ import java.security.SignatureException;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 
 import com.lowagie.text.DocumentException;
 
 import de.thorstenberger.examServer.pdf.signature.SignPdf;
 import de.thorstenberger.examServer.pdf.signature.SignatureInfos;
+import de.thorstenberger.examServer.service.ConfigManager;
 import de.thorstenberger.examServer.service.ExamServerManager;
 import de.thorstenberger.examServer.service.UserManager;
 import de.thorstenberger.taskmodel.TaskApiException;
@@ -96,7 +98,6 @@ public class RenderAndSignPDF implements Runnable {
       final File tempFile = File.createTempFile("pdf", "pdf");
       tempFile.deleteOnExit();
       final FileOutputStream fos = new FileOutputStream(tempFile);
-
       // create pdf
       final PDFExporter pdfExporter = new PDFExporter(um, tm);
       pdfExporter.renderPdf(tasklet, filename, fos);
@@ -132,7 +133,7 @@ public class RenderAndSignPDF implements Runnable {
    * @return
    */
   private boolean signAndTimestamp(final File pdfIn, final File pdfOut) {
-    final SignatureInfos infos = getBean("signatureInfos");
+    final SignatureInfos infos = ((ConfigManager) getBean("configManager")).getPDFSignatureInfos();
     FileInputStream instream = null;
     FileOutputStream outstream = null;
     try {
@@ -172,7 +173,12 @@ public class RenderAndSignPDF implements Runnable {
    * @return
    */
   <T> T getBean(final String name) {
+    try {
     return (T) applicationContext.getBean(name);
+    } catch (final BeansException be) {
+      log.error(String.format("Could not fetch bean named '%s'!", name), be);
+      return null;
+    }
   }
 
 }

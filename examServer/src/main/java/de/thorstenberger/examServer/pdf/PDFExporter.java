@@ -20,7 +20,9 @@ package de.thorstenberger.examServer.pdf;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
+import java.net.URLEncoder;
 
 import javax.management.AttributeNotFoundException;
 import javax.management.InstanceNotFoundException;
@@ -95,6 +97,8 @@ public class PDFExporter {
   }
 
   private void init(final String url, final String sessionId) {
+    log.trace("url for rendering pdfs: " + url);
+
     httpclient = new HttpClient();
     getPdfMethod = new GetMethod(url);
     // reuse our current session to make sure the view is able to receive our taskdef
@@ -136,7 +140,8 @@ public class PDFExporter {
     } catch (final ReflectionException e) {
       log.warn("Could not access JMX mbeans.", e);
     }
-    return null;
+    log.warn("No mbeans of type '*:type=Connector,*' configured, using default url (assuming non-ssl http connector on port 8080).");
+    return "http://localhost:8080";
   }
 
   /**
@@ -155,9 +160,10 @@ public class PDFExporter {
    * @param filename
    * @param ostream
    */
-  public void renderPdf(final Tasklet tasklet, final String filename, final OutputStream ostream) {
+  public boolean renderPdf(final Tasklet tasklet, final String filename, final OutputStream ostream) {
     final long taskId = tasklet.getTaskId();
     final String userId = tasklet.getUserId();
+    log.trace(String.format("rendering pdf for user='%s' and taskid='%d'", userId, taskId));
 
     // set delegate object for taskmodel-core-view
     final User user = usermanager.getUserByUsername(userId);
@@ -172,14 +178,19 @@ public class PDFExporter {
     if (mockSession) {
       queryString += "&mockSessionId=" + sessionId;
     }
+    queryString = encode(queryString);
+    log.trace("querystring= " + queryString);
 
     getPdfMethod.setQueryString(queryString);
     try {
       final int responseCode = httpclient.executeMethod(getPdfMethod);
       if (responseCode < 400) {
         ostream.write(getPdfMethod.getResponseBody());
+        return true;
+      } else {
+        log.warn("Could not render pdf, got http response code " + responseCode);
+        return false;
       }
-      getPdfMethod.releaseConnection();
     } catch (final HttpException e) {
       log.error("Could not create pdf.", e);
       e.printStackTrace();
@@ -188,6 +199,24 @@ public class PDFExporter {
       e.printStackTrace();
     } finally {
       TaskModelViewDelegate.removeSession(sessionId);
+      getPdfMethod.releaseConnection();
+    }
+    return false;
+  }
+
+  /**
+   * Encode http query string using UTF8 encoding. See http://www.w3.org/TR/html40 for details.
+   * 
+   * @param queryString
+   * @return
+   */
+  private String encode(final String queryString) {
+    try {
+      return URLEncoder.encode(queryString, "UTF8");
+    } catch (final UnsupportedEncodingException e) {
+      log.warn("Could not encode http query string '" + queryString + "' with UTF8 encoding. This error should never happen.");
+      // return unencoded query
+      return queryString;
     }
   }
 }

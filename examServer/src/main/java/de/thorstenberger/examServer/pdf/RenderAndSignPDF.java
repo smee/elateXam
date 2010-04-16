@@ -85,7 +85,6 @@ public class RenderAndSignPDF implements Runnable {
     final UserManager um = getBean("userManager");
     final TaskManager tm = getBean("TaskManager");
 
-
     try {
       final Tasklet tasklet = tm.getTaskletContainer().getTasklet(taskId, userId);
 
@@ -98,21 +97,25 @@ public class RenderAndSignPDF implements Runnable {
       final File tempFile = File.createTempFile("pdf", "pdf");
       tempFile.deleteOnExit();
       final FileOutputStream fos = new FileOutputStream(tempFile);
-      // create pdf
+      // create pdf into temporary file
       final PDFExporter pdfExporter = new PDFExporter(um, tm);
-      pdfExporter.renderPdf(tasklet, filename, fos);
+      final boolean success = pdfExporter.renderPdf(tasklet, filename, fos);
       fos.close();
-      // create unique filename, prevent overwriting existing files
-      File destFile = new File(directory, filename);
-      int counter = 0;
-      while (destFile.exists()) {
-        destFile = new File(directory, String.format("version-%d-%s", counter, filename));
-        counter++;
-      }
-      log.info("Using filename " + destFile.getName());
-      if (!signAndTimestamp(tempFile, destFile)) {
-        log.warn("An error occured on signing/timestamping the pdf, using unsigned pdf instead.");
-        FileUtils.copyFile(tempFile, destFile);
+      if (!success) {
+        log.warn("Could not render pdf, check the logfile for errors!");
+      } else {
+        // create unique filename, prevent overwriting existing files
+        File destFile = new File(directory, filename);
+        int counter = 0;
+        while (destFile.exists()) {
+          destFile = new File(directory, String.format("version-%d-%s", counter, filename));
+          counter++;
+        }
+        log.info("Using filename " + destFile.getName());
+        if (!signAndTimestamp(tempFile, destFile)) {
+          log.warn("An error occured on signing/timestamping the pdf, using unsigned pdf instead.");
+          FileUtils.copyFile(tempFile, destFile);
+        }
       }
       // cleanup
       tempFile.delete();
@@ -152,15 +155,15 @@ public class RenderAndSignPDF implements Runnable {
       log.error("Error on file access.", e);
     } catch (final DocumentException e) {
       log.error("Could not read pdf.", e);
-    }finally{
+    } finally {
 
       try {
-      if(instream!=null) {
+        if (instream != null) {
           instream.close();
-      }
-      if(outstream!=null) {
-        outstream.close();
-      }
+        }
+        if (outstream != null) {
+          outstream.close();
+        }
       } catch (final IOException e) {
         log.warn("Could not close filestreams to pdf files.", e);
       }
@@ -174,7 +177,7 @@ public class RenderAndSignPDF implements Runnable {
    */
   <T> T getBean(final String name) {
     try {
-    return (T) applicationContext.getBean(name);
+      return (T) applicationContext.getBean(name);
     } catch (final BeansException be) {
       log.error(String.format("Could not fetch bean named '%s'!", name), be);
       return null;

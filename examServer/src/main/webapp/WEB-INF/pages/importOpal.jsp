@@ -17,10 +17,11 @@ Hier k&ouml;nnen Sie Mitglieder einer OPAL-Gruppe ins Pr&uuml;fungssystem import
 <html:form action="/importOpalUsers.do">
 <table border="0">
 <tr>
-<td>OPAL-Benutzername: </td><td><html:text property="userId" size="60"/></td>
+<td>OPAL-Benutzername (Email): </td><td><html:text property="userId" size="60"/></td>
 </tr>
 <tr>
 <td>ID der Gruppe: </td><td><html:text property="groupId" size="60"/></td>
+<td><a href="<c:url value="/images/opal_groupid.png"/>" target="_blank">Screenshot OPAL</a></td>
 </tr>
 </table>
 <br/><br/>
@@ -34,7 +35,7 @@ Hier k&ouml;nnen Sie Mitglieder einer OPAL-Gruppe ins Pr&uuml;fungssystem import
   Importierte Benutzer:
   </h2>
   <display:table name="importedMembers" cellspacing="0" cellpadding="0" requestURI="" 
-      defaultsort="1" id="users" pagesize="25" class="table" export="true">
+      defaultsort="1" id="users" pagesize="25" class="table" export="false">
       <display:column property="memberId" escapeXml="true" sortable="true" titleKey="userForm.username" style="width: 25%"/>
       <display:column property="firstname" escapeXml="true" sortable="true" titleKey="userForm.firstName" style="width: 25%"/>
       <display:column property="lastname" escapeXml="true" sortable="true" titleKey="userForm.lastName" style="width: 34%"/>

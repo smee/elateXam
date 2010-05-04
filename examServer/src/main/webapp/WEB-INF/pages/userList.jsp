@@ -42,3 +42,8 @@
 <script type="text/javascript">
     highlightTableRows("users");
 </script>
+<br/>
+<br/>
+<br/>
+<h2>Benutzer importieren</h2>
+<html:link action="/opalUsers">... aus OPAL</html:link>

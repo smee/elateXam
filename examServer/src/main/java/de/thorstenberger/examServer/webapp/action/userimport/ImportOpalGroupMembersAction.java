@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.acegisecurity.userdetails.UsernameNotFoundException;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -87,7 +88,9 @@ public class ImportOpalGroupMembersAction extends BaseAction {
         user.setUsername(member.getMemberId());
         user.setFirstName(member.getFirstname());
         user.setLastName(member.getLastname());
-
+        // use random password, needs to be changed manually
+        // or not used at all (i.e. use remote authentication)
+        user.setPassword(RandomStringUtils.randomAlphanumeric(10));
         try {
           um.saveUser(user);
         } catch (final UserExistsException e1) {

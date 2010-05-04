@@ -60,7 +60,7 @@ public class ImportOpalGroupMembersAction extends BaseAction {
 
     if (!StringUtils.isEmpty(opalForm.getUserId()) && !StringUtils.isEmpty(opalForm.getGroupId())) {
       final List<Member> members = fetchGroupMembers(opalForm.getUserId(), opalForm.getGroupId());
-      // storeImportedUsers(members);
+      storeImportedUsers(members);
 
       request.setAttribute("importedMembers", members);
     }

@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.examServer.webapp.action.userimport;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +38,7 @@ import de.thorstenberger.examServer.service.UserManager;
 import de.thorstenberger.examServer.webapp.action.BaseAction;
 import de.thorstenberger.examServer.webapp.form.ImportOpalGroupMembersForm;
 import de.thorstenberger.examServer.ws.opal.GroupMembersRequestElement;
+import de.thorstenberger.examServer.ws.opal.GroupMembersWS;
 import de.thorstenberger.examServer.ws.opal.GroupMembersWS_Service;
 import de.thorstenberger.examServer.ws.opal.Member;
 import de.thorstenberger.examServer.ws.opal.MemberList;
@@ -108,13 +110,21 @@ public class ImportOpalGroupMembersAction extends BaseAction {
    * @return
    */
   private List<Member> fetchGroupMembers(final String userId, final String groupId) {
-    final GroupMembersWS_Service groupService = new GroupMembersWS_Service();
-    final GroupMembersRequestElement req = new GroupMembersRequestElement();
-    req.setOwnerId(userId);
-    req.setGroupId(groupId);
+    try {
+      final GroupMembersWS groupService = new GroupMembersWS_Service().getGroupMembersWSSOAP();
 
-    final MemberList groupMembers = groupService.getGroupMembersWSSOAP().getGroupMembers(req);
-    return groupMembers.getMember();
+      final GroupMembersRequestElement req = new GroupMembersRequestElement();
+      req.setOwnerId(userId);
+      req.setGroupId(groupId);
+
+      final MemberList groupMembers = groupService.getGroupMembers(req);
+      return groupMembers.getMember();
+
+    } catch (final RuntimeException e) {
+      log.error(String.format("Could not import opal group members (user: %s, group: %s", userId, groupId), e);
+      // TODO actionmessage to inform user
+      return Collections.emptyList();
+    }
   }
 
 }

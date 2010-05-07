@@ -1,8 +1,0 @@
-INFO main de.thorstenberger.examServer.dao.AbstractTransactionalFileIO - Starting RM at 'C:\DOKUME~1\sdienst\LOKALE~1\Temp\transaction1100344973291838283test' / 'C:\DOKUME~1\sdienst\LOKALE~1\Temp\transaction1100344973291838283test_dirty'
-INFO main de.thorstenberger.examServer.dao.AbstractTransactionalFileIO - Started RM
-INFO main de.thorstenberger.examServer.dao.AbstractTransactionalFileIO - Starting RM at 'C:\DOKUME~1\sdienst\LOKALE~1\Temp\transaction3759102356561466409test' / 'C:\DOKUME~1\sdienst\LOKALE~1\Temp\transaction3759102356561466409test_dirty'
-INFO main de.thorstenberger.examServer.dao.AbstractTransactionalFileIO - Started RM
-INFO main de.thorstenberger.examServer.dao.AbstractTransactionalFileIO - Starting RM at 'C:\DOKUME~1\sdienst\LOKALE~1\Temp\transaction2348848006379804831test' / 'C:\DOKUME~1\sdienst\LOKALE~1\Temp\transaction2348848006379804831test_dirty'
-INFO main de.thorstenberger.examServer.dao.AbstractTransactionalFileIO - Started RM
-INFO main de.thorstenberger.examServer.dao.AbstractTransactionalFileIO - Starting RM at 'C:\DOKUME~1\sdienst\LOKALE~1\Temp\transaction3642437746317655130test' / 'C:\DOKUME~1\sdienst\LOKALE~1\Temp\transaction3642437746317655130test_dirty'
-INFO main de.thorstenberger.examServer.dao.AbstractTransactionalFileIO - Started RM

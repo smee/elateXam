@@ -56,9 +56,9 @@ public class ImportOpalGroupMembersAction extends AbstractImportMembersAction {
 
     if (!StringUtils.isEmpty(opalForm.getUserId()) && !StringUtils.isEmpty(opalForm.getGroupId())) {
       final List<Member> members = fetchGroupMembers(opalForm.getUserId(), opalForm.getGroupId());
-      storeImportedUsers(members);
+      final List<Member> importedMembers = storeImportedUsers(members);
 
-      request.setAttribute("importedMembers", members);
+      request.setAttribute("importedMembers", importedMembers);
     }
 
     return mapping.findForward("success");

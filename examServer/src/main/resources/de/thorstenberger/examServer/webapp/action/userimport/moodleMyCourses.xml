@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<robotPlan>
+  <step>
+    <mode>GET</mode>
+    <url>https://moodle.uni-leipzig.de</url>
+    <element />
+    <param />
+  </step>
+  <step>
+    <mode>GET_Link</mode>
+    <name>Login</name>
+    <element />
+    <param />
+  </step>
+  <step>
+    <mode>POST</mode>
+    <name>formular</name>
+    <element />
+    <param>
+      <type>select</type>
+      <name>gruppe</name>
+      <value>inf</value>
+      <state />
+    </param>
+    <param>
+      <type>input</type>
+      <name>username</name>
+      <value>param:un</value>
+      <state />
+    </param>
+    <param>
+      <type>input</type>
+      <name>password</name>
+      <value>param:pw</value>
+      <state />
+    </param>
+    <param>
+      <type>hidden</type>
+      <name>testcookies</name>
+      <value>1</value>
+      <state />
+    </param>    
+    <button>submitOk</button>
+  </step>
+  <step>
+    <mode>GET_Link</mode>
+    <name>Mein Moodle</name>
+    <element />
+    <param />
+  </step>
+  <step>
+    <mode>EXTRACT_Links</mode>
+    <name>course/view.php</name>
+    <element />
+    <param />
+  </step>
+</robotPlan>

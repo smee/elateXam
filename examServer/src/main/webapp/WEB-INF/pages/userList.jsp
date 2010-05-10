@@ -46,4 +46,5 @@
 <br/>
 <br/>
 <h2>Benutzer importieren</h2>
+<html:link action="/moodleUsers">... aus moodle</html:link><br/>
 <html:link action="/opalUsers">... aus OPAL</html:link>

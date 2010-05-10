@@ -1,6 +1,6 @@
 /*
 
-Copyright (C) 2009 Steffen Dienst
+Copyright (C) 2010 Steffen Dienst
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,18 +24,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.acegisecurity.userdetails.UsernameNotFoundException;
-import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-import de.thorstenberger.examServer.model.User;
-import de.thorstenberger.examServer.service.RoleManager;
-import de.thorstenberger.examServer.service.UserExistsException;
-import de.thorstenberger.examServer.service.UserManager;
-import de.thorstenberger.examServer.webapp.action.BaseAction;
 import de.thorstenberger.examServer.webapp.form.ImportOpalGroupMembersForm;
 import de.thorstenberger.examServer.ws.opal.GroupMembersRequestElement;
 import de.thorstenberger.examServer.ws.opal.GroupMembersWS;
@@ -50,7 +43,7 @@ import de.thorstenberger.examServer.ws.opal.MemberList;
  * @author Steffen Dienst
  *
  */
-public class ImportOpalGroupMembersAction extends BaseAction {
+public class ImportOpalGroupMembersAction extends AbstractImportMembersAction {
 	@Override
 	public ActionForward execute(
 	    final ActionMapping mapping,
@@ -70,37 +63,6 @@ public class ImportOpalGroupMembersAction extends BaseAction {
 
     return mapping.findForward("success");
 	}
-
-  /**
-   * Add imported members as users into our own user management system.
-   *
-   * @param members
-   *          opal members
-   */
-  private void storeImportedUsers(final List<Member> members) {
-    final UserManager um = (UserManager) getBean("userManager");
-    final RoleManager rm = (RoleManager) getBean("roleManager");
-
-    for (final Member member : members) {
-      try {
-        um.getUserByUsername(member.getMemberId());
-      } catch (final UsernameNotFoundException e) {
-        final User user = new User();
-        user.addRole(rm.getRole("student"));
-        user.setUsername(member.getMemberId());
-        user.setFirstName(member.getFirstname());
-        user.setLastName(member.getLastname());
-        // use random password, needs to be changed manually
-        // or not used at all (i.e. use remote authentication)
-        user.setPassword(RandomStringUtils.randomAlphanumeric(10));
-        try {
-          um.saveUser(user);
-        } catch (final UserExistsException e1) {
-          log.error("User exists, this error should never occur!", e1);
-        }
-      }
-    }
-  }
 
   /**
    * Fetch all members of the given group via webservice.

@@ -21,13 +21,14 @@ package de.thorstenberger.examServer.webapp.action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 
-import de.thorstenberger.taskmodel.TaskManager;
 import de.thorstenberger.taskmodel.Tasklet;
 import de.thorstenberger.taskmodel.TaskletContainer;
 import de.thorstenberger.taskmodel.complex.ComplexTasklet;
@@ -38,31 +39,35 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.Try;
  *
  */
 public class IncreaseTimeExtensionAction extends BaseAction {
+  private final static Log log = LogFactory.getLog("TaskLogger");
+
 	@Override
-	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ActionMessages errors = new ActionMessages();
-		
+	public ActionForward execute(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+		final ActionMessages errors = new ActionMessages();
+
 		long taskId;
 		try {
 			taskId = Long.parseLong( request.getParameter("taskId") );
-		} catch (NumberFormatException e) {
+		} catch (final NumberFormatException e) {
 			errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "misc.error", e.getMessage() ) );
 			saveErrors( request, errors );
 			return mapping.findForward( "noSelection" );
 		}
-		String userId = request.getParameter("userId");
-		
-		TaskManager manager = (TaskManager)getBean( "TaskManager" );
-		TaskletContainer container = (TaskletContainer)getBean( "TaskletContainer" );
-		
-		Tasklet tasklet = container.getTasklet(taskId, userId);
+		final String userId = request.getParameter("userId");
+
+		final TaskletContainer container = (TaskletContainer)getBean( "TaskletContainer" );
+
+		final Tasklet tasklet = container.getTasklet(taskId, userId);
 		if(tasklet instanceof ComplexTasklet) {
-			ComplexTasklet ct = (ComplexTasklet) tasklet;
-			Try activeTry = ct.getActiveTry();
+			final ComplexTasklet ct = (ComplexTasklet) tasklet;
+			final Try activeTry = ct.getActiveTry();
 			// increase time by 5 minutes
 			// TODO make configurable
 			activeTry.setTimeExtension(activeTry.getTimeExtension()+5*60*1000);
 			container.storeTasklet(tasklet);
+
+      log.info(String.format("Increased time for student '%s' by 5min.", userId));
+
 		}
 		return mapping.findForward( "success" );
 	}

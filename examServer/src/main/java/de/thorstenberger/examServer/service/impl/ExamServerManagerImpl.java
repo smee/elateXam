@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /**
- * 
+ *
  */
 package de.thorstenberger.examServer.service.impl;
 
@@ -40,7 +40,7 @@ import de.thorstenberger.examServer.service.ExamServerManager;
 
 /**
  * @author Thorsten Berger
- * 
+ *
  */
 public class ExamServerManagerImpl implements ExamServerManager, ApplicationContextAware {
 
@@ -52,7 +52,7 @@ public class ExamServerManagerImpl implements ExamServerManager, ApplicationCont
   private File repositoryFile;
 
   /**
-   * 
+   *
    */
   public ExamServerManagerImpl() {
     super();
@@ -76,7 +76,7 @@ public class ExamServerManagerImpl implements ExamServerManager, ApplicationCont
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see de.thorstenberger.examServer.service.ExamServerManager#getHomeDir()
    */
   public File getHomeDir() {
@@ -92,7 +92,7 @@ public class ExamServerManagerImpl implements ExamServerManager, ApplicationCont
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see de.thorstenberger.examServer.service.ExamServerManager#getSystemDir()
    */
   public File getSystemDir() {
@@ -101,7 +101,7 @@ public class ExamServerManagerImpl implements ExamServerManager, ApplicationCont
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see de.thorstenberger.examServer.service.ExamServerManager#getTaskDefDir()
    */
   public File getTaskDefDir() {
@@ -110,7 +110,7 @@ public class ExamServerManagerImpl implements ExamServerManager, ApplicationCont
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see de.thorstenberger.examServer.service.ExamServerManager#init()
    */
   public void init() {
@@ -163,7 +163,7 @@ public class ExamServerManagerImpl implements ExamServerManager, ApplicationCont
     if (sc != null) {
       File log4j;
       try {
-        log4j = new File(this.getClass().getClassLoader().getResource("log4j.properties").toURI());
+        log4j = new File(this.getClass().getClassLoader().getResource("examserverLog4j.properties").toURI());
         configLogging(log4j);
       } catch (final URISyntaxException e) {
         throw new RuntimeException(e);
@@ -174,7 +174,7 @@ public class ExamServerManagerImpl implements ExamServerManager, ApplicationCont
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @seeorg.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.
    * ApplicationContext)
    */

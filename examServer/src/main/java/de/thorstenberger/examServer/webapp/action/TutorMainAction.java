@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /**
- * 
+ *
  */
 package de.thorstenberger.examServer.webapp.action;
 
@@ -42,13 +42,13 @@ import de.thorstenberger.taskmodel.Tasklet.Status;
 
 /**
  * @author Thorsten Berger
- * 
+ *
  */
 public class TutorMainAction extends BaseAction {
 
     /**
      * Count all tasklets for the given taskdef id, that are solved but not corrected yet.
-     * 
+     *
      * @param id
      * @param tutorname
      * @param taskletContainer
@@ -81,7 +81,7 @@ public class TutorMainAction extends BaseAction {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seeorg.apache.struts.action.Action#execute(org.apache.struts.action.
      * ActionMapping, org.apache.struts.action.ActionForm,
      * javax.servlet.http.HttpServletRequest,
@@ -116,6 +116,7 @@ public class TutorMainAction extends BaseAction {
         }
 
         request.setAttribute("TaskDefs", tdvos);
+        request.setAttribute("privileged", request.isUserInRole("admin"));
         // FIXME sorting with displaytag doesn't work...
         return mapping.findForward("success");
     }

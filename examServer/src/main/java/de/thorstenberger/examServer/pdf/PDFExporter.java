@@ -172,13 +172,12 @@ public class PDFExporter {
 
     TaskModelViewDelegate.storeDelegateObject(sessionId, taskId, delegateObject);
     // set request parameters
-    String queryString = String.format("id=%d&exportToPdf=%s", taskId, filename);
+    String queryString = String.format("id=%s&exportToPdf=%s", encode(Long.toString(taskId)), encode(filename));
     // if we do not want to reference the delegate object via our real sessionId, we should tell
     // the SaveAction.java of taskmodel-core-view so
     if (mockSession) {
       queryString += "&mockSessionId=" + sessionId;
     }
-    queryString = encode(queryString);
     log.trace("querystring= " + queryString);
 
     getPdfMethod.setQueryString(queryString);
@@ -206,7 +205,7 @@ public class PDFExporter {
 
   /**
    * Encode http query string using UTF8 encoding. See http://www.w3.org/TR/html40 for details.
-   * 
+   *
    * @param queryString
    * @return
    */

@@ -41,7 +41,14 @@
             <artifactId>taskmodel-api</artifactId>
             <version>1.0.0-SNAPSHOT</version>
 	   <scope>provided</scope> 
-        </dependency>    	
+        </dependency>
+      <dependency>
+        <groupId>de.elatexam</groupId>
+        <artifactId>drawtask</artifactId>
+        <version>1.0.2-SNAPSHOT</version>
+        <type>jar</type>
+        <scope>provided</scope>
+      </dependency>
     <!-- Apache commons -->
     <dependency>
       <groupId>commons-logging</groupId>

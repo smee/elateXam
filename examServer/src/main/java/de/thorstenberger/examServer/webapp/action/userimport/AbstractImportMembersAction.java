@@ -41,7 +41,7 @@ public abstract class AbstractImportMembersAction extends BaseAction {
 
   /**
    * Add imported members as users into our own user management system.
-   * 
+   *
    * @param members
    *          opal members
    * @return all successfully imported users
@@ -63,6 +63,11 @@ public abstract class AbstractImportMembersAction extends BaseAction {
         // use random password, needs to be changed manually
         // or not used at all (i.e. use remote authentication)
         user.setPassword(RandomStringUtils.randomAlphanumeric(10));
+        user.setAccountExpired(false);
+        user.setAccountLocked(false);
+        user.setCredentialsExpired(false);
+        user.setEnabled(true);
+
         try {
           um.saveUser(user);
           importedMembers.add(member);

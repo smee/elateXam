@@ -3,6 +3,9 @@ package drawing;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
@@ -11,6 +14,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
@@ -30,7 +34,7 @@ public class CompleteDrawingPanel extends JPanel {
 		private final int BACKGROUND=0;
 		private final int FOREGROUND=1;
 		private final int CORRECTION=2;
-		
+
 			String fg,bg,corr;
 			int crntLayer;
 			private final int w,h;
@@ -40,7 +44,7 @@ public class CompleteDrawingPanel extends JPanel {
 				this.h=h;
 				this.crntLayer=FOREGROUND;
 			}
-			
+
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange()==ItemEvent.SELECTED) {
 					switch (((JComboBox)e.getSource()).getSelectedIndex()) {
@@ -90,7 +94,7 @@ public class CompleteDrawingPanel extends JPanel {
 					break;
 				case CORRECTION:
 					p.setBackgroundImage(Util.combineImages(Util.generateBlankImage(w,h,Color.WHITE),new String[] {val,fg}));
-					break;					
+					break;
 				default:
 					break;
 				}
@@ -105,7 +109,7 @@ public class CompleteDrawingPanel extends JPanel {
 					break;
 				case FOREGROUND:
 					p.addForegroundImage(val);
-					break;	
+					break;
 				default:
 					break;
 				}
@@ -118,31 +122,31 @@ public class CompleteDrawingPanel extends JPanel {
 					break;
 				case CORRECTION:
 					p.addForegroundImage(val);
-					break;	
+					break;
 				default:
 					break;
 				}
 			}
 			public String getBackGroundString() {
-				if (crntLayer==BACKGROUND) 
+				if (crntLayer==BACKGROUND)
 					return p.getCompletePictureBase64();
 				else
 					return bg;
 			}
 			public String getForeGroundString() {
-				if (crntLayer==FOREGROUND) 
+				if (crntLayer==FOREGROUND)
 					return p.getForegroundImageString();
 				else
 					return fg;
 			}
 			public String getCorrectionString() {
-				if (crntLayer==CORRECTION) 
+				if (crntLayer==CORRECTION)
 					return p.getForegroundImageString();
 				else
 					return corr;
 			}
 	}
-	
+
 	private DrawingPanel p;
 	private JButton colorButton;
 	private StrokeWidthSelectionPanel swsp;
@@ -152,7 +156,7 @@ public class CompleteDrawingPanel extends JPanel {
 	private String defaultFg;
 	private boolean resetFlag;
 	private JToolBar toolbar;
-	
+
 	public CompleteDrawingPanel(){
 		this(600,350,true);
 	}
@@ -171,8 +175,8 @@ public class CompleteDrawingPanel extends JPanel {
 		panel.add(p,BorderLayout.WEST);
 		add(panel,BorderLayout.CENTER);
 		toolbar = createJToolbar(tutorMode);
-		add(toolbar,BorderLayout.NORTH);		
-		
+		add(toolbar,BorderLayout.NORTH);
+
 	}
 
 	private JToolBar createJToolbar(boolean tutorMode) {
@@ -230,14 +234,15 @@ public class CompleteDrawingPanel extends JPanel {
 		tb.add(redoAction);
 		p.getActionRecorder().addPropertyChangeListener(new PropertyChangeListener(){
 			public void propertyChange(PropertyChangeEvent evt) {
-				if(evt.getPropertyName().equals("undo"))
-					undoAction.setEnabled(((Boolean)evt.getNewValue()).booleanValue());
-				else
-					if(evt.getPropertyName().equals("redo"))
-						redoAction.setEnabled(((Boolean)evt.getNewValue()).booleanValue());
+				if(evt.getPropertyName().equals("undo")) {
+          undoAction.setEnabled(((Boolean)evt.getNewValue()).booleanValue());
+        } else
+					if(evt.getPropertyName().equals("redo")) {
+            redoAction.setEnabled(((Boolean)evt.getNewValue()).booleanValue());
+          }
 			}
 		});
-		
+
 		swsp=new StrokeWidthSelectionPanel(new int[]{1,2,4,8,12},new int[] {6,10,20,30},p);
 		tb.add(swsp);
 		colorButton = new JButton();
@@ -272,8 +277,8 @@ public class CompleteDrawingPanel extends JPanel {
 
 		// assure resetting the reset flag on any drawing action
 		p.addPropertyChangeListener( "action", new UnresetPropertyChangeListener() );
-		
-		
+
+
 //		tb.add(new MyAction("debug save","prints imagedata to console",null,null){
 //			public void actionPerformed(ActionEvent e) {
 //				String data=p.getForegroundWithUndoString(5);
@@ -317,16 +322,17 @@ public class CompleteDrawingPanel extends JPanel {
 //						ex.printStackTrace();
 //					}
 //				}
-//			
+//
 //			}
 //		});
 
-		if(tutorMode) {		
+		if(tutorMode) {
 			tb.add(new MyAction("Hintergrund laden","Bild aus Datei laden",null,null) {
 				public void actionPerformed(ActionEvent e) {
 					JFileChooser jfc=new JFileChooser(".");
 					jfc.setFileFilter(new FileFilter() {
-						public boolean accept(File f) {
+						@Override
+            public boolean accept(File f) {
 							boolean ret=f.isDirectory();
 							String name=f.getAbsolutePath().toLowerCase();
 							return ret || name.endsWith("jpeg")
@@ -335,10 +341,11 @@ public class CompleteDrawingPanel extends JPanel {
 							|| name.endsWith("png")
 							|| name.endsWith("bmp");
 						}
-						public String getDescription() {
+						@Override
+            public String getDescription() {
 							return "Bilder (*.jpeg, *.png, *.gif, *.bmp)";
 						}
-						
+
 					});
 					int ret=jfc.showOpenDialog(CompleteDrawingPanel.this);
 					if(ret==JFileChooser.APPROVE_OPTION) {
@@ -360,6 +367,28 @@ public class CompleteDrawingPanel extends JPanel {
 			tb.add(cb);
 		}
 		tb.add(Box.createGlue());
+    tb.add(new MyAction("Copy to clipboard", "prints imagedata to console", null, null) {
+      public void actionPerformed(final ActionEvent e) {
+        final StringBuilder sb = new StringBuilder("<paintSubTaskDef id=\"paint_").append(new Random().nextInt());
+        sb.append("\">\n");
+        sb.append("<problem>bla bla</problem>\n");
+        sb.append("  <images>\n");
+        sb.append("    <mutableTemplateImage>\n");
+        sb.append("      ").append(isl.getForeGroundString()).append("\n");
+        sb.append("    </mutableTemplateImage>\n");
+        sb.append("    <immutableBackgroundImage>\n");
+        sb.append("      ").append(isl.getBackGroundString()).append("\n");
+        sb.append("    </immutableBackgroundImage>\n");
+        sb.append("    <correctionTemplateImage>\n");
+        sb.append("      ").append(isl.getCorrectionString()).append("\n");
+        sb.append("    </correctionTemplateImage>\n");
+        sb.append("  </images>\n");
+        sb.append("</paintSubTaskDef>\n");
+        final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(new StringSelection(sb.toString()), null);
+        JOptionPane.showMessageDialog(null, "Now paste clipboard contents into complex taskdef.");
+      }
+    });
 		return tb;
 	}
 	private void setButtonColor(final JButton colorButton, Color col) {
@@ -390,7 +419,7 @@ public class CompleteDrawingPanel extends JPanel {
 	public String getForegroundImage() {
 		return isl.getForeGroundString();
 	}
-	
+
 	public String getCorrectionImage() {
 		return isl.getCorrectionString();
 	}
@@ -400,7 +429,8 @@ public class CompleteDrawingPanel extends JPanel {
 	public String getForegroundPictureWithUndoData(int numUndoSteps) {
 		return p.getForegroundWithUndoString(numUndoSteps);
 	}
-	public synchronized void addFocusListener(FocusListener l) {
+	@Override
+  public synchronized void addFocusListener(FocusListener l) {
 		super.addFocusListener(l);
 		p.addFocusListener(l);
 	}
@@ -411,7 +441,7 @@ public class CompleteDrawingPanel extends JPanel {
 	public boolean isResetted() {
 		return resetFlag;
 	}
-	public void setForegroundWithUndoData(String undoData) {		
+	public void setForegroundWithUndoData(String undoData) {
 		p.setForegroundWithUndoData(undoData);
 	}
 
@@ -420,7 +450,7 @@ public class CompleteDrawingPanel extends JPanel {
 	}
 
 	public void setHasChanged(boolean b) {
-		p.setHasChanged(b);		
+		p.setHasChanged(b);
 	}
 	private final class UnresetPropertyChangeListener implements PropertyChangeListener{
 
@@ -430,7 +460,7 @@ public class CompleteDrawingPanel extends JPanel {
 				resetFlag = false;
 			}
 		}
-	
+
 	}
 	public void setResetted(boolean wasResetted) {
 		resetFlag=wasResetted;

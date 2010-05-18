@@ -326,69 +326,71 @@ public class CompleteDrawingPanel extends JPanel {
 //			}
 //		});
 
-		if(tutorMode) {
-			tb.add(new MyAction("Hintergrund laden","Bild aus Datei laden",null,null) {
-				public void actionPerformed(ActionEvent e) {
-					JFileChooser jfc=new JFileChooser(".");
-					jfc.setFileFilter(new FileFilter() {
-						@Override
+    if (tutorMode) {
+      tb.add(new MyAction("Hintergrund laden", "Bild aus Datei laden", null, null) {
+        public void actionPerformed(ActionEvent e) {
+          JFileChooser jfc = new JFileChooser(".");
+          jfc.setFileFilter(new FileFilter() {
+            @Override
             public boolean accept(File f) {
-							boolean ret=f.isDirectory();
-							String name=f.getAbsolutePath().toLowerCase();
-							return ret || name.endsWith("jpeg")
-							|| name.endsWith("jpg")
-							|| name.endsWith("gif")
-							|| name.endsWith("png")
-							|| name.endsWith("bmp");
-						}
-						@Override
-            public String getDescription() {
-							return "Bilder (*.jpeg, *.png, *.gif, *.bmp)";
-						}
+              boolean ret = f.isDirectory();
+              String name = f.getAbsolutePath().toLowerCase();
+              return ret || name.endsWith("jpeg")
+                  || name.endsWith("jpg")
+                  || name.endsWith("gif")
+                  || name.endsWith("png")
+                  || name.endsWith("bmp");
+            }
 
-					});
-					int ret=jfc.showOpenDialog(CompleteDrawingPanel.this);
-					if(ret==JFileChooser.APPROVE_OPTION) {
-						File file=jfc.getSelectedFile();
-						Image img;
-						try {
-							img = ImageUtil.getScaledInstance(ImageIO.read(file),w,h);
-							isl.setBackGroundImageString(Util.getBase64StringFromImage(img));
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						}
-					}
-				}
-			});
-			final JComboBox cb=new JComboBox(new Object[] {"Hintergrundbild","Vordergrundbild","Lösungsschablone"});
-			cb.addItemListener(isl);
-			cb.setSelectedIndex(1);
-			cb.setSelectedIndex(0);
-			tb.add(cb);
-		}
-		tb.add(Box.createGlue());
-    tb.add(new MyAction("Copy to clipboard", "prints imagedata to console", null, null) {
-      public void actionPerformed(final ActionEvent e) {
-        final StringBuilder sb = new StringBuilder("<paintSubTaskDef id=\"paint_").append(new Random().nextInt());
-        sb.append("\">\n");
-        sb.append("<problem>bla bla</problem>\n");
-        sb.append("  <images>\n");
-        sb.append("    <mutableTemplateImage>\n");
-        sb.append("      ").append(isl.getForeGroundString()).append("\n");
-        sb.append("    </mutableTemplateImage>\n");
-        sb.append("    <immutableBackgroundImage>\n");
-        sb.append("      ").append(isl.getBackGroundString()).append("\n");
-        sb.append("    </immutableBackgroundImage>\n");
-        sb.append("    <correctionTemplateImage>\n");
-        sb.append("      ").append(isl.getCorrectionString()).append("\n");
-        sb.append("    </correctionTemplateImage>\n");
-        sb.append("  </images>\n");
-        sb.append("</paintSubTaskDef>\n");
-        final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        clipboard.setContents(new StringSelection(sb.toString()), null);
-        JOptionPane.showMessageDialog(null, "Now paste clipboard contents into complex taskdef.");
-      }
-    });
+            @Override
+            public String getDescription() {
+              return "Bilder (*.jpeg, *.png, *.gif, *.bmp)";
+            }
+
+          });
+          int ret = jfc.showOpenDialog(CompleteDrawingPanel.this);
+          if (ret == JFileChooser.APPROVE_OPTION) {
+            File file = jfc.getSelectedFile();
+            Image img;
+            try {
+              img = ImageUtil.getScaledInstance(ImageIO.read(file), w, h);
+              isl.setBackGroundImageString(Util.getBase64StringFromImage(img));
+            } catch (IOException e1) {
+              e1.printStackTrace();
+            }
+          }
+        }
+      });
+      final JComboBox cb = new JComboBox(new Object[] { "Hintergrundbild", "Vordergrundbild", "Lösungsschablone" });
+      cb.addItemListener(isl);
+      cb.setSelectedIndex(1);
+      cb.setSelectedIndex(0);
+      tb.add(cb);
+
+      tb.add(Box.createGlue());
+      tb.add(new MyAction("Copy to clipboard", "prints imagedata to console", null, null) {
+        public void actionPerformed(final ActionEvent e) {
+          final StringBuilder sb = new StringBuilder("<paintSubTaskDef id=\"paint_").append(new Random().nextInt());
+          sb.append("\">\n");
+          sb.append("<problem>bla bla</problem>\n");
+          sb.append("  <images>\n");
+          sb.append("    <mutableTemplateImage>\n");
+          sb.append("      ").append(isl.getForeGroundString()).append("\n");
+          sb.append("    </mutableTemplateImage>\n");
+          sb.append("    <immutableBackgroundImage>\n");
+          sb.append("      ").append(isl.getBackGroundString()).append("\n");
+          sb.append("    </immutableBackgroundImage>\n");
+          sb.append("    <correctionTemplateImage>\n");
+          sb.append("      ").append(isl.getCorrectionString()).append("\n");
+          sb.append("    </correctionTemplateImage>\n");
+          sb.append("  </images>\n");
+          sb.append("</paintSubTaskDef>\n");
+          final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+          clipboard.setContents(new StringSelection(sb.toString()), null);
+          JOptionPane.showMessageDialog(null, "Now paste clipboard contents into complex taskdef.");
+        }
+      });
+    }
 		return tb;
 	}
 	private void setButtonColor(final JButton colorButton, Color col) {

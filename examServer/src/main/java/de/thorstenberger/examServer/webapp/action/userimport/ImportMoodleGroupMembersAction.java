@@ -21,6 +21,7 @@ package de.thorstenberger.examServer.webapp.action.userimport;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -59,6 +60,8 @@ public class ImportMoodleGroupMembersAction extends AbstractImportMembersAction 
 
         // fetch all courses of this user
         final List<String> courses = fetchCoursesOf(form.getUserId(), form.getPassword());
+        courses.remove("Help");// remove invalid course
+        courses.remove("Hilfe");// remove invalid course
         request.setAttribute("knownCourses", courses);
       } else {
         // fetch all group participants
@@ -83,7 +86,8 @@ public class ImportMoodleGroupMembersAction extends AbstractImportMembersAction 
     final Robot robot = new Robot(new String[]{"un:"+userId,"pw:"+password});
     robot.run(this.getClass().getResourceAsStream("moodleMyCourses.xml"));
     final String[] textResult = robot.getLastTextResult().split("\n");
-    return Arrays.asList(textResult);
+    // return mutable list
+    return new ArrayList<String>(Arrays.asList(textResult));
   }
 
 

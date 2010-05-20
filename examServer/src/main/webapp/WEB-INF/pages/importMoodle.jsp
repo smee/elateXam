@@ -13,29 +13,45 @@ Hier k&ouml;nnen Sie Mitglieder einer moodle-Gruppe ins Pr&uuml;fungssystem impo
 </div>
 
 <br/><br/>
-    
+
+<script type="text/javascript">
+  function importCourse( courseName ) {
+	  var moodleForm = document.getElementById('moodleGroupMembersImportForm');
+	  moodleForm.courseName.value=courseName;
+	  moodleForm.submit();
+  }
+</script>    
+
 <html:form action="/importMoodleUsers.do">
 <table border="0">
 <tr>
-<td>Moodle-Benutzername (Email): </td><td><html:text property="userId" size="60"/></td>
+  <td>Moodle-Benutzername (Email): </td><td><html:text property="userId" size="60"/></td>
 </tr>
 <tr>
-<td>Passwort: </td><td><html:password property="password" size="60"/></td>
+  <td>Passwort: </td><td><html:password property="password" size="60"/></td>
 </tr>
 <tr>
-<td>Kursname: </td><td><html:text property="courseName" size="60"/></td>
+  <td>Kursname: </td><td><html:text property="courseName" size="60" /></td>
 </tr>
-<tr>
-  <td>Ihre Kurse:</td>
-  <td><html:submit property="searchCourses">Meine Kurse suchen</html:submit></td>
-</tr>
-<tr><td></td>
-  <td>
-    <c:forEach var="course" items="${knownCourses}">
-      <c:out value="${course}"/><br/>
-    </c:forEach>
-  </td>
-</tr>
+
+<c:choose>
+  <c:when test="${empty knownCourses}">
+    <tr>
+      <td>Ihre Kurse:</td>
+      <td><html:submit property="searchCourses">Meine Kurse suchen</html:submit></td>
+    </tr>
+  </c:when>
+  <c:otherwise>
+    <tr>
+      <td>Bitte wählen Sie:</td>
+      <td>
+        <c:forEach var="course" items="${knownCourses}">
+          <a href="javascript:importCourse('<c:out value="${course}"/>');"><c:out value="${course}"/></a><br/>
+        </c:forEach>
+      </td>
+    </tr>
+  </c:otherwise>
+</c:choose>
 </table>
 <br/><br/>
 <html:submit>Importieren</html:submit>

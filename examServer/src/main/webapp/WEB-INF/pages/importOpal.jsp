@@ -3,8 +3,8 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-    <title><fmt:message key="systemConfig.title"/></title>
-    <content tag="heading"><fmt:message key="systemConfig.heading"/></content>
+    <title><fmt:message key="import.opal.title"/></title>
+    <content tag="heading"><fmt:message key="import.opal.heading"/></content>
     <meta name="menu" content="MainMenu"/>
 </head>
 

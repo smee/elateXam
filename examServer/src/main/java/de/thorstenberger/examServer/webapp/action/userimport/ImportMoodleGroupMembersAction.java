@@ -21,6 +21,7 @@ package de.thorstenberger.examServer.webapp.action.userimport;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -101,7 +102,7 @@ public class ImportMoodleGroupMembersAction extends AbstractImportMembersAction 
   private List<Member> fetchGroupMembers(final String userId, final String password, final String courseName) {
     final Robot robot = new Robot(new String[] { "un:" + userId, "pw:" + password, "coursename:" + courseName });
     robot.run(this.getClass().getResourceAsStream("moodleParticipants.xml"));
-    final String participantsCsv = new String(robot.getLastByteResult());
+    final String participantsCsv = new String(robot.getLastByteResult(), Charset.forName("UTF8"));
 
     return loadParticipantsFromCsv(participantsCsv);
   }

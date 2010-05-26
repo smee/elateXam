@@ -17,28 +17,29 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.view;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.thorstenberger.taskmodel.view.tree.AbstractDataNode;
 import de.thorstenberger.taskmodel.view.tree.DataNode;
 
 /**
  * @author Thorsten Berger
  *
  */
-public class CategoryNode implements DataNode {
+public class CategoryNode extends AbstractDataNode {
 
 	private String categoryName;
 	private String id;
 	private List<DataNode> pages;
-	
-	
+
+
 	/**
-	 * 
+	 *
 	 */
 	public CategoryNode( String id, String categoryName ) {
 		this.id = id;
@@ -78,6 +79,6 @@ public class CategoryNode implements DataNode {
 		return id;
 	}
 
-	
-	
+
+
 }

@@ -1,6 +1,6 @@
 /*
 
-Copyright (C) 2005 Thorsten Berger
+Copyright (C) 2010 Steffen Dienst
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,29 +16,23 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-/**
- *
- */
 package de.thorstenberger.taskmodel.view.tree;
 
-import java.util.List;
-
 /**
- * @author Thorsten Berger
+ * Per default all of our folder nodes are open.
+ *
+ * @author Steffen Dienst
  *
  */
-public interface DataNode {
-
-	public String getName();
-
-	public boolean isFolder();
-
-	public List<DataNode> getSubNodes();
-
-  /**
-   * Should this tree node be rendered as open or closed?
-   * 
-   * @return
+public abstract class AbstractDataNode implements DataNode {
+  /*
+   * (non-Javadoc)
+   *
+   * @see de.thorstenberger.taskmodel.view.tree.DataNode#isOpen()
    */
-  boolean isOpen();
+  public boolean isOpen() {
+    return true;
+  }
+
+
 }

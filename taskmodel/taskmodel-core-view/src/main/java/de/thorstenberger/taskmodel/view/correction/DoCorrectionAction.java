@@ -132,7 +132,6 @@ public class DoCorrectionAction extends Action {
                     + mapping.findForward("doCorrection").getPath(), request, response);
             request.setAttribute("rootNode", rn);
             request.setAttribute("nodeFormatter", cnf);
-            request.setAttribute("expanded", true);
 
             final CorrectionInfoVO civo = new CorrectionInfoVO();
             civo.setTaskId(id);

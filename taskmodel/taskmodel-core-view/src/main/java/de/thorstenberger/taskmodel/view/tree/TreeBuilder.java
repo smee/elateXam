@@ -67,34 +67,42 @@ public class TreeBuilder {
 	 * @param parentIndex
 	 */
 	private void buildSubNodes(DataNode curr, int parentIndex, HttpServletRequest request ){
-		List<DataNode> subnodes = curr.getSubNodes();
+    final String iconPath = request.getContextPath() + "/icons/";
+    List<DataNode> subnodes = curr.getSubNodes();
 
-		if( subnodes == null || subnodes.size() == 0 )
-			return;
-		
-		for( DataNode node : subnodes ){
-		
-			if( isVisible( node ) ){
-				
-				if( node.isFolder() ){
-					
-					sb.append("		d.add(" + (++childIndex) + "," + parentIndex + ",'" + formatNodeView( node ) + "','"
-						+ "','','','" + request.getContextPath() + "/icons/" + getFolderIcon( node ) +  "','" + request.getContextPath() + "/icons/folderopen.gif');\n" );
-					
-				}else{
-					
-					sb.append("		d.add(" + (++childIndex) + "," + parentIndex + ",'" + formatNodeView( node ) + "'" +
-					 ( getLeafIcon( node ) != null ? ",'','','','" + request.getContextPath() + "/icons/" + getLeafIcon( node ) + "'":"") + ");\n" );
-					
-				};
-				
-				if( !isLocked( node ) )
-					buildSubNodes( node, childIndex, request );
-			}
-			
-		}
-		
-	}
+    if (subnodes == null || subnodes.size() == 0)
+      return;
+
+    for (DataNode node : subnodes) {
+
+      if (isVisible(node)) {
+        String icon = "";
+        String iconOpen = "";
+
+        if (node.isFolder()) {
+          icon = iconPath + getFolderIcon(node);
+          iconOpen = iconPath + "folderopen.gif";
+        } else {
+          if (getLeafIcon(node) != null) {
+            icon = iconPath + getLeafIcon(node);
+            iconOpen = icon;
+          }
+        }
+        // add(id, pid, name, url, title, target, icon, iconOpen, open)
+        sb.append(
+            String.format("   d.add(%d, %d, '%s', '', '', '', '%s', '%s', %b);\n",
+                ++childIndex,
+                parentIndex,
+                formatNodeView(node),
+                icon,
+                iconOpen,
+                node.isOpen()));
+        if (!isLocked(node)) {
+          buildSubNodes(node, childIndex, request);
+        }
+      }
+    }
+  }
 	
 	
 	private String formatNodeView( DataNode node ){

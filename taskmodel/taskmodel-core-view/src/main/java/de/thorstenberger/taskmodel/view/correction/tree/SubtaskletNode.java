@@ -20,6 +20,7 @@ package de.thorstenberger.taskmodel.view.correction.tree;
 
 import java.util.List;
 
+import de.thorstenberger.taskmodel.view.tree.AbstractDataNode;
 import de.thorstenberger.taskmodel.view.tree.DataNode;
 
 /**
@@ -28,15 +29,15 @@ import de.thorstenberger.taskmodel.view.tree.DataNode;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class SubtaskletNode implements DataNode {
+public class SubtaskletNode extends AbstractDataNode {
 
     private String virtualSubtaskNum;
     private String studentLogin;
     private long taskId;
     private boolean currentlySelected;
-    
+
     /**
-     * 
+     *
      */
     public SubtaskletNode( String virtualSubtaskNum, String studentLogin, long taskId, boolean currentlySelected ) {
         this.virtualSubtaskNum = virtualSubtaskNum;

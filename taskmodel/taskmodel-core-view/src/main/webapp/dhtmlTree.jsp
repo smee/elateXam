@@ -26,10 +26,6 @@
 
 		document.write(d);
 		
-		<c:if test="${expanded}">
-			d.openAll();
-		</c:if>
-		
 //-->
 </script>
 </div>

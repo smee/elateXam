@@ -17,27 +17,28 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.view;
 
 import java.util.List;
 
+import de.thorstenberger.taskmodel.view.tree.AbstractDataNode;
 import de.thorstenberger.taskmodel.view.tree.DataNode;
 
 /**
  * @author Thorsten Berger
  *
  */
-public class PageNode implements DataNode {
+public class PageNode extends AbstractDataNode {
 
 	private int pageNumber;
 	private long taskId;
 	private boolean currentlyActivePage;
 	private int processStatus;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public PageNode( int pageNumber, long taskId, boolean currentlyActivePage, int processStatus ) {
 		this.pageNumber = pageNumber;
@@ -122,7 +123,7 @@ public class PageNode implements DataNode {
 	public void setTaskId(long taskId) {
 		this.taskId = taskId;
 	}
-	
-	
+
+
 
 }

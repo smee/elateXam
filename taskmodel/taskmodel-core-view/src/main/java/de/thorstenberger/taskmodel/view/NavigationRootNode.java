@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.view;
 
@@ -27,41 +27,42 @@ import java.util.List;
 import de.thorstenberger.taskmodel.complex.ComplexTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Try;
+import de.thorstenberger.taskmodel.view.tree.AbstractDataNode;
 import de.thorstenberger.taskmodel.view.tree.DataNode;
 
 /**
  * @author Thorsten Berger
  *
  */
-public class NavigationRootNode implements DataNode {
+public class NavigationRootNode extends AbstractDataNode {
 
 	private List<DataNode> categories;
-	
+
 	public NavigationRootNode( ComplexTasklet cth, long taskId, int pageNo ) {
 		categories = new ArrayList<DataNode>();
 		Try theTry =  cth.getActiveTry();
 
 		List<Page> pages = theTry.getPages();
-		
+
 		CategoryNode currentCategoryNode;
-		
+
 		// build list of category nodes and add their corresponding pages on the fly
 		for( Page page : pages ){
 
 			currentCategoryNode = getCategoryNode( page.getCategoryRefId() );
-			
+
 			if( currentCategoryNode == null ){
 				currentCategoryNode = new CategoryNode( page.getCategoryRefId(),
 						cth.getComplexTaskDefRoot().getCategories().get( page.getCategoryRefId() ).getTitle() );
 				categories.add( currentCategoryNode );
 			}
-			
+
 			currentCategoryNode.addPage( new PageNode( page.getNumber(), taskId, page.getNumber() == pageNo, page.getProcessStatus() ) );
-			
+
 		}
-		
+
 	}
-	
+
 	private CategoryNode getCategoryNode( String id ){
 		for( int i=0; i<categories.size(); i++ ){
 			if( ((CategoryNode) categories.get(i) ).getId().equals( id ) )

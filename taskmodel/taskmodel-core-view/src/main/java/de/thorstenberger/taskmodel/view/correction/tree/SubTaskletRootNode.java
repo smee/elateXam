@@ -22,15 +22,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
+import de.thorstenberger.taskmodel.view.tree.AbstractDataNode;
 import de.thorstenberger.taskmodel.view.tree.DataNode;
 
 /**
  * @author Thorsten Berger
- * 
+ *
  *         TODO To change the template for this generated type comment go to
  *         Window - Preferences - Java - Code Style - Code Templates
  */
-public class SubTaskletRootNode implements DataNode {
+public class SubTaskletRootNode extends AbstractDataNode {
 
     private final List<SubTasklet> subTasklets;
     private final String studentLogin;
@@ -39,7 +40,7 @@ public class SubTaskletRootNode implements DataNode {
     private final String actualCorrector;
 
     /**
-     * 
+     *
      */
     public SubTaskletRootNode(final List<SubTasklet> subTasklets, final String studentLogin, final long taskId,
             final String currentlySelectedSubtaskNum, final String actualCorrector) {
@@ -52,7 +53,7 @@ public class SubTaskletRootNode implements DataNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.view.tree.DataNode#getName()
      */
     public String getName() {
@@ -68,7 +69,7 @@ public class SubTaskletRootNode implements DataNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.view.tree.DataNode#getSubNodes()
      */
     public List<DataNode> getSubNodes() {
@@ -118,7 +119,7 @@ public class SubTaskletRootNode implements DataNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.view.tree.DataNode#isFolder()
      */
     public boolean isFolder() {

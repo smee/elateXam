@@ -21,15 +21,16 @@ package de.thorstenberger.taskmodel.view.correction.tree;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.thorstenberger.taskmodel.view.tree.AbstractDataNode;
 import de.thorstenberger.taskmodel.view.tree.DataNode;
 
 /**
  * @author Thorsten Berger
- * 
+ *
  *         TODO To change the template for this generated type comment go to
  *         Window - Preferences - Java - Code Style - Code Templates
  */
-public class SubtaskletFolder implements DataNode {
+public class SubtaskletFolder extends AbstractDataNode {
 
     public enum Type {
         UNCORRECTED("uncorrected"),
@@ -54,7 +55,7 @@ public class SubtaskletFolder implements DataNode {
     private final List<DataNode> subTaskletNodes = new ArrayList<DataNode>();
 
     /**
-     * 
+     *
      */
     public SubtaskletFolder(final Type type) {
         this.type = type;
@@ -66,7 +67,7 @@ public class SubtaskletFolder implements DataNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.view.tree.DataNode#getName()
      */
     public String getName() {
@@ -76,7 +77,7 @@ public class SubtaskletFolder implements DataNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.view.tree.DataNode#getSubNodes()
      */
     public List<DataNode> getSubNodes() {
@@ -92,18 +93,21 @@ public class SubtaskletFolder implements DataNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.thorstenberger.taskmodel.view.tree.DataNode#isFolder()
      */
     public boolean isFolder() {
         return true;
     }
 
-    // /**
-    // * @return Returns the corrected.
-    // */
-    // public boolean isCorrected() {
-    // return corrected;
-    // }
-
+  /**
+   * If this type is {@link Type#CORRECTED} we won't open the subtree. This preserves valuable screen space if there are
+   * many of them.
+   *
+   * @see de.thorstenberger.taskmodel.view.tree.AbstractDataNode#isOpen()
+   */
+  @Override
+  public boolean isOpen() {
+    return getType() != Type.CORRECTED;
+  }
 }

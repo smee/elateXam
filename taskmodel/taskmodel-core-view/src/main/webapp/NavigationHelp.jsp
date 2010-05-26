@@ -1,11 +1,14 @@
-<%@ page contentType="text/html; charset=UTF-8"%>
-<html>
-<head>
-<title>Symbol-Legende</title>
-	<link rel="stylesheet" href="<%= request.getContextPath() %>/format.css" type="text/css">
-</head>
-<body style="background-color: #ffffff;" bgcolor="#FFFFFF" marginwidth="0" marginheight="0" topmargin="0" leftmargin="0">
-<table width="200" align="left" valign="top" cellspacing="0" cellpadding="0" border="0">
+<style>
+<!--
+#navHelp {
+  display: none; 
+  border: 1px solid #BFB8BF; 
+  -moz-border-radius: 15px 15px 15px 15px;
+  background: white;
+}
+-->
+</style>
+<table id="navHelp" width="200" align="left" valign="top" cellspacing="0" cellpadding="0" border="0">
 <tr>
     <td width=200 height=150>
       <div align="center">
@@ -31,8 +34,6 @@
     </td>
 </tr>
 <tr>
-    <td height=21 align="right" valign="middle" bgcolor="#009933"><a href="javascript:window.close();"><b><font color="#FFFFFF">schließen</font></b></a>&nbsp;&nbsp;</td>
+    <td height=21 align="right" valign="middle" bgcolor="#009933"><a href="#" onclick="document.getElementById('navHelp').style.display='none';"><b><font color="#FFFFFF">verbergen</font></b></a>&nbsp;&nbsp;</td>
 </tr>
 </table>
-</body>
-</html>

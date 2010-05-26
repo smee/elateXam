@@ -171,25 +171,6 @@ function checkedLink(name, target, linkClass)
 	document.write("<a class=" +linkClass+ " href=javascript:leave('" +escape( target ) + "')>" +name+ "</a>");
 }
 
-function fenster(file,breite,hoehe) {
-                var wf ="";
-                wf = wf + "width="+breite;
-                wf = wf + ",height="+hoehe;
-                wf = wf + ",resizable=" + "no";
-                wf = wf + ",scrollbars=" + "no";
-                wf = wf + ",menubar=" + "no";
-                wf = wf + ",toolbar=" + "no";
-                wf = wf + ",directories=" + "no";
-                wf = wf + ",location=" + "no";
-                wf = wf + ",status=" + "no";
-                wf = wf + ",screenX=" + "10";
-                wf = wf + ",screenY=" + "10";
-                var auf ="";
-                auf = file;
-                window.open(auf,"help",wf);
-}
-
-
 //-->
 </script>
 
@@ -229,7 +210,7 @@ function fenster(file,breite,hoehe) {
         <table border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td bgcolor="#E1F4FF">
-			<a class="ComplexTaskNavLegend" href="javascript:fenster('NavigationHelp.jsp',200,180)">
+			<a class="ComplexTaskNavLegend" href="#" onclick="document.getElementById('navHelp').style.display='block';">
 			<img src="<%= request.getContextPath() %>/icons/small/help.gif" width="14" height="14" align="absbottom" border="0">Symbol-Legende
 			</a>
 			</td>
@@ -237,6 +218,7 @@ function fenster(file,breite,hoehe) {
           </tr>
         </table>
       </div>
+      <jsp:include page="NavigationHelp.jsp" />
 	  <br>
 <br>
 

@@ -20,9 +20,8 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
   @BeforeSuite
   @Parameters( { "selenium.host", "selenium.port" })
   public void attachCompleteScreenshotListener(@Optional("localhost") final String host, @Optional("4444") final String port, final ITestContext context) {
-    if (!("localhost".equals(host))) {
+    if (!("localhost".equals(host)))
       return;
-    }
     final Selenium screenshotTaker = new DefaultSelenium(host, Integer.parseInt(port), "", "");
     final TestRunner tr = (TestRunner) context;
     final File outputDirectory = new File(context.getOutputDirectory());
@@ -246,7 +245,110 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
     verifyEquals(selenium.getTable("//div[@id='main']/table/tbody/tr/td/fieldset[1]/table.1.1"), "1");
     selenium.click("link=Logout");
     selenium.waitForPageToLoad("30000");
-    assertEquals(selenium.getTitle(), "Login");
   }
+
+  /**
+   * Test that random assignments of corrections to our (single) tutor works. Stupid test...
+   *
+   * @throws Exception
+   */
+  @Test(dependsOnMethods = { "testStudentRunsExam" })
+  public void testRandomCorrection() throws Exception {
+    login("admin", "admin");
+    assertEquals(selenium.getTitle(), "Hauptmenü");
+    selenium.click("link=Aufgaben-Korrektur");
+    selenium.waitForPageToLoad("30000");
+    verifyEquals(selenium.getText("//table[@id='row']/tbody/tr/td[4]"), "1");
+    selenium.click("link=Test");
+    selenium.waitForPageToLoad("30000");
+    assertEquals(selenium.getTitle(), "Korrektur-Übersicht");
+    verifyEquals(selenium.getText("//fieldset[1]/table/tbody/tr[1]/td[2]"), "1");
+    verifyTrue(selenium.isTextPresent("Keine Elemente vorhanden"));
+    selenium.click("//input[@value='Auswählen']");
+    selenium.waitForPageToLoad("30000");
+    assertEquals(selenium.getTitle(), "Korrektur-Übersicht");
+    verifyEquals(selenium.getTable("row.1.5"), "admin");
+    verifyEquals(selenium.getTable("row.1.3"), "correcting");
+    selenium.click("link=Übersicht");
+    selenium.waitForPageToLoad("30000");
+    assertEquals(selenium.getTitle(), "Hauptmenü");
+    selenium.click("link=Logout");
+  }
+
+  /**
+   * @param password
+   * @param username
+   *
+   */
+  protected void login(String username, String password) {
+    selenium.open("/examServer/login.jsp");
+    assertEquals(selenium.getTitle(), "Login");
+    selenium.type("j_username", username);
+    selenium.type("j_password", password);
+    selenium.click("//input[@name='login']");
+    selenium.waitForPageToLoad("30000");
+  }
+
+  /**
+   * Do manual correction of three subtasks.
+   *
+   * @throws Exception
+   */
+  @Test(dependsOnMethods = { "testRandomCorrection" })
+  public void testDoManualCorrection() throws Exception {
+    login("admin", "admin");
+    assertEquals(selenium.getTitle(), "Hauptmenü");
+    selenium.click("link=Aufgaben-Korrektur");
+    selenium.waitForPageToLoad("30000");
+    selenium.click("link=Test");
+    selenium.waitForPageToLoad("30000");
+    assertEquals(selenium.getTitle(), "Korrektur-Übersicht");
+    // start manual correction
+    selenium.click("//table[@id='row']/tbody/tr/td[9]/a/small");
+    selenium.waitForPageToLoad("30000");
+    assertEquals(selenium.getTitle(), "Korrektur");
+    assertTrue(selenium.isTextPresent("Lösung von studi"));
+    verifyEquals(selenium.getTable("//table[2]/tbody/tr/td/table[2].2.0"), "Aufgaben \n Aufgaben\nmanuelle Korr. notw.\nAufgabe 8\nAufgabe 9\nAufgabe 11\n\nmanuell korrigiert\nkorrigiert\nnicht korrigiert");
+    // do manual correction
+    selenium.click("link=Aufgabe 8");
+    selenium.waitForPageToLoad("30000");
+    assertEquals(selenium.getTitle(), "Korrektur");
+    // is subtasklet 8 shown?
+    assertTrue(selenium.isElementPresent("document.forms[0].elements[4]"));
+    verifyEquals(selenium.getText("//td[2]/fieldset/legend"), "Korrektur - Aufgabe 8");
+    verifyTrue(selenium.isElementPresent("//td[2]/fieldset/img[1][@src='/taskmodel-core-view/pics/questionmark.gif']"));
+    selenium.click("submit");
+    selenium.waitForPageToLoad("30000");
+    assertEquals(selenium.getTitle(), "Korrektur");
+    selenium.click("link=Aufgabe 9");
+    selenium.waitForPageToLoad("30000");
+    assertEquals(selenium.getTitle(), "Korrektur");
+    verifyEquals(selenium.getText("//td[2]/fieldset/legend"), "Korrektur - Aufgabe 9");
+    selenium.click("submit");
+    selenium.waitForPageToLoad("30000");
+    assertEquals(selenium.getTitle(), "Korrektur");
+    selenium.click("link=Aufgabe 11");
+    selenium.waitForPageToLoad("30000");
+    assertEquals(selenium.getTitle(), "Korrektur");
+    verifyEquals(selenium.getText("//td[2]/fieldset/legend"), "Korrektur - Aufgabe 11");
+    selenium.type("task[0].text_points", "3");
+    selenium.click("submit");
+    selenium.waitForPageToLoad("30000");
+    assertEquals(selenium.getTitle(), "Korrektur");
+    // verify successfully completed correction
+    verifyTrue(selenium.isTextPresent("Aufgabe korrigiert. Korrekturen:"));
+    verifyEquals(selenium.getTable("//font/table.0.1"), "3.0");
+    verifyEquals(selenium.getTable("//table[2]/tbody/tr/td/table[2].2.0"), "Aufgaben \n Aufgaben\nmanuelle Korr. notw.\nmanuell korrigiert\nAufgabe 8\nAufgabe 9\nAufgabe 11\n\nkorrigiert\nnicht korrigiert");
+    assertEquals(selenium.getTable("//div/table/tbody/tr/td[2]/fieldset[1]/table.0.1"), "corrected");
+    selenium.click("link=Korrektur-Übersicht");
+    selenium.waitForPageToLoad("30000");
+    assertEquals(selenium.getTitle(), "Korrektur-Übersicht");
+    selenium.click("link=Übersicht");
+    selenium.waitForPageToLoad("30000");
+    assertEquals(selenium.getTitle(), "Hauptmenü");
+    selenium.click("link=Logout");
+    selenium.waitForPageToLoad("30000");
+  }
+
 }
 

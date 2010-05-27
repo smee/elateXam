@@ -32,12 +32,8 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
   @Test(dependsOnMethods = { "testAddStudent", "testEnableLogins", "testAddComplextaskDefinition" })
   public void testCoreviewShowsErrorTexts() throws Exception {
     // log in
-    selenium.open("/examServer/login.jsp");
-    assertEquals(selenium.getTitle(), "Login");
-    selenium.type("j_password", "admin");
-    selenium.type("j_username", "admin");
-    selenium.click("//input[@name='login']");
-    selenium.waitForPageToLoad("30000");
+    login("admin", "admin");
+
     // open invalid taskmodel-core-view page
     selenium.open("/taskmodel-core-view/execute.do?id=5&todo=new&try=1");
     selenium.waitForPageToLoad("30000");
@@ -46,12 +42,8 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
   }
   @Test
   public void testAddComplextaskDefinition() throws Exception {
-    selenium.open("/examServer/login.jsp");
-    assertEquals(selenium.getTitle(), "Login");
-    selenium.type("j_password", "admin");
-    selenium.type("j_username", "admin");
-    selenium.click("//input[@name='login']");
-    selenium.waitForPageToLoad("30000");
+    login("admin", "admin");
+
     verifyTrue(selenium.isTextPresent("Gratulation, Sie haben sich erfolgreich angemeldet! Als Administrator haben Sie folgende Möglichkeiten:"));
     selenium.click("link=Aufgaben-Verwaltung");
     selenium.waitForPageToLoad("30000");
@@ -83,12 +75,8 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
 
   @Test
   public void testAddStudent() throws Exception {
-    selenium.open("/examServer/login.jsp");
-    assertEquals(selenium.getTitle(), "Login");
-    selenium.type("j_password", "admin");
-    selenium.type("j_username", "admin");
-    selenium.click("//input[@name='login']");
-    selenium.waitForPageToLoad("30000");
+    login("admin", "admin");
+
     assertEquals(selenium.getTitle(), "Hauptmenü");
     selenium.click("link=Benutzer-Verwaltung");
     selenium.waitForPageToLoad("30000");
@@ -114,12 +102,8 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
 
   @Test
   public void testEnableAskForSemester() throws Exception {
-    selenium.open("/examServer/login.jsp");
-    assertEquals(selenium.getTitle(), "Login");
-    selenium.type("j_username", "admin");
-    selenium.type("j_password", "admin");
-    selenium.click("//input[@name='login']");
-    selenium.waitForPageToLoad("30000");
+    login("admin", "admin");
+
     assertEquals(selenium.getTitle(), "Hauptmenü");
     selenium.click("link=Login-Konfiguration");
     selenium.waitForPageToLoad("30000");
@@ -139,12 +123,8 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
 
   @Test
   public void testEnableLogins() throws Exception {
-    selenium.open("/examServer/login.jsp");
-    assertEquals(selenium.getTitle(), "Login");
-    selenium.type("j_username", "admin");
-    selenium.type("j_password", "admin");
-    selenium.click("//input[@name='login']");
-    selenium.waitForPageToLoad("30000");
+    login("admin", "admin");
+
     assertEquals(selenium.getTitle(), "Hauptmenü");
     selenium.click("link=Login-Konfiguration");
     selenium.waitForPageToLoad("30000");
@@ -163,12 +143,8 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
 
   @Test(dependsOnMethods = { "testEnableAskForSemester", "testEnableLogins", "testAddStudent" })
   public void testCompletePersonalDetails() throws Exception {
-    selenium.open("/examServer/login.jsp");
-    assertEquals(selenium.getTitle(), "Login");
-    selenium.type("j_username", "studi");
-    selenium.type("j_password", "test");
-    selenium.click("//input[@name='login']");
-    selenium.waitForPageToLoad("30000");
+    login("studi", "test");
+
     assertEquals(selenium.getTitle(), "Hauptmenü");
     verifyTrue(selenium.isTextPresent("Bitte vervollständigen Sie Ihre Daten und klicken Sie auf OK!"));
     selenium.type("matrikel", "111000");
@@ -181,12 +157,8 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
 
   @Test(dependsOnMethods = { "testCompletePersonalDetails", "testAddComplextaskDefinition" })
   public void testStudentRunsExam() throws Exception {
-    selenium.open("/examServer/login.jsp");
-    assertEquals(selenium.getTitle(), "Login");
-    selenium.type("j_username", "studi");
-    selenium.type("j_password", "test");
-    selenium.click("//input[@name='login']");
-    selenium.waitForPageToLoad("30000");
+    login("studi", "test");
+
     assertEquals(selenium.getTitle(), "Hauptmenü");
     // should greet the student with his name
     verifyTrue(selenium.isElementPresent("//div[@id='main']/h1[text()='Hallo Max Mustermann!']"));

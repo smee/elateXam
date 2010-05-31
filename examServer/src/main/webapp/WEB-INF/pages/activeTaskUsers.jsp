@@ -3,6 +3,7 @@
 <head>
     <title><fmt:message key="activeTaskUsers.title"/></title>
     <content tag="heading"><fmt:message key="activeTaskUsers.title"/></content>
+    <meta http-equiv="refresh" content="60" />
     <meta name="menu" content="AdminMenu"/>
 </head>
 <body id="activeUsers"/>
@@ -12,7 +13,23 @@
 <div class="separator"></div>
 
 <input type="button" onclick="location.href='<html:rewrite forward="mainMenu"/>'" value="<fmt:message key="button.done"/>"/>
-
+  
+ <br/>
+ <br/>
+ <h2><fmt:message key="activeUsers.increaseTimeGlobally"/></h2>
+  <form method="post" action="<html:rewrite action="/increaseTimeGlobal"/>">
+    <select name="taskId">
+       <option value=""><fmt:message key="activeUsers.choose"/></option>
+      <c:forEach items="${activeTasks}" var="task"> 
+        <option value="<c:out value="${task.taskId}"/>"> <c:out value="${task.taskTitle}"/></option>
+      </c:forEach>
+    </select>
+    <input type="submit" value="+5min"/>
+  </form>
+    
+    <br/>
+ <h2><fmt:message key="activeUsers.progress"/></h2>    
+ 
 <display:table name="ActiveUsers" id="user" cellspacing="0" cellpadding="0"
     defaultsort="1" class="table" pagesize="50" requestURI="">
   

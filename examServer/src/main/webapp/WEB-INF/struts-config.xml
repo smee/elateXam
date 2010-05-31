@@ -165,6 +165,9 @@
   <action path="/increaseTime" roles="admin" type="de.thorstenberger.examServer.webapp.action.IncreaseTimeExtensionAction">
     <forward name="success" path="/activeTaskUsers.html" redirect="true"/>
   </action>
+  <action path="/increaseTimeGlobal" roles="admin" type="de.thorstenberger.examServer.webapp.action.TimeExtensionGlobalAction">
+    <forward name="success" path="/activeTaskUsers.html" redirect="true"/>
+  </action>
   <action path="/TaskConfigList" type="de.thorstenberger.examServer.webapp.action.TaskConfigMainAction">
    <forward name="success" path="/WEB-INF/pages/taskList.jsp"/>
   </action>

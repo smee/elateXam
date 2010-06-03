@@ -34,7 +34,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpUtils;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -55,7 +54,7 @@ import com.lowagie.text.DocumentException;
 
 /**
  * Adjusted from org.displaytag.filter.ResponseOverrideFilter. ServletFilter that captures html, converts it to pdf.
- * 
+ *
  * @author sdienst
  */
 public class ExportPDFFilter implements Filter {
@@ -109,7 +108,7 @@ public class ExportPDFFilter implements Filter {
 
     /**
      * Tidy up the html and convert it into standard conform XHTML.
-     * 
+     *
      * @param html
      *            html document
      * @return equivalent xhtml document
@@ -152,7 +151,7 @@ public class ExportPDFFilter implements Filter {
      * selected option.</li>
      * <li>Replace every input checkbox with [ ] for unchecked or [X] for checked inputs.</li>
      * </ul>
-     * 
+     *
      * @param xhtml
      *            xhtml as {@link Document}
      * @param xhtmlText
@@ -181,7 +180,7 @@ public class ExportPDFFilter implements Filter {
 
     /**
      * Read filecontents from the given stream.
-     * 
+     *
      * @param resourceAsStream
      * @return
      */
@@ -207,7 +206,7 @@ public class ExportPDFFilter implements Filter {
 
     /**
      * Render the given xhtml document as pdf and write it to the response outputstream.
-     * 
+     *
      * @param dom
      *            xhtml document
      * @param request
@@ -218,7 +217,7 @@ public class ExportPDFFilter implements Filter {
     private void renderPdf(final Document dom, final HttpServletRequest request,
             final ServletResponse response) throws IOException {
         final ITextRenderer renderer = new ITextRenderer(80 / 3f, 15);
-        renderer.setDocument(dom, HttpUtils.getRequestURL(request).toString());
+        renderer.setDocument(dom, request.getRequestURL().toString());
         renderer.layout();
 
         response.setContentType("application/pdf");

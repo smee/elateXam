@@ -24,10 +24,10 @@
     <b>
       <xsl:choose>
         <xsl:when test="@checked">
-          [X]
+          <div>[X]</div>
         </xsl:when>
         <xsl:otherwise>
-          [ ]
+          <div style="white-space:nowrap;">[ ]</div>
         </xsl:otherwise>
       </xsl:choose>
     </b>

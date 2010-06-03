@@ -25,7 +25,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.lang.management.ManagementFactory;
 
+import javax.management.AttributeNotFoundException;
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanException;
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectInstance;
+import javax.management.ObjectName;
+import javax.management.ReflectionException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -217,7 +226,7 @@ public class ExportPDFFilter implements Filter {
     private void renderPdf(final Document dom, final HttpServletRequest request,
             final ServletResponse response) throws IOException {
         final ITextRenderer renderer = new ITextRenderer(80 / 3f, 15);
-        renderer.setDocument(dom, request.getRequestURL().toString());
+        renderer.setDocument(dom, getLocalURL(request));
         renderer.layout();
 
         response.setContentType("application/pdf");
@@ -233,4 +242,43 @@ public class ExportPDFFilter implements Filter {
             throw new IOException(e.getMessage());
         }
     }
+
+  /**
+   * Try to find a nonssl connector to retrieve shared resources like stylesheets, images etc. Fallback: Use request
+   * url.
+   * 
+   * @param request
+   * @return
+   */
+  private String getLocalURL(final HttpServletRequest request) {
+
+    final MBeanServer beanServer = ManagementFactory.getPlatformMBeanServer();
+    try {
+      for (final Object mbean : beanServer.queryMBeans(new ObjectName("*:type=Connector,*"), null)) {
+        final ObjectInstance oi = (ObjectInstance) mbean;
+        final Boolean isSecure = (Boolean) beanServer.getAttribute(oi.getObjectName(), "secure");
+        final String protocol = (String) beanServer.getAttribute(oi.getObjectName(), "protocol");
+        final int port = (Integer) beanServer.getAttribute(oi.getObjectName(), "port");
+        if (!isSecure && protocol.startsWith("HTTP")) {
+          log.debug(String.format("Using unsecured tomcat connector at port %d", port));
+          return "http://localhost:" + port;
+        }
+      }
+    } catch (final MalformedObjectNameException e) {
+      log.warn("Could not access JMX mbeans.", e);
+    } catch (final NullPointerException e) {
+      log.warn("Could not access JMX mbeans.", e);
+    } catch (final AttributeNotFoundException e) {
+      log.warn("Could not access JMX mbeans.", e);
+    } catch (final InstanceNotFoundException e) {
+      log.warn("Could not access JMX mbeans.", e);
+    } catch (final MBeanException e) {
+      log.warn("Could not access JMX mbeans.", e);
+    } catch (final ReflectionException e) {
+      log.warn("Could not access JMX mbeans.", e);
+    }
+    String requestURL = request.getRequestURL().toString();
+    log.warn("No mbeans of type '*:type=Connector,*' configured, using request url (assuming non-ssl): " + requestURL);
+    return requestURL;
+  }
 }

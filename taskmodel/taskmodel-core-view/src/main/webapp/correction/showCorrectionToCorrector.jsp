@@ -29,6 +29,12 @@
 	</td>
   </tr>
   <tr bgcolor="#F2F9FF"> 
+    <td/>
+    <td align="right"> 
+		<html:link action="/showCorrectionToCorrector?exportToPdf=${Correction.taskId}-${Correction.userId}.pdf" name="Correction" property="loginAndTaskId"><img src="pics/pdf_icon.png" border="0" hspace="5">Exportiere PDF</html:link>
+	</td>
+  </tr>
+  <tr bgcolor="#F2F9FF"> 
 	<td colspan="2"><br>
 	<fieldset>
             

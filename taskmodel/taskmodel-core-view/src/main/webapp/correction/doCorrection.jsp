@@ -16,13 +16,13 @@
 <p class="header">L&ouml;sung von ${Correction.userId}</p>
 
 
-<table border="0" cellspacing="2" cellpadding="2" width="790">
 
 <form method="post" action="<html:rewrite action="/saveCorrection"/>">
 							<input type="hidden" name="userId" value="${Correction.userId}"/>
 							<input type="hidden" name="taskId" value="${Correction.taskId}"/>
 							<input type="hidden" name="selectedSubTaskletNum" value="${Correction.subTasklet.virtualSubTaskletNumber}"/>
 
+<table border="0" cellspacing="2" cellpadding="2" width="790">
   <tr bgcolor="#F2F9FF"> 
     <td valign="top"><img src="<%= request.getContextPath() %>/pics/exit.gif" width="20" height="16"> 
     	<html:link action="/tutorCorrectionOverview" paramId="taskId" paramName="Correction" paramProperty="taskId">Korrektur-Übersicht</html:link>
@@ -32,7 +32,11 @@
   </tr>
   <tr bgcolor="#F2F9FF"> 
     <td valign="top"/>
-    <td valign="top" align="right"><html:link action="/showCorrectionToCorrector?exportToPdf=${Correction.taskId}-${Correction.userId}.pdf" name="Correction" property="loginAndTaskId"><img src="pics/magnifier.gif" border="0" hspace="5">Exportiere PDF</html:link>
+    <td valign="top" align="right">
+             <input type="submit" name="submit" value="Korrektur speichern">
+    <!--
+    <html:link action="/showCorrectionToCorrector?exportToPdf=${Correction.taskId}-${Correction.userId}.pdf" name="Correction" property="loginAndTaskId"><img src="pics/magnifier.gif" border="0" hspace="5">Exportiere PDF</html:link>
+    -->
 	</td>
   </tr>
   <tr> 
@@ -196,7 +200,7 @@
 	 </div>
 	  </td>
   </tr>
-  
+  </table>
 </form>
 
   <tr bgcolor="#F2F9FF"> 

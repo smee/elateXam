@@ -308,7 +308,7 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
     selenium.waitForPageToLoad("30000");
     assertEquals(selenium.getTitle(), "Korrektur");
     assertTrue(selenium.isTextPresent("Lösung von studi"));
-    verifyEquals(selenium.getTable("//table[2]/tbody/tr/td/table[2].2.0"), "Aufgaben \n Aufgaben\nmanuelle Korr. notw.\nAufgabe 8\nAufgabe 9\nAufgabe 11\n\nmanuell korrigiert\nkorrigiert\nnicht korrigiert");
+    verifyEquals(selenium.getTable("//form/table.2.0"), "Aufgaben \n Aufgaben\nmanuelle Korr. notw.\nAufgabe 8\nAufgabe 9\nAufgabe 11\n\nmanuell korrigiert\nkorrigiert\nnicht korrigiert");
     // do manual correction
     selenium.click("link=Aufgabe 8");
     selenium.waitForPageToLoad("30000");
@@ -338,7 +338,7 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
     // verify successfully completed correction
     verifyTrue(selenium.isTextPresent("Aufgabe korrigiert. Korrekturen:"));
     verifyEquals(selenium.getTable("//font/table.0.1"), "3.0");
-    verifyEquals(selenium.getTable("//table[2]/tbody/tr/td/table[2].2.0"), "Aufgaben \n Aufgaben\nmanuelle Korr. notw.\nmanuell korrigiert\nAufgabe 8\nAufgabe 9\nAufgabe 11\n\nkorrigiert\nnicht korrigiert");
+    verifyEquals(selenium.getTable("//form/table.2.0"), "Aufgaben \n Aufgaben\nmanuelle Korr. notw.\nmanuell korrigiert\nAufgabe 8\nAufgabe 9\nAufgabe 11\n\nkorrigiert\nnicht korrigiert");
     assertEquals(selenium.getTable("//div/table/tbody/tr/td[2]/fieldset[1]/table.0.1"), "corrected");
     selenium.click("link=Korrektur-Übersicht");
     selenium.waitForPageToLoad("30000");

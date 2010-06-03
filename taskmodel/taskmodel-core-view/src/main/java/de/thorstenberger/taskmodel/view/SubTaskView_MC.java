@@ -62,13 +62,13 @@ public class SubTaskView_MC extends SubTaskView {
 		HttpServletRequest request=(HttpServletRequest) context.getViewContextObject();
 		StringBuffer ret = new StringBuffer();
 
-		// alle Antworten einfügen
+		// alle Antworten einfï¿½gen
 		ret.append("\n<table>\n");
 		List<SubTasklet_MC.Answer> answers = mcSubTasklet.getAnswers();
 		for(int j=0; j<answers.size(); j++){
 
 			if( mcSubTasklet.getMcCategory().equals( SubTasklet_MC.CAT_SINGLESELECT ) )
-				ret.append("<tr><td nowrap valing=top><input type=\"radio\" name=\"task[" + relativeTaskNumber +
+				ret.append("<tr><td nowrap valign=top><input type=\"radio\" name=\"task[" + relativeTaskNumber +
 						"].ss\" value=\"" + j + "\"" + checked( answers.get( j ) ) +
 						( corrected ? " disabled=\"disabled\"" : "" ) +  " onChange=\"setModified()\">&nbsp;" +
 						( corrected && answers.get( j ).isCorrect() ? getSymbolForCorrectedAnswer( request, answers.get( j ) ) : "" ) + "</td>\n");
@@ -137,7 +137,7 @@ public class SubTaskView_MC extends SubTaskView {
 		// weder ss- noch ms-Variable, also Aufgabe nicht bearbeitet
 		if( mcSubmitData == null )
 			mcSubmitData = new McSubmitData();
-		// TODO unübersichtlich
+		// TODO unï¿½bersichtlich
 
 		return mcSubmitData;
 	}

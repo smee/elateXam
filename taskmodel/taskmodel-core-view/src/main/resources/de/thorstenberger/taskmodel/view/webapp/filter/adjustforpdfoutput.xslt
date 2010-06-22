@@ -23,15 +23,23 @@
   <xsl:template match="input[@type='checkbox']">
     <b>
       <xsl:choose>
-        <xsl:when test="@checked">
-          <div>[X]</div>
-        </xsl:when>
+        <xsl:when test="@checked"><div>[X]</div></xsl:when>
         <xsl:otherwise>
           <div style="white-space:nowrap;">[ ]</div>
         </xsl:otherwise>
       </xsl:choose>
     </b>
   </xsl:template>
+  <!-- replace radio buttons with an equivalent string -->
+  <xsl:template match="input[@type='radio']">
+    <b>
+      <xsl:choose>
+        <xsl:when test="@checked">[X]</xsl:when>
+        <xsl:otherwise>[ ]</xsl:otherwise>
+      </xsl:choose>
+    </b>
+  </xsl:template>
+  
   <!-- use different columns for checkboxes and the added image to make sure,
        they are horizontally aligned. xhtmlrenderer likes to mess with the layout... -->
   <xsl:template match="td[./input/@type='checkbox']">

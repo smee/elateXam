@@ -58,17 +58,6 @@ public class ContentCaptureServletResponse extends HttpServletResponseWrapper {
         return buffer.toByteArray();
     }
 
-    /**
-     * @return
-     */
-    public String getContent() {
-        if (writer != null) {
-            writer.flush();
-        }
-        // Flying saucer doesn't like thead or tbody, so let's just strip them
-        return new String(buffer.toByteArray()).replaceAll("<thead>|</thead>|<tbody>|</tbody>", "");
-    }
-
     /*
      * (non-Javadoc)
      * 

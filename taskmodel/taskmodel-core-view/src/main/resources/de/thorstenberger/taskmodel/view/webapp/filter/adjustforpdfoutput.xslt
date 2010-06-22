@@ -71,4 +71,12 @@
       </style>
     </xsl:element>
   </xsl:template>
+  
+  <!-- Flying saucer seems to have trouble with thead and tbody, strip them from the html. -->
+  <xsl:template match="thead">
+    <xsl:apply-templates/>  
+  </xsl:template>
+  <xsl:template match="tbody">
+    <xsl:apply-templates/>  
+  </xsl:template>
 </xsl:stylesheet>

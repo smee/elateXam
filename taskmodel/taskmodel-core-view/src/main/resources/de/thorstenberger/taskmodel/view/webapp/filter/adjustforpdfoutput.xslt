@@ -62,13 +62,25 @@
   </xsl:template>
   
   <!-- add page numbers to each page footer -->
+  <!-- also make sure we use a font with at least some utf8 glyphs (cyrillic etc.) -->
   <xsl:template match="head">
     <xsl:element name="head">
       <xsl:apply-templates select="@*|node()" />
       <style type="text/css">
-        @page { @bottom-center { content: "Seite " counter(page) " von "
-        counter(pages); } }      
+        @page { 
+          @bottom-center { 
+            content: "Seite " counter(page) " von " counter(pages); 
+          } 
+        }
+             
+        p,ul,ol,li,div,td,th,address,blockquote,nobr,i {
+           font-family: "Lucida Sans Unicode";
+        }
+        b {
+           font-family: "Lucida Sans Bold Unicode";
+        }
       </style>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     </xsl:element>
   </xsl:template>
   

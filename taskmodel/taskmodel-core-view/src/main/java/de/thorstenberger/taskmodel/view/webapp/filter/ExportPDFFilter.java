@@ -25,7 +25,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
+import java.nio.charset.Charset;
 
 import javax.management.AttributeNotFoundException;
 import javax.management.InstanceNotFoundException;
@@ -56,10 +58,12 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
+import org.w3c.tidy.Configuration;
 import org.w3c.tidy.Tidy;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.BaseFont;
 
 /**
  * Adjusted from org.displaytag.filter.ResponseOverrideFilter. ServletFilter that captures html, converts it to pdf.
@@ -83,7 +87,8 @@ public class ExportPDFFilter implements Filter {
     /**
      * Logger.
      */
-    private static final Log log = LogFactory.getLog(ExportPDFFilter.class);;
+    private static final Log log = LogFactory.getLog(ExportPDFFilter.class);
+    private String fontPath;
 
     /**
      * {@inheritDoc}
@@ -108,7 +113,7 @@ public class ExportPDFFilter implements Filter {
             // call the rest of the filter chain
             filterChain.doFilter(servletRequest, wrapper);
 
-            final Document dom = getRenderedXhtml(wrapper.getContent());
+            final Document dom = getRenderedXhtml(new String(wrapper.getBinaryContent(),Charset.forName("UTF8")));
 
             // call flying saucer to render xHtml to pdf
             renderPdf(dom, (HttpServletRequest) servletRequest, servletResponse);
@@ -128,17 +133,25 @@ public class ExportPDFFilter implements Filter {
         final Tidy tidy = new Tidy();
         tidy.setXHTML(true); // output pure xhtml
         tidy.setQuiet(true); // suppress verbose messages
-        tidy.setShowWarnings(false);// suppress warnings
+    tidy.setShowWarnings(false);// suppress warnings
         /*
          * wrap javascript in strings to prevent parsing errors later on
          */
         tidy.setWrapScriptlets(true);
         tidy.setBreakBeforeBR(true);// line wrap on br
+        tidy.setCharEncoding(Configuration.UTF8);
 
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        final Document xhtml = tidy.parseDOM(new ByteArrayInputStream(html.getBytes()), baos);
+        Charset utf8 = Charset.forName("UTF8");
+        final Document xhtml = tidy.parseDOM(new ByteArrayInputStream(html.getBytes(utf8)), baos);
 
-        return processDocument(xhtml, baos.toString());
+    try {
+      return processDocument(xhtml, baos.toString("UTF8"));
+    } catch (UnsupportedEncodingException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      return null;
+    }
     }
 
     /**
@@ -148,6 +161,10 @@ public class ExportPDFFilter implements Filter {
         final String bufferParam = filterConfig.getInitParameter("buffer");
         if (log.isDebugEnabled()) {
             log.debug("bufferParam=" + bufferParam);
+        }
+        this.fontPath = filterConfig.getServletContext().getRealPath("/WEB-INF/lsansuni.ttf");
+        if (this.fontPath == null) {
+          log.error("Could not locate lsansuni.ttf font file, is needed for utf-8 glyphs in PDFs!");
         }
         log.info("Filter initialized.");
     }
@@ -223,30 +240,37 @@ public class ExportPDFFilter implements Filter {
      * @throws IOException
      *             if the document could not get renderered
      */
-    private void renderPdf(final Document dom, final HttpServletRequest request,
+  private void renderPdf(final Document dom, final HttpServletRequest request,
             final ServletResponse response) throws IOException {
-        final ITextRenderer renderer = new ITextRenderer(80 / 3f, 15);
-        renderer.setDocument(dom, getLocalURL(request));
-        renderer.layout();
+    System.out.println(fontPath);
+    final ITextRenderer renderer = new ITextRenderer(80 / 3f, 15);
+    try {
+      // FIXME find absolute path to font file
+      renderer.getFontResolver().addFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+    } catch (DocumentException e1) {
+      e1.printStackTrace();
+    }
+    renderer.setDocument(dom, getLocalURL(request));
+    renderer.layout();
 
-        response.setContentType("application/pdf");
-        // set an appropriate filename
-        ((HttpServletResponse) response).setHeader("Content-Disposition", "attachment; filename="
+    response.setContentType("application/pdf");
+    // set an appropriate filename
+    ((HttpServletResponse) response).setHeader("Content-Disposition", "attachment; filename="
                 + request.getParameter(EXPORTFILENAME));
 
-        try {
-            renderer.createPDF(response.getOutputStream());
-        } catch (final DocumentException e) {
-            log.error("Could not render pdf.", e);
-            // FIXME should we just return the original content?
-            throw new IOException(e.getMessage());
-        }
+    try {
+      renderer.createPDF(response.getOutputStream());
+    } catch (final DocumentException e) {
+      log.error("Could not render pdf.", e);
+      // FIXME should we just return the original content?
+      throw new IOException(e.getMessage());
     }
+  }
 
   /**
    * Try to find a nonssl connector to retrieve shared resources like stylesheets, images etc. Fallback: Use request
    * url.
-   * 
+   *
    * @param request
    * @return
    */

@@ -18,14 +18,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.view.webapp.filter;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.util.Locale;
 
 import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
@@ -86,7 +85,7 @@ public class ContentCaptureServletResponse extends HttpServletResponseWrapper {
     public PrintWriter getWriter() throws IOException {
         if (writer == null) {
             buffer = new ByteArrayOutputStream();
-            writer = new PrintWriter(buffer);
+            writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(buffer, "UTF8")),  false);
         }
         return writer;
     }

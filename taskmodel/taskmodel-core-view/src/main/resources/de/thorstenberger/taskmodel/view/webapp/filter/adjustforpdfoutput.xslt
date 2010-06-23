@@ -14,9 +14,9 @@
   <!-- replace all comoboxes with a string that contains the selected element -->
   <xsl:template match="select">
     ausgewählt: 
-    "<b>
+    <b>"
       <xsl:value-of select="./option[@selected='selected']" />
-    </b>"
+    "</b>
   </xsl:template>
   
   <!-- replace checkboxes with an equivalent string -->
@@ -73,11 +73,8 @@
           } 
         }
              
-        p,ul,ol,li,div,td,th,address,blockquote,nobr,i {
+        p,ul,ol,li,div,td,th,address,blockquote,nobr,i,b {
            font-family: "Lucida Sans Unicode";
-        }
-        b {
-           font-family: "Lucida Sans Bold Unicode";
         }
       </style>
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />

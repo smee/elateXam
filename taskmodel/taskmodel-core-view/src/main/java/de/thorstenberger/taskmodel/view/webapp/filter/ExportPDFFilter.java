@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
 import java.nio.charset.Charset;
 
@@ -45,6 +44,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -129,11 +129,10 @@ public class ExportPDFFilter implements Filter {
      */
     public Document getRenderedXhtml(final String html) {
         // convert HTML to xHTML
-
         final Tidy tidy = new Tidy();
         tidy.setXHTML(true); // output pure xhtml
         tidy.setQuiet(true); // suppress verbose messages
-    tidy.setShowWarnings(false);// suppress warnings
+        tidy.setShowWarnings(false);// suppress warnings
         /*
          * wrap javascript in strings to prevent parsing errors later on
          */
@@ -145,13 +144,7 @@ public class ExportPDFFilter implements Filter {
         Charset utf8 = Charset.forName("UTF8");
         final Document xhtml = tidy.parseDOM(new ByteArrayInputStream(html.getBytes(utf8)), baos);
 
-    try {
-      return processDocument(xhtml, baos.toString("UTF8"));
-    } catch (UnsupportedEncodingException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-      return null;
-    }
+        return processDocument(xhtml);
     }
 
     /**
@@ -180,15 +173,15 @@ public class ExportPDFFilter implements Filter {
      *
      * @param xhtml
      *            xhtml as {@link Document}
-     * @param xhtmlText
-     *            string representation of the xhtml parameter
      * @return
      */
-    private Document processDocument(final Document xhtml, final String xhtmlText) {
+    private Document processDocument(final Document xhtml) {
         final String xslt = readFile(this.getClass().getResourceAsStream("adjustforpdfoutput.xslt"));
         final Source xsltSource = new StreamSource(new StringReader(xslt));
         try {
             final Transformer transformer = TransformerFactory.newInstance().newTransformer(xsltSource);
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF8");
+
             final DOMResult result = new DOMResult();
             transformer.transform(new DOMSource(xhtml), result);
             return (Document) result.getNode();
@@ -201,6 +194,7 @@ public class ExportPDFFilter implements Filter {
             e.printStackTrace();
         }
         // fall through in error case: return untransformed xhtml
+        log.warn("Could not clean up html, using orginial instead. This might lead to missing content!");
         return xhtml;
     }
 
@@ -240,12 +234,10 @@ public class ExportPDFFilter implements Filter {
      * @throws IOException
      *             if the document could not get renderered
      */
-  private void renderPdf(final Document dom, final HttpServletRequest request,
-            final ServletResponse response) throws IOException {
-    System.out.println(fontPath);
+  private void renderPdf(final Document dom, final HttpServletRequest request, final ServletResponse response) throws IOException {
+    log.debug("Using unicode font at path " + fontPath);
     final ITextRenderer renderer = new ITextRenderer(80 / 3f, 15);
     try {
-      // FIXME find absolute path to font file
       renderer.getFontResolver().addFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
     } catch (DocumentException e1) {
       e1.printStackTrace();

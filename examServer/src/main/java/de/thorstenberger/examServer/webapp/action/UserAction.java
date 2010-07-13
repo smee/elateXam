@@ -8,9 +8,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.acegisecurity.Authentication;
 import org.acegisecurity.AuthenticationTrustResolver;
 import org.acegisecurity.AuthenticationTrustResolverImpl;
-import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.context.SecurityContext;
-
+import org.acegisecurity.context.SecurityContextHolder;
+import org.acegisecurity.userdetails.UsernameNotFoundException;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
@@ -19,6 +19,8 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.util.MessageResources;
+import org.springframework.mail.SimpleMailMessage;
+
 import de.thorstenberger.examServer.Constants;
 import de.thorstenberger.examServer.model.Role;
 import de.thorstenberger.examServer.model.User;
@@ -29,7 +31,6 @@ import de.thorstenberger.examServer.service.UserManager;
 import de.thorstenberger.examServer.util.StringUtil;
 import de.thorstenberger.examServer.webapp.form.UserForm;
 import de.thorstenberger.examServer.webapp.util.RequestUtil;
-import org.springframework.mail.SimpleMailMessage;
 
 /**
  * Implementation of <strong>Action</strong> that interacts with the {@link
@@ -56,7 +57,7 @@ import org.springframework.mail.SimpleMailMessage;
  * @struts.action-forward name="edit" path="/WEB-INF/pages/userForm.jsp"
  */
 public final class UserAction extends BaseAction {
-    
+
     public ActionForward add(ActionMapping mapping, ActionForm form,
                              HttpServletRequest request,
                              HttpServletResponse response)
@@ -84,11 +85,10 @@ public final class UserAction extends BaseAction {
             log.debug("Entering 'cancel' method");
         }
 
-        if (!StringUtils.equals(request.getParameter("from"), "list")) {
-            return mapping.findForward("mainMenu");
-        } else {
-            return mapping.findForward("viewUsers");
-        }
+        if (!StringUtils.equals(request.getParameter("from"), "list"))
+          return mapping.findForward("mainMenu");
+        else
+          return mapping.findForward("viewUsers");
     }
 
     public ActionForward delete(ActionMapping mapping, ActionForm form,
@@ -98,7 +98,7 @@ public final class UserAction extends BaseAction {
         if (log.isDebugEnabled()) {
             log.debug("Entering 'delete' method");
         }
-        
+
         // Extract attributes and parameters we will need
         ActionMessages messages = new ActionMessages();
         UserForm userForm = (UserForm) form;
@@ -149,7 +149,16 @@ public final class UserAction extends BaseAction {
         // if a user's username is passed in
         if (request.getParameter("username") != null) {
             // lookup the user using that id
+          try{
             user = mgr.getUserByUsername(userForm.getUsername());
+          }catch(UsernameNotFoundException e){
+            // user unknown, call user add form
+            log.warn("Could not find user "+userForm.getUsername()+", offering to create a new one.");
+            ActionMessages messages = new ActionMessages();
+            messages.add(ActionMessages.GLOBAL_MESSAGE,  new ActionMessage("user.notfound",userForm.getUsername()));
+            saveMessages(request.getSession(), messages);
+            return mapping.findForward("addUser");
+          }
         } else {
             // look it up based on the current user's id
             user = mgr.getUserByUsername(request.getRemoteUser());
@@ -172,7 +181,7 @@ public final class UserAction extends BaseAction {
         if (log.isDebugEnabled()) {
             log.debug("Entering 'save' method");
         }
-        
+
         // run validation rules on this form
         // See https://appfuse.dev.java.net/issues/show_bug.cgi?id=128
         ActionMessages errors = form.validate(mapping, request);
@@ -193,7 +202,7 @@ public final class UserAction extends BaseAction {
 
         Boolean encrypt = (Boolean) getConfiguration().get(Constants.ENCRYPT_PASSWORD);
 
-        if (StringUtils.equals(request.getParameter("encryptPass"), "true") 
+        if (StringUtils.equals(request.getParameter("encryptPass"), "true")
                 && (encrypt != null && encrypt.booleanValue())) {
             String algorithm = (String) getConfiguration().get(Constants.ENC_ALGORITHM);
 
@@ -228,15 +237,15 @@ public final class UserAction extends BaseAction {
             userForm.setConfirmPassword(userForm.getPassword());
             // reset the version # to what was passed in
             userForm.setVersion(request.getParameter("version"));
-            updateFormBean(mapping, request, userForm); 
-            
+            updateFormBean(mapping, request, userForm);
+
             return mapping.findForward("edit");
         }
 
         BeanUtils.copyProperties(userForm, convert(user));
         userForm.setConfirmPassword(userForm.getPassword());
         updateFormBean(mapping, request, userForm);
-        
+
         if (!StringUtils.equals(request.getParameter("from"), "list")) {
             // add success messages
             messages.add(ActionMessages.GLOBAL_MESSAGE,
@@ -284,12 +293,13 @@ public final class UserAction extends BaseAction {
         // return a forward to the user list definition
         return mapping.findForward("list");
     }
-    
+
+    @Override
     public ActionForward unspecified(ActionMapping mapping, ActionForm form,
                                      HttpServletRequest request,
                                      HttpServletResponse response)
     throws Exception {
-        
+
         return search(mapping, form, request, response);
     }
 
@@ -334,7 +344,7 @@ public final class UserAction extends BaseAction {
 
             if (resolver.isRememberMe(auth)) {
                 request.getSession().setAttribute("cookieLogin", "true");
-                
+
                 // add warning message
                 ActionMessages messages = new ActionMessages();
                 messages.add(ActionMessages.GLOBAL_MESSAGE,  new ActionMessage("userProfile.cookieLogin"));

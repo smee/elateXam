@@ -1,10 +1,18 @@
 <%@ include file="/common/taglibs.jsp"%>
+<%@ taglib uri="http://struts.apache.org/tags-html" prefix="html"%>
 
 <head>
     <title><fmt:message key="userList.title"/></title>
     <content tag="heading"><fmt:message key="userList.heading"/></content>
     <meta name="menu" content="AdminMenu"/>
 </head>
+
+<html:form action="/editUser.html?from=list">
+    <html-el:text property="username"></html-el:text>
+	<html:submit>Suchen</html:submit>
+</html:form>	
+<br/>
+<br/>
 
 <c:set var="buttons">
     <input type="button" style="margin-right: 5px"

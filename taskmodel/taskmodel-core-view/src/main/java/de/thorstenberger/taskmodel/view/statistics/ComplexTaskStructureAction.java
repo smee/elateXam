@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.view.statistics;
 
@@ -39,6 +39,8 @@ import de.thorstenberger.taskmodel.TaskModelViewDelegate;
 import de.thorstenberger.taskmodel.complex.TaskDef_Complex;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Category;
+import de.thorstenberger.taskmodel.view.statistics.graph.BoxScoresDatasetProducer;
+import de.thorstenberger.taskmodel.view.statistics.graph.ScoresDatasetProducer;
 
 /**
  * @author Thorsten Berger
@@ -51,7 +53,7 @@ public class ComplexTaskStructureAction extends Action {
 	 */
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
+
 		ActionMessages errors = new ActionMessages();
 
 		long id;
@@ -62,7 +64,7 @@ public class ComplexTaskStructureAction extends Action {
 			saveErrors( request, errors );
 			return mapping.findForward( "error" );
 		}
-		
+
 		CorrectorDelegateObject delegateObject = (CorrectorDelegateObject)TaskModelViewDelegate.getDelegateObject( request.getSession().getId(), id );
 
 		if( delegateObject == null ){
@@ -77,10 +79,10 @@ public class ComplexTaskStructureAction extends Action {
 			saveErrors( request, errors );
 			return mapping.findForward( "error" );
 		}
-	
-		
+
+
 		TaskDef_Complex tdc = (TaskDef_Complex)delegateObject.getTaskDef();
-		
+
 		RootInfoVO rivo = new RootInfoVO();
 		rivo.setTaskId( tdc.getId() );
 		rivo.setDescription( tdc.getComplexTaskDefRoot().getDescription() );
@@ -92,7 +94,7 @@ public class ComplexTaskStructureAction extends Action {
 		rivo.setTitle( tdc.getComplexTaskDefRoot().getTitle() );
 		rivo.setTries( tdc.getComplexTaskDefRoot().getTries() );
 		List<CategoryInfoVO> civos = new ArrayList<CategoryInfoVO>();
-		
+
 		for( Category category : tdc.getComplexTaskDefRoot().getCategoriesList() ){
 			CategoryInfoVO civo = new CategoryInfoVO();
 			civo.setId( category.getId() );
@@ -100,7 +102,7 @@ public class ComplexTaskStructureAction extends Action {
 			civo.setMixAllSubTasks( category.isMixAllSubTasks() );
 			civo.setTasksPerPage( category.getTasksPerPage() );
 			civo.setTitle( category.getTitle() );
-			
+
 			List<BlockInfoVO> bivos = new ArrayList<BlockInfoVO>();
 			for( Block block : category.getBlocks() ){
 				BlockInfoVO bivo = new BlockInfoVO();
@@ -114,12 +116,14 @@ public class ComplexTaskStructureAction extends Action {
 			civo.setBlocks( bivos );
 			civos.add( civo );
 		}
-		
+
 		rivo.setCategories( civos );
-		
-		request.setAttribute( "Root", rivo );			
+
+		request.setAttribute( "Root", rivo );
+    request.setAttribute("stats", new ScoresDatasetProducer(delegateObject.getTaskManager().getTaskletContainer().getTasklets(delegateObject.getTaskId())));
+    request.setAttribute("boxes", new BoxScoresDatasetProducer(delegateObject.getTaskManager().getTaskletContainer().getTasklets(delegateObject.getTaskId())));
 		return mapping.findForward( "success" );
-		
+
 	}
-	
+
 }

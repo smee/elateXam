@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://cewolf.sourceforge.net/taglib/cewolf.tld" prefix="chart"%>
 
 <html:html>
 <head>
@@ -57,6 +58,35 @@
 			</c:forEach>
         </ul>    
 	</fieldset><br>
+	<fieldset>
+<!-- 
+		<jsp:useBean id="fixxaxis" class="de.thorstenberger.taskmodel.view.statistics.graph.FixXAxisChartPostProcessor" />
+--> 
+        <chart:chart 
+            id="line" 
+            title="Punkte-Histogramm" 
+            type="histogram" 
+            xaxislabel="Gesamtpunktzahl"
+			xaxisinteger="true"
+            yaxislabel="Häufigkeit">
+            <chart:data>
+                <chart:producer id="stats"/>
+            </chart:data>
+        </chart:chart>
+        <p>
+        <chart:img chartid="line" renderer="cewolf" width="600" height="500"/>
+        <p>
+        <chart:chart 
+            id="boxes" 
+            title="Punkteverteilung pro Aufgabentyp" 
+            type="box"> 
+            <chart:data>
+                <chart:producer id="boxes"/>
+            </chart:data>
+        </chart:chart>
+        <p>
+        <chart:img chartid="boxes" renderer="cewolf" width="600" height="500"/>
+	</fieldset>
 	</td>
   </tr>
   

@@ -182,6 +182,11 @@
         	<version>2.0.8</version>
           <!-- must not use version > 2.0.8, itext has changed a method signature, leads to binary incompatibility :( -->
         </dependency>
+        <dependency>
+          <groupId>cewolf</groupId>
+          <artifactId>cewolf</artifactId>
+          <version>1.2-SNAPSHOT</version>
+        </dependency>        
     </dependencies>
    <build>
        <resources>

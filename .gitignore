@@ -5,3 +5,4 @@ examServer/examserver.log
 .classpath
 .project
 .settings/
+*.strutside

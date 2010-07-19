@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@taglib uri="http://cewolf.sourceforge.net/taglib/cewolf.tld" prefix="chart"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="/WEB-INF/cewolf.tld" prefix="chart" %>
 
 <html:html>
 <head>
@@ -59,9 +59,6 @@
         </ul>    
 	</fieldset><br>
 	<fieldset>
-<!-- 
-		<jsp:useBean id="fixxaxis" class="de.thorstenberger.taskmodel.view.statistics.graph.FixXAxisChartPostProcessor" />
---> 
         <chart:chart 
             id="line" 
             title="Punkte-Histogramm" 

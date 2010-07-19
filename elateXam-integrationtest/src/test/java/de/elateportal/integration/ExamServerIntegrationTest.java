@@ -232,11 +232,14 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
 
     assertEquals(selenium.getTitle(), "Bearbeitung: Test");
     verifyEquals(selenium.getValue("task[0].text"), "foo");
-    // submit the exam
-    verifyTrue(selenium.isTextPresent(""));
-    clickAndWait("submit");
 
-    assertTrue(selenium.getConfirmation().matches("^Mit der Abgabe Ihrer Aufgaben beenden Sie die Bearbeitung\\.\n\nSie haben noch nicht alle Aufgaben bearbeitet\\. Wollen Sie wirklich abgeben[\\s\\S]$"));
+    verifyTrue(selenium.isTextPresent("6 / 11: 55%"));
+    // submit the exam without answering all questions
+    selenium.answerOnNextPrompt("ABGEBEN");
+    clickAndWait("submit");
+    // there should be a prompt popup that asks us to enter "ABGEBEN" (german for SUBMIT)
+    assertTrue(selenium.getPrompt().matches("^Sie haben noch nicht alle Aufgaben bearbeitet\\. \nWollen Sie wirklich abgeben[\\s\\S] \n\n\\(Tippen Sie dazu das Wort \"ABGEBEN\"\\)$"));
+
     assertEquals(selenium.getTitle(), "Aufgaben abgegeben");
     verifyTrue(selenium.isTextPresent("Ihre Lösung wurde erfolgreich abgegeben."));
     verifyTrue(selenium.isElementPresent("//img[@src='/taskmodel-core-view/pics/info.gif']"));

@@ -34,14 +34,13 @@
   </developers>
   <scm>
     <connection>
-      scm:svn:https://elateportal.svn.sourceforge.net/svnroot/elateportal/trunk/taskmodel/taskmodel-log
+        git://github.com/smee/elateXam.git
     </connection>
     <developerConnection>
-      scm:svn:https://elateportal.svn.sourceforge.net/svnroot/elateportal/trunk/taskmodel/taskmodel-log
+      scm:git:git@github.com:smee/elateXam.git
     </developerConnection>
-    <tag>HEAD</tag>
     <url>
-      http://elateportal.svn.sourceforge.net/viewvc/elateportal/trunk/taskmodel/taskmodel-log
+      http://github.com/smee/elateXam/taskmodel-log
     </url>
   </scm>
 

@@ -16,10 +16,15 @@
   <description>Common parent for all addon task osgi bundles</description>
   
   <scm>
-    <connection>scm:svn:https://elateportal.svn.sourceforge.net/svnroot/elateportal/trunk/taskmodel/addon</connection>
-    <developerConnection>scm:svn:https://elateportal.svn.sourceforge.net/svnroot/elateportal/trunk/taskmodel/addon</developerConnection>
-    <tag>HEAD</tag>
-    <url>http://elateportal.svn.sourceforge.net/viewvc/elateportal/trunk/taskmodel/addon</url>
+    <connection>
+        git://github.com/smee/elateXam.git
+    </connection>
+    <developerConnection>
+      scm:git:git@github.com:smee/elateXam.git
+    </developerConnection>
+    <url>
+      http://github.com/smee/elateXam/taskmodel/addon
+    </url>
   </scm>
   <modules>
     <module>autotool-addon</module>

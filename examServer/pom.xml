@@ -34,14 +34,13 @@
   </developers>
   <scm>
     <connection>
-      scm:svn:https://elateportal.svn.sourceforge.net/svnroot/elateportal/trunk/examServer
+        git://github.com/smee/elateXam.git
     </connection>
     <developerConnection>
-      scm:svn:https://elateportal.svn.sourceforge.net/svnroot/elateportal/trunk/examServer
+      scm:git:git@github.com:smee/elateXam.git
     </developerConnection>
-    <tag>HEAD</tag>
     <url>
-      http://elateportal.svn.sourceforge.net/viewvc/elateportal/trunk/examServer
+      http://github.com/smee/elateXam
     </url>
   </scm>
   

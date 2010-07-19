@@ -16,10 +16,15 @@
   <description>Applet for drawing/graphical tasks</description>
   
   <scm>
-    <connection>scm:svn:https://elateportal.svn.sourceforge.net/svnroot/elateportal/trunk/taskmodel/drawtask</connection>
-    <developerConnection>scm:svn:https://elateportal.svn.sourceforge.net/svnroot/elateportal/trunk/taskmodel/drawtask</developerConnection>
-    <tag>HEAD</tag>
-    <url>http://elateportal.svn.sourceforge.net/viewvc/elateportal/trunk/taskmodel/drawtask</url>
+    <connection>
+        git://github.com/smee/elateXam.git
+    </connection>
+    <developerConnection>
+      scm:git:git@github.com:smee/elateXam.git
+    </developerConnection>
+    <url>
+      http://github.com/smee/elateXam/taskmodel/drawtask
+    </url>
   </scm>
 
 </project>

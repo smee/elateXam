@@ -108,10 +108,15 @@
   </developers>
 
   <scm>
-    <connection>scm:svn:https://elateportal.svn.sourceforge.net/svnroot/elateportal/trunk/taskmodel</connection>
-    <developerConnection>scm:svn:https://elateportal.svn.sourceforge.net/svnroot/elateportal/trunk/taskmodel</developerConnection>
-    <tag>HEAD</tag>
-    <url>http://elateportal.svn.sourceforge.net/viewvc/elateportal/trunk/taskmodel</url>
+    <connection>
+        git://github.com/smee/elateXam.git
+    </connection>
+    <developerConnection>
+      scm:git:git@github.com:smee/elateXam.git
+    </developerConnection>
+    <url>
+      http://github.com/smee/elateXam/taskmodel
+    </url>
   </scm>
 
   <prerequisites>

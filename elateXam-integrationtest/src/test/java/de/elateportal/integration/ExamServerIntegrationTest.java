@@ -44,22 +44,22 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
     login("admin", "admin");
 
     verifyTrue(selenium.isTextPresent("Gratulation, Sie haben sich erfolgreich angemeldet! Als Administrator haben Sie folgende Möglichkeiten:"));
-    selenium.click("link=Aufgaben-Verwaltung");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("link=Aufgaben-Verwaltung");
+
     assertEquals(selenium.getTitle(), "Hauptmenü");
     selenium.click("taskDefFile");
     selenium.type("taskDefFile", getAbsolutePath("testklausur.xml"));
-    selenium.click("//input[@value='Hochladen']");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("//input[@value='Hochladen']");
+
     selenium.type("title", "Test");
     assertEquals(selenium.getTitle(), "Aufgaben-Konfiguration");
     selenium.click("stopped");
-    selenium.click("//input[@value='Speichern']");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("//input[@value='Speichern']");
+
     assertEquals(selenium.getTitle(), "Hauptmenü");
     assertEquals(selenium.getTable("row.1.0"), "Test");
-    selenium.click("link=Logout");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("link=Logout");
+
     assertEquals(selenium.getTitle(), "Login");
   }
 
@@ -77,25 +77,24 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
     login("admin", "admin");
 
     assertEquals(selenium.getTitle(), "Hauptmenü");
-    selenium.click("link=Benutzer-Verwaltung");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("link=Benutzer-Verwaltung");
+
     assertEquals(selenium.getTitle(), "Benutzerliste");
-    selenium.click("//input[@value='Hinzufügen']");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("//input[@value='Hinzufügen']");
+
     assertEquals(selenium.getTitle(), "Benutzereinstellungen");
     selenium.type("username", "studi");
     selenium.type("password", "test");
     selenium.type("confirmPassword", "test");
     selenium.type("firstName", "Max");
     selenium.type("lastName", "Mustermann");
-    selenium.click("method.save");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("method.save");
+
     assertEquals(selenium.getTitle(), "Benutzereinstellungen");
     verifyTrue(selenium.isElementPresent("//div[@id='successMessages']"));
     // verifyTrue(selenium.isTextPresent("User information for Max Mustermann has been added successfully"));
     verifyTrue(selenium.isElementPresent("//img[@alt='Information' and @class='icon']"));
-    selenium.click("link=Logout");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("link=Logout");
     assertEquals(selenium.getTitle(), "Login");
   }
 
@@ -104,19 +103,18 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
     login("admin", "admin");
 
     assertEquals(selenium.getTitle(), "Hauptmenü");
-    selenium.click("link=Login-Konfiguration");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("link=Login-Konfiguration");
+
     assertEquals(selenium.getTitle(), "Login-Konfiguration");
     selenium.click("askForStudentDetails");
-    selenium.click("//input[@value='Speichern']");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("//input[@value='Speichern']");
+
     assertEquals(selenium.getTitle(), "Login-Konfiguration");
     verifyTrue(selenium.isElementPresent("//div[@id='successMessages']"));
     verifyTrue(selenium.isElementPresent("//img[@alt='Information' and @class='icon']"));
     verifyTrue(selenium.isTextPresent("Ok, Studenten müssen jetzt persönliche Daten angeben."));
     verifyEquals(selenium.getValue("askForStudentDetails"), "on");
-    selenium.click("link=Logout");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("link=Logout");
     assertEquals(selenium.getTitle(), "Login");
   }
 
@@ -125,18 +123,17 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
     login("admin", "admin");
 
     assertEquals(selenium.getTitle(), "Hauptmenü");
-    selenium.click("link=Login-Konfiguration");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("link=Login-Konfiguration");
+
     assertEquals(selenium.getTitle(), "Login-Konfiguration");
     selenium.click("studentsLoginEnabled");
-    selenium.click("//input[@value='Speichern']");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("//input[@value='Speichern']");
+
     assertEquals(selenium.getTitle(), "Login-Konfiguration");
     verifyTrue(selenium.isElementPresent("//div[@id='successMessages']"));
     verifyTrue(selenium.isTextPresent("Ok, Studenten haben jetzt Zugriff auf den Prüfungsserver."));
     verifyTrue(selenium.isElementPresent("//img[@alt='Information' and @class='icon']"));
-    selenium.click("link=Logout");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("link=Logout");
     assertEquals(selenium.getTitle(), "Login");
   }
 
@@ -148,10 +145,17 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
     verifyTrue(selenium.isTextPresent("Bitte vervollständigen Sie Ihre Daten und klicken Sie auf OK!"));
     selenium.type("matrikel", "111000");
     selenium.type("semester", "15");
-    selenium.click("OK");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("OK");
     assertEquals(selenium.getTitle(), "Hauptmenü");
     verifyTrue(selenium.isTextPresent("In der folgenden Liste finden Sie alle verfügbaren Aufgaben."));
+  }
+
+  /**
+   *
+   */
+  protected void clickAndWait(String what) {
+    selenium.click(what);
+    selenium.waitForPageToLoad("30000");
   }
 
   @Test(dependsOnMethods = { "testCompletePersonalDetails", "testAddComplextaskDefinition" })
@@ -161,13 +165,11 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
     assertEquals(selenium.getTitle(), "Hauptmenü");
     // should greet the student with his name
     verifyTrue(selenium.isElementPresent("//div[@id='main']/h1[text()='Hallo Max Mustermann!']"));
-    selenium.click("link=Test");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("link=Test");
     // Start should be available, continue not
     verifyTrue(selenium.isEditable("//input[@value='Starten']"));
     verifyFalse(selenium.isEditable("//input[@value='Fortsetzen']"));
-    selenium.click("//input[@value='Starten']");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("//input[@value='Starten']");
     assertEquals(selenium.getTitle(), "Bearbeitung: Test");
     verifyTrue(selenium.isElementPresent("//fieldset/legend[text()='Aufgabe 1']"));
     verifyTrue(selenium.isElementPresent("//fieldset/legend[text()='Aufgabe 2']"));
@@ -180,12 +182,12 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
     selenium.click("link=Seite 2");
     assertEquals(selenium.getConfirmation(), "Sie haben Ihre Änderungen an dieser Seite noch nicht gespeichert.\n\nOK - Änderungen verwerfen und Seite verlassen\nAbbrechen - Seite noch nicht verlassen");
     assertEquals(selenium.getTitle(), "Bearbeitung: Test");
-    selenium.click("save");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("save");
+
     // current page still page 1?
     verifyTrue(selenium.isElementPresent("//div[@id='dd1']/div/img[@src='/taskmodel-core-view/pics/sparkle001bu.gif']"));
-    selenium.click("link=Seite 3");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("link=Seite 3");
+
     assertEquals(selenium.getTitle(), "Bearbeitung: Test");
     verifyTrue(selenium.isElementPresent("task[0].concept_0"));
     verifyTrue(selenium.isElementPresent("task[0].concept_1"));
@@ -204,47 +206,46 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
     selenium.select("task[1].concept_1", "index=1");
     selenium.select("task[1].concept_2", "index=2");
     selenium.select("task[1].concept_3", "index=0");
-    selenium.click("save");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("save");
+
     assertEquals(selenium.getTitle(), "Bearbeitung: Test");
     // page 3 is completely processed
     verifyTrue(selenium.isElementPresent("//div[@id='dd4']/div/img[@src='/taskmodel-core-view/icons/processed.gif']"));
     // cloze subtask
-    selenium.click("link=Seite 5");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("link=Seite 5");
+
     assertEquals(selenium.getTitle(), "Bearbeitung: Test");
     selenium.type("task[0].gap_0", "a");
     selenium.type("task[1].gap_0", "a");
-    selenium.click("save");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("save");
+
     assertEquals(selenium.getTitle(), "Bearbeitung: Test");
     verifyEquals(selenium.getValue("task[0].gap_0"), "a");
     verifyEquals(selenium.getValue("task[1].gap_0"), "a");
     // text subtask
-    selenium.click("link=Seite 7");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("link=Seite 7");
+
     assertEquals(selenium.getTitle(), "Bearbeitung: Test");
     verifyTrue(selenium.isElementPresent("task[0].text"));
     selenium.type("task[0].text", "foo");
-    selenium.click("save");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("save");
+
     assertEquals(selenium.getTitle(), "Bearbeitung: Test");
     verifyEquals(selenium.getValue("task[0].text"), "foo");
     // submit the exam
     verifyTrue(selenium.isTextPresent(""));
-    selenium.click("submit");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("submit");
+
     assertTrue(selenium.getConfirmation().matches("^Mit der Abgabe Ihrer Aufgaben beenden Sie die Bearbeitung\\.\n\nSie haben noch nicht alle Aufgaben bearbeitet\\. Wollen Sie wirklich abgeben[\\s\\S]$"));
     assertEquals(selenium.getTitle(), "Aufgaben abgegeben");
     verifyTrue(selenium.isTextPresent("Ihre Lösung wurde erfolgreich abgegeben."));
     verifyTrue(selenium.isElementPresent("//img[@src='/taskmodel-core-view/pics/info.gif']"));
-    selenium.click("link=Übersicht");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("link=Übersicht");
+
     assertEquals(selenium.getTitle(), "");
     // we have processed one try
     verifyEquals(selenium.getTable("//div[@id='main']/table/tbody/tr/td/fieldset[1]/table.1.1"), "1");
-    selenium.click("link=Logout");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("link=Logout");
   }
 
   /**
@@ -256,23 +257,23 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
   public void testRandomCorrection() throws Exception {
     login("admin", "admin");
     assertEquals(selenium.getTitle(), "Hauptmenü");
-    selenium.click("link=Aufgaben-Korrektur");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("link=Aufgaben-Korrektur");
+
     verifyEquals(selenium.getText("//table[@id='row']/tbody/tr/td[4]"), "1");
-    selenium.click("link=Test");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("link=Test");
+
     assertEquals(selenium.getTitle(), "Korrektur-Übersicht");
     verifyEquals(selenium.getText("//fieldset[1]/table/tbody/tr[1]/td[2]"), "1");
     verifyTrue(selenium.isTextPresent("Keine Elemente vorhanden"));
-    selenium.click("//input[@value='Auswählen']");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("//input[@value='Auswählen']");
+
     assertEquals(selenium.getTitle(), "Korrektur-Übersicht");
     verifyEquals(selenium.getTable("row.1.5"), "admin");
     verifyEquals(selenium.getTable("row.1.3"), "correcting");
-    selenium.click("link=Übersicht");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("link=Übersicht");
+
     assertEquals(selenium.getTitle(), "Hauptmenü");
-    selenium.click("link=Logout");
+    clickAndWait("link=Logout");
   }
 
   /**
@@ -285,8 +286,7 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
     assertEquals(selenium.getTitle(), "Login");
     selenium.type("j_username", username);
     selenium.type("j_password", password);
-    selenium.click("//input[@name='login']");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("//input[@name='login']");
   }
 
   /**
@@ -298,56 +298,55 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
   public void testDoManualCorrection() throws Exception {
     login("admin", "admin");
     assertEquals(selenium.getTitle(), "Hauptmenü");
-    selenium.click("link=Aufgaben-Korrektur");
-    selenium.waitForPageToLoad("30000");
-    selenium.click("link=Test");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("link=Aufgaben-Korrektur");
+
+    clickAndWait("link=Test");
+
     assertEquals(selenium.getTitle(), "Korrektur-Übersicht");
     // start manual correction
-    selenium.click("//table[@id='row']/tbody/tr/td[9]/a/small");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("//table[@id='row']/tbody/tr/td[9]/a/small");
+
     assertEquals(selenium.getTitle(), "Korrektur");
     assertTrue(selenium.isTextPresent("Lösung von studi"));
     verifyEquals(selenium.getTable("//form/table.2.0"), "Aufgaben \n Aufgaben\nmanuelle Korr. notw.\nAufgabe 8\nAufgabe 9\nAufgabe 11\n\nmanuell korrigiert\nkorrigiert\nnicht korrigiert");
     // do manual correction
-    selenium.click("link=Aufgabe 8");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("link=Aufgabe 8");
+
     assertEquals(selenium.getTitle(), "Korrektur");
     // is subtasklet 8 shown?
     assertTrue(selenium.isElementPresent("document.forms[0].elements[4]"));
     verifyEquals(selenium.getText("//td[2]/fieldset/legend"), "Korrektur - Aufgabe 8");
     verifyTrue(selenium.isElementPresent("//td[2]/fieldset/img[1][@src='/taskmodel-core-view/pics/questionmark.gif']"));
-    selenium.click("submit");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("submit");
+
     assertEquals(selenium.getTitle(), "Korrektur");
-    selenium.click("link=Aufgabe 9");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("link=Aufgabe 9");
+
     assertEquals(selenium.getTitle(), "Korrektur");
     verifyEquals(selenium.getText("//td[2]/fieldset/legend"), "Korrektur - Aufgabe 9");
-    selenium.click("submit");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("submit");
+
     assertEquals(selenium.getTitle(), "Korrektur");
-    selenium.click("link=Aufgabe 11");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("link=Aufgabe 11");
+
     assertEquals(selenium.getTitle(), "Korrektur");
     verifyEquals(selenium.getText("//td[2]/fieldset/legend"), "Korrektur - Aufgabe 11");
     selenium.type("task[0].text_points", "3");
-    selenium.click("submit");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("submit");
+
     assertEquals(selenium.getTitle(), "Korrektur");
     // verify successfully completed correction
     verifyTrue(selenium.isTextPresent("Aufgabe korrigiert. Korrekturen:"));
     verifyEquals(selenium.getTable("//font/table.0.1"), "3.0");
     verifyEquals(selenium.getTable("//form/table.2.0"), "Aufgaben \n Aufgaben\nmanuelle Korr. notw.\nmanuell korrigiert\nAufgabe 8\nAufgabe 9\nAufgabe 11\n\nkorrigiert\nnicht korrigiert");
     assertEquals(selenium.getTable("//div/table/tbody/tr/td[2]/fieldset[1]/table.0.1"), "corrected");
-    selenium.click("link=Korrektur-Übersicht");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("link=Korrektur-Übersicht");
+
     assertEquals(selenium.getTitle(), "Korrektur-Übersicht");
-    selenium.click("link=Übersicht");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("link=Übersicht");
+
     assertEquals(selenium.getTitle(), "Hauptmenü");
-    selenium.click("link=Logout");
-    selenium.waitForPageToLoad("30000");
+    clickAndWait("link=Logout");
   }
 
 }

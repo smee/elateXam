@@ -52,7 +52,7 @@
           <generatePackage>de.thorstenberger.taskmodel.complex.jaxb</generatePackage>
           <generateDirectory>${project.build.directory}/jaxb-source</generateDirectory>
           <extension>true</extension>
-          <verbose>true</verbose>
+          <verbose>false</verbose>
         </configuration>
       </plugin>
     </plugins>

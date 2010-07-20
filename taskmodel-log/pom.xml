@@ -50,6 +50,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>buildnumber-maven-plugin</artifactId>
+        <version>buildnumber-maven-plugin-1.0-beta-5-SNAPSHOT</version>
         <executions>
           <execution>
             <id>make-buildnumber</id>
@@ -62,10 +63,6 @@
         <configuration>
           <doUpdate>false</doUpdate>
           <doCheck>false</doCheck>
-          <format>{0,date,yyyyMMdd}</format>
-          <items>
-            <item>timestamp</item>
-          </items>
         </configuration>
       </plugin>
   		<plugin>
@@ -82,6 +79,23 @@
         <artifactId>exec-maven-plugin</artifactId>
         <configuration>
           <mainClass>SecureLogClient</mainClass>
+        </configuration>
+      </plugin>      
+     <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.3.1</version>
+        <configuration>
+          <archive>
+            <manifestEntries>
+	    <Build-Version>${project.version}</Build-Version>
+              <Build-Revision>${buildNumber} at ${timestamp}</Build-Revision>
+	    <Build-Branch>${scmBranch}</Build-Branch>
+	    <Build-User>${user.name}</Build-User>
+	    <Hudson-Build>${BUILD_NUMBER}</Hudson-Build>
+	    <Hudson-BuildId>${BUILD_ID}</Hudson-BuildId>
+            </manifestEntries>
+          </archive>
         </configuration>
       </plugin>      
   	</plugins>

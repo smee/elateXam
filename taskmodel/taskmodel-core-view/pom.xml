@@ -219,8 +219,12 @@
             </manifest>
             <manifestEntries>
               <Implementation-Version>${project.version}</Implementation-Version>
-              <Implementation-Build>${buildNumber}</Implementation-Build>
-            </manifestEntries>
+              <Implementation-Revision>${buildNumber} at ${timestamp}</Implementation-Revision>
+	    <Implementation-Branch>${scmBranch}</Implementation-Branch>
+	    <Implementation-User>${user.name}</Implementation-User>
+	    <Hudson-Build>${BUILD_NUMBER}</Hudson-Build>
+	    <Hudson-BuildId>${BUILD_ID}</Hudson-BuildId>
+	  </manifestEntries>
           </archive>
           <webResources>
             <resource>

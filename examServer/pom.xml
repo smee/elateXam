@@ -106,7 +106,9 @@
             </manifest>
             <manifestEntries>
               <Implementation-Version>${project.version}</Implementation-Version>
-              <Implementation-Build>${buildNumber}</Implementation-Build>
+              <Implementation-Revision>${buildNumber} at ${timestamp}</Implementation-Revision>
+	    <Implementation-Branch>${scmBranch}</Implementation-Branch>
+	    <Implementation-User>${user.name}</Implementation-User>
             </manifestEntries>
           </archive>
               <webResources>
@@ -148,6 +150,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>buildnumber-maven-plugin</artifactId>
+        <version>1.0-beta-5-SNAPSHOT</version>
         <executions>
           <execution>
             <id>make-buildnumber</id>
@@ -160,10 +163,6 @@
         <configuration>
           <doUpdate>false</doUpdate>
           <doCheck>false</doCheck>
-          <format>{0,date,yyyyMMdd-HH:mm:ss}</format>
-          <items>
-            <item>timestamp</item>
-          </items>
         </configuration>
       </plugin>
       <!--

@@ -3,14 +3,12 @@
   org.springframework.context.ApplicationContext ctx = 
     org.springframework.web.context.support.WebApplicationContextUtils.getRequiredWebApplicationContext( application );
   de.thorstenberger.examServer.service.ConfigManager configManager = (de.thorstenberger.examServer.service.ConfigManager) ctx.getBean( "configManager" );
-  String mailSuffix=configManager.getHTTPAuthMail();
-  if(mailSuffix!=null && mailSuffix.length()>0 && mailSuffix.charAt(0)!='@'){
-    mailSuffix="@"+mailSuffix;
-  }
-  pageContext.setAttribute( "usernamePostfix", mailSuffix);
+  java.util.List<String> mailSuffixes=configManager.getRadiusMailSuffixes();
+  pageContext.setAttribute( "mailSuffixes", mailSuffixes);
+  pageContext.setAttribute("showMailsuffixes",!org.apache.commons.lang.StringUtils.isEmpty(configManager.getRadiusHost()));
 %>
 <form method="post" id="loginForm" action="<c:url value="/j_security_check"/>"
-    onsubmit="saveUsername(this);return validateForm(this)">
+    onsubmit="saveUsername(this);adjustUsername(this);return validateForm(this)">
 <fieldset>
 <ul>
 <c:if test="${param.error != null}">
@@ -26,7 +24,14 @@
             <fmt:message key="label.username"/> <span class="req">*</span>
         </label>
         <input type="text" class="text medium" name="j_username" id="j_username" tabindex="1" />
-        <b style="white-space: nowrap;"><c:out value="${usernamePostfix}"></c:out></b>
+        <!--  render all mail suffixes as drop down-->
+        <c:if test="${showMailsuffixes}">
+        	<select name="j_suffix">
+        		<c:forEach items="${mailSuffixes}" var="suffix">
+        		<option value="<c:out value="${suffix}"/>"><c:out value="${suffix}"/></option>
+        		</c:forEach>
+        	</select>
+        </c:if>
     </li>
 
     <li>

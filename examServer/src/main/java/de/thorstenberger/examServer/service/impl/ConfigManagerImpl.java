@@ -29,6 +29,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
@@ -43,8 +44,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import de.thorstenberger.examServer.dao.xml.jaxb.Config;
-import de.thorstenberger.examServer.dao.xml.jaxb.ObjectFactory;
 import de.thorstenberger.examServer.dao.xml.jaxb.ConfigType.PdfSignatureSettingsType;
+import de.thorstenberger.examServer.dao.xml.jaxb.ConfigType.RadiusEmailSuffixes;
+import de.thorstenberger.examServer.dao.xml.jaxb.ObjectFactory;
 import de.thorstenberger.examServer.pdf.signature.SignatureInfos;
 import de.thorstenberger.examServer.service.ConfigManager;
 import de.thorstenberger.examServer.service.ExamServerManager;
@@ -159,9 +161,8 @@ public class ConfigManagerImpl implements ConfigManager {
         final Iterator it = config.getFlag().iterator();
         while (it.hasNext()) {
             final String _flag = (String) it.next();
-            if (_flag.equalsIgnoreCase(flag)) {
-                return true;
-            }
+            if (_flag.equalsIgnoreCase(flag))
+              return true;
         }
         return false;
     }
@@ -307,9 +308,9 @@ public class ConfigManagerImpl implements ConfigManager {
    */
   @Override
   public SignatureInfos getPDFSignatureInfos() {
-    if (!config.isSetPdfSignatureSettings()) {
+    if (!config.isSetPdfSignatureSettings())
       return new SignatureInfos();
-    } else {
+    else {
       final SignatureInfos si = new SignatureInfos();
       try {
         BeanUtils.copyProperties(si, config.getPdfSignatureSettings());
@@ -346,6 +347,42 @@ public class ConfigManagerImpl implements ConfigManager {
       log.warn("Could not copy all properties from SignatureInfos into PDF!", e);
     } catch (final InvocationTargetException e) {
       log.warn("Could not copy all properties from SignatureInfos into PDF!", e);
+    }
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see de.thorstenberger.examServer.service.ConfigManager#getRadiusMailSuffixes()
+   */
+  @Override
+  public List<String> getRadiusMailSuffixes() {
+    List<String> result = new LinkedList<String>();
+    List<RadiusEmailSuffixes> radiusEmailSuffixes = config.getRadiusEmailSuffixes();
+    for (RadiusEmailSuffixes res : radiusEmailSuffixes) {
+      result.add(res.getValue());
+    }
+    return result;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.thorstenberger.examServer.service.ConfigManager#setRadiusMailSuffixes(java.util.List)
+   */
+  @Override
+  public synchronized void setRadiusMailSuffixes(List<String> suffixes) {
+    List<RadiusEmailSuffixes> crntSuffixes = config.getRadiusEmailSuffixes();
+    crntSuffixes.clear();
+
+    try {
+      final ObjectFactory oF = new ObjectFactory();
+      for (String suffix : suffixes) {
+        crntSuffixes.add(oF.createConfigTypeRadiusEmailSuffixes(suffix));
+      }
+      save();
+    } catch (JAXBException e) {
+      log.error("Could not store radius mail suffixes!", e);
     }
   }
 

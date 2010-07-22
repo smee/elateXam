@@ -54,7 +54,8 @@ public class SystemConfigAction extends BaseAction {
     scf.setRadiusHost(configManager.getRadiusHost());
     scf.setRadiusSharedSecret(configManager.getRadiusSharedSecret());
     scf.setSignatureSettings( configManager.getPDFSignatureInfos() );
-    
+    scf.setRadiusMailSuffixes(configManager.getRadiusMailSuffixes());
+
 		return mapping.findForward( "systemConfig" );
 	}
 

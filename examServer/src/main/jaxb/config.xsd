@@ -11,9 +11,9 @@
 				<xs:element name="studentsLoginEnabled" type="xs:boolean"/>
 				<xs:element name="loadJVMOnStartup" type="xs:boolean"/>
 				<xs:element name="flag" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-				<xs:element name="radiusHost" type="xs:string" minOccurs="0"/>
-				<xs:element name="radiusSharedSecret" type="xs:string" minOccurs="0"/>
-                <xs:element name="pdfSignatureSettings" minOccurs="0">
+				<xs:element name="radiusHost" type="xs:string" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="radiusSharedSecret" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="pdfSignatureSettings" minOccurs="0" maxOccurs="1">
                   <xs:complexType>
                     <xs:sequence>
                       <xs:element name="keystoreFile" type="xs:string"/>
@@ -28,7 +28,10 @@
                     </xs:sequence>
                   </xs:complexType>
                 </xs:element>
-			</xs:sequence>
+                <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                  <xs:element name="radiusEmailSuffixes" type="xs:string"/>
+                </xs:sequence>
+  			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

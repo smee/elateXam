@@ -21,6 +21,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.examServer.webapp.form;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+
 import de.thorstenberger.examServer.pdf.signature.SignatureInfos;
 
 /**
@@ -38,6 +43,40 @@ public class SystemConfigForm extends BaseForm {
 	private String radiusHost;
 	private String radiusSharedSecret;
   private SignatureInfos si = new SignatureInfos();
+  private List<String> mailSuffixes;
+
+  /**
+   * @return the mailSuffixes
+   */
+  public List<String> getRadiusMailSuffixes() {
+    return mailSuffixes;
+  }
+
+  /**
+   * Same contents as {@link #getRadiusMailSuffixes()} but as a single space delimited string.
+   * 
+   * @return
+   */
+  public String getRadiusMailSuffixesDelimited() {
+    return StringUtils.join(mailSuffixes, " ");
+  }
+
+  /**
+   * Split the string among whitespaces, add them to the {@link #getRadiusMailSuffixes()} list.
+   *
+   * @param s
+   */
+  public void setRadiusMailSuffixesDelimited(String s) {
+    this.mailSuffixes = Arrays.asList(s.split("\\s+"));
+  }
+
+  /**
+   * @param mailSuffixes
+   *          the mailSuffixes to set
+   */
+  public void setRadiusMailSuffixes(List<String> mailSuffixes) {
+    this.mailSuffixes = mailSuffixes;
+  }
 
   private String todo;
 

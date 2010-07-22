@@ -21,6 +21,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.examServer.service;
 
+import java.util.List;
+
 import de.thorstenberger.examServer.pdf.signature.SignatureInfos;
 
 
@@ -74,12 +76,22 @@ public interface ConfigManager {
     String getRadiusSharedSecret();
     void setRadiusSharedSecret(String secret);
 
+    /**
+     * Get a list of mail suffixes that resemble all mails that can be used for the current radius authentication server.
+     * 
+     * @return
+     */
+    List<String> getRadiusMailSuffixes();
+    
+    void setRadiusMailSuffixes(List<String> suffixes);
+    
   /**
    * Settings for signing and timestamping PDF files.
-   * 
+   *
    * @return
    */
   SignatureInfos getPDFSignatureInfos();
 
   void setPDFSignatureInfos(SignatureInfos si);
+
 }

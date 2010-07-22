@@ -37,6 +37,9 @@ Hier konfigurieren Sie allgemeine Einstellungen des Pr&uuml;fungsservers.
 <tr>
 <td>Radius-Shared-Secret: </td><td><html:password property="radiusSharedSecret" size="60"/></td>
 </tr>
+<tr>
+<td>Radius-Mail-Suffixes (space delimited): </td><td><html:text property="radiusMailSuffixesDelimited" size="60"/></td>
+</tr>
 </table>
 <h3>PDF-Einstellungen</h3>
 <div class="separator">

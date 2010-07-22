@@ -15,6 +15,19 @@
     function validateForm(form) {                                                               
         return validateRequired(form); 
     } 
+    /**
+     * Add value of input field j_suffix to j_username iff it results into an email.
+     * @param form
+     * @returns
+     */
+    function adjustUsername(form){
+    	if(form.j_suffix && containsAt(form.j_suffix.value) && !containsAt(form.j_username.value)){
+    		form.j_username.value=form.j_username.value+form.j_suffix.value;
+    	}
+    }
+    function containsAt(str){
+    	return str.indexOf('@')>-1;
+    }
     
     function passwordHint() {
         if ($("j_username").value.length == 0) {

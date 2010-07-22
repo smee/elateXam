@@ -71,10 +71,10 @@ public class SystemConfigSubmitAction extends BaseAction {
 		configManager.setRadiusHost( scf.getRadiusHost() );
 		configManager.setRadiusSharedSecret( scf.getRadiusSharedSecret() );
 		configManager.setPDFSignatureInfos( scf.getSignatureSettings() );
+    configManager.setRadiusMailSuffixes(scf.getRadiusMailSuffixes());
 
-    if ("Signatur testen".equals(scf.getTodo())) {
+    if ("Signatur testen".equals(scf.getTodo()))
       return createSignedPDF(mapping, request, response, configManager);
-    }
 
     final ActionMessages messages = new ActionMessages();
 		messages.add(ActionMessages.GLOBAL_MESSAGE,	new ActionMessage( "systemConfig.saved" ) );

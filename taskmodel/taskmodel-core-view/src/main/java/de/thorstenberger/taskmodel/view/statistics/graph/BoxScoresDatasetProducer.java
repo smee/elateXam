@@ -44,11 +44,14 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTa
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Text;
 
 /**
+ * Chart dataset to show box and whisker charts of point distribution per subtasklet type.
+ * 
  * @author Steffen Dienst
- *
+ * 
  */
 public class BoxScoresDatasetProducer implements DatasetProducer {
   static {
+    // make sure we can render boxandwhisker charts, too
     CewolfChartFactory.registerFactory(new CewolfChartFactory("box") {
 
       @Override
@@ -58,6 +61,7 @@ public class BoxScoresDatasetProducer implements DatasetProducer {
       }
     });
   }
+
   private List mc, cloze, mapping, text;
 
   public BoxScoresDatasetProducer(List<Tasklet> tasklets) {

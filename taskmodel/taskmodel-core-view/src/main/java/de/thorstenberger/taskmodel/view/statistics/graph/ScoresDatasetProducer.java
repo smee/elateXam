@@ -36,6 +36,8 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 
 /**
+ * Chart dataset for tasklet score distribution, automatically scored vs. manually scored.
+ *
  * @author Steffen Dienst
  *
  */
@@ -58,6 +60,7 @@ public class ScoresDatasetProducer implements DatasetProducer {
         for (ManualCorrection mc : tc.getManualCorrections()) {
           score += mc.getPoints();
         }
+        // mean score for multiple manual corrections
         if (!tc.getManualCorrections().isEmpty()) {
           score /= tc.getManualCorrections().size();
         }
@@ -130,7 +133,7 @@ public class ScoresDatasetProducer implements DatasetProducer {
    * @see de.laures.cewolf.DatasetProducer#getProducerId()
    */
   public String getProducerId() {
-    return "some data provider";
+    return "auto vs. manual scores";
   }
 
 }

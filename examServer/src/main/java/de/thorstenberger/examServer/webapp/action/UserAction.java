@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.acegisecurity.Authentication;
 import org.acegisecurity.AuthenticationTrustResolver;
 import org.acegisecurity.AuthenticationTrustResolverImpl;
+import org.acegisecurity.GrantedAuthority;
 import org.acegisecurity.context.SecurityContext;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.userdetails.UsernameNotFoundException;
@@ -186,6 +187,11 @@ public final class UserAction extends BaseAction {
         // See https://appfuse.dev.java.net/issues/show_bug.cgi?id=128
         ActionMessages errors = form.validate(mapping, request);
 
+        UserForm userForm = (UserForm) form;
+        // does the user try to change attributes of another user? Allow only for role admin.
+        if (!request.getRemoteUser().equals(userForm.getUsername()) && !validateAdminRole()) {
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.changeuser.notadmin"));
+        }
         if (!errors.isEmpty()) {
             saveErrors(request, errors);
             return mapping.findForward("edit");
@@ -193,7 +199,6 @@ public final class UserAction extends BaseAction {
 
         // Extract attributes and parameters we will need
         ActionMessages messages = new ActionMessages();
-        UserForm userForm = (UserForm) form;
         User user = new User();
 
         // Exceptions are caught by ActionExceptionHandler
@@ -272,6 +277,20 @@ public final class UserAction extends BaseAction {
                 return mapping.findForward("edit");
             }
         }
+    }
+
+    /**
+     * @return
+     */
+    protected boolean validateAdminRole() {
+      // make sure no non-admin tries to save a new user!
+      boolean isAdmin=false;
+      for( GrantedAuthority authority: SecurityContextHolder.getContext().getAuthentication().getAuthorities()){
+        if(authority.getAuthority().equals("admin")) {
+          isAdmin=true;
+        }
+      }
+      return isAdmin;
     }
 
     public ActionForward search(ActionMapping mapping, ActionForm form,

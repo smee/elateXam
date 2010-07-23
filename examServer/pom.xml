@@ -97,9 +97,9 @@
       </plugin>
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
-        <configuration>
+        <configuration><!--
           <attachClasses>true</attachClasses>
-          <archive>
+          --><archive>
             <addMavenDescriptor>false</addMavenDescriptor>
             <manifest>
               <addClasspath>false</addClasspath>

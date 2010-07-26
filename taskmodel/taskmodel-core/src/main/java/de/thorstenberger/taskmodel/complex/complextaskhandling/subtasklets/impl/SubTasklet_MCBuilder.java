@@ -17,26 +17,33 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl;
 
+import static de.thorstenberger.taskmodel.complex.RandomUtil.getPermutation;
+import static de.thorstenberger.taskmodel.complex.RandomUtil.shuffle;
+import static org.apache.commons.lang.ArrayUtils.addAll;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import de.thorstenberger.taskmodel.complex.RandomUtil;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_MC;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.McSubTaskType;
 import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDefType;
-import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
 import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDefType.CorrectType;
 import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDefType.IncorrectType;
+import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
+import de.thorstenberger.taskmodel.util.ReflectionHelper;
 
 /**
  * @author Thorsten Berger
@@ -47,164 +54,210 @@ public class SubTasklet_MCBuilder {
 	Log log = LogFactory.getLog( SubTasklet_MCBuilder.class );
 	private static Random r = new Random();
 	private ObjectFactory taskHandlingobjectFactory = new ObjectFactory();
-	
+
 	/**
-	 * Mögliche Antworten zu MC-Aufgaben hinzufügen.
+	 * Mï¿½gliche Antworten zu MC-Aufgaben hinzufï¿½gen.
 	 * @param newMcSubTask
 	 * @param mcSubTaskDef
 	 */
 	void constructAnswersForMCSubTask( ComplexTaskHandlingType.TryType.PageType.McSubTask newMcSubTask,
 			McSubTaskDefType mcSubTaskDef) throws JAXBException{
 
-		List correctAnswers = mcSubTaskDef.getCorrect();
-		List incorrectAnswers = mcSubTaskDef.getIncorrect();
-				
-		// sicherheitshalber prüfen, dürfte aber schon durch XML-Schema ausgeschlossen sein
-		if( correctAnswers.size() == 0 || mcSubTaskDef.getDisplayedAnswers() == 0 ){
+        List allAvailableAnswers = mcSubTaskDef.getCorrectOrIncorrect();
+        int[] availCorrectAnswersIndices = getIndices(allAvailableAnswers, CorrectType.class);
+        int[] availIncorrectAnswersIndices = getIndices(allAvailableAnswers, IncorrectType.class);
+
+        // make sure the task definition is correct, i.e. that there are answers at all!
+        if (availCorrectAnswersIndices.length == 0 || mcSubTaskDef.getDisplayedAnswers() == 0) {
 			log.warn( "Aufgabe " + mcSubTaskDef.getId() + " wird keine Antworten enthalten!" );
 			return;
 		}
+        // how many correct answers will be presented?
+        int numOfCorrectAnswersToShow = getChosenNumCorrectAnswers(mcSubTaskDef, availCorrectAnswersIndices.length, availIncorrectAnswersIndices.length);
 
-		int numOfCorrectAnswers;
+		// Anzahl der insg. anzuzeigenden Antworten
+        int numOfAnswers = Math.min(numOfCorrectAnswersToShow + availIncorrectAnswersIndices.length, mcSubTaskDef.getDisplayedAnswers());
+        int numOfIncorrectAnswersToShow = numOfAnswers - numOfCorrectAnswersToShow;
+
+
+        // random permutation of indices to all available correct answer definitions
+        int[] correctAnswersOrder = getPermutation(availCorrectAnswersIndices.length);
+        // random permutation of indices to all available incorrect answer definitions
+        int[] incorrectAnswersOrder = getPermutation(availIncorrectAnswersIndices.length);
+
+        // final array of the indices of the answer definition that will be chosen
+        int[] choosenAnswerIndices = addAll(
+                selectFirst(availCorrectAnswersIndices, correctAnswersOrder, numOfCorrectAnswersToShow),
+                selectFirst(availIncorrectAnswersIndices, incorrectAnswersOrder, numOfIncorrectAnswersToShow));
+
+        if (mcSubTaskDef.isPreserveOrderOfAnswers()) {
+            Arrays.sort(choosenAnswerIndices);
+        } else {
+            choosenAnswerIndices = shuffle(choosenAnswerIndices);
+        }
+
+        // Array der ausgewï¿½hlten Antworten
+        ComplexTaskHandlingType.TryType.PageType.McSubTaskType.AnswerType[] toInsert =
+                new ComplexTaskHandlingType.TryType.PageType.McSubTaskType.AnswerType[numOfAnswers];
+
+		int insertIndex = 0;
+        // insert correct answers to represent
+        for (int i = 0; i < numOfAnswers; i++) {
+            toInsert[insertIndex++] = createAnswerType(
+                    allAvailableAnswers.get(choosenAnswerIndices[i]));
+        }
+
+		// und jetzt die Antworten in XML entspr. einfï¿½gen
+		List answers = newMcSubTask.getAnswer();
+		for( int i=0; i<toInsert.length; i++) {
+            answers.add( toInsert[i] );
+        }
+
+	}
+
+    /**
+     * Return the first <code>numToChoose</code> values from <code>values</code> as indexed by <code>indices</code><br/>
+     * Example: selectFirst({10,20,30,40},{2,0,1,3},2) ==> {30,10}
+     *
+     * @param values
+     * @param indices
+     * @param numToChoose
+     * @return
+     */
+    private int[] selectFirst(int[] values, int[] indices, int numToChoose) {
+        if (values.length != indices.length || indices.length < numToChoose)
+            throw new IllegalArgumentException(
+                    String.format("Internal implementation error, can't choose the first %d values of %s indexed by %s!", numToChoose, ArrayUtils.toString(values), ArrayUtils.toString(indices)));
+
+        int[] result = new int[numToChoose];
+        for (int i = 0; i < numToChoose; i++) {
+            result[i] = values[indices[i]];
+        }
+        return result;
+    }
+
+    /**
+     * How many correct answers will be chosen for representation?
+     *
+     * @param mcSubTaskDef
+     * @param availCorrectAnswers
+     *            number of existing correct answer definitions
+     * @param availIncorrectAnswers
+     *            number of existing incorrect answer definitions
+     * @return
+     */
+    protected int getChosenNumCorrectAnswers(McSubTaskDefType mcSubTaskDef, int availCorrectAnswers, int availIncorrectAnswers) {
+        int numOfCorrectAnswers;
 		// nach Kategorie die Anzahl der richtigen Antworten festlegen
 		if( mcSubTaskDef.getCategory().equals( SubTasklet_MC.CAT_SINGLESELECT ) ){
 			numOfCorrectAnswers = 1;
 		}else{
-			
+
 			int wantedMinCorrect = mcSubTaskDef.isSetMinCorrectAnswers() ?
 										mcSubTaskDef.getMinCorrectAnswers() : 1;
-			
+
 			// mindestens so viele richtige Antworten
-			// das kommt daher, dass zu wenig falsche Fragen da sein könnten, um die gewünschte
+			// das kommt daher, dass zu wenig falsche Fragen da sein kï¿½nnten, um die gewï¿½nschte
 			// Anzahl angezeigter Antworten zu erzeugen
-			int minCorr = Math.max( mcSubTaskDef.getDisplayedAnswers() - incorrectAnswers.size(), wantedMinCorrect );
-			// und sicherheitshalber beschränken
-			minCorr = Math.min( minCorr, correctAnswers.size() );
+            int minCorr = Math.max(mcSubTaskDef.getDisplayedAnswers() - availIncorrectAnswers, wantedMinCorrect);
+			// und sicherheitshalber beschrï¿½nken
+            minCorr = Math.min(minCorr, availCorrectAnswers);
 			minCorr = Math.min( minCorr, mcSubTaskDef.getDisplayedAnswers() );
-			
+
 			// maximal so viele richtige Antworten
-			int maxCorr = Math.min( correctAnswers.size(), mcSubTaskDef.getDisplayedAnswers() );
-			if( mcSubTaskDef.isSetMaxCorrectAnswers() )
-				maxCorr = Math.min( maxCorr, mcSubTaskDef.getMaxCorrectAnswers() );
-			
+            int maxCorr = Math.min(availCorrectAnswers, mcSubTaskDef.getDisplayedAnswers());
+			if( mcSubTaskDef.isSetMaxCorrectAnswers() ) {
+                maxCorr = Math.min( maxCorr, mcSubTaskDef.getMaxCorrectAnswers() );
+            }
+
 			// TODO Algorithmus verifizieren
-			if( maxCorr < minCorr )
-				maxCorr = minCorr;
-			
-			// ok, jetzt zufällig mit den berechneten Grenzen festlegen
+			if( maxCorr < minCorr ) {
+                maxCorr = minCorr;
+            }
+
+			// ok, jetzt zufï¿½llig mit den berechneten Grenzen festlegen
 			numOfCorrectAnswers = r.nextInt( maxCorr - minCorr + 1 ) + minCorr;
-			
+
 		}
+        return numOfCorrectAnswers;
+    }
 
-
-		// Anzahl der insg. anzuzeigenden Antworten
-		int numOfAnswers = Math.min( numOfCorrectAnswers + incorrectAnswers.size() , mcSubTaskDef.getDisplayedAnswers() );		
-
-		// Array der ausgewählten Antworten		
-		ComplexTaskHandlingType.TryType.PageType.McSubTaskType.AnswerType[] toInsert =
-			new ComplexTaskHandlingType.TryType.PageType.McSubTaskType.AnswerType[ numOfAnswers ];
-		
-		// Auswahlreihenfolge der Antworten als zufällige Permutation
-		int[] correctAnswersOrder = RandomUtil.getPermutation( correctAnswers.size() );
-		int[] incorrectAnswersOrder = RandomUtil.getPermutation( incorrectAnswers.size() );
-		
-		if( mcSubTaskDef.isPreserveOrderOfAnswers() ){
-			int[] tmpOrder = RandomUtil.getPermutation( correctAnswers.size() );
-			correctAnswersOrder = new int[ numOfCorrectAnswers ];
-			System.arraycopy( tmpOrder, 0, correctAnswersOrder, 0, numOfCorrectAnswers );
-			Arrays.sort( correctAnswersOrder );
-			
-			tmpOrder = RandomUtil.getPermutation( incorrectAnswers.size() );
-			incorrectAnswersOrder = new int[ numOfAnswers - numOfCorrectAnswers ];
-			System.arraycopy( tmpOrder, 0, incorrectAnswersOrder, 0, numOfAnswers - numOfCorrectAnswers );
-			Arrays.sort( incorrectAnswersOrder );
-		}
-		
-		int[] insertOrder = RandomUtil.getPermutation( toInsert.length );
-		if( mcSubTaskDef.isPreserveOrderOfAnswers() ){
-			Arrays.sort( insertOrder );
-		}
-			
-		int insertIndex = 0;
-		
-		// korrekte einfügen
-		for( int i=0; i<numOfCorrectAnswers; i++)
-			toInsert[ insertOrder[ insertIndex++ ] ] = createAnswerType( 
-					(McSubTaskDefType.CorrectType)
-							correctAnswers.get( correctAnswersOrder[i] ) );
-
-		// falsche einfügen
-		for( int i=0; i < ( numOfAnswers - numOfCorrectAnswers ); i++ )
-			toInsert[ insertOrder[ insertIndex++ ] ] = createAnswerType(
-					(McSubTaskDefType.IncorrectType)
-							incorrectAnswers.get( incorrectAnswersOrder[i] ) );
-		
-		
-		// und jetzt die Antworten in XML entspr. einfügen
-		List answers = newMcSubTask.getAnswer();
-		for( int i=0; i<toInsert.length; i++)
-			answers.add( toInsert[i] );
-		
-	}
-	
 	void constructPreviewAnswersForMCSubTask( ComplexTaskHandlingType.TryType.PageType.McSubTask newMcSubTask,
 			McSubTaskDefType mcSubTaskDef) throws JAXBException{
-		
-		List<CorrectType> correctAnswers = (List<CorrectType>)mcSubTaskDef.getCorrect();
-		List<IncorrectType> incorrectAnswers = (List<IncorrectType>)mcSubTaskDef.getIncorrect();
-		
-		// sicherheitshalber prüfen, dürfte aber schon durch XML-Schema ausgeschlossen sein
+
+        List<CorrectType> correctAnswers = SubTasklet_MCBuilder.filterList(mcSubTaskDef.getCorrectOrIncorrect(), CorrectType.class);
+        List<IncorrectType> incorrectAnswers = SubTasklet_MCBuilder.filterList(mcSubTaskDef.getCorrectOrIncorrect(), IncorrectType.class);
+
+		// sicherheitshalber prï¿½fen, dï¿½rfte aber schon durch XML-Schema ausgeschlossen sein
 		if( correctAnswers.size() == 0 || mcSubTaskDef.getDisplayedAnswers() == 0 ){
-			log.warn( "Aufgabe " + mcSubTaskDef.getId() + " enthält keine Antworten" );
+			log.warn( "Aufgabe " + mcSubTaskDef.getId() + " enthï¿½lt keine Antworten" );
 			return;
 		}
-		
+
 		List answers = newMcSubTask.getAnswer();
-		for( CorrectType ct : correctAnswers )
-			answers.add( createAnswerType( ct ) );
-		for( IncorrectType ict : incorrectAnswers )
-			answers.add( createAnswerType( ict ) );
-		
+		for( CorrectType ct : correctAnswers ) {
+            answers.add( createAnswerType( ct ) );
+        }
+		for( IncorrectType ict : incorrectAnswers ) {
+            answers.add( createAnswerType( ict ) );
+        }
+
 	}
-	
-	
+
+
 	/**
 	 * neuen AnswerType aus korrekter Antwort erstellen
 	 * @param correct
 	 * @return
 	 */
-	private ComplexTaskHandlingType.TryType.PageType.McSubTaskType.AnswerType createAnswerType(
-						McSubTaskDefType.CorrectType correct ) throws JAXBException{
-		
-		ComplexTaskHandlingType.TryType.PageType.McSubTaskType.AnswerType ret;
-		
+    private McSubTaskType.AnswerType createAnswerType(Object answer) throws JAXBException {
+
+        ComplexTaskHandlingType.TryType.PageType.McSubTaskType.AnswerType ret;
+
 		ret = taskHandlingobjectFactory.createComplexTaskHandlingTypeTryTypePageTypeMcSubTaskTypeAnswerType();
 
-		ret.setRefId( correct.getId() );
-		ret.setSelected( false );
-		
-		return ret;
-		
-	}
-
-	/**
-	 * neuen AnswerType aus inkorrekten Antworten erstellen
-	 * @param incorrect
-	 * @return
-	 */
-	private ComplexTaskHandlingType.TryType.PageType.McSubTaskType.AnswerType createAnswerType(
-			McSubTaskDefType.IncorrectType incorrect ) throws JAXBException{
-
-		ComplexTaskHandlingType.TryType.PageType.McSubTaskType.AnswerType ret;
-		
-		ret = taskHandlingobjectFactory.createComplexTaskHandlingTypeTryTypePageTypeMcSubTaskTypeAnswerType();
-		
-		ret.setRefId( incorrect.getId() );
+        ret.setRefId((String) ReflectionHelper.callMethod(answer, "getId", new Object[0]));
 		ret.setSelected( false );
 
 		return ret;
 
 	}
+
+    /**
+     * Return all instances of <code>clazz</code> from the given list.
+     *
+     * @param correctOrIncorrect
+     * @param clazz
+     * @return
+     */
+    static List filterList(List correctOrIncorrect, Class<?> clazz) {
+        List result = new ArrayList();
+        for (Object o : correctOrIncorrect) {
+            if (clazz.isInstance(o)) {
+                result.add(o);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Return all instances of <code>clazz</code> from the given list.
+     *
+     * @param correctOrIncorrect
+     * @param clazz
+     * @return
+     */
+    static int[] getIndices(List correctOrIncorrect, Class<?> clazz) {
+        List<Integer> selected = new ArrayList<Integer>();
+        int idx = 0;
+        for (Object o : correctOrIncorrect) {
+            if (clazz.isInstance(o)) {
+                selected.add(idx);
+            }
+            idx++;
+        }
+        return ArrayUtils.toPrimitive(selected.toArray(new Integer[selected.size()]));
+    }
 
 
 }

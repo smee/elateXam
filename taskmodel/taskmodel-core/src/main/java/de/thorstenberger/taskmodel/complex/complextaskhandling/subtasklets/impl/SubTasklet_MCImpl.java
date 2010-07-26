@@ -36,12 +36,14 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitD
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.McSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_MC;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.McTaskBlock;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.McSubTask;
 import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDef;
 import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDefType;
+import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDefType.Correct;
+import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDefType.Incorrect;
 import de.thorstenberger.taskmodel.complex.jaxb.SubTaskDefType;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.McTaskBlock;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.McSubTask;
 
 /**
  * @author Thorsten Berger
@@ -71,7 +73,8 @@ public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#isSetNeedsManualCorrectionFlag()
 	 */
-	public boolean isSetNeedsManualCorrectionFlag() {
+	@Override
+    public boolean isSetNeedsManualCorrectionFlag() {
 		return false;
 	}
 
@@ -89,7 +92,7 @@ public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_
 			if( mcSubmitData.isSelected( i ) ){
 				answerImpl.setSelected( true );
 				if( ss ){
-					// es darf nur eine Antwort bei Single Select ausgewählt sein
+					// es darf nur eine Antwort bei Single Select ausgewï¿½hlt sein
 					if ( sstest )
 						throw new IllegalStateException( TaskHandlingConstants.SUBMIT_DATA_CORRUPTED );
 					sstest = true;
@@ -162,15 +165,17 @@ public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_
 
 				List<Answer> answers = getAnswers();
 				for( Answer answer : answers )
-					if( answer.isCorrect() && !answer.isCorrectlySolvedAnswer() )
-						points -= correctAnswerNegativePoints;
-					else if( !answer.isCorrect() && !answer.isCorrectlySolvedAnswer() )
-						points -= incorrectAnswerNegativePoints;
+					if( answer.isCorrect() && !answer.isCorrectlySolvedAnswer() ) {
+                        points -= correctAnswerNegativePoints;
+                    } else if( !answer.isCorrect() && !answer.isCorrectlySolvedAnswer() ) {
+                        points -= incorrectAnswerNegativePoints;
+                    }
 
 			}
 
-			if( points < 0 )
-				points = 0;
+			if( points < 0 ) {
+                points = 0;
+            }
 
 			setAutoCorrection( points );
 
@@ -216,8 +221,8 @@ public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_
 		List answers = mcSubTask.getAnswer();
 		List<Answer> ret = new ArrayList<Answer>( answers.size() );
 
-		List correctAnswerDefs = mcSubTaskDef.getCorrect();
-		List incorrectAnswerDefs = mcSubTaskDef.getIncorrect();
+        List correctAnswerDefs = SubTasklet_MCBuilder.filterList(mcSubTaskDef.getCorrectOrIncorrect(), Correct.class);
+        List incorrectAnswerDefs = SubTasklet_MCBuilder.filterList(mcSubTaskDef.getCorrectOrIncorrect(), Incorrect.class);
 
 		for( int i=0; i<answers.size(); i++ ){
 			ComplexTaskHandlingType.TryType.PageType.McSubTaskType.AnswerType answer =
@@ -236,8 +241,9 @@ public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_
 				}
 			}
 
-			if( found )
-				continue;
+			if( found ) {
+                continue;
+            }
 
 			// falsche Antwort?
 			for( int j=0; j<incorrectAnswerDefs.size(); j++ ){
@@ -260,7 +266,7 @@ public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_
 
 	}
 
-	public class AnswerImpl implements SubTasklet_MC.Answer{
+    public class AnswerImpl implements SubTasklet_MC.Answer {
 
 		private SubTasklet_MC mcSubTasklet;
 		private McSubTaskDefType.CorrectType correctAnswerDef;
@@ -290,7 +296,8 @@ public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_
 			this.answer = answer;
 		}
 
-		public String toString(){
+		@Override
+        public String toString(){
 			if( correct )
 				return correctAnswerDef.getValue();
 			else
@@ -340,8 +347,9 @@ public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_
 		int ret = 0;
 		List<Answer> answers = getAnswers();
 		for( Answer answer : answers )
-			if( !answer.isCorrectlySolvedAnswer() )
-				ret++;
+			if( !answer.isCorrectlySolvedAnswer() ) {
+                ret++;
+            }
 
 		return ret;
 	}
@@ -351,8 +359,9 @@ public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_
 		int ret = 0;
 		List<Answer> answers = getAnswers();
 		for( Answer answer : answers )
-			if( answer.isSelected() )
-				ret++;
+			if( answer.isSelected() ) {
+                ret++;
+            }
 		return ret;
 	}
 
@@ -381,6 +390,6 @@ public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_
 		}
 	}
 
-	
+
 
 }

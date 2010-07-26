@@ -22,16 +22,16 @@ import java.util.Arrays;
 import java.util.Random;
 
 /**
- * 
+ *
  * random utils
- * 
+ *
  * @author Thorsten Berger
  *
  */
 public class RandomUtil {
 
 	private static Random r = new Random();
-	
+
 	/**
 	 * get random permutation of the n first natural numbers
 	 * @param n
@@ -39,19 +39,20 @@ public class RandomUtil {
 	 */
 	public static int[] getPermutation( int n ){
 		int[] ret = new int[n];
-		
+
 		int[] remaining = new int[n];
 		// init remaining array with the first n natural numbers
-		for(int i=0;i<remaining.length;i++)
-			remaining[i] = i;
-		
+		for(int i=0;i<remaining.length;i++) {
+            remaining[i] = i;
+        }
+
 		// select random element and remove from remaining array
 		for(int i=0;i<ret.length;i++){
 			int a = r.nextInt( remaining.length );
 			ret[i] = remaining [ a ];
 			remaining = removeElement( remaining, a);
 		}
-		
+
 		return ret;
 	}
 
@@ -65,8 +66,9 @@ public class RandomUtil {
 		int[] ret = new int[ array.length - 1 ];
 		int destPos = 0;
 		for( int i=0; i<array.length;i++){
-			if( i!=index )
-				ret[ destPos++ ] = array[i];
+			if( i!=index ) {
+                ret[ destPos++ ] = array[i];
+            }
 		}
 		return ret;
 	}
@@ -80,7 +82,7 @@ public class RandomUtil {
 	public static int getInt( int n ){
 		return r.nextInt( n );
 	}
-	
+
 	/**
 	 * just testing
 	 * @param args
@@ -94,7 +96,7 @@ public class RandomUtil {
 		int allSubtasksSize=10;
 		int numOfTasks = 2;
 		int[] selectOrder = new int[0];
-		
+
 		int[] tmpOrder = RandomUtil.getPermutation( allSubtasksSize );
 		selectOrder = new int[ numOfTasks ];
 		System.arraycopy( tmpOrder, 0, selectOrder, 0, numOfTasks );	// hinten abschneiden
@@ -104,5 +106,30 @@ public class RandomUtil {
 			System.out.print ( selectOrder[i] + " " );
 		}
 	}
-	
+
+    /**
+     * Use "inside out" Durstenfeld-Shuffle for shuffling the given array. Returns a copy, does not change the given
+     * array in place.
+     *
+     * @param source
+     *            array to sort
+     * @return shuffled array
+     * @throws NullPointerException
+     *             if array==null
+     */
+    public static int[] shuffle(int[] source) {
+        int[] shuffled = new int[source.length];
+        if (source.length == 0)
+            return shuffled;
+        Random rnd = new Random();
+
+        shuffled[0] = source[0];
+        for (int i = 1; i < source.length; i++) {
+            int j = rnd.nextInt(i + 1);
+            shuffled[i] = shuffled[j];
+            shuffled[j] = source[i];
+        }
+        return shuffled;
+    }
+
 }

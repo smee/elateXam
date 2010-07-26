@@ -22,9 +22,9 @@ package de.thorstenberger.taskmodel.util;
 import de.thorstenberger.taskmodel.TaskModelRuntimeException;
 
 public class ReflectionHelper {
-	public static Object callMethod(Object obj, String method,Object... args) {
+    public static <T> T callMethod(Object obj, String method, Object... args) {
 		try {
-			return obj.getClass().getMethod(method).invoke(obj,args);
+            return (T) obj.getClass().getMethod(method).invoke(obj, args);
 		} catch (Exception e) {
 			throw new TaskModelRuntimeException(e);
 		}

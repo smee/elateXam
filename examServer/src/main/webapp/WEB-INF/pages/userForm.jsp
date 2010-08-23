@@ -53,14 +53,7 @@
     <li>
         <examServer:label styleClass="desc" key="userForm.username"/>
         <html:errors property="username"/>
-        <c:choose>
-        	<c:when test="${param.from == 'list'}">
-	        	<html:text styleClass="text large" property="username" styleId="username"/>
-        	</c:when>
-        	<c:otherwise>
-	        	<html:text styleClass="text large" property="username" styleId="username" disabled="true" readonly="true"/>
-        	</c:otherwise>
-       	</c:choose>
+       	<html:text styleClass="text large" property="username" styleId="username"/>
         
     </li>
     <li>

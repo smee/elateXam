@@ -47,8 +47,8 @@ import de.thorstenberger.examServer.model.Role;
 import de.thorstenberger.examServer.model.StudentTaskletAnnotationVO;
 import de.thorstenberger.examServer.model.TaskDefVO;
 import de.thorstenberger.examServer.model.TaskletVO;
-import de.thorstenberger.examServer.model.User;
 import de.thorstenberger.examServer.model.TaskletVO.ManualCorrectionsVO;
+import de.thorstenberger.examServer.model.User;
 import de.thorstenberger.examServer.service.ExamServerManager;
 import de.thorstenberger.examServer.service.UserManager;
 import de.thorstenberger.taskmodel.CategoryFilter;
@@ -64,18 +64,19 @@ import de.thorstenberger.taskmodel.TaskDef;
 import de.thorstenberger.taskmodel.TaskFactory;
 import de.thorstenberger.taskmodel.TaskFilter;
 import de.thorstenberger.taskmodel.TaskFilterException;
+import de.thorstenberger.taskmodel.TaskManager.UserAttribute;
 import de.thorstenberger.taskmodel.TaskModelPersistenceException;
 import de.thorstenberger.taskmodel.Tasklet;
 import de.thorstenberger.taskmodel.TaskletCorrection;
 import de.thorstenberger.taskmodel.TaskmodelUtil;
 import de.thorstenberger.taskmodel.UserInfo;
-import de.thorstenberger.taskmodel.TaskManager.UserAttribute;
 import de.thorstenberger.taskmodel.complex.ComplexTaskBuilder;
 import de.thorstenberger.taskmodel.complex.ComplexTasklet;
 import de.thorstenberger.taskmodel.complex.ComplexTaskletImpl;
 import de.thorstenberger.taskmodel.complex.TaskDef_Complex;
 import de.thorstenberger.taskmodel.complex.TaskDef_ComplexImpl;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefDAO;
+import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
 import de.thorstenberger.taskmodel.impl.AbstractTaskFactory;
 import de.thorstenberger.taskmodel.impl.ManualCorrectionImpl;
 import de.thorstenberger.taskmodel.impl.StudentAnnotationImpl;
@@ -233,13 +234,11 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
         TaskletVO taskletVO = taskHandlingDao.getTasklet(taskId, userId);
         final TaskDefVO taskDefVO = taskDefDao.getTaskDef(taskId);
 
-        if (taskDefVO == null) {
+        if (taskDefVO == null)
             throw new TaskApiException("TaskDef " + taskId + " does not exist!");
-        }
 
-        if (taskletVO != null) {
+        if (taskletVO != null)
             throw new TaskApiException("Tasklet (" + userId + ", " + taskId + ") does already exist!");
-        }
 
         taskletVO = new TaskletVO();
         taskletVO.setLogin(userId);
@@ -328,12 +327,13 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
                 users.add(u);
             }
         }
-        
+
         for (final User u : users) {
             // ignore invalid/locked tutors
-            if(u.isAccountExpired() || u.isAccountLocked())
-              continue;
-          
+            if(u.isAccountExpired() || u.isAccountLocked()) {
+                continue;
+            }
+
             final UserInfoImpl ui = new UserInfoImpl();
             ui.setLogin(u.getUsername());
             ui.setFirstName(u.getFirstName());
@@ -356,9 +356,8 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
         final Iterator it = taskDefs.iterator();
         while (it.hasNext()) {
             final TaskDef td = (TaskDef) it.next();
-            if (td.getId() == taskId) {
+            if (td.getId() == taskId)
                 return td;
-            }
         }
         return null;
     }
@@ -414,13 +413,11 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
     public Tasklet getTasklet(final String userId, final long taskId) {
 
         final TaskletVO taskletVO = taskHandlingDao.getTasklet(taskId, userId);
-        if (taskletVO == null) {
+        if (taskletVO == null)
             return null;
-        }
         final TaskDefVO taskDefVO = taskDefDao.getTaskDef(taskId);
-        if (taskDefVO == null) {
+        if (taskDefVO == null)
             throw new RuntimeException("No corresponding taskDef found: " + taskId);
-        }
 
 
         return instantiateTasklet(taskletVO, taskDefVO, userId, taskId);
@@ -572,15 +569,12 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
     }
 
     private boolean objectsDiffer(final Object a, final Object b) {
-        if (a == null && b == null) {
+        if (a == null && b == null)
             return false;
-        }
-        if (a == null && b != null) {
+        if (a == null && b != null)
             return true;
-        }
-        if (b == null && a != null) {
+        if (b == null && a != null)
             return true;
-        }
 
         return !a.equals(b);
     }
@@ -605,11 +599,12 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
     synchronized public long storeNewTaskDef(final String filename, final byte[] fileContent) throws TaskApiException {
         try {
             this.taskDefCache = null;
-
+            String title = "[new task]";
             // throw exception if the file is no valid taskDef
             try {
                 final ByteArrayInputStream bis = new ByteArrayInputStream(fileContent);
-                complexTaskDefDAO.getComplexTaskDefRoot(bis);
+                ComplexTaskDefRoot complexTaskDefRoot = complexTaskDefDAO.getComplexTaskDefRoot(bis);
+                title = complexTaskDefRoot.getTitle();
             } catch (final TaskApiException e) {
                 throw new TaskApiException("Invalid taskDef format.", e);
             }
@@ -628,7 +623,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
             final TaskDefVO td = new TaskDefVO();
             td.setComplexTaskFile(file.getName());
-            td.setTitle("[new task]");
+            td.setTitle(title);
             td.setType(TaskContants.TYPE_COMPLEX);
             td.setStopped(true);
             td.setVisible(true);
@@ -675,9 +670,8 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
             tdvo.setShortDescription(taskDef.getShortDescription());
             taskDefDao.storeTaskDef(tdvo);
 
-        } else {
+        } else
             throw new TaskApiException("Unsupported task of type \"" + taskDef.getType() + "\".");
-        }
     }
 
     /*

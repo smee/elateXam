@@ -10,6 +10,14 @@
   <name>examServer</name>
   <inceptionYear>2006</inceptionYear>
   <organization />
+  <licenses>
+    <license>
+      <name>GPL v2</name>
+      <distribution>repo</distribution>
+      <comments></comments>
+      <url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
+    </license>
+  </licenses>
   <mailingLists>
     <mailingList>
       <name>${pom.name} Dev List</name>

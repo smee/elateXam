@@ -9,6 +9,14 @@
   <packaging>jar</packaging>
   <name>Integration tests for examServer and taskmodel-core-view</name>
   <inceptionYear>2010</inceptionYear>
+    <licenses>
+    <license>
+      <name>GPL v2</name>
+      <distribution>repo</distribution>
+      <comments></comments>
+      <url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
+    </license>
+  </licenses>
   <organization />
   <developers>
     <developer>

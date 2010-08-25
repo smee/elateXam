@@ -26,7 +26,7 @@ clientalias="clientCert"
 
 echo "Generating new server certificate key..."
 keytool -genkeypair -alias ${serveralias} -keyalg RSA -validity 365 -keystore server.keystore -dname cn="${commonname}",o="${ownername}",l="${location}" -keypass ${password} -storepass ${password}
-
+sleep 1
 echo "Generating new client certificate key..."
 keytool -genkeypair -alias ${clientalias} -keyalg RSA -validity 365 -storetype pkcs12 -keystore clientcertificate.p12 -dname cn="${commonname}",o="${ownername}",l="${location}"  -storepass ${password} -keypass ${password}
 

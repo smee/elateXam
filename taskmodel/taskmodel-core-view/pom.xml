@@ -54,11 +54,20 @@
         <type>jar</type>
         <scope>provided</scope>
       </dependency>
-    <!-- Apache commons -->
+<!-- logging -->
     <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+      <version>1.6.1</version>
+      <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>1.6.1</version>
+      <scope>compile</scope>
+    </dependency>    
+    <!-- Apache commons -->
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
@@ -171,6 +180,10 @@
             		<artifactId>itext</artifactId>
             		<groupId>com.lowagie</groupId>
             	</exclusion>
+            	<exclusion>
+            		<artifactId>jcl104-over-slf4j</artifactId>
+            		<groupId>org.slf4j</groupId>
+            	</exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -209,7 +222,7 @@
           		<groupId>crimson</groupId>
           	</exclusion>
           </exclusions>
-        </dependency>        
+        </dependency>   
     </dependencies>
    <build>
        <resources>

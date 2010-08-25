@@ -574,11 +574,25 @@
       <version>1.0-rc3</version>
     </dependency>
     <dependency>
-    	<groupId>commons-logging</groupId>
-    	<artifactId>commons-logging</artifactId>
-    	<version>1.0.4</version>
-    	<type>jar</type>
-    	<scope>compile</scope>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+      <version>1.6.1</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>1.6.1</version>
+      <scope>compile</scope>
+    </dependency>      
+    <dependency>
+      <!-- This dependency is not needed at all. The scope 'provided' results 
+        in globally excluding it from all transitive dependencies. The classes get 
+        provided by jcl-over-slf4j instead. This fixes the errors described in http://articles.qos.ch/classloader.html -->
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>[1.0.0,1.9.99]</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 

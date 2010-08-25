@@ -85,7 +85,18 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-
+ <dependencies>
+         <dependency>
+        <!-- This dependency is not needed at all. The scope 'provided' results in globally excluding
+        it from all transitive dependencies. The classes get provided by jcl-over-slf4j instead.
+        This fixes the errors described in http://articles.qos.ch/classloader.html -->
+        	<groupId>commons-logging</groupId>
+        	<artifactId>commons-logging</artifactId>
+        	<version>1.1.1</version>
+        	<type>jar</type>
+        	<scope>provided</scope>
+        </dependency>
+</dependencies>
   <developers>
     <developer>
       <id>berger</id>

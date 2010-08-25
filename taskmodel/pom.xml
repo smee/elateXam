@@ -173,11 +173,6 @@
           <version>${maven.javadoc.plugin.version}</version>
         </plugin>
         <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>buildnumber-maven-plugin</artifactId>
-          <version>${mojo.buildnumber.plugin.version}</version>
-        </plugin>
-        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-release-plugin</artifactId>
           <version>${maven.release.plugin.version}</version>
@@ -213,23 +208,32 @@
         </executions>
       </plugin>
       <!-- buildnumber -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>buildnumber-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>make-buildnumber</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>create</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <doUpdate>false</doUpdate>
-          <doCheck>false</doCheck>
-        </configuration>
-      </plugin>
+     <plugin>
+           <groupId>org.codehaus.groovy.maven</groupId>
+           <artifactId>gmaven-plugin</artifactId>
+           <version>1.0</version>
+           <executions>
+                <execution>
+                         <phase>generate-resources</phase>
+                         <goals>
+                             <goal>execute</goal>
+                         </goals>
+                         <configuration>
+                             <!-- Fetch build version information, store for use in Mifos -->
+                             <source>
+                                 def env = System.getenv()
+                                 def gitcmd = "git"
+                                 if (env['OS'] =~ /^Windows/)
+                                     gitcmd = "cmd /c ${gitcmd}"
+                                 def gitShaProc = """${gitcmd} log --pretty=format:%H -n1""".execute()
+                                 project.properties['buildNumber'] = gitShaProc.in.text
+                                 project.properties['scmBranch'] = """${gitcmd} symbolic-ref HEAD""".execute().in.text
+                                 project.properties['timestamp'] = "" + new Date()
+                             </source>
+                         </configuration>
+                </execution>
+            </executions>
+        </plugin>
       <!-- erstelle eclipse projekte aus unterprojekten mit 'mvn eclipse:eclipse' -->
       <plugin>
         <inherited>true</inherited>

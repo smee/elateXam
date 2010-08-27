@@ -22,10 +22,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 package de.thorstenberger.examServer.service.impl;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
@@ -59,13 +57,11 @@ public class ExamServerManagerImpl implements ExamServerManager, ApplicationCont
     // TODO Auto-generated constructor stub
   }
 
-  private void configLogging(final File log4JConfigFile) {
+    private void configLogging(final InputStream inputStream) {
 
     final Properties p = new Properties();
     try {
-      p.load(new FileInputStream(log4JConfigFile));
-    } catch (final FileNotFoundException e) {
-      throw new RuntimeException(e);
+            p.load(inputStream);
     } catch (final IOException e) {
       throw new RuntimeException(e);
     }
@@ -161,13 +157,7 @@ public class ExamServerManagerImpl implements ExamServerManager, ApplicationCont
     }
 
     if (sc != null) {
-      File log4j;
-      try {
-        log4j = new File(this.getClass().getClassLoader().getResource("examserverLog4j.properties").toURI());
-        configLogging(log4j);
-      } catch (final URISyntaxException e) {
-        throw new RuntimeException(e);
-      }
+            configLogging(this.getClass().getClassLoader().getResourceAsStream("examserverLog4j.properties"));
     }
 
   }

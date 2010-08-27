@@ -44,11 +44,6 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>commons-logging</groupId>
-        <artifactId>commons-logging</artifactId>
-        <version>1.1.1</version>
-      </dependency>
-      <dependency>
         <groupId>commons-lang</groupId>
         <artifactId>commons-lang</artifactId>
         <version>2.4</version>
@@ -78,11 +73,6 @@
         <artifactId>spring-core</artifactId>
         <version>2.5.4</version>
       </dependency>      
-      <dependency>
-        <groupId>log4j</groupId>
-        <artifactId>log4j</artifactId>
-        <version>1.2.14</version>
-      </dependency>
     </dependencies>
   </dependencyManagement>
  <dependencies>
@@ -96,6 +86,12 @@
         	<type>jar</type>
         	<scope>provided</scope>
         </dependency>
+      <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.14</version>
+        <scope>provided</scope>
+      </dependency>	
 </dependencies>
   <developers>
     <developer>

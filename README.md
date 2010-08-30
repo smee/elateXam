@@ -2,6 +2,7 @@
 
 This repository contains the complete code of a GPL v2 licensed eAssessment solution suitable for exams in an educational context.
 
+
 Subprojects
 -----------
 
@@ -17,16 +18,24 @@ Subprojects
 Building
 ---------
 
-Make sure you have a recent installation of [Java JDK 1.6.0+](http://www.oracle.com/technetwork/java/javase/downloads/index.html) as well as [Maven 2](http://maven.apache.org/download.html).
+Make sure you have a recent installation of [Java JDK 1.6.0+](http://www.oracle.com/technetwork/java/javase/downloads/index.html) as well as [Maven 2](http://maven.apache.org/download.html). Also there are two more external dependencies:
+* [CEWolf](http://github.com/smee/cewolf): struts 1 graphing component
+* [HttpBot](http://github.com/smee/httpbot): scriptable http crawler
 
-1. Checkout sources: `git checkout git://github.com/smee/elateXam.git`
-2. Build and install the taskmodel:
+1. Build the prerequisites.
+2. Checkout sources: `git checkout git://github.com/smee/elateXam.git`
+3. Build and install the taskmodel:
     cd taskmodel
     mvn clean install
     cd ..
-3. Build and install the examserver:
+4. Build and install the examserver:
     cd examserver
     mvn clean install
 
-If you have an installation of Tomcat v5.5 available, you may also directly install all needed artifacts by changing the maven commands to
+Running
+--------
+If you have an installation of Tomcat v5.5 available, you may also directly install all needed artifacts by changing the maven commands above to
     mvn clean install -PdeployTomcat -Dtomcat.path=/path/to/tomcat-5.5.27/'
+    
+Assuming your tomcat configuration is unchanged, open your browser and navigate to [http://localhost:8080/examServer]()
+

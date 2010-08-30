@@ -87,9 +87,6 @@ public class RadiusAuthenticationProvider extends AbstractUserDetailsAuthenticat
         messageSourceAccessor.getMessage("AbstractUserDetailsAuthenticationProvider.onlySupports",
         "Only UsernamePasswordAuthenticationToken is supported"));
 
-    if (!configManager.isStudentsLoginEnabled()) {
-      throw new AuthenticationServiceException("Login disabled for student role.");
-    }
 
     if (!StringUtils.isEmpty(configManager.getRadiusHost()) && !StringUtils.isEmpty(configManager.getRadiusSharedSecret())) {
 
@@ -103,9 +100,8 @@ public class RadiusAuthenticationProvider extends AbstractUserDetailsAuthenticat
 
         userBean = getRemoteUserInfos(username, password);
 
-        if (!userBean.getRole().equals("student")) {
-          throw new AuthenticationServiceException("Only student role allowed.");
-        }
+        if (userBean.getRole().equals("student") && !configManager.isStudentsLoginEnabled())
+            throw new AuthenticationServiceException("Login disabled for student role.");
 
         try {
 

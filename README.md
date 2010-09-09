@@ -18,9 +18,9 @@ Subprojects
 Building
 ---------
 
-Make sure you have a recent installation of [Java JDK 1.6.0+](http://www.oracle.com/technetwork/java/javase/downloads/index.html) as well as [Maven 2](http://maven.apache.org/download.html). Also there are two more external dependencies:
-* [CEWolf](http://github.com/smee/cewolf): struts 1 graphing component
-* [HttpBot](http://github.com/smee/httpbot): scriptable http crawler
+Make sure you have a recent installation of [Java JDK 1.6.0+](http://www.oracle.com/technetwork/java/javase/downloads/index.html) as well as [Maven 2](http://maven.apache.org/download.html). Also there are two more external dependencies:   
+* [CEWolf](http://github.com/smee/cewolf): struts 1 graphing component (for statistics graphes)
+* [HttpBot](http://github.com/smee/httpbot): scriptable http crawler (importing users from moodle via .csv download)
 
 1. Build the prerequisites.
 2. Checkout sources: `git checkout git://github.com/smee/elateXam.git`

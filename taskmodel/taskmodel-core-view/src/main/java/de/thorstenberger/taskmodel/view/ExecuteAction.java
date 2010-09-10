@@ -46,7 +46,7 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.Try.ProgressInfor
 /**
  * TODO transactions that respects all changes to tasklets etc. per action
  * @author Thorsten Berger
- * 
+ *
  */
 public class ExecuteAction extends org.apache.struts.action.Action {
 
@@ -131,15 +131,17 @@ public class ExecuteAction extends org.apache.struts.action.Action {
 
         try {
 
-            if ("new".equals(todo)) { // new try
-                ct.startNewTry(Integer.parseInt(request.getParameter("try")));
-                // TODO logging
-                log.info("Student starts new try.");
+            SavePageAction.logPostData(request, ct);
 
+            if ("new".equals(todo)) { // new try
+                int tryNo = Integer.parseInt(request.getParameter("try"));
+                ct.startNewTry(tryNo);
+
+                log.info("Student starts new try.");
             } else if ("continue".equals(todo)) { // continue try
                 ct.continueLastTry();
-                log.info("Student continues the try.");
 
+                log.info("Student continues the try.");
             } else {
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("invalid.parameter"));
                 saveErrors(request, errors);

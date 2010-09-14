@@ -95,7 +95,7 @@ function send(){
 		inputValue = prompt("Sie haben noch nicht alle Aufgaben bearbeitet. \nWollen Sie wirklich abgeben? \n\n(Tippen Sie dazu das Wort \"ABGEBEN\")",'');
 		return "ABGEBEN"==inputValue;
 	}else{
-	    return confirm("Mit der Abgabe Ihrer Aufgaben beenden Sie die Bearbeitung. \nSie k&ouml;nnen diese danache NICHT mehr &auml;ndern!" );
+	    return confirm("Mit der Abgabe Ihrer Aufgaben beenden Sie die Bearbeitung. \nSie können diese danach NICHT mehr ändern!" );
 	}
 
 }

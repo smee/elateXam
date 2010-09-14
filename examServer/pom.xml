@@ -4,7 +4,7 @@
   xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.elatexam</groupId>
-  <artifactId>examServer</artifactId>
+  <artifactId>examServer-leipzig</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>war</packaging>
   <name>examServer</name>
@@ -62,7 +62,6 @@
   
   
   <build>
-    <finalName>${pom.artifactId}-Leipzig-${pom.version}</finalName>
     <resources>
       <resource>
         <directory>src/main/java</directory>

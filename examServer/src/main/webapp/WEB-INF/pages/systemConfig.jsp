@@ -63,13 +63,13 @@ Hier konfigurieren Sie Einstellungen f&uuml;r die PDF-Signaturen und Zeitstempel
 <td>Pfad zum Keystore (serverseitig): </td><td><html:text property="signatureSettings.keystoreFile" size="60"/></td>
 </tr>
 <tr>
+<td>Alias der Zertifikatkette: </td><td><html:text property="signatureSettings.certificateChainAlias" size="60"/></td>
+</tr>
+<tr>
+<td>Alias des Privatschl&uuml;ssels: </td><td><html:text property="signatureSettings.keyAlias" size="60"/></td>
+</tr>
+<tr>
 <td>Keystorepasswort: </td><td><html:password property="signatureSettings.keystorePassword" size="60"/></td>
-</tr>
-<tr>
-<td>Alias der Zertifikatkette: </td><td><html:password property="signatureSettings.certificateChainAlias" size="60"/></td>
-</tr>
-<tr>
-<td>Alias des Privatschl&uuml;ssels: </td><td><html:password property="signatureSettings.keyAlias" size="60"/></td>
 </tr>
 <tr>
 <td>Privatschl&uuml;sselpasswort: </td><td><html:password property="signatureSettings.privateKeyPassword" size="60"/></td>

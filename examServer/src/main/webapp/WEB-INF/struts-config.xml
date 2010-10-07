@@ -18,6 +18,7 @@
     <form-bean name="taskForm" type="de.thorstenberger.examServer.webapp.form.TaskForm"/>
     <form-bean name="taskUploadForm" type="de.thorstenberger.examServer.webapp.form.TaskDefUploadForm"/>
     <form-bean name="opalGroupMembersImportForm" type="de.thorstenberger.examServer.webapp.form.ImportOpalGroupMembersForm"/>
+    <form-bean name="moodleGroupMembersImportForm" type="de.thorstenberger.examServer.webapp.form.ImportMoodleGroupMembersForm"/>
     <form-bean name="loginConfigForm" type="de.thorstenberger.examServer.webapp.form.LoginConfigForm"/>
     <form-bean name="systemConfigForm" type="de.thorstenberger.examServer.webapp.form.SystemConfigForm"/>
   </form-beans>
@@ -153,6 +154,12 @@
       <forward name="success" redirect="false" path="/WEB-INF/pages/importOpal.jsp"/>
     </action>
     <action path="/opalUsers" type="org.apache.struts.actions.ForwardAction" parameter="/WEB-INF/pages/importOpal.jsp" roles="admin">
+    </action>
+    <!-- actions for importing users from a moodle  course -->
+    <action path="/importMoodleUsers" name="moodleGroupMembersImportForm" type="de.thorstenberger.examServer.webapp.action.userimport.ImportMoodleGroupMembersAction" scope="request" validate="false" input="/WEB-INF/pages/importMoodle.jsp" roles="admin">
+      <forward name="success" redirect="false" path="/WEB-INF/pages/importMoodle.jsp"/>
+    </action>
+    <action path="/moodleUsers" type="org.apache.struts.actions.ForwardAction" parameter="/WEB-INF/pages/importMoodle.jsp" roles="admin">
     </action>
   </action-mappings>
   <controller inputForward="true" maxFileSize="2M" nocache="true"/>

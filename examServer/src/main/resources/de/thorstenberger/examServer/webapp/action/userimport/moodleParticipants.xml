@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<robotPlan>
+  <step>
+    <mode>GET</mode>
+    <url>https://moodle.uni-leipzig.de</url>
+    <element />
+    <param />
+  </step>
+  <step>
+    <mode>GET_Link</mode>
+    <name>Login</name>
+    <element />
+    <param />
+  </step>
+  <step>
+    <mode>POST</mode>
+    <name>formular</name>
+    <element />
+    <param>
+      <type>select</type>
+      <name>gruppe</name>
+      <value>inf</value>
+      <state />
+    </param>
+    <param>
+      <type>input</type>
+      <name>username</name>
+      <value>param:un</value>
+      <state />
+    </param>
+    <param>
+      <type>input</type>
+      <name>password</name>
+      <value>param:pw</value>
+      <state />
+    </param>
+    <param>
+      <type>hidden</type>
+      <name>testcookies</name>
+      <value>1</value>
+      <state />
+    </param>    
+    <button>submitOk</button>
+  </step>
+  <step>
+    <mode>GET_Link</mode>
+    <name>Mein Moodle</name>
+    <element />
+    <param />
+  </step>
+  <step>
+    <mode>GET_Link</mode>
+    <name>param:coursename</name>
+    <element />
+    <param />
+  </step>
+  <step>
+    <mode>GET_Link</mode>
+    <name>Teilnehmer exportieren</name>
+    <element />
+    <param />
+  </step>
+  <step>
+    <mode>POST</mode>
+    <name>roleform</name>
+    <element />
+    <param>
+      <type>select</type>
+      <name>role</name>
+      <value>5</value>
+      <state />
+    </param>
+    <param>
+      <type>checkbox</type>
+      <name>username</name>
+      <state>true</state>
+      <value/>
+    </param>
+    <param>
+      <type>checkbox</type>
+      <name>email</name>
+      <state>true</state>
+      <value/>
+    </param>
+    <param>
+      <type>checkbox</type>
+      <name>firstname</name>
+      <state>true</state>
+      <value/>
+    </param>
+    <param>
+      <type>checkbox</type>
+      <name>lastname</name>
+      <state>true</state>
+      <value/>
+    </param>
+    <param>
+      <type>select</type>
+      <name>username_column</name>
+      <value>1</value>
+      <state />
+    </param>
+    <param>
+      <type>select</type>
+      <name>email_column</name>
+      <value>2</value>
+      <state />
+    </param>
+    <param>
+      <type>select</type>
+      <name>firstname_column</name>
+      <value>3</value>
+      <state />
+    </param>
+    <param>
+      <type>select</type>
+      <name>lastname_column</name>
+      <value>4</value>
+      <state />
+    </param>  
+    <button>als Textdatei downloaden</button>
+  </step>  
+</robotPlan>

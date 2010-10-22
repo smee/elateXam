@@ -14,6 +14,22 @@ jcs.region.taskmodel-core_userObjectCache.elementattributes.IdleTime=3600
 jcs.region.taskmodel-core_userObjectCache.elementattributes.IsSpool=false
 jcs.region.taskmodel-core_userObjectCache.elementattributes.IsRemote=false
 jcs.region.taskmodel-core_userObjectCache.elementattributes.IsLateral=false  
+
+# preview cache configuration
+jcs.region.misc-cache=
+jcs.region.misc-cache.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.misc-cache.cacheattributes.MaxObjects=300
+jcs.region.misc-cache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.misc-cache.cacheattributes.UseMemoryShrinker=false
+jcs.region.misc-cache.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.region.misc-cache.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.region.misc-cache.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.misc-cache.elementattributes.IsEternal=false
+jcs.region.misc-cache.elementattributes.MaxLifeSeconds=7200
+jcs.region.misc-cache.elementattributes.IdleTime=3600
+jcs.region.misc-cache.elementattributes.IsSpool=false
+jcs.region.misc-cache.elementattributes.IsRemote=false
+jcs.region.misc-cache.elementattributes.IsLateral=false  
     
 
 ## sets the default aux value for any non configured caches

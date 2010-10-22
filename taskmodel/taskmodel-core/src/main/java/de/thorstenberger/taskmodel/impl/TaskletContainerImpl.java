@@ -52,16 +52,24 @@ public class TaskletContainerImpl implements TaskletContainer {
 	 *
 	 */
 	public TaskletContainerImpl( final TaskFactory taskFactory ) {
-		this.taskFactory = taskFactory;
+        this(taskFactory, "taskmodel-core_userObjectCache");
+    }
 
-		// TODO check for at least 512MB of free memory
+    /**
+     * @param taskFactory
+     * @param cacheName
+     */
+    public TaskletContainerImpl(final TaskFactory taskFactory, String cacheName) {
+        this.taskFactory = taskFactory;
+
+        // TODO check for at least 512MB of free memory
 //		System.out.println( Runtime.getRuntime().maxMemory() );
 
-		try {
-			this.userObjectCache = JCS.getInstance( "taskmodel-core_userObjectCache" );
-		} catch (final CacheException e) {
-			throw new TaskModelPersistenceException( e );
-		}
+        try {
+            this.userObjectCache = JCS.getInstance(cacheName);
+        } catch (final CacheException e) {
+            throw new TaskModelPersistenceException(e);
+        }
 	}
 
 	/* (non-Javadoc)
@@ -194,9 +202,8 @@ public class TaskletContainerImpl implements TaskletContainer {
 
 		}
 
-		if( assignableTasklets.size() == 0 ) {
-      throw new TaskApiException( TaskHandlingConstants.NO_UNCORRECTED_AND_UNASSIGNED_SOLUTIONS_AVAILABLE );
-    }
+		if( assignableTasklets.size() == 0 )
+            throw new TaskApiException( TaskHandlingConstants.NO_UNCORRECTED_AND_UNASSIGNED_SOLUTIONS_AVAILABLE );
 
 		assignableTasklets.get( r.nextInt( assignableTasklets.size() ) ).assignToCorrector( correctorId );
 
@@ -224,7 +231,7 @@ public class TaskletContainerImpl implements TaskletContainer {
       ret.add( getTasklet( taskId, userId ) );
     }
 
-		return ret; 
+		return ret;
 
 	}
 
@@ -242,7 +249,7 @@ public class TaskletContainerImpl implements TaskletContainer {
 	 */
 	public synchronized void reset() {
 		try {
-			userObjectCache.destroy();
+            userObjectCache.remove();
 		} catch (final CacheException e) {
 			throw new TaskModelPersistenceException( e );
 		}

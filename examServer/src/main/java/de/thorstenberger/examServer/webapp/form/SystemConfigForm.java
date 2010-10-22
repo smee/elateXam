@@ -34,16 +34,19 @@ import de.thorstenberger.examServer.pdf.signature.SignatureInfos;
  */
 public class SystemConfigForm extends BaseForm {
 
-	private String title;
-	private String remoteUserManagerURL;
-	private boolean loadJVMOnStartup;
+    private String title;
+    private String remoteUserManagerURL;
+    private boolean loadJVMOnStartup;
 
-	private String httpAuthURL;
-	private String httpAuthMail;
-	private String radiusHost;
-	private String radiusSharedSecret;
+    private String httpAuthURL;
+    private String httpAuthMail;
+    private String radiusHost;
+    private String radiusSharedSecret;
   private SignatureInfos si = new SignatureInfos();
   private List<String> mailSuffixes;
+
+    private long randomSeed;
+    private boolean randomSeedRandom = true;
 
   /**
    * @return the mailSuffixes
@@ -54,7 +57,7 @@ public class SystemConfigForm extends BaseForm {
 
   /**
    * Same contents as {@link #getRadiusMailSuffixes()} but as a single space delimited string.
-   * 
+   *
    * @return
    */
   public String getRadiusMailSuffixesDelimited() {
@@ -80,7 +83,7 @@ public class SystemConfigForm extends BaseForm {
 
   private String todo;
 
-	/**
+    /**
    * @return name of the submit button pressed
    */
   public String getTodo() {
@@ -120,65 +123,65 @@ public class SystemConfigForm extends BaseForm {
     this.radiusSharedSecret = radiusSharedSecret;
   }
   /**
-	 * @return Returns the loadJVMOnStartup.
-	 */
-	public boolean isLoadJVMOnStartup() {
-		return loadJVMOnStartup;
-	}
-	/**
-	 * @param loadJVMOnStartup The loadJVMOnStartup to set.
-	 */
-	public void setLoadJVMOnStartup(final boolean loadJVMOnStartup) {
-		this.loadJVMOnStartup = loadJVMOnStartup;
-	}
-	/**
-	 * @return Returns the remoteUserManagerURL.
-	 */
-	public String getRemoteUserManagerURL() {
-		return remoteUserManagerURL;
-	}
-	/**
-	 * @param remoteUserManagerURL The remoteUserManagerURL to set.
-	 */
-	public void setRemoteUserManagerURL(final String remoteUserManagerURL) {
-		this.remoteUserManagerURL = remoteUserManagerURL;
-	}
-	/**
-	 * @return Returns the title.
-	 */
-	public String getTitle() {
-		return title;
-	}
-	/**
-	 * @param title The title to set.
-	 */
-	public void setTitle(final String title) {
-		this.title = title;
-	}
-	/**
-	 * @return the httpAuthURL
-	 */
-	public String getHttpAuthURL() {
-		return httpAuthURL;
-	}
-	/**
-	 * @param httpAuthURL the httpAuthURL to set
-	 */
-	public void setHttpAuthURL(final String httpAuthURL) {
-		this.httpAuthURL = httpAuthURL;
-	}
-	/**
-	 * @return the httpAuthMail
-	 */
-	public String getHttpAuthMail() {
-		return httpAuthMail;
-	}
-	/**
-	 * @param httpAuthMail the httpAuthMail to set
-	 */
-	public void setHttpAuthMail(final String httpAuthMail) {
-		this.httpAuthMail = httpAuthMail;
-	}
+     * @return Returns the loadJVMOnStartup.
+     */
+    public boolean isLoadJVMOnStartup() {
+        return loadJVMOnStartup;
+    }
+    /**
+     * @param loadJVMOnStartup The loadJVMOnStartup to set.
+     */
+    public void setLoadJVMOnStartup(final boolean loadJVMOnStartup) {
+        this.loadJVMOnStartup = loadJVMOnStartup;
+    }
+    /**
+     * @return Returns the remoteUserManagerURL.
+     */
+    public String getRemoteUserManagerURL() {
+        return remoteUserManagerURL;
+    }
+    /**
+     * @param remoteUserManagerURL The remoteUserManagerURL to set.
+     */
+    public void setRemoteUserManagerURL(final String remoteUserManagerURL) {
+        this.remoteUserManagerURL = remoteUserManagerURL;
+    }
+    /**
+     * @return Returns the title.
+     */
+    public String getTitle() {
+        return title;
+    }
+    /**
+     * @param title The title to set.
+     */
+    public void setTitle(final String title) {
+        this.title = title;
+    }
+    /**
+     * @return the httpAuthURL
+     */
+    public String getHttpAuthURL() {
+        return httpAuthURL;
+    }
+    /**
+     * @param httpAuthURL the httpAuthURL to set
+     */
+    public void setHttpAuthURL(final String httpAuthURL) {
+        this.httpAuthURL = httpAuthURL;
+    }
+    /**
+     * @return the httpAuthMail
+     */
+    public String getHttpAuthMail() {
+        return httpAuthMail;
+    }
+    /**
+     * @param httpAuthMail the httpAuthMail to set
+     */
+    public void setHttpAuthMail(final String httpAuthMail) {
+        this.httpAuthMail = httpAuthMail;
+    }
 
   /**
    * @param si
@@ -195,6 +198,20 @@ public class SystemConfigForm extends BaseForm {
     return si;
   }
 
+    public void setRandomSeed(long value) {
+        this.randomSeed = value;
+    }
 
+    public void setRandomSeedRandom(boolean val) {
+        this.randomSeedRandom = val;
+    }
+
+    public boolean isRandomSeedRandom() {
+        return randomSeedRandom;
+    }
+
+    public long getRandomSeed() {
+        return randomSeed;
+    }
 
 }

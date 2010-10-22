@@ -53,35 +53,42 @@ import de.thorstenberger.examServer.webapp.form.SystemConfigForm;
  */
 public class SystemConfigSubmitAction extends BaseAction {
 
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.examServer.webapp.action.BaseAction#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	public ActionForward execute(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+    /* (non-Javadoc)
+     * @see de.thorstenberger.examServer.webapp.action.BaseAction#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+     */
+    @Override
+    public ActionForward execute(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request, final HttpServletResponse response) throws Exception {
 
 
-		final SystemConfigForm scf = (SystemConfigForm)form;
-		final ConfigManager configManager = (ConfigManager)getBean( "configManager" );
+        final SystemConfigForm scf = (SystemConfigForm)form;
+        final ConfigManager configManager = (ConfigManager)getBean( "configManager" );
 
-		configManager.setTitle( scf.getTitle() );
-		configManager.setRemoteUserManagerURL( scf.getRemoteUserManagerURL() );
-		configManager.setLoadJVMOnStartup( scf.isLoadJVMOnStartup() );
-		configManager.setHTTPAuthURL( scf.getHttpAuthURL() );
-		configManager.setHTTPAuthMail( scf.getHttpAuthMail() );
-		configManager.setRadiusHost( scf.getRadiusHost() );
-		configManager.setRadiusSharedSecret( scf.getRadiusSharedSecret() );
-		configManager.setPDFSignatureInfos( scf.getSignatureSettings() );
+        configManager.setTitle( scf.getTitle() );
+        configManager.setRemoteUserManagerURL( scf.getRemoteUserManagerURL() );
+        configManager.setLoadJVMOnStartup( scf.isLoadJVMOnStartup() );
+        configManager.setHTTPAuthURL( scf.getHttpAuthURL() );
+        configManager.setHTTPAuthMail( scf.getHttpAuthMail() );
+        configManager.setRadiusHost( scf.getRadiusHost() );
+        configManager.setRadiusSharedSecret( scf.getRadiusSharedSecret() );
+        configManager.setPDFSignatureInfos( scf.getSignatureSettings() );
     configManager.setRadiusMailSuffixes(scf.getRadiusMailSuffixes());
+        
+        // manually set random seed?
+        if (scf.isRandomSeedRandom()) {
+            configManager.clearRandomSeed();
+        } else {
+            configManager.setRandomSeed(scf.getRandomSeed());
+        }
 
     if ("Signatur testen".equals(scf.getTodo()))
       return createSignedPDF(mapping, request, response, configManager);
 
     final ActionMessages messages = new ActionMessages();
-		messages.add(ActionMessages.GLOBAL_MESSAGE,	new ActionMessage( "systemConfig.saved" ) );
-		saveMessages( request, messages );
+        messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage( "systemConfig.saved" ) );
+        saveMessages( request, messages );
 
-		return mapping.findForward( "success" );
-	}
+        return mapping.findForward( "success" );
+    }
 
   /**
    * @param mapping

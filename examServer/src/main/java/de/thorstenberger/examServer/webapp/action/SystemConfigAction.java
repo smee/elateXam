@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ */
 /**
  *
  */
@@ -37,28 +37,33 @@ import de.thorstenberger.examServer.webapp.form.SystemConfigForm;
  */
 public class SystemConfigAction extends BaseAction {
 
-	/* (non-Javadoc)
-	 * @see de.thorstenberger.examServer.webapp.action.BaseAction#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	public ActionForward execute(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+    /*
+     * (non-Javadoc)
+     *
+     * @see de.thorstenberger.examServer.webapp.action.BaseAction#execute(org.apache.struts.action.ActionMapping,
+     * org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest,
+     * javax.servlet.http.HttpServletResponse)
+     */
+    @Override
+    public ActionForward execute(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request, final HttpServletResponse response) throws Exception {
 
-		final SystemConfigForm scf = (SystemConfigForm)form;
-		final ConfigManager configManager = (ConfigManager)getBean( "configManager" );
+        final SystemConfigForm scf = (SystemConfigForm) form;
+        final ConfigManager configManager = (ConfigManager) getBean("configManager");
 
-		scf.setLoadJVMOnStartup( configManager.isLoadJVMOnStartup() );
-		scf.setRemoteUserManagerURL( configManager.getRemoteUserManagerURL() );
-		scf.setTitle( configManager.getTitle() );
-		scf.setHttpAuthURL( configManager.getHTTPAuthURL() );
-		scf.setHttpAuthMail( configManager.getHTTPAuthMail() );
-    scf.setRadiusHost(configManager.getRadiusHost());
-    scf.setRadiusSharedSecret(configManager.getRadiusSharedSecret());
-    scf.setSignatureSettings( configManager.getPDFSignatureInfos() );
-    scf.setRadiusMailSuffixes(configManager.getRadiusMailSuffixes());
+        scf.setLoadJVMOnStartup(configManager.isLoadJVMOnStartup());
+        scf.setRemoteUserManagerURL(configManager.getRemoteUserManagerURL());
+        scf.setTitle(configManager.getTitle());
+        scf.setHttpAuthURL(configManager.getHTTPAuthURL());
+        scf.setHttpAuthMail(configManager.getHTTPAuthMail());
+        scf.setRadiusHost(configManager.getRadiusHost());
+        scf.setRadiusSharedSecret(configManager.getRadiusSharedSecret());
+        scf.setSignatureSettings(configManager.getPDFSignatureInfos());
+        scf.setRadiusMailSuffixes(configManager.getRadiusMailSuffixes());
 
-		return mapping.findForward( "systemConfig" );
-	}
-
-
+        scf.setRandomSeed(configManager.getRandomSeed());
+        scf.setRandomSeedRandom(configManager.isRandomSeedRandom());
+        
+        return mapping.findForward("systemConfig");
+    }
 
 }

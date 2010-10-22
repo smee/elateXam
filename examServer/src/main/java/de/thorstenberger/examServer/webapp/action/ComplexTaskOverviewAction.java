@@ -63,7 +63,7 @@ public class ComplexTaskOverviewAction extends BaseAction {
 			throw new RuntimeException( e );
 		}
 
-		TaskManager tm = (TaskManager)getBean( "TaskManager" );
+		TaskManager tm = getTaskManager();
 		TaskDef td = tm.getTaskDef( taskId );
 
 		TaskDef_Complex ctd;
@@ -122,7 +122,7 @@ public class ComplexTaskOverviewAction extends BaseAction {
 		TaskModelViewDelegateObject delegateObject = new TaskModelViewDelegateObjectImpl( taskId,
 				tm,
 				login, user.getFirstName() + " " + user.getLastName(),
-				response.encodeURL( request.getContextPath() + "/TaskViewFactory.html?taskId=" + taskId ) );
+                response.encodeURL(createReturnUrl(request, taskId)));
 
 
 
@@ -137,6 +137,26 @@ public class ComplexTaskOverviewAction extends BaseAction {
 
 
 	}
+
+    /**
+     * Create an absolute url that should be used as return url.
+     * 
+     * @param request
+     * @param taskId
+     * @return
+     */
+    protected String createReturnUrl(HttpServletRequest request, long taskId) {
+        return request.getContextPath() + "/TaskViewFactory.html?taskId=" + taskId;
+    }
+
+    /**
+     * Get a preconfigured instance of {@link TaskManager}.
+     *
+     * @return
+     */
+    protected TaskManager getTaskManager() {
+        return (TaskManager)getBean( "TaskManager" );
+    }
 
 
 }

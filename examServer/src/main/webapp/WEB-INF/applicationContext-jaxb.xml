@@ -37,5 +37,10 @@
 			<ref bean="examServerManager"/>
 		</constructor-arg>
     </bean>
+    <bean id="previewTaskHandlingDao" class="de.thorstenberger.examServer.dao.xml.ReadOnlyTaskHandlingDaoImpl">
+		<constructor-arg>
+			<ref bean="examServerManager"/>
+		</constructor-arg>
+    </bean>
     
 </beans>

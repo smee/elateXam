@@ -59,10 +59,10 @@
 Korrekturstand des letzten Versuchs:
 <c:choose>
 	<c:when test="${task.correctionVisible}">
-		<a href="/taskmodel-core-view/showSolution.do?id=<c:out value="${task.id}"/>">verfügbar</a>
+		<a href="/taskmodel-core-view/showSolution.do?id=<c:out value="${task.id}"/>">verf&uuml;gbar</a>
 	</c:when>
 	<c:otherwise>
-		nicht verfügbar
+		nicht verf&uuml;gbar
 	</c:otherwise>
 </c:choose>
 <br>
@@ -136,7 +136,7 @@ Korrekturstand des letzten Versuchs:
   unten auf einer Seite finden. Was Sie nicht speichern, geht nach Verlassen einer 
   Seite unwiederbringlich verloren! Sollten Sie einmal das Speichern vor dem Verlassen einer Seite vergessen, 
   erscheint ein entsprechender Warnhinweis. Klicken Sie auf "Abbrechen", um auf der aktuellen Seite zu bleiben 
-  und Ihre Änderungen abspeichern zu können.
+  und Ihre &Auml;nderungen abspeichern zu k&ouml;nnen.
     </li>
   <li>Wenn Sie sich durch die Klausur bewegen, benutzen Sie bitte nur die Navigationsleiste 
   links oben. Hier k&ouml;nnen Sie auch sehen, welche Seiten Sie bereits teilweise 
@@ -157,7 +157,7 @@ Korrekturstand des letzten Versuchs:
 <!--<b>
   Die Aufgaben:</b><br>
   <br>
-  Es gibt fünf Aufgabentypen: Multiple-Choice-Fragen, 
+  Es gibt f&uuml;nf Aufgabentypen: Multiple-Choice-Fragen, 
   Zuordnungsaufgaben, L&uuml;ckentextaufgaben, Aufgaben mit freiem Text und Aufgaben zur graphischen Darstellung. Lesen 
   Sie die Aufgabenstellung <b>genau</b> durch!<br>
   <br>
@@ -183,12 +183,12 @@ Korrekturstand des letzten Versuchs:
     Text beantworten. Bitte formulieren Sie in ganzen S&auml;tzen, Stichworte 
     reichen keinesfalls aus. Wenn Sie &uuml;berhaupt Abk&uuml;rzungen verwenden, 
     dann verwenden Sie nur allgemein gebr&auml;uchliche, wie sie im DUDEN stehen.</li>
-  <li>Bei Aufgaben zur graphischen Darstellung sollen Sie eine Fragestellung durch Zeichnen einer Graphik lösen.
-  Ihnen stehen dazu ein Zeichenbereich, in dem Sie Linien zeichnen können und ein Textbereich für zusätzliche Erklärungen zur Verfügung.
-  Weiterhin gibt es eine Rückgängig-Funktion und einen Radiergummi zum Überarbeiten Ihrer Graphik. Bitte beachten Sie, dass es bei diesem
-  Aufgabentyp weniger auf eine schöne als vielmehr auf eine konzeptionelle Darstellung Ihrer Lösung ankommt. Vergeuden Sie keine Zeit mit der Korrektur von verwackelten Linien.<br/>
-  Technischer Hinweis: Für diesen Aufgabentyp muss Ihr Browser Java unterstützen. Internet Explorer und Mozilla/Firefox installieren gegebenenfalls ein entsprechendes Plugin automatisch beim ersten
-  Aufruf nach. Sie können die Java-Laufzeitumgebung von <a href="http://www.java.com/de/download/index.jsp"/>http://www.java.com/de/download/index.jsp</a> auch selbst installieren.
+  <li>Bei Aufgaben zur graphischen Darstellung sollen Sie eine Fragestellung durch Zeichnen einer Graphik l&ouml;sen.
+  Ihnen stehen dazu ein Zeichenbereich, in dem Sie Linien zeichnen k&ouml;nnen und ein Textbereich f&uuml;r zus&auml;tzliche Erkl&auml;rungen zur Verf&uuml;gung.
+  Weiterhin gibt es eine R&uuml;ckg&auml;ngig-Funktion und einen Radiergummi zum &Uuml;berarbeiten Ihrer Graphik. Bitte beachten Sie, dass es bei diesem
+  Aufgabentyp weniger auf eine sch&ouml;ne als vielmehr auf eine konzeptionelle Darstellung Ihrer L&ouml;sung ankommt. Vergeuden Sie keine Zeit mit der Korrektur von verwackelten Linien.<br/>
+  Technischer Hinweis: F&uuml;r diesen Aufgabentyp muss Ihr Browser Java unterst&uuml;tzen. Internet Explorer und Mozilla/Firefox installieren gegebenenfalls ein entsprechendes Plugin automatisch beim ersten
+  Aufruf nach. Sie k&ouml;nnen die Java-Laufzeitumgebung von <a href="http://www.java.com/de/download/index.jsp"/>http://www.java.com/de/download/index.jsp</a> auch selbst installieren.
   </li>
 </ul>
 <br>-->

@@ -6,7 +6,7 @@
     <meta name="menu" content="MainMenu"/>
 </head>
 
-<p>In der folgenden Liste finden Sie alle verfügbaren Aufgaben. Klicken Sie auf den Titel der Aufgabe, um sie zu bearbeiten.</p>
+<p>In der folgenden Liste finden Sie alle verf&uuml;gbaren Aufgaben. Klicken Sie auf den Titel der Aufgabe, um sie zu bearbeiten.</p>
 
 	<display:table partialList="false" name="TaskDefs" uid="row" pagesize="30" sort="list" class="table">
 		<display:column title="Name&nbsp;&nbsp;&nbsp;" sortable="true">
@@ -20,6 +20,9 @@
         </display:column>
 		<display:column title="L&ouml;schen" sortable="false">
 		    <html:link action="/removeTask" paramId="taskId" paramName="row" paramProperty="id"><c:out value="X"/></html:link>
+		</display:column>
+		<display:column title="Vorschau" sortable="false">
+		    <html:link action="/PreviewTaskViewFactory" paramId="taskId" paramName="row" paramProperty="id"><c:out value="Link"/></html:link>
 		</display:column>
 	</display:table>
 

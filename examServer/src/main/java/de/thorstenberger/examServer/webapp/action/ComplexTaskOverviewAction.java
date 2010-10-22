@@ -29,6 +29,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import de.thorstenberger.examServer.model.User;
+import de.thorstenberger.examServer.service.ConfigManager;
 import de.thorstenberger.examServer.service.UserManager;
 import de.thorstenberger.examServer.util.DateUtil;
 import de.thorstenberger.examServer.webapp.vo.ComplexTaskInfoVO;
@@ -122,7 +123,8 @@ public class ComplexTaskOverviewAction extends BaseAction {
 		TaskModelViewDelegateObject delegateObject = new TaskModelViewDelegateObjectImpl( taskId,
 				tm,
 				login, user.getFirstName() + " " + user.getLastName(),
-                response.encodeURL(createReturnUrl(request, taskId)));
+                response.encodeURL(createReturnUrl(request, taskId)),
+                ((ConfigManager) getBean("configManager")).getRandomSeed());
 
 
 
@@ -140,7 +142,7 @@ public class ComplexTaskOverviewAction extends BaseAction {
 
     /**
      * Create an absolute url that should be used as return url.
-     * 
+     *
      * @param request
      * @param taskId
      * @return

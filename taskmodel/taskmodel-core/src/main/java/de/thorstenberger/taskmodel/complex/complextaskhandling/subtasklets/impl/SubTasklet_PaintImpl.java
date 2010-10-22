@@ -33,12 +33,12 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.correctionsubmitdata.PaintCorrectionSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.PaintSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Paint;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.PaintTaskBlock;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.PaintSubTask;
 import de.thorstenberger.taskmodel.complex.jaxb.ManualCorrectionType;
 import de.thorstenberger.taskmodel.complex.jaxb.PaintSubTaskDef;
 import de.thorstenberger.taskmodel.complex.jaxb.SubTaskDefType;
 import de.thorstenberger.taskmodel.complex.jaxb.SubTaskType;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.PaintTaskBlock;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.PaintSubTask;
 
 
 public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTasklet_Paint {
@@ -65,7 +65,8 @@ public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTaskl
 		paintSubTask.setResetted(psd.isResetted());
 	}
 
-	public boolean isCorrected() {
+	@Override
+    public boolean isCorrected() {
 		return paintSubTask.isSetAutoCorrection() || paintSubTask.isSetManualCorrection();
 	}
 
@@ -80,8 +81,9 @@ public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTaskl
 	public void doAutoCorrection() {
 		if( isProcessed() == false ){
 			setAutoCorrection( 0 );
-		}else
-			paintSubTask.setNeedsManualCorrection( true );
+		} else {
+            paintSubTask.setNeedsManualCorrection( true );
+        }
 	}
 
 	public void doManualCorrection( CorrectionSubmitData csd ){
@@ -169,13 +171,13 @@ public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTaskl
 	}
 
 	public boolean isProcessed() {
-		
+
 		if( isTextuallyAnsweredByStudent() )
 			return true;
-		
+
 		if( isResetted() )
 			return false;
-		
+
     if( paintSubTask.getPictureString() != null && paintSubTask.getPictureString().trim().length() > 0 ){
       String templateImage = "";
       if (paintSubTaskDef.isSetImages()) {
@@ -183,9 +185,9 @@ public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTaskl
       }
       return !paintSubTask.getPictureString().equals(templateImage);
     }
-		
+
 		return false;
-		
+
 //		if( paintSubTask.getPictureString() == null || paintSubTask.getPictureString().trim().length() == 0 )
 //			return isTextuallyAnswerdByStudent();
 //		else
@@ -194,7 +196,7 @@ public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTaskl
 	}
 
 
-	public void build() throws TaskApiException{
+    public void build(long randomSeed) throws TaskApiException {
 		paintSubTask.setTextAnswer( "" );
 		paintSubTask.setResetted(false);
 	}
@@ -235,8 +237,9 @@ public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTaskl
 
 	public String getUserForegroundString() {
 		String pic=paintSubTask.getPictureString();
-		if(pic==null || pic.length()==0)
-			pic=getMutablePictureString();
+		if(pic==null || pic.length()==0) {
+            pic=getMutablePictureString();
+        }
 		return pic == null ? "" : pic;
 	}
 

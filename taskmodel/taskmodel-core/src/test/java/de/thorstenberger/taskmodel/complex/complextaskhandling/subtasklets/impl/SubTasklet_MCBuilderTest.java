@@ -28,6 +28,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.junit.Assert;
 import org.junit.Before;
 
+import de.thorstenberger.taskmodel.complex.RandomUtil;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_MC;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.McSubTask;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.McSubTaskType.AnswerType;
@@ -48,7 +49,7 @@ public class SubTasklet_MCBuilderTest {
 
     @Before
     public void setup() throws JAXBException {
-        this.mcbuilder = new SubTasklet_MCBuilder();
+        this.mcbuilder = new SubTasklet_MCBuilder(new RandomUtil());
         this.factory = new ObjectFactory();
     }
     @org.junit.Test

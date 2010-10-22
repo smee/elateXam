@@ -41,7 +41,14 @@ public interface ComplexTasklet extends Tasklet {
 
 	public boolean canStartNewTry();
 
-	public void startNewTry( int tryNo ) throws IllegalStateException;
+    /**
+     * Generate a new try. Uses randomSeed to ensure repeatability of the generation process if needed.
+     * 
+     * @param tryNo
+     * @param randomSeed
+     * @throws IllegalStateException
+     */
+    public void startNewTry(int tryNo, long randomSeed) throws IllegalStateException;
 
 	public boolean canContinueTry();
 
@@ -53,7 +60,7 @@ public interface ComplexTasklet extends Tasklet {
 	 * @param pageNo
 	 * @param submitData
 	 * @param hashcode
-	 * @throws IllegalStateException if the hashcode doesn't match of the 
+	 * @throws IllegalStateException if the hashcode doesn't match of the
 	 */
 	public void savePage( int pageNo, List<SubmitData> submitData, long hashcode ) throws IllegalStateException;
 
@@ -75,7 +82,7 @@ public interface ComplexTasklet extends Tasklet {
 	public Try getActiveTry() throws IllegalStateException;
 
 	/**
-	 * Gibt den letzten (nicht unbedingt aktiven) Versuch zur Korrektur und Einsichtnahme zurück.
+	 * Gibt den letzten (nicht unbedingt aktiven) Versuch zur Korrektur und Einsichtnahme zurï¿½ck.
 	 * TODO: rename method, the term "solution" is misleading in this case
 	 * @return
 	 */

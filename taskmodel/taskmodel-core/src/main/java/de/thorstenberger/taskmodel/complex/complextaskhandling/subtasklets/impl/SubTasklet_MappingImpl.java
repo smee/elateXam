@@ -27,26 +27,22 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 import de.thorstenberger.taskmodel.TaskApiException;
-import de.thorstenberger.taskmodel.TaskModelPersistenceException;
 import de.thorstenberger.taskmodel.complex.TaskHandlingConstants;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
 import de.thorstenberger.taskmodel.complex.complextaskdef.blocks.impl.GenericBlockImpl;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.ManualSubTaskletCorrection;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTaskletCorrection;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.MappingSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Mapping;
-import de.thorstenberger.taskmodel.complex.jaxb.AutoCorrectionType;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.MappingTaskBlock;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.MappingSubTask;
 import de.thorstenberger.taskmodel.complex.jaxb.MappingSubTaskDef;
 import de.thorstenberger.taskmodel.complex.jaxb.MappingSubTaskDefType;
 import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
 import de.thorstenberger.taskmodel.complex.jaxb.SubTaskDefType;
 import de.thorstenberger.taskmodel.complex.jaxb.SubTaskType;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.MappingTaskBlock;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.MappingSubTask;
 
 /**
  * @author Thorsten Berger
@@ -78,8 +74,9 @@ public class SubTasklet_MappingImpl extends AbstractSubTasklet implements SubTas
 		ret.append( concepts.length );
 		for( int i=0; i<concepts.length; i++ ){
 			Assignment assignm = concepts[i].getAssignment();
-			if( assignm != null )
-				ret.append( assignm.getId() );
+			if( assignm != null ) {
+                ret.append( assignm.getId() );
+            }
 		}
 
 		return ret.toString().hashCode();
@@ -89,7 +86,8 @@ public class SubTasklet_MappingImpl extends AbstractSubTasklet implements SubTas
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#isSetNeedsManualCorrectionFlag()
 	 */
-	public boolean isSetNeedsManualCorrectionFlag() {
+	@Override
+    public boolean isSetNeedsManualCorrectionFlag() {
 		return false;
 	}
 
@@ -103,10 +101,11 @@ public class SubTasklet_MappingImpl extends AbstractSubTasklet implements SubTas
 
 			for( int i=0; i<indexAssignments.length; i++ ){
 
-				if( indexAssignments[i] == null )
-					concepts[ i ].setAssignment( null );
-				else
-					concepts[ i ].setAssignment( assignments[ indexAssignments[i].intValue() ].getId() );
+				if( indexAssignments[i] == null ) {
+                    concepts[ i ].setAssignment( null );
+                } else {
+                    concepts[ i ].setAssignment( assignments[ indexAssignments[i].intValue() ].getId() );
+                }
 
 			}
 
@@ -128,16 +127,20 @@ public class SubTasklet_MappingImpl extends AbstractSubTasklet implements SubTas
 			if( concepts[i].getAssignment() != null ){
 				noneProcessed = false;
 
-				if( !concepts[i].isCorrectlyAssigned() )
-					points -= negativePoints;
+				if( !concepts[i].isCorrectlyAssigned() ) {
+                    points -= negativePoints;
+                }
 
-			}else
-				points -= negativePoints;	// nicht zugeordnet als falsch bewertet
+			}
+            else {
+                points -= negativePoints;	// nicht zugeordnet als falsch bewertet
+            }
 
 		}
 
-		if( points < 0 || noneProcessed )
-			points = 0;
+		if( points < 0 || noneProcessed ) {
+            points = 0;
+        }
 
 		setAutoCorrection( points );
 
@@ -179,9 +182,10 @@ public class SubTasklet_MappingImpl extends AbstractSubTasklet implements SubTas
 	public Assignment[] getAssignments(){
 		List assignments = mappingSubTaskDef.getAssignment();
 		Assignment[] ret = new Assignment[ assignments.size() ];
-		for( int i=0; i<ret.length; i++ )
-			ret[i] = new AssignmentImpl(
+		for( int i=0; i<ret.length; i++ ) {
+            ret[i] = new AssignmentImpl(
 					(MappingSubTaskDefType.AssignmentType) assignments.get( i ) );
+        }
 		return ret;
 	}
 
@@ -245,7 +249,7 @@ public class SubTasklet_MappingImpl extends AbstractSubTasklet implements SubTas
 //			if( getAssignment().getId().equals( correctAssignment ))
 //				return true;
 			for( int i=0; i<correctAssignments.size(); i++ ){
-				if( getAssignment().getId().equals( (String) correctAssignments.get( i ) ) )
+				if( getAssignment().getId().equals( correctAssignments.get( i ) ) )
 					return true;
 			}
 
@@ -256,8 +260,9 @@ public class SubTasklet_MappingImpl extends AbstractSubTasklet implements SubTas
 		public List<Assignment> getCorrectAssignments(){
 			List<Assignment> ret = new LinkedList<Assignment>();
 			List<String> correctAssignmentIDs = conceptDef.getCorrectAssignmentID();
-			for( String caid : correctAssignmentIDs )
-				ret.add( findAssignment( caid ) );
+			for( String caid : correctAssignmentIDs ) {
+                ret.add( findAssignment( caid ) );
+            }
 			return ret;
 		}
 
@@ -279,7 +284,8 @@ public class SubTasklet_MappingImpl extends AbstractSubTasklet implements SubTas
 			return assignment.getId();
 		}
 
-		public boolean equals( Object o ){
+		@Override
+        public boolean equals( Object o ){
 			if( o == null )
 				return false;
 
@@ -295,7 +301,7 @@ public class SubTasklet_MappingImpl extends AbstractSubTasklet implements SubTas
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#build()
 	 */
-	public void build() throws TaskApiException {
+    public void build(long randomSeed) throws TaskApiException {
 		try {
 			addAssignments( mappingSubTask, mappingSubTaskDef );
 		} catch (JAXBException e) {

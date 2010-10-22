@@ -126,19 +126,21 @@ public interface SubTasklet {
 	 */
 	public String getCorrectionHint();
 
-	/**
-	 * Called when the SubTasklet is initially created.
-	 * SubTasklet should e.g. create random answers, assignments, texts etc
-	 *
-	 */
-	public void build() throws TaskApiException;
+    /**
+     * Called when the SubTasklet is initially created. SubTasklet should e.g. create random answers, assignments, texts
+     * etc
+     *
+     * @param randomSeed
+     *            seed to use for any randomly generated values
+     */
+	public void build(long randomSeed) throws TaskApiException;
 
 	/**
 	 * Called on SubTasklet creation, but should initialize it for previewing purposes only, i.e.
 	 * to preview the SubTasklet in the editor. Usually, this should just forward to {@link #build()}.
 	 * In the case of a SubTasklet_MC, it'd make sense to append all answers in order to preview the
 	 * whole SubTasklet.
-	 * 
+	 *
 	 * @throws TaskApiException
 	 */
 	public void buildPreview() throws TaskApiException;

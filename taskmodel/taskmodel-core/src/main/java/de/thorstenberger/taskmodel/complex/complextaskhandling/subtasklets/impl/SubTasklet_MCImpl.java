@@ -28,6 +28,7 @@ import javax.xml.bind.JAXBException;
 
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskModelPersistenceException;
+import de.thorstenberger.taskmodel.complex.RandomUtil;
 import de.thorstenberger.taskmodel.complex.TaskHandlingConstants;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
@@ -368,10 +369,10 @@ public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#build()
 	 */
-	public void build() throws TaskApiException {
-		SubTasklet_MCBuilder builder = new SubTasklet_MCBuilder();
+    public void build(long randomSeed) throws TaskApiException {
+        SubTasklet_MCBuilder builder = new SubTasklet_MCBuilder(new RandomUtil(randomSeed));
 		try {
-			builder.constructAnswersForMCSubTask( mcSubTask, mcSubTaskDef );
+            builder.constructAnswersForMCSubTask(mcSubTask, mcSubTaskDef);
 		} catch (JAXBException e) {
 			throw new TaskApiException( e );
 		}
@@ -382,7 +383,7 @@ public class SubTasklet_MCImpl extends AbstractSubTasklet implements SubTasklet_
 	 */
 	@Override
 	public void buildPreview() throws TaskApiException {
-		SubTasklet_MCBuilder builder = new SubTasklet_MCBuilder();
+        SubTasklet_MCBuilder builder = new SubTasklet_MCBuilder(new RandomUtil());
 		try {
 			builder.constructPreviewAnswersForMCSubTask( mcSubTask, mcSubTaskDef );
 		} catch (JAXBException e) {

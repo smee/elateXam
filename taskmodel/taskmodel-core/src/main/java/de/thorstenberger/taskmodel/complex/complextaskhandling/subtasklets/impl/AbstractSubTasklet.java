@@ -43,7 +43,6 @@ import de.thorstenberger.taskmodel.complex.jaxb.ManualCorrectionType;
 import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
 import de.thorstenberger.taskmodel.complex.jaxb.SubTaskDefType;
 import de.thorstenberger.taskmodel.complex.jaxb.SubTaskType;
-import de.thorstenberger.taskmodel.util.ReflectionHelper;
 
 public abstract class AbstractSubTasklet implements SubTasklet{
 	protected Block block;
@@ -146,14 +145,14 @@ public abstract class AbstractSubTasklet implements SubTasklet{
 
 		List<ManualSubTaskletCorrection> corrections = getManualCorrections();
 		if( complexTaskDefRoot.getCorrectionMode().getType() == ComplexTaskDefRoot.CorrectionModeType.MULTIPLECORRECTORS ){
-			if( corrections != null)
-				for( ManualSubTaskletCorrection mstc : corrections )
+			if( corrections != null) {
+                for( ManualSubTaskletCorrection mstc : corrections )
 					if( mstc.getCorrector().equals( corrector ) )
 						return true;
+            }
 			return false;
-		}else{
-			return corrections != null && corrections.size() > 0;
-		}
+		} else
+            return corrections != null && corrections.size() > 0;
 
 	}
 		/*
@@ -232,8 +231,9 @@ public abstract class AbstractSubTasklet implements SubTasklet{
 			return Collections.EMPTY_LIST;
 		List<ManualSubTaskletCorrection> ret = new LinkedList<ManualSubTaskletCorrection>();
 		List<ManualCorrectionType> mcs = subTaskType.getManualCorrection();
-		for( ManualCorrectionType mc : mcs )
-			ret.add( new ManualSubTaskletCorrectionImpl( mc.getCorrector(), mc.getPoints() ) );
+		for( ManualCorrectionType mc : mcs ) {
+            ret.add( new ManualSubTaskletCorrectionImpl( mc.getCorrector(), mc.getPoints() ) );
+        }
 		return ret;
 	}
 	public boolean isInteractiveFeedback() {
@@ -264,8 +264,8 @@ public abstract class AbstractSubTasklet implements SubTasklet{
 	 */
 	public void buildPreview() throws TaskApiException {
 		// just forward to build(), override if special care is needed for preview purposes
-		build();
+        build(System.nanoTime());
 	}
-	
-	
+
+
 }

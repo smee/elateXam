@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.impl;
 
@@ -33,26 +33,42 @@ import de.thorstenberger.taskmodel.Tasklet;
  */
 public class TaskModelViewDelegateObjectImpl implements TaskModelViewDelegateObject {
 
-	private String login;
-	private String userName;
-	private long taskId;
-	private TaskManager taskManager;
-	private String returnURL;
-	
-	
-	
+	final private String login;
+	final private String userName;
+	final private long taskId;
+	final private TaskManager taskManager;
+	final private String returnURL;
+	final private long randomSeed;
+
+
+
 	/**
 	 * @param login
 	 * @param taskDef
 	 * @param tasklet
 	 * @param userName
 	 */
-	public TaskModelViewDelegateObjectImpl(long taskId, TaskManager taskManager, String login, String userName, String returnURL) {
+    public TaskModelViewDelegateObjectImpl(long taskId, TaskManager taskManager, String login, String userName, String returnURL) {
+        this(taskId, taskManager, login, userName, returnURL, System.nanoTime());
+    }
+
+    /**
+     * 
+     * @param taskId
+     * @param taskManager
+     * @param login
+     * @param userName
+     * @param returnURL
+     * @param randomSeed
+     *            seed to use for all random generation of content
+     */
+	public TaskModelViewDelegateObjectImpl(long taskId, TaskManager taskManager, String login, String userName, String returnURL, long randomSeed) {
 		this.taskId = taskId;
 		this.taskManager = taskManager;
 		this.login = login;
 		this.userName = userName;
 		this.returnURL = returnURL;
+		this.randomSeed = randomSeed;
 	}
 
 	/* (non-Javadoc)
@@ -96,5 +112,9 @@ public class TaskModelViewDelegateObjectImpl implements TaskModelViewDelegateObj
 	public String getReturnURL() {
 		return returnURL;
 	}
+
+    public long getRandomSeed() {
+        return randomSeed;
+    }
 
 }

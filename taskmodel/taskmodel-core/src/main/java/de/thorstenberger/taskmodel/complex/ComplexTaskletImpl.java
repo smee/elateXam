@@ -141,9 +141,8 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
      * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#canStartNewTry()
      */
     public synchronized boolean canStartNewTry() {
-        if( canContinueTry() ) {
+        if( canContinueTry() )
             return false;
-        }
 
         try {
             checkActive();
@@ -157,7 +156,7 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
     /* (non-Javadoc)
      * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#startNewTry(int)
      */
-    public synchronized void startNewTry(final int tryNo) throws IllegalStateException {
+    public synchronized void startNewTry(final int tryNo, long randomSeed) throws IllegalStateException {
         // Student davon abhalten, versehentlich einen neuen Versuch zu starten
         // falls noch einer in Bearbeitung
         if( canContinueTry() ){
@@ -168,16 +167,15 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
         // Status-Checks
         checkActive();
         // Anzahl bereits abgesendeter Versuche:
-        if( complexTaskHandlingRoot.getNumberOfTries() >= complexTaskDefRoot.getTries() ) {
+        if( complexTaskHandlingRoot.getNumberOfTries() >= complexTaskDefRoot.getTries() )
             throw new IllegalStateException( TaskHandlingConstants.TRIES_SPENT );
-        }
         // Sicherheitsabfrage, dass auch wirklich ein neuer Versuch gestartet werden soll
-        if( tryNo <= complexTaskHandlingRoot.getNumberOfTries() ) {
+        if( tryNo <= complexTaskHandlingRoot.getNumberOfTries() )
             throw new IllegalStateException( TaskHandlingConstants.CANNOT_RESTART_SPENT_TRY );
-        }
 
+        // use given given seed to generate a new random try.
         final Try newTry =
-            complexTaskBuilder.generateTry( complexTaskDefRoot, System.currentTimeMillis() );
+                complexTaskBuilder.generateTry(complexTaskDefRoot, System.currentTimeMillis(), randomSeed);
 
         complexTaskHandlingRoot.addTry( newTry );
 
@@ -207,20 +205,18 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
         } catch (final IllegalStateException e) {
             return false;
         }
-        if( getStatus() == Status.INPROGRESS ) {
+        if( getStatus() == Status.INPROGRESS )
             return true;
-        } else {
+        else
             return false;
-        }
     }
 
     /* (non-Javadoc)
      * @see de.thorstenberger.taskmodel.complex.ComplexTasklet#continueLastTry()
      */
     public synchronized void continueLastTry() throws IllegalStateException {
-        if( !canContinueTry() ) {
+        if( !canContinueTry() )
             throw new IllegalStateException( TaskHandlingConstants.CANNOT_CONTINUE_TIME_EXCEEDED );
-        }
 
 
         // TODO TRY zur�ckgeben
@@ -233,13 +229,11 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
     public synchronized void canSavePage(final int pageNo, final long hashcode)
     throws IllegalStateException {
 
-        if( !canContinueTry() ) {
+        if( !canContinueTry() )
             throw new IllegalStateException( TaskHandlingConstants.CANNOT_SAVE_TIME_EXCEEDED );
-        }
         final Try activeTry = getActiveTry();
-        if( hashcode != activeTry.getPage( pageNo ).getHash() ) {
+        if( hashcode != activeTry.getPage( pageNo ).getHash() )
             throw new IllegalStateException( TaskHandlingConstants.SUBMIT_DATA_CORRUPTED );
-        }
 
     }
 
@@ -249,13 +243,11 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
     public synchronized void savePage(final int pageNo, final List<SubmitData> submitData, final long hashcode)
     throws IllegalStateException {
 
-        if( !canContinueTry() ) {
+        if( !canContinueTry() )
             throw new IllegalStateException( TaskHandlingConstants.CANNOT_SAVE_TIME_EXCEEDED );
-        }
         final Try activeTry = getActiveTry();
-        if( hashcode != activeTry.getPage( pageNo ).getHash() ) {
+        if( hashcode != activeTry.getPage( pageNo ).getHash() )
             throw new IllegalStateException( TaskHandlingConstants.SUBMIT_DATA_CORRUPTED );
-        }
 
         final List<SubTasklet> subTasklets = activeTry.getPage( pageNo ).getSubTasklets();
 
@@ -279,10 +271,9 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
         // falls nicht in Bearbeitung, dann einfach abbrechen,
         // d.h. wenn die Bearbeitung vorher schon automatisch wegen Zeit�berschreitung
         // gestoppt (und korrigiert) wurde, wird dies dem Student mitgeteilt
-        if( getStatus() != Status.INPROGRESS) {
+        if( getStatus() != Status.INPROGRESS)
             throw new IllegalStateException( TaskHandlingConstants.TIME_EXCEEDED_AUTO_SUBMIT_MADE );
             // don't call checkActive(), as this method could also be called by update later on
-        }
 
         setStatus( Status.SOLVED );
 
@@ -327,12 +318,10 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
     public synchronized void doManualCorrection(final SubTasklet actualSubtasklet,
             final CorrectionSubmitData csd) throws IllegalStateException {
 
-        if( canContinueTry() ) {
+        if( canContinueTry() )
             throw new IllegalStateException( TaskHandlingConstants.CANNOT_CORRECT_TASK_IN_PROGRESS );
-        }
-        if( !hasOrPassedStatus( Status.SOLVED ) ) {
+        if( !hasOrPassedStatus( Status.SOLVED ) )
             throw new IllegalStateException( TaskHandlingConstants.CANNOT_CORRECT_TASK_NOT_SOLVED );
-        }
 
         if( actualSubtasklet != null && csd != null ){
 
@@ -400,9 +389,8 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
      */
     public synchronized de.thorstenberger.taskmodel.complex.complextaskhandling.Try getActiveTry() throws IllegalStateException {
 
-        if( getStatus() != Status.INPROGRESS ) {
+        if( getStatus() != Status.INPROGRESS )
             throw new IllegalStateException( TaskHandlingConstants.NOT_IN_PROGRESS );
-        }
 
         return complexTaskHandlingRoot.getRecentTry();
     }
@@ -442,9 +430,8 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
 
         boolean change = false;
 
-        if( !hasOrPassedStatus( Status.CORRECTED ) ) {
+        if( !hasOrPassedStatus( Status.CORRECTED ) )
             throw new IllegalStateException( TaskHandlingConstants.STUDENT_CAN_ONLY_ANNOTATE_CORRECTED_TRY );
-        }
 
         if( getTaskletCorrection().getStudentAnnotations().size() > 0 && !getTaskletCorrection().getStudentAnnotations().get( 0 ).isAcknowledged() ){
             getTaskletCorrection().getStudentAnnotations().remove( 0 );
@@ -473,9 +460,8 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
      */
     public synchronized void acknowledgeStudentAnnotation() throws IllegalStateException {
 
-        if( !hasOrPassedStatus( Status.ANNOTATED ) ) {
+        if( !hasOrPassedStatus( Status.ANNOTATED ) )
             throw new IllegalStateException( TaskHandlingConstants.CORRECTOR_CAN_ONLY_ACKNOWLEDGE_IF_ANNOTATED );
-        }
 
         for( final StudentAnnotation anno : getTaskletCorrection().getStudentAnnotations() ){
             if( !anno.isAcknowledged() ) {
@@ -498,9 +484,8 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
      */
     public synchronized void doAutoCorrection() throws IllegalStateException {
 
-        if( !hasOrPassedStatus( Status.SOLVED ) ) {
+        if( !hasOrPassedStatus( Status.SOLVED ) )
             throw new IllegalStateException( TaskHandlingConstants.CANNOT_CORRECT_TASK_NOT_SOLVED );
-        }
 
         //		 FIXME: use dependency injection to get the corrector instance
         final ComplexTaskletCorrector corrector = complexTaskBuilder.getComplexTaskFactory().getComplexTaskletCorrector();
@@ -532,15 +517,12 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
 
 
     private boolean objectsDiffer( final Object a, final Object b ){
-        if( a == null && b == null ) {
+        if( a == null && b == null )
             return false;
-        }
-        if( a == null && b != null ) {
+        if( a == null && b != null )
             return true;
-        }
-        if( b == null && a != null ) {
+        if( b == null && a != null )
             return true;
-        }
 
         return !a.equals( b );
     }
@@ -549,11 +531,10 @@ public class ComplexTaskletImpl extends AbstractTasklet implements ComplexTaskle
     throws IllegalStateException {
 
         if( !hasOrPassedStatus( Status.INPROGRESS ) ) {
-            if(getStatus().getOrder()<Status.INPROGRESS.getOrder()) {
+            if(getStatus().getOrder()<Status.INPROGRESS.getOrder())
                 throw new IllegalStateException( TaskHandlingConstants.CANNOT_CORRECT_TASK_NOT_IN_PROGRESS );
-            } else {
+            else
                 throw new IllegalStateException( TaskHandlingConstants.CANNOT_CORRECT_TASK_NOT_SOLVED );
-            }
         }
 
         if( actualSubtasklet != null && sd != null ){

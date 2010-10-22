@@ -17,11 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.complex;
-
-import java.util.List;
 
 import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Category;
@@ -36,24 +34,25 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.Try;
  *
  */
 public interface ComplexTaskBuilder {
-	
+
 	public ComplexTaskFactory getComplexTaskFactory();
 
-	public List<SubTasklet> buildSubTaskletsFromCategory( Category category, ComplexTaskDefRoot complexTaskDefRoot );
-	
-	/**
-	 * Selection algorithm
-	 * 
-	 * @param block
-	 * @return
-	 */
-	public List<SubTasklet> buildSubTaskletsFromBlock( Block block, ComplexTaskDefRoot complexTaskDefRoot, String categoryId );
+    // public List<SubTasklet> buildSubTaskletsFromCategory( Category category, ComplexTaskDefRoot complexTaskDefRoot );
+
+// /**
+    // * Selection algorithm
+    // *
+    // * @param block
+    // * @return
+    // */
+    // public List<SubTasklet> buildSubTaskletsFromBlock( Block block, ComplexTaskDefRoot complexTaskDefRoot, String
+    // categoryId );
 
 	/**
 	 * Generates a complete new Try by using appropriate selection algorithms
 	 * @param complexTaskDefRoot
 	 * @return
 	 */
-	public Try generateTry( ComplexTaskDefRoot complexTaskDefRoot, long startTime );
-	
+    public Try generateTry(ComplexTaskDefRoot complexTaskDefRoot, long startTime, long randomSeed);
+
 }

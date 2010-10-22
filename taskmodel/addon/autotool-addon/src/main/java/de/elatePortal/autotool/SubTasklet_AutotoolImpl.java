@@ -46,11 +46,11 @@ import de.thorstenberger.taskmodel.complex.RandomUtil;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl.AbstractAddonSubTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
+import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl.AbstractAddonSubTasklet;
 import de.thorstenberger.taskmodel.complex.jaxb.AddonSubTaskDef;
-import de.thorstenberger.taskmodel.complex.jaxb.SubTaskDefType;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.AddonSubTask;
+import de.thorstenberger.taskmodel.complex.jaxb.SubTaskDefType;
 
 /**
  * @author Steffen Dienst
@@ -172,20 +172,23 @@ public class SubTasklet_AutotoolImpl extends AbstractAddonSubTasklet implements 
 		this.autotoolSubTask = new AutotoolSubTaskDummy(atSubTask);
 	}
 
-	public String getProblem(){
+	@Override
+    public String getProblem(){
 		return autotoolSubTask.getProblem();
 	}
 
 	public String getAnswer(){
 		String answer=autotoolSubTask.getAnswer();
-		if(answer==null)
-			answer=autotoolSubTask.getDefaultAnswer();
+		if(answer==null) {
+            answer=autotoolSubTask.getDefaultAnswer();
+        }
 		return answer;
 	}
 	public String getLastCorrectedAnswer(){
 		String answer=autotoolSubTask.getLastCorrectedAnswer();
-		if(answer==null)
-			answer=getAnswer();
+		if(answer==null) {
+            answer=getAnswer();
+        }
 		return answer;
 	}
 
@@ -198,7 +201,7 @@ public class SubTasklet_AutotoolImpl extends AbstractAddonSubTasklet implements 
 		try {
 			AutotoolTaskInstance ati=new AutotoolTaskInstance.AutotoolTaskInstanceVO(autotoolTaskConfig.getTaskType(),(Map) deserialize(autotoolSubTask.getAutotoolInstanceBlob()));
 			AutotoolGrade grade=getAutotoolServices().gradeTaskInstance(ati,getAnswer());
-			setCorrection((float) (grade.isSolved()?block.getPointsPerSubTask():0), grade.getGradeDocumentation(), true);//TODO autotools laenge der loesung speichern?
+			setCorrection((grade.isSolved()?block.getPointsPerSubTask():0), grade.getGradeDocumentation(), true);//TODO autotools laenge der loesung speichern?
 			autotoolSubTask.setAutotoolScore(grade.getPoints());
 			autotoolSubTask.setLastCorrectedAnswer(getAnswer());
 		} catch (Exception e) {//TODO bloed
@@ -213,10 +216,12 @@ public class SubTasklet_AutotoolImpl extends AbstractAddonSubTasklet implements 
 	}
 
 	protected void setCorrection( float points, String doc, boolean auto ){
-		if(auto)
-			super.setAutoCorrection(points);
-		else
-			;//TODO
+		if(auto) {
+            super.setAutoCorrection(points);
+        }
+        else {
+            ;//TODO
+        }
 		autotoolSubTask.setAutotoolDoc(doc);
 	}
 
@@ -231,10 +236,10 @@ public class SubTasklet_AutotoolImpl extends AbstractAddonSubTasklet implements 
 	 *  (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#build()
 	 */
-	public void build() throws TaskApiException {
+    public void build(long randomSeed) throws TaskApiException {
 		SignedAutotoolTaskConfig satc=new SignedAutotoolTaskConfig.SignedAutotoolTaskConfigVO(this.autotoolTaskConfig.getTaskType(),autotoolTaskConfig.getConfigString(),"",autotoolTaskConfig.getSignature());
 		try {
-			AutotoolTaskInstance task=getAutotoolServices().getTaskInstance(satc,RandomUtil.getInt(1000000));
+            AutotoolTaskInstance task = getAutotoolServices().getTaskInstance(satc, new RandomUtil(randomSeed).getInt(1000000));
 			autotoolSubTask.setProblem(task.getProblem());
 			autotoolSubTask.setDefaultAnswer(task.getDefaultAnswer());
 			autotoolSubTask.setAnswerDoc(task.getAnswerDoc());
@@ -273,8 +278,9 @@ public class SubTasklet_AutotoolImpl extends AbstractAddonSubTasklet implements 
 	}
 
 	private AutotoolServices getAutotoolServices() throws IOException {
-		if(ats == null)
-			ats=new AutotoolServices(new URL(autotoolTaskConfig.getAutotoolServerUrl()));
+		if(ats == null) {
+            ats=new AutotoolServices(new URL(autotoolTaskConfig.getAutotoolServerUrl()));
+        }
 		return ats;
 	}
 
@@ -299,8 +305,9 @@ public class SubTasklet_AutotoolImpl extends AbstractAddonSubTasklet implements 
 	private Element getElement(Element memento, String string) {
 		Element e=null;
 		NodeList nl=memento.getElementsByTagName(string);
-		if(nl.getLength()>0)
-			e=(Element) nl.item(0);
+		if(nl.getLength()>0) {
+            e=(Element) nl.item(0);
+        }
 		return e;
 	}
 
@@ -344,7 +351,8 @@ public class SubTasklet_AutotoolImpl extends AbstractAddonSubTasklet implements 
 		return ((AddonSubTaskDef)this.jaxbSubTaskDef).getTaskType();
 	}
 
-	public boolean isInteractiveFeedback() {
+	@Override
+    public boolean isInteractiveFeedback() {
 		return this.autotoolTaskConfig.isInteractive();
 	}
 

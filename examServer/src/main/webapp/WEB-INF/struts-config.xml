@@ -20,6 +20,7 @@
     <form-bean name="opalGroupMembersImportForm" type="de.thorstenberger.examServer.webapp.form.ImportOpalGroupMembersForm"/>
     <form-bean name="loginConfigForm" type="de.thorstenberger.examServer.webapp.form.LoginConfigForm"/>
     <form-bean name="systemConfigForm" type="de.thorstenberger.examServer.webapp.form.SystemConfigForm"/>
+    <form-bean name="randomSeedForm" type="de.thorstenberger.examServer.webapp.form.SeedForm"/>
   </form-beans>
   <!-- ========== Global Exceptions Definitions =================================== -->
   <global-exceptions>
@@ -123,6 +124,11 @@
     <action path="/saveSystemConfig" name="systemConfigForm" type="de.thorstenberger.examServer.webapp.action.SystemConfigSubmitAction" scope="request" validate="false" input="/SystemConfig" roles="admin">
       <forward name="success" path="/SystemConfig.html"/>
     </action>
+    <!-- random seed config -->
+    <action path="/saveRandomConfig" name="randomSeedForm" type="de.thorstenberger.examServer.webapp.action.RandomSeedSubmitAction" scope="request" validate="false" input="/TaskConfigList" roles="admin">
+      <forward name="success" path="/TaskConfigList.html"/>
+    </action>
+    
     <action path="/CorrectorFactory" type="de.thorstenberger.examServer.webapp.action.CorrectorFactoryAction" roles="tutor,admin">
     </action>
     <!-- forward name="complex" path="/ComplexTaskOverview.html" redirect="true"/ -->
@@ -140,10 +146,10 @@
     <action path="/increaseTimeGlobal" type="de.thorstenberger.examServer.webapp.action.TimeExtensionGlobalAction" roles="admin">
       <forward name="success" redirect="true" path="/activeTaskUsers.html"/>
     </action>
-    <action path="/TaskConfigList" type="de.thorstenberger.examServer.webapp.action.TaskConfigMainAction">
+    <action path="/TaskConfigList" name="randomSeedForm" type="de.thorstenberger.examServer.webapp.action.TaskConfigMainAction" roles="admin"  scope="request">
       <forward name="success" path="/WEB-INF/pages/taskList.jsp"/>
     </action>
-    <action path="/removeTask" type="de.thorstenberger.examServer.webapp.action.RemoveTaskAction">
+    <action path="/removeTask" type="de.thorstenberger.examServer.webapp.action.RemoveTaskAction" roles="admin">
       <forward name="success" redirect="true" path="/TaskConfigList.html"/>
     </action>
     <action path="/TaskConfig" name="taskForm" type="de.thorstenberger.examServer.webapp.action.TaskConfigAction" scope="request" validate="false" roles="admin">

@@ -28,9 +28,11 @@
   </scm>
   <modules>
     <module>autotool-addon</module>
+	<!--
     <module>junit-addon</module>
     <module>junit-addon-correction</module>
     <module>junit-addon-correction-interfaces</module>
+	-->
   </modules>
   
   <repositories>

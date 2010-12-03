@@ -21,7 +21,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.bind.JAXBException;
@@ -33,20 +32,15 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
 import de.thorstenberger.taskmodel.complex.complextaskdef.blocks.impl.GenericBlockImpl;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.ManualSubTaskletCorrection;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTaskletCorrection;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.correctionsubmitdata.TextCorrectionSubmitData;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.impl.ManualSubTaskletCorrectionImpl;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.TextSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Text;
-import de.thorstenberger.taskmodel.complex.jaxb.AutoCorrectionType;
-import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
-import de.thorstenberger.taskmodel.complex.jaxb.SubTaskDefType;
-import de.thorstenberger.taskmodel.complex.jaxb.TextSubTaskDef;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.TextTaskBlock;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.TextSubTask;
 import de.thorstenberger.taskmodel.complex.jaxb.ManualCorrectionType;
+import de.thorstenberger.taskmodel.complex.jaxb.SubTaskDefType;
+import de.thorstenberger.taskmodel.complex.jaxb.TextSubTaskDef;
 
 /**
  * @author Thorsten Berger
@@ -107,10 +101,11 @@ public class SubTasklet_TextImpl extends AbstractSubTasklet implements SubTaskle
 	public void doAutoCorrection(){
 		if( !isProcessed() ){
 			setAutoCorrection( 0 );
-		}else
-			textSubTask.setNeedsManualCorrection( true );
+		} else {
+            textSubTask.setNeedsManualCorrection( true );
+        }
 
-		// mehr können wir leider nicht machen...
+		// mehr kï¿½nnen wir leider nicht machen...
 	}
 
 	public void doManualCorrection( CorrectionSubmitData csd ){
@@ -171,14 +166,13 @@ public class SubTasklet_TextImpl extends AbstractSubTasklet implements SubTaskle
 
 
 	public boolean isProcessed(){
-		
+
 		if( textSubTask.getAnswer() == null || textSubTask.getAnswer().trim().length() == 0 )
 			return false;
-		
-		if( getInitialTextFieldValue() != null ){
-			return !getInitialTextFieldValue().equals( textSubTask.getAnswer() );
-		}
-		
+
+		if( getInitialTextFieldValue() != null )
+            return !getInitialTextFieldValue().equals( textSubTask.getAnswer() );
+
 		return true;
 	}
 
@@ -195,7 +189,7 @@ public class SubTasklet_TextImpl extends AbstractSubTasklet implements SubTaskle
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#build()
 	 */
-	public void build() throws TaskApiException {
+    public void build(long randomSeed) throws TaskApiException {
 		// nothing to build :)
 		// except:
 		textSubTask.setAnswer( getInitialTextFieldValue() != null ? getInitialTextFieldValue() : "" );

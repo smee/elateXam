@@ -65,8 +65,8 @@ public class ConfigManagerImpl implements ConfigManager {
     private final Log log = LogFactory.getLog(ConfigManagerImpl.class);
 
     /**
-	 *
-	 */
+     *
+     */
     public ConfigManagerImpl(final ExamServerManager examServerManager) {
 
         this.examServerManager = examServerManager;
@@ -367,7 +367,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see de.thorstenberger.examServer.service.ConfigManager#setRadiusMailSuffixes(java.util.List)
    */
   @Override
@@ -385,5 +385,49 @@ public class ConfigManagerImpl implements ConfigManager {
       log.error("Could not store radius mail suffixes!", e);
     }
   }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see de.thorstenberger.examServer.service.ConfigManager#getRandomSeed()
+     */
+    @Override
+    public long getRandomSeed() {
+        if (config.isSetRandomSeed())
+            return config.getRandomSeed();
+        else {
+            synchronized(this){
+                // generate a unique random seed
+                return System.nanoTime();
+            }
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see de.thorstenberger.examServer.service.ConfigManager#setRandomSeed(long)
+     */
+    @Override
+    public void setRandomSeed(long val) {
+        config.setRandomSeed(val);
+        save();
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see de.thorstenberger.examServer.service.ConfigManager#clearRandomSeed()
+     */
+    @Override
+    public void clearRandomSeed() {
+        config.unsetRandomSeed();
+        save();
+    }
+
+    @Override
+    public boolean isRandomSeedRandom() {
+        return config.isSetRandomSeed();
+    }
 
 }

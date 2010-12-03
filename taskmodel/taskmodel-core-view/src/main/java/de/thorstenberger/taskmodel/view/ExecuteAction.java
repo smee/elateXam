@@ -135,7 +135,7 @@ public class ExecuteAction extends org.apache.struts.action.Action {
 
             if ("new".equals(todo)) { // new try
                 int tryNo = Integer.parseInt(request.getParameter("try"));
-                ct.startNewTry(tryNo);
+                ct.startNewTry(tryNo, delegateObject.getRandomSeed());
 
                 log.info("Student starts new try.");
             } else if ("continue".equals(todo)) { // continue try

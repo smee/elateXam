@@ -78,13 +78,13 @@ public interface ConfigManager {
 
     /**
      * Get a list of mail suffixes that resemble all mails that can be used for the current radius authentication server.
-     * 
+     *
      * @return
      */
     List<String> getRadiusMailSuffixes();
-    
+
     void setRadiusMailSuffixes(List<String> suffixes);
-    
+
   /**
    * Settings for signing and timestamping PDF files.
    *
@@ -93,5 +93,27 @@ public interface ConfigManager {
   SignatureInfos getPDFSignatureInfos();
 
   void setPDFSignatureInfos(SignatureInfos si);
+
+    /**
+     * Random seed to use for all random generation processes involving tasklet creation.
+     *
+     * @return
+     */
+    long getRandomSeed();
+
+    /**
+     * Is the result of {@link #getRandomSeed()} fixed (i.e. previously set by {@link #setRandomSeed(long)}?
+     * @return true if there is a fixed value, false after calling {@link #clearRandomSeed()}.
+     */
+    boolean isRandomSeedRandom();
+    /**
+     * @param val
+     */
+    void setRandomSeed(long val);
+
+    /**
+     * Use random values for each call to {@link #getRandomSeed()}.
+     */
+    void clearRandomSeed();
 
 }

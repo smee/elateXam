@@ -36,9 +36,9 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitD
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl.AbstractAddonSubTasklet;
 import de.thorstenberger.taskmodel.complex.jaxb.AddonSubTaskDef;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.AddonSubTask;
 import de.thorstenberger.taskmodel.complex.jaxb.SubTaskDefType;
 import de.thorstenberger.taskmodel.complex.jaxb.SubTaskType;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.AddonSubTask;
 
 public class JUnitSubTaskletImpl extends AbstractAddonSubTasklet implements SubTasklet_JUnit{
 	private class JUnitSubtaskDummy{
@@ -125,16 +125,20 @@ public class JUnitSubTaskletImpl extends AbstractAddonSubTasklet implements SubT
 
 	public void doAutoCorrection() {
 			JUnitTestResult result=taskCorrector.runUnitTest( justdd.getInterfaceClassDef(), this.getClassDef(), justdd.getTestClassDef(), justdd.getTimeout() );
-			if(result != null)
-				setCorrection(result.isCorrect()?block.getPointsPerSubTask():0,result.getResult(),true);
-			else
-				;//TODO needs manual correction
+			if(result != null) {
+                setCorrection(result.isCorrect()?block.getPointsPerSubTask():0,result.getResult(),true);
+            }
+            else {
+                ;//TODO needs manual correction
+            }
 	}
 	protected void setCorrection( float points, String result, boolean auto ){
-		if(auto)
-			super.setAutoCorrection(points);
-		else
-			;//TODO
+		if(auto) {
+            super.setAutoCorrection(points);
+        }
+        else {
+            ;//TODO
+        }
 		justd.setTestResult(result);
 	}
 
@@ -156,10 +160,11 @@ public class JUnitSubTaskletImpl extends AbstractAddonSubTasklet implements SubT
 		return justd.getClassDef()!=null && justd.getClassDef().length()>0 && !justd.getClassDef().equals(justdd.getDefaultClassDef());
 	}
 
-	public void build() throws TaskApiException {
+    public void build(long randomSeed) throws TaskApiException {
 		//TODO
 	}
-	public String getProblem() {
+	@Override
+    public String getProblem() {
 		return justdd.getProblem();
 	}
 	public String getAddOnType() {
@@ -168,12 +173,14 @@ public class JUnitSubTaskletImpl extends AbstractAddonSubTasklet implements SubT
 
 	public String getClassDef() {
 		String cd=justd.getClassDef();
-		if(cd==null)
-			cd=justdd.getDefaultClassDef();
+		if(cd==null) {
+            cd=justdd.getDefaultClassDef();
+        }
 		return cd;
 	}
 
-	public boolean isInteractiveFeedback() {
+	@Override
+    public boolean isInteractiveFeedback() {
 		return justdd.isInteractiveFeedback();
 	}
 
@@ -182,8 +189,9 @@ public class JUnitSubTaskletImpl extends AbstractAddonSubTasklet implements SubT
 	private Element getElement(Element memento, String string) {
 		Element e=null;
 		NodeList nl=memento.getElementsByTagName(string);
-		if(nl.getLength()>0)
-			e=(Element) nl.item(0);
+		if(nl.getLength()>0) {
+            e=(Element) nl.item(0);
+        }
 		return e;
 	}
 

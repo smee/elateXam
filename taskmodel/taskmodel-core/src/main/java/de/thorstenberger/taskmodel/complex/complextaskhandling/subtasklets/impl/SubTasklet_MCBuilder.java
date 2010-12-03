@@ -21,14 +21,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl;
 
-import static de.thorstenberger.taskmodel.complex.RandomUtil.getPermutation;
-import static de.thorstenberger.taskmodel.complex.RandomUtil.shuffle;
 import static org.apache.commons.lang.ArrayUtils.addAll;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import javax.xml.bind.JAXBException;
 
@@ -36,6 +33,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import de.thorstenberger.taskmodel.complex.RandomUtil;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_MC;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.McSubTaskType;
@@ -52,16 +50,19 @@ import de.thorstenberger.taskmodel.util.ReflectionHelper;
 public class SubTasklet_MCBuilder {
 
 	Log log = LogFactory.getLog( SubTasklet_MCBuilder.class );
-	private static Random r = new Random();
 	private ObjectFactory taskHandlingobjectFactory = new ObjectFactory();
+    private RandomUtil r;
 
+	public SubTasklet_MCBuilder(RandomUtil r) {
+        this.r = r;
+    }
 	/**
 	 * M�gliche Antworten zu MC-Aufgaben hinzuf�gen.
 	 * @param newMcSubTask
 	 * @param mcSubTaskDef
 	 */
 	void constructAnswersForMCSubTask( ComplexTaskHandlingType.TryType.PageType.McSubTask newMcSubTask,
-			McSubTaskDefType mcSubTaskDef) throws JAXBException{
+            McSubTaskDefType mcSubTaskDef) throws JAXBException {
 
         List allAvailableAnswers = mcSubTaskDef.getCorrectOrIncorrect();
         int[] availCorrectAnswersIndices = getIndices(allAvailableAnswers, CorrectType.class);
@@ -81,9 +82,9 @@ public class SubTasklet_MCBuilder {
 
 
         // random permutation of indices to all available correct answer definitions
-        int[] correctAnswersOrder = getPermutation(availCorrectAnswersIndices.length);
+        int[] correctAnswersOrder = r.getPermutation(availCorrectAnswersIndices.length);
         // random permutation of indices to all available incorrect answer definitions
-        int[] incorrectAnswersOrder = getPermutation(availIncorrectAnswersIndices.length);
+        int[] incorrectAnswersOrder = r.getPermutation(availIncorrectAnswersIndices.length);
 
         // final array of the indices of the answer definition that will be chosen
         int[] choosenAnswerIndices = addAll(
@@ -93,7 +94,9 @@ public class SubTasklet_MCBuilder {
         if (mcSubTaskDef.isPreserveOrderOfAnswers()) {
             Arrays.sort(choosenAnswerIndices);
         } else {
-            choosenAnswerIndices = shuffle(choosenAnswerIndices);
+            // use unique random generator to shuffle the selected answers
+            // This means everybody may get the same answers, but not necessarily in the same order
+            choosenAnswerIndices = new RandomUtil().shuffle(choosenAnswerIndices);
         }
 
         // Array der ausgew�hlten Antworten
@@ -176,7 +179,7 @@ public class SubTasklet_MCBuilder {
             }
 
 			// ok, jetzt zuf�llig mit den berechneten Grenzen festlegen
-			numOfCorrectAnswers = r.nextInt( maxCorr - minCorr + 1 ) + minCorr;
+            numOfCorrectAnswers = r.getInt(maxCorr - minCorr + 1) + minCorr;
 
 		}
         return numOfCorrectAnswers;

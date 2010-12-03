@@ -38,3 +38,20 @@
 <br/><br/>
 <html:submit>Hochladen</html:submit>
 </html:form>
+
+<br/>
+<br/>
+<p><h2>Einstellungen des Zufallsgenerators: </h2></p>
+<html:form action="/saveRandomConfig">
+<table border="0">
+  <tr>
+    <td>Fragen komplett zuf&auml;llig w&uuml;rfeln? </td><td><html:checkbox property="randomSeedRandom"/>
+&nbsp;&nbsp; (Wenn aktiviert bekommt jeder Student andere Fragen, ansonsten wird nur die Reihenfolge zuf&auml;llig ge&auml;ndert.)</td>
+  </tr>
+  <tr>
+    <td>Zufallsstartwert: </td><td>	<html:text property="randomSeed" size="30"/>
+    </td>
+  </tr>
+</table>
+<html:submit>Speichern</html:submit>
+</html:form>

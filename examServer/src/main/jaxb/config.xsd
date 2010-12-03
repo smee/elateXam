@@ -31,6 +31,7 @@
                 <xs:sequence minOccurs="0" maxOccurs="unbounded">
                   <xs:element name="radiusEmailSuffixes" type="xs:string"/>
                 </xs:sequence>
+                <xs:element name="randomSeed" type="xs:long" minOccurs="0" maxOccurs="1"/>
   			</xs:sequence>
 		</xs:complexType>
 	</xs:element>

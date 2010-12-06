@@ -427,7 +427,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
     @Override
     public boolean isRandomSeedRandom() {
-        return config.isSetRandomSeed();
+    return !config.isSetRandomSeed();
     }
 
 }

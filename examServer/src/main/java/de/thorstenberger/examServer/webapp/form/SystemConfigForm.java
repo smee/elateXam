@@ -42,11 +42,9 @@ public class SystemConfigForm extends BaseForm {
     private String httpAuthMail;
     private String radiusHost;
     private String radiusSharedSecret;
-  private SignatureInfos si = new SignatureInfos();
-  private List<String> mailSuffixes;
+    private SignatureInfos si = new SignatureInfos();
+    private List<String> mailSuffixes;
 
-    private long randomSeed;
-    private boolean randomSeedRandom = true;
 
   /**
    * @return the mailSuffixes
@@ -198,20 +196,5 @@ public class SystemConfigForm extends BaseForm {
     return si;
   }
 
-    public void setRandomSeed(long value) {
-        this.randomSeed = value;
-    }
-
-    public void setRandomSeedRandom(boolean val) {
-        this.randomSeedRandom = val;
-    }
-
-    public boolean isRandomSeedRandom() {
-        return randomSeedRandom;
-    }
-
-    public long getRandomSeed() {
-        return randomSeed;
-    }
 
 }

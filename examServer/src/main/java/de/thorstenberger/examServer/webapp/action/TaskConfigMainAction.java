@@ -31,9 +31,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-import de.thorstenberger.examServer.model.User;
 import de.thorstenberger.examServer.service.ConfigManager;
-import de.thorstenberger.examServer.service.UserManager;
+import de.thorstenberger.examServer.webapp.form.SeedForm;
 import de.thorstenberger.examServer.webapp.vo.TaskDefVO;
 import de.thorstenberger.taskmodel.TaskDef;
 import de.thorstenberger.taskmodel.TaskManager;
@@ -46,7 +45,24 @@ public class TaskConfigMainAction extends BaseAction {
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		TaskManager taskManager = (TaskManager)getBean( "TaskManager" );
+    request.setAttribute("TaskDefs", loadTaskDefs());
+    loadRandomSettings((SeedForm) form);
+
+    return mapping.findForward("success");
+  }
+
+  private void loadRandomSettings(SeedForm form) {
+    ConfigManager configManager = (ConfigManager) getBean("configManager");
+    // manually set random seed?
+    form.setRandomSeed(configManager.getRandomSeed());
+    form.setRandomSeedRandom(configManager.isRandomSeedRandom());
+  }
+
+  /**
+   * @return
+   */
+  protected List<TaskDefVO> loadTaskDefs() {
+    TaskManager taskManager = (TaskManager) getBean("TaskManager");
 
 		List<TaskDef> taskDefs = taskManager.getTaskDefs();
 
@@ -54,8 +70,9 @@ public class TaskConfigMainAction extends BaseAction {
 
 		for( TaskDef taskDef : taskDefs ){
 
-			if( !taskDef.isVisible() )
-				continue;
+			if( !taskDef.isVisible() ) {
+        continue;
+      }
 
 			TaskDefVO tdvo = new TaskDefVO();
         	tdvo.setId( "" + taskDef.getId() );
@@ -66,11 +83,8 @@ public class TaskConfigMainAction extends BaseAction {
         	tdvo.setActive( taskDef.isActive() );
         	tdvos.add( tdvo );
 		}
-
-		request.setAttribute( "TaskDefs", tdvos );
-
-		return mapping.findForward( "success" );
-	}
+    return tdvos;
+  }
 
 
 }

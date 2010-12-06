@@ -60,9 +60,6 @@ public class SystemConfigAction extends BaseAction {
         scf.setSignatureSettings(configManager.getPDFSignatureInfos());
         scf.setRadiusMailSuffixes(configManager.getRadiusMailSuffixes());
 
-        scf.setRandomSeed(configManager.getRandomSeed());
-        scf.setRandomSeedRandom(configManager.isRandomSeedRandom());
-        
         return mapping.findForward("systemConfig");
     }
 

@@ -71,14 +71,8 @@ public class SystemConfigSubmitAction extends BaseAction {
         configManager.setRadiusHost( scf.getRadiusHost() );
         configManager.setRadiusSharedSecret( scf.getRadiusSharedSecret() );
         configManager.setPDFSignatureInfos( scf.getSignatureSettings() );
-    configManager.setRadiusMailSuffixes(scf.getRadiusMailSuffixes());
+        configManager.setRadiusMailSuffixes(scf.getRadiusMailSuffixes());
         
-        // manually set random seed?
-        if (scf.isRandomSeedRandom()) {
-            configManager.clearRandomSeed();
-        } else {
-            configManager.setRandomSeed(scf.getRandomSeed());
-        }
 
     if ("Signatur testen".equals(scf.getTodo()))
       return createSignedPDF(mapping, request, response, configManager);

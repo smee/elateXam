@@ -69,9 +69,8 @@ public class SubTaskView_Paint extends SubTaskView {
                 throw new ParsingException(e);
             }
             return new PaintCorrectionSubmitData(points);
-        } else {
-            throw new ParsingException();
-        }
+        } else
+          throw new ParsingException();
     }
 
     /**
@@ -123,8 +122,10 @@ public class SubTaskView_Paint extends SubTaskView {
 
         ret.append("</object>\n<br/><br/>\n");
         ret.append("<textarea name=\"task[" + relativeTaskNumber + "].text\" cols=\"" +
-                paintSubTasklet.getTextFieldWidth() + "\" rows=\"" + paintSubTasklet.getTextFieldHeight()
-                + "\" onChange=\"setModified()\">\n");
+                paintSubTasklet.getTextFieldWidth() + "\" rows=\"" + paintSubTasklet.getTextFieldHeight() +
+                "\" onChange=\"setModified()\"" +
+                " readonly=" + (corrected ? "\"true\"" : "\"false\"") +
+                ">\n");
         ret.append(paintSubTasklet.getTextualAnswer());
         ret.append("</textarea>\n");
         ret.append("</div>\n");

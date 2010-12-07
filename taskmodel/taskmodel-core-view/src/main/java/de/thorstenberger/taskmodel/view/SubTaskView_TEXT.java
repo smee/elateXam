@@ -23,8 +23,6 @@ import java.text.ParseException;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import de.thorstenberger.taskmodel.MethodNotSupportedException;
 import de.thorstenberger.taskmodel.complex.ParsingException;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
@@ -53,20 +51,18 @@ public class SubTaskView_TEXT extends SubTaskView {
 	/**
 	 * @see de.thorstenberger.uebman.services.student.task.complex.SubTaskView#getRenderedHTML(int)
 	 */
-	public String getRenderedHTML( ViewContext context, int relativeTaskNumber) {
+	@Override
+  public String getRenderedHTML( ViewContext context, int relativeTaskNumber) {
 		return getRenderedHTML( relativeTaskNumber, false );
 	}
 
 	public String getRenderedHTML(int relativeTaskNumber, boolean corrected) {
 		StringBuffer ret = new StringBuffer();
 
-		// workaround: textarea not disabled, for better screen reading experience :)
-		corrected = false;
-
 		ret.append("<div align=\"center\">\n");
 		ret.append("<textarea name=\"task[" + relativeTaskNumber + "].text\" cols=\"" +
 						textSubTasklet.getTextFieldWidth() + "\" rows=\"" + textSubTasklet.getTextFieldHeight() + "\" onChange=\"setModified()\"" +
-						( corrected ? "disabled=\"disabled\"" : "" ) + ">\n");
+            "readonly=" + (corrected ? "\"true\"" : "\"false\"") + ">\n");
 		ret.append( textSubTasklet.getAnswer() );
 		ret.append("</textarea></div>\n");
 
@@ -74,11 +70,13 @@ public class SubTaskView_TEXT extends SubTaskView {
 
 	}
 
-	public String getCorrectedHTML( ViewContext context, int relativeTaskNumber ){
+	@Override
+  public String getCorrectedHTML( ViewContext context, int relativeTaskNumber ){
 		return getRenderedHTML( -1, true );
 	}
 
-	public String getCorrectionHTML( String actualCorrector, ViewContext context ){
+	@Override
+  public String getCorrectionHTML( String actualCorrector, ViewContext context ){
 	    StringBuffer ret = new StringBuffer();
 	    ret.append( getRenderedHTML( -1, true ) );
 
@@ -90,7 +88,8 @@ public class SubTaskView_TEXT extends SubTaskView {
 	/**
 	 * @see de.thorstenberger.uebman.services.student.task.complex.SubTaskView#getSubmitData(java.util.Map, int)
 	 */
-	public SubmitData getSubmitData(Map postedVarsForTask)
+	@Override
+  public SubmitData getSubmitData(Map postedVarsForTask)
 			throws ParsingException {
 
 		Iterator it = postedVarsForTask.values().iterator();
@@ -101,7 +100,8 @@ public class SubTaskView_TEXT extends SubTaskView {
 
 		}
 
-	public CorrectionSubmitData getCorrectionSubmitData( Map postedVars ) throws ParsingException, MethodNotSupportedException{
+	@Override
+  public CorrectionSubmitData getCorrectionSubmitData( Map postedVars ) throws ParsingException, MethodNotSupportedException{
 	    Iterator it = postedVars.values().iterator();
 	    if( it.hasNext() ){
 	        float points;

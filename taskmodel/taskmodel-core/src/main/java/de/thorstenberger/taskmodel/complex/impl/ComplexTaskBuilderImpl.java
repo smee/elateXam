@@ -208,7 +208,7 @@ public class ComplexTaskBuilderImpl implements ComplexTaskBuilder {
         final RandomUtil r = new RandomUtil(randomSeed);
 		Try newTry;
 		try {
-			newTry = complexTaskFactory.createTry( startTime, complexTaskFactory, complexTaskDefRoot );
+			newTry = complexTaskFactory.createTry( startTime, complexTaskFactory, complexTaskDefRoot, randomSeed );
 		} catch (TaskApiException e1) {
 			throw new TaskModelPersistenceException( e1 );
 		}

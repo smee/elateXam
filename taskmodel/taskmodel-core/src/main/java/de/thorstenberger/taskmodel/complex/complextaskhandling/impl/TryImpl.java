@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.complex.complextaskhandling.impl;
 
@@ -35,9 +35,9 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Try;
-import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType;
+import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
 
 /**
  * @author Thorsten Berger
@@ -48,9 +48,9 @@ public class TryImpl implements Try {
 	private final TryType tryType;
 	private final ComplexTaskFactory complexTaskFactory;
 	private final ComplexTaskDefRoot complexTaskDefRoot;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public TryImpl( TryType tryType, ComplexTaskFactory complexTaskFactory, ComplexTaskDefRoot complexTaskDefRoot ) {
 		this.tryType = tryType;
@@ -105,28 +105,29 @@ public class TryImpl implements Try {
 		List<Page> pages = getPages();
 		int numOfSubTasks = 0;
 		int numOfProcessedSubTasks = 0;
-		
+
 		for( Page page : pages ){
 			List<SubTasklet> subtasklets = page.getSubTasklets();
 			numOfSubTasks += subtasklets.size();
 			for( SubTasklet subTasklet : subtasklets )
-				if( subTasklet.isProcessed() )
-					numOfProcessedSubTasks++;
+				if( subTasklet.isProcessed() ) {
+          numOfProcessedSubTasks++;
+        }
 		}
-		
+
 		if( numOfSubTasks == 0 )
 			return new ProgressInformationImpl( numOfSubTasks, numOfProcessedSubTasks, 0 );
-		
+
 		return new ProgressInformationImpl( numOfSubTasks, numOfProcessedSubTasks, (float)numOfProcessedSubTasks / (float) numOfSubTasks );
-		
+
 	}
-	
+
 	public static class ProgressInformationImpl implements ProgressInformation{
 
 		private final int numOfSubtasks;
 		private final int numOfProcessedSubtasks;
 		private final float progressPercentage;
-		
+
 		/**
 		 * @param numOfSubtasks
 		 * @param numOfProcessedSubtasks
@@ -158,14 +159,14 @@ public class TryImpl implements Try {
 		public float getProgressPercentage() {
 			return progressPercentage;
 		}
-		
+
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.ComplexTaskFactory#createPage(int, de.thorstenberger.taskmodel.complex.complextaskdef.Category)
 	 */
 	public Page addNewPage(int pageNumber, Category category) throws TaskApiException {
-		
+
 		PageType pageType;
 		try {
 			pageType = ( new ObjectFactory() ).createComplexTaskHandlingTypeTryTypePageType();
@@ -175,7 +176,7 @@ public class TryImpl implements Try {
 		pageType.setNo( pageNumber );
 		pageType.setCategoryRefID( category.getId() );
 		tryType.getPage().add( pageType );
-		
+
 		return new PageImpl( pageType, complexTaskFactory, complexTaskDefRoot );
 	}
 
@@ -215,10 +216,19 @@ public class TryImpl implements Try {
 	public void setTimeExtension(long msec) {
 		if(msec < 0)
 			throw new IllegalArgumentException("The extension time for a try must not be negative!");
-		
+
 		tryType.setExtensionTime(msec);
   }
-	
-	
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.thorstenberger.taskmodel.complex.complextaskhandling.Try#getRandomSeed()
+   */
+  public long getRandomSeed() {
+    return tryType.getRandomSeed();
+  }
+
+
 
 }

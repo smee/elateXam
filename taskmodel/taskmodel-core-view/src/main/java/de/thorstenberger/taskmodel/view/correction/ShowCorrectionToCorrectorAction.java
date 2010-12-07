@@ -54,13 +54,13 @@ import de.thorstenberger.taskmodel.view.DateUtil;
 import de.thorstenberger.taskmodel.view.HtmlViewContext;
 import de.thorstenberger.taskmodel.view.ParserUtil;
 import de.thorstenberger.taskmodel.view.SubTaskletInfoVO;
-import de.thorstenberger.taskmodel.view.ViewContext;
 import de.thorstenberger.taskmodel.view.SubTaskletInfoVO.Correction;
+import de.thorstenberger.taskmodel.view.ViewContext;
 import de.thorstenberger.taskmodel.view.correction.CorrectionInfoVO.CorrectorAnnotation;
 
 /**
  * @author Thorsten Berger
- * 
+ *
  */
 public class ShowCorrectionToCorrectorAction extends Action {
 
@@ -68,7 +68,7 @@ public class ShowCorrectionToCorrectorAction extends Action {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seeorg.apache.struts.action.Action#execute(org.apache.struts.action.
      * ActionMapping, org.apache.struts.action.ActionForm,
      * javax.servlet.http.HttpServletRequest,
@@ -156,6 +156,7 @@ public class ShowCorrectionToCorrectorAction extends Action {
         } catch (final IllegalStateException e) {
             civo.setTryStartTime("-");
         }
+        civo.setRandomSeed(tasklet.getSolutionOfLatestTry().getRandomSeed());
         final UserInfo ui = delegateObject.getTaskManager().getUserInfo(userId);
         if (ui == null) {
             civo.setUnregisteredUser(true);

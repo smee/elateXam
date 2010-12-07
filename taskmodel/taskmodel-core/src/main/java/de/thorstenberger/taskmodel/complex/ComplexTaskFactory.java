@@ -48,7 +48,19 @@ public interface ComplexTaskFactory {
 
 	public SubTasklet instantiateSubTasklet( Object subTask, ComplexTaskDefRoot complexTaskDefRoot, String categoryId );
 
-	public Try createTry( long startTime, ComplexTaskFactory complexTaskFactory, ComplexTaskDefRoot complexTaskDefRoot ) throws TaskApiException;
+  /**
+   * A student starts a new try.
+   *
+   * @param startTime
+   *          timstamp of start
+   * @param complexTaskFactory
+   * @param complexTaskDefRoot
+   * @param randomSeed
+   *          random seed to use for choosing questions/answers from the question pool.
+   * @return
+   * @throws TaskApiException
+   */
+  public Try createTry(long startTime, ComplexTaskFactory complexTaskFactory, ComplexTaskDefRoot complexTaskDefRoot, long randomSeed) throws TaskApiException;
 
 	public ComplexTaskletCorrector getComplexTaskletCorrector();
 

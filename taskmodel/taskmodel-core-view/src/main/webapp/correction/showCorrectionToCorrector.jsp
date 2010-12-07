@@ -77,6 +77,12 @@
                 <td>Startzeit der Bearbeitung:</td>
                 <td>${Correction.tryStartTime}</td>
               </tr>
+              <c:if test="${Correction.randomSeed != 0}">
+                <tr> 
+                  <td>Startwert des Zufallsgenerators:</td>
+                  <td>${Correction.randomSeed}</td>
+                </tr>
+              </c:if>
             </table>
 			</fieldset><br>
 	</td>

@@ -48,12 +48,6 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl.
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl.SubTasklet_TextImpl;
 import de.thorstenberger.taskmodel.complex.jaxb.AddonSubTaskDef;
 import de.thorstenberger.taskmodel.complex.jaxb.ClozeSubTaskDef;
-import de.thorstenberger.taskmodel.complex.jaxb.MappingSubTaskDef;
-import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDef;
-import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
-import de.thorstenberger.taskmodel.complex.jaxb.PaintSubTaskDef;
-import de.thorstenberger.taskmodel.complex.jaxb.TaskBlockType;
-import de.thorstenberger.taskmodel.complex.jaxb.TextSubTaskDef;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.AddonSubTask;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.ClozeSubTask;
@@ -61,11 +55,12 @@ import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.McSubTask;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.PaintSubTask;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.TextSubTask;
-import de.thorstenberger.taskmodel.complex.jaxb.impl.ClozeSubTaskDefImpl;
-import de.thorstenberger.taskmodel.complex.jaxb.impl.MappingSubTaskDefImpl;
-import de.thorstenberger.taskmodel.complex.jaxb.impl.McSubTaskDefImpl;
-import de.thorstenberger.taskmodel.complex.jaxb.impl.PaintSubTaskDefImpl;
-import de.thorstenberger.taskmodel.complex.jaxb.impl.TextSubTaskDefImpl;
+import de.thorstenberger.taskmodel.complex.jaxb.MappingSubTaskDef;
+import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDef;
+import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
+import de.thorstenberger.taskmodel.complex.jaxb.PaintSubTaskDef;
+import de.thorstenberger.taskmodel.complex.jaxb.TaskBlockType;
+import de.thorstenberger.taskmodel.complex.jaxb.TextSubTaskDef;
 
 /**
  * @author Thorsten Berger
@@ -135,9 +130,8 @@ public class ComplexTaskFactoryImpl implements ComplexTaskFactory {
 				atSubTask.setRefId( subTaskDef.getId() );
 				return instantiateSubTasklet( atSubTask, complexTaskDefRoot, categoryId );
 			}
-		}else {
-			return null;//should be extended via addonsubtasks
-		}
+		} else
+        return null;//should be extended via addonsubtasks
 
 		} catch (JAXBException e) {
 			throw new TaskApiException();
@@ -185,7 +179,7 @@ public class ComplexTaskFactoryImpl implements ComplexTaskFactory {
 			String addonType=((AddonSubTaskDef)((GenericSubTaskDefImpl)blockAndSubTaskDef.getSubTaskDef()).getJaxbSubTaskDef()).getTaskType();
 			AddOnSubTaskletFactory factory=TaskModelServices.getInstance().getAddonSubtaskletFactory().getSubTaskletFactory(addonType);
 			if(factory!=null)
-				return factory.createAddOnSubTasklet(complexTaskDefRoot, blockAndSubTaskDef.getBlock(), (AddonSubTaskDef) ((GenericSubTaskDefImpl)blockAndSubTaskDef.getSubTaskDef()).getJaxbSubTaskDef(), atSubTask );
+				return factory.createAddOnSubTasklet(complexTaskDefRoot, blockAndSubTaskDef.getBlock(), ((GenericSubTaskDefImpl)blockAndSubTaskDef.getSubTaskDef()).getJaxbSubTaskDef(), atSubTask );
 		}
 		return null;
 
@@ -194,7 +188,7 @@ public class ComplexTaskFactoryImpl implements ComplexTaskFactory {
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.ComplexTaskFactory#createTry(long)
 	 */
-	public Try createTry( long startTime, ComplexTaskFactory complexTaskFactory, ComplexTaskDefRoot complexTaskDefRoot ) throws TaskApiException{
+  public Try createTry(long startTime, ComplexTaskFactory complexTaskFactory, ComplexTaskDefRoot complexTaskDefRoot, long randomSeed) throws TaskApiException {
 		TryType tryType;
 		try {
 			tryType = objectFactory.createComplexTaskHandlingTypeTryType();
@@ -204,6 +198,7 @@ public class ComplexTaskFactoryImpl implements ComplexTaskFactory {
 		tryType.setStartTime( startTime );
 		// FIXME never used; remove?
 		tryType.setSubmitted( false );
+    tryType.setRandomSeed(randomSeed);
 
 		Try tryImpl = new TryImpl( tryType, complexTaskFactory, complexTaskDefRoot  );
 		return tryImpl;
@@ -221,7 +216,7 @@ public class ComplexTaskFactoryImpl implements ComplexTaskFactory {
 		Category category = complexTaskDefRoot.getCategories().get( categoryId );
 		List<Block> blocks = category.getBlocks();
 
-		// alle Blöcke in der Kategorie durchlaufen
+		// alle Blï¿½cke in der Kategorie durchlaufen
 		for( Block block : blocks ){
 
 			List<SubTaskDefOrChoice> subTaskDefsOrChoices = block.getSubTaskDefOrChoiceList();

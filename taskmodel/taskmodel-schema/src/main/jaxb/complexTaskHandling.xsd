@@ -163,6 +163,7 @@
 						</xs:sequence>
 						<xs:attribute name="startTime" type="xs:long" use="required"/>
 						<xs:attribute name="submitted" type="xs:boolean" use="required"/>
+                        <xs:attribute name="randomSeed" type="xs:long" use="optional"/>
 						<xs:attribute name="extensionTime" type="xs:long" use="optional"/>
 					</xs:complexType>
 				</xs:element>

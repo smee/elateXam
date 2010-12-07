@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.complex.complextaskhandling;
 
@@ -35,48 +35,50 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef;
  *
  */
 public interface Try {
-	
+
 	public int getNumberOfPages();
-	
+
 	public long getStartTime();
-	
+
+  public long getRandomSeed();
+
 	/**
-	 * Get individual time extension for this try. 
+	 * Get individual time extension for this try.
 	 * @return a time in milliseconds
 	 */
 	public long getTimeExtension();
-	
+
 	/**
 	 * Extend the deadline for this try by <code>msec</code> milliseconds.
 	 * @param msec positive time in msec.
 	 */
 	public void setTimeExtension(long msec);
 	/**
-	 * 
+	 *
 	 * @param pageNo, the page number, starting with 1
 	 * @return
 	 */
 	public Page getPage( int pageNo );
-	
+
 	public List<Page> getPages();
-	
+
 	public ProgressInformation getProgressInformation();
-	
+
 	public Page addNewPage(int pageNumber, Category category) throws TaskApiException;
-	
+
 	public SubTasklet lookupSubTasklet( SubTaskDef subTaskDef );
-	
+
 	/**
 	 * Informations about the processing state. If the user gave an answer, a {@link SubTasklet} is marked as processed (@see {@link SubTasklet#isProcessed()}.
 	 */
 	public static interface ProgressInformation{
-		
+
 		public int getNumOfSubtasklets();
-		
+
 		public int getNumOfProcessedSubtasklets();
-		
+
 		public float getProgressPercentage();
-		
+
 	}
-	
+
 }

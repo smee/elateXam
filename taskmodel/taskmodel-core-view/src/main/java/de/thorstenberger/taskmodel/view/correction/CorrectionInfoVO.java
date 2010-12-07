@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.view.correction;
 
@@ -45,21 +45,22 @@ public class CorrectionInfoVO {
 	private int numOfTry;
 	private String tryStartTime;
 	private List<Correction> corrections;
-	
+
 	private String currentCorrectorAnnotation;
 	private List<CorrectorAnnotation> otherCorrectorAnnotations;
 	private List<AnnotationInfoVO> acknowledgedAnnotations;
 	private List<AnnotationInfoVO> nonAcknowledgedAnnotations;
 	private boolean canAcknowledge;
-	
+
 	private SubTaskletInfoVO subTasklet;
 
 	private Map<String, String> loginAndTaskId;
-	
+
 	private List<String> availableCorrectors;
-	
-	
-	
+  private long randomSeed;
+
+
+
 	/**
 	 * @return the availableCorrectors
 	 */
@@ -254,12 +255,12 @@ public class CorrectionInfoVO {
 	public void setSubTasklet(SubTaskletInfoVO subTasklet) {
 		this.subTasklet = subTasklet;
 	}
-	
+
 	public class AnnotationInfoVO{
-		
+
 		private String date;
 		private String text;
-		
+
 	/**
 	 * @param date
 	 * @param text
@@ -294,9 +295,9 @@ public class CorrectionInfoVO {
 		public void setText(String text) {
 			this.text = text;
 		}
-		
+
 	}
-	
+
 	/**
 	 * @return the otherCorrectorAnnotations
 	 */
@@ -333,7 +334,7 @@ public class CorrectionInfoVO {
 		}
 		return loginAndTaskId;
 	}
-	
+
 	public class CorrectorAnnotation{
 		private String corrector;
 		private String annotation;
@@ -370,11 +371,11 @@ public class CorrectionInfoVO {
 		public void setCorrector(String corrector) {
 			this.corrector = corrector;
 		}
-		
+
 	}
-	
+
 	public static class Correction{
-		
+
 		private String corrector;
 		private boolean auto;
 		private float points;
@@ -423,9 +424,21 @@ public class CorrectionInfoVO {
 		public void setPoints(float points) {
 			this.points = points;
 		}
-		
+
 	}
 
-	
+	/**
+	 * Random seed used for choosing questions for this try.
+	 * @return
+	 */
+	public long getRandomSeed(){
+	  return this.randomSeed;
+	}
+
+  public void setRandomSeed(long randomSeed) {
+    this.randomSeed=randomSeed;
+  }
+
+
 
 }

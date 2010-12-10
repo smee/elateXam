@@ -97,7 +97,7 @@ public class AutotoolConfigPanel extends JPanel {
 
     /**
      * This method initializes
-     * 
+     *
      */
     public AutotoolConfigPanel() {
         super();
@@ -132,7 +132,7 @@ public class AutotoolConfigPanel extends JPanel {
 
     /**
      * This method initializes jConfigPane
-     * 
+     *
      * @return javax.swing.JTextPane
      */
     private JTextPane getConfigTextPane() {
@@ -145,19 +145,19 @@ public class AutotoolConfigPanel extends JPanel {
 
     /**
      * This method initializes jAutotoolUrlTf
-     * 
+     *
      * @return javax.swing.JTextField
      */
     private JTextField getJAutotoolUrlTf() {
         if (jAutotoolUrlTf == null) {
-            jAutotoolUrlTf = new JTextField("http://dfa.imn.htwk-leipzig.de/cgi-bin/modular-server.cgi");
+      jAutotoolUrlTf = new JTextField("http://autolat.imn.htwk-leipzig.de/cgi-bin/autotool-0.2.0.cgi");
         }
         return jAutotoolUrlTf;
     }
 
     /**
      * This method initializes jGenerateXmlButton
-     * 
+     *
      * @return javax.swing.JButton
      */
     private JButton getJGenerateXmlButton() {
@@ -180,7 +180,7 @@ public class AutotoolConfigPanel extends JPanel {
 
     /**
      * This method initializes jSignatureTF
-     * 
+     *
      * @return javax.swing.JTextField
      */
     private JTextField getJSignatureTF() {
@@ -193,7 +193,7 @@ public class AutotoolConfigPanel extends JPanel {
 
     /**
      * This method initializes jTaskTypesCb
-     * 
+     *
      * @return javax.swing.JComboBox
      */
     private JComboBox getJTaskTypesCb() {
@@ -224,7 +224,7 @@ public class AutotoolConfigPanel extends JPanel {
 
     /**
      * This method initializes jVerifyButton
-     * 
+     *
      * @return javax.swing.JButton
      */
     private JButton getJVerifyButton() {
@@ -302,7 +302,7 @@ public class AutotoolConfigPanel extends JPanel {
 
     /**
      * This method initializes jButton
-     * 
+     *
      * @return javax.swing.JButton
      */
     private JButton getRefreshButton() {
@@ -350,7 +350,7 @@ public class AutotoolConfigPanel extends JPanel {
 
     /**
      * This method initializes this
-     * 
+     *
      */
     private void initialize() {
         final GridBagConstraints gridBagConstraints31 = new GridBagConstraints();
@@ -449,9 +449,8 @@ public class AutotoolConfigPanel extends JPanel {
         final int len = model.getSize();
         int ptr = 0;
         while (ptr < len) {
-            if (model.getElementAt(ptr++).equals(value)) {
-                return true;
-            }
+            if (model.getElementAt(ptr++).equals(value))
+              return true;
         }
         return false;
     }

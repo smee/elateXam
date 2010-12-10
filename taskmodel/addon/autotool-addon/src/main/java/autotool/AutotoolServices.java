@@ -2,6 +2,7 @@ package autotool;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -20,8 +21,10 @@ public class AutotoolServices{
 		private String taskType;
 
 		private AutotoolTaskConfigVO(String taskType,Map config) {
-			this.doc=AutotoolServices.trimHtmlTags((String) ((Map)config).get("documentation"));
-			this.config=(String) ((Map)((Map)config).get("contents")).get("contents");
+      Map m = (Map) config.get("TaskDescription");
+      System.out.println(m.keySet());
+      this.doc = AutotoolServices.trimHtmlTags((String) m.get("documentation"));
+      this.config = (String) m.get("task_sample_config");
 			this.taskType=taskType;
 		}
 
@@ -77,33 +80,54 @@ public class AutotoolServices{
 	}
 
 	public List<String> getTaskTypes() throws XmlRpcException {
-		Object[] response=(Object[]) client.execute("autotool.list_types",Collections.EMPTY_LIST);
+    Object[] response = (Object[]) client.execute("get_task_types", Collections.EMPTY_LIST);
 		List<String> result=new ArrayList<String>(response.length);
 		for (Object m : response) {
-			result.add((String) ((Map)m).get("contents"));
+      result.addAll(findTaskNames(m));
 		}
 		return result;
 	}
 
-	public AutotoolTaskConfig getConfig(String taskType) throws XmlRpcException {
-		Map<String,String> m=new HashMap<String,String>();
-		m.put("contents",taskType);
-		final Object config=client.execute("autotool.get_config",new Object[] {m});
+  private Collection<? extends String> findTaskNames(Object m) {
+    List<String> res = new ArrayList<String>();
+    if (m instanceof Map) {
+      Map map = (Map) m;
+      if (map.containsKey("Task")) {
+        res.add((String) ((Map) map.get("Task")).get("task_name"));
+      } else {
+        for (Object val : map.values()) {
+          res.addAll(findTaskNames(val));
+        }
+      }
+    } else if (m instanceof Object[]) {
+      for (Object val : (Object[]) m) {
+        res.addAll(findTaskNames(val));
+      }
+    }
+    return res;
+  }
 
+  public AutotoolTaskConfig getConfig(String taskType) throws XmlRpcException {
+
+    final Object config = client.execute("get_task_description", new Object[] { taskType });
+    System.out.println(config);
 		return new AutotoolTaskConfigVO(taskType,(Map) config);
 	}
 
 	public SignedAutotoolTaskConfig getSignedConfig(AutotoolTaskConfig config) throws XmlRpcException {
-		Map m=(Map) client.execute("autotool.verify_config",new Object[] {struct(config.getTaskType()),struct(config.getConfigString())});
+    Map m = (Map) client.execute("verify_task_config", new Object[] { struct(config.getTaskType()),
+        struct(config.getConfigString()) });
 		return new SignedAutotoolTaskConfig.SignedAutotoolTaskConfigVO(m,config);
 	}
 
 	public AutotoolTaskInstance getTaskInstance(SignedAutotoolTaskConfig cfg, int seed) throws XmlRpcException {
-		Map inst=(Map) client.execute("autotool.get_instance",new Object[] {struct(cfg.getTaskType()),sigCfg2XmlRpc(cfg),struct(new Integer(seed))});
+    Map inst = (Map) client.execute("get_task_instance", new Object[] { struct(cfg.getTaskType()), sigCfg2XmlRpc(cfg),
+        struct(new Integer(seed)) });
 		return new AutotoolTaskInstance.AutotoolTaskInstanceVO(cfg,inst,serverUrlString);
 	}
 	public AutotoolGrade gradeTaskInstance(AutotoolTaskInstance inst, String solution) throws XmlRpcException {
-		Map grade=(Map) client.execute("autotool.grade",new Object[] {struct(inst.getTaskType()),inst.getSignedInstance(),struct(solution)});
+    Map grade = (Map) client.execute("grade_task_solution", new Object[] { struct(inst.getTaskType()), inst.getSignedInstance(),
+        struct(solution) });
 		return new AutotoolGradeVO(grade,serverUrlString);
 	}
 
@@ -123,8 +147,9 @@ public class AutotoolServices{
 	}
 
 	public static String replaceImgLinks(String serverUrl, String string) {
-	if(!serverUrl.endsWith("/"))
-			serverUrl=serverUrl.substring(0,serverUrl.lastIndexOf('/')+1);
+	if(!serverUrl.endsWith("/")) {
+    serverUrl=serverUrl.substring(0,serverUrl.lastIndexOf('/')+1);
+  }
 		return string.replaceAll("<img src=\"../","<img src=\""+serverUrl);
 	}
 
@@ -142,7 +167,9 @@ public class AutotoolServices{
 				break;
 			case '\n':
 				if(inTag)
-					continue;//skip it
+         {
+          continue;//skip it
+        }
 				break;
 			default:
 				break;

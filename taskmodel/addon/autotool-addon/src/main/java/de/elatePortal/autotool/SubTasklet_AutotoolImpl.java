@@ -29,8 +29,10 @@ import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.Map;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.commons.codec.binary.Base64;
-import org.apache.xerces.dom.CoreDocumentImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -69,9 +71,14 @@ public class SubTasklet_AutotoolImpl extends AbstractAddonSubTasklet implements 
 		private void parseSubTask(AddonSubTask atSubTask) {
 			this.memento=atSubTask.getMemento();
 			if(memento==null) {
-				Document doc=new CoreDocumentImpl();
-				memento=doc.createElementNS("http://complex.taskmodel.thorstenberger.de/complexTaskHandling","Memento");
-				atSubTask.setMemento(memento);
+        Document doc;
+        try {
+          doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+          memento = doc.createElementNS("http://complex.taskmodel.thorstenberger.de/complexTaskHandling", "Memento");
+          atSubTask.setMemento(memento);
+        } catch (ParserConfigurationException e) {
+          throw new RuntimeException(e);
+        }
 			}
 		}
 

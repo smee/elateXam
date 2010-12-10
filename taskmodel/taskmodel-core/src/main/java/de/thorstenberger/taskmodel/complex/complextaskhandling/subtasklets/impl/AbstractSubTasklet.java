@@ -25,10 +25,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-
 import de.thorstenberger.taskmodel.TaskApiException;
-import de.thorstenberger.taskmodel.TaskModelPersistenceException;
 import de.thorstenberger.taskmodel.complex.TaskHandlingConstants;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
@@ -67,7 +64,7 @@ public abstract class AbstractSubTasklet implements SubTasklet{
 	 */
 	public void addToPage(Page page) {
 		PageImpl pageImpl = (PageImpl)page;
-		pageImpl.getPageType().getMcSubTaskOrClozeSubTaskOrTextSubTask().add( subTaskType );
+    pageImpl.getPage().getMcSubTaskOrClozeSubTaskOrTextSubTask().add(subTaskType);
 	}
 	/*
 	 * (non-Javadoc)
@@ -244,21 +241,21 @@ public abstract class AbstractSubTasklet implements SubTasklet{
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#isSetNeedsManualCorrectionFlag()
 	 */
 	public boolean isSetNeedsManualCorrectionFlag() {
-		return subTaskType.isNeedsManualCorrection();
+    return subTaskType.isSetNeedsManualCorrection() && subTaskType.isNeedsManualCorrection();
 	}
-	protected void setAutoCorrection( float points ){
-		AutoCorrectionType corr = subTaskType.getAutoCorrection();
-		if( corr == null ){
-			ObjectFactory of = new ObjectFactory();
-			try {
-				corr = of.createAutoCorrectionType();
-				subTaskType.setAutoCorrection( corr );
-			} catch (JAXBException e) {
-				throw new TaskModelPersistenceException( e );
-			}
-		}
-		corr.setPoints( points );
-	}
+
+  /**
+   * @param points
+   */
+  protected void setAutoCorrection(float points) {
+    AutoCorrectionType corr = subTaskType.getAutoCorrection();
+    if (corr == null) {
+      ObjectFactory of = new ObjectFactory();
+      corr = of.createAutoCorrectionType();
+      subTaskType.setAutoCorrection(corr);
+    }
+    corr.setPoints(points);
+  }
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#buildPreview()
 	 */

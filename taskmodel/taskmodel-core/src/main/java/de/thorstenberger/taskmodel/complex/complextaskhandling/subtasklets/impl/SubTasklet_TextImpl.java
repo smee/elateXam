@@ -23,10 +23,7 @@ package de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl
 
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-
 import de.thorstenberger.taskmodel.TaskApiException;
-import de.thorstenberger.taskmodel.TaskModelPersistenceException;
 import de.thorstenberger.taskmodel.complex.TaskHandlingConstants;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
@@ -36,8 +33,8 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.correctionsubmitdata.TextCorrectionSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.TextSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Text;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.TextTaskBlock;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.TextSubTask;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDef.Category.TextTaskBlock;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.TextSubTask;
 import de.thorstenberger.taskmodel.complex.jaxb.ManualCorrectionType;
 import de.thorstenberger.taskmodel.complex.jaxb.SubTaskDefType;
 import de.thorstenberger.taskmodel.complex.jaxb.TextSubTaskDef;
@@ -129,11 +126,7 @@ public class SubTasklet_TextImpl extends AbstractSubTasklet implements SubTaskle
 			}
 			// corrector not found, so create a new ManualCorrection for him
 			ManualCorrectionType mc;
-			try {
-				mc = objectFactory.createManualCorrectionType();
-			} catch (JAXBException e) {
-				throw new TaskModelPersistenceException( e );
-			}
+      mc = objectFactory.createManualCorrectionType();
 			mc.setCorrector( tcsd.getCorrector() );
 			mc.setPoints( tcsd.getPoints() );
 			manualCorrections.add( mc );
@@ -144,11 +137,7 @@ public class SubTasklet_TextImpl extends AbstractSubTasklet implements SubTaskle
 			if( manualCorrections.size() > 0 ){
 				mc = manualCorrections.get( 0 );
 			}else{
-				try {
-					mc = objectFactory.createManualCorrectionType();
-				} catch (JAXBException e) {
-					throw new TaskModelPersistenceException( e );
-				}
+        mc = objectFactory.createManualCorrectionType();
 				manualCorrections.add( mc );
 			}
 			mc.setCorrector( tcsd.getCorrector() );

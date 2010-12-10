@@ -23,8 +23,6 @@ package de.thorstenberger.taskmodel.complex.impl;
 
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskModelServices;
 import de.thorstenberger.taskmodel.complex.ComplexTaskFactory;
@@ -48,13 +46,13 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl.
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl.SubTasklet_TextImpl;
 import de.thorstenberger.taskmodel.complex.jaxb.AddonSubTaskDef;
 import de.thorstenberger.taskmodel.complex.jaxb.ClozeSubTaskDef;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.AddonSubTask;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.ClozeSubTask;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.MappingSubTask;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.McSubTask;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.PaintSubTask;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.TextSubTask;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.AddonSubTask;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.ClozeSubTask;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.MappingSubTask;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.McSubTask;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.PaintSubTask;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.TextSubTask;
 import de.thorstenberger.taskmodel.complex.jaxb.MappingSubTaskDef;
 import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDef;
 import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
@@ -100,45 +98,40 @@ public class ComplexTaskFactoryImpl implements ComplexTaskFactory {
 	 * @see de.thorstenberger.taskmodel.complex.ComplexTaskFactory#createSubTaskletForSubTaskDef(de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef)
 	 */
 	public SubTasklet createSubTaskletForSubTaskDef(SubTaskDef subTaskDef, ComplexTaskDefRoot complexTaskDefRoot, String categoryId )
-			throws TaskApiException {
+      throws TaskApiException {
 
-		try {
-			if( subTaskDef instanceof GenericSubTaskDefImpl){
-				Object jaxbSubTaskDef=((GenericSubTaskDefImpl)subTaskDef).getJaxbSubTaskDef();
-			if( jaxbSubTaskDef instanceof McSubTaskDef ){
-				McSubTask mcSubTask = objectFactory.createComplexTaskHandlingTypeTryTypePageTypeMcSubTask();
-				mcSubTask.setRefId( subTaskDef.getId() );
-				return instantiateSubTasklet( mcSubTask, complexTaskDefRoot, categoryId );
-			}else if( jaxbSubTaskDef instanceof MappingSubTaskDef ){
-				MappingSubTask mappingSubTask = objectFactory.createComplexTaskHandlingTypeTryTypePageTypeMappingSubTask();
-				mappingSubTask.setRefId( subTaskDef.getId() );
-				return instantiateSubTasklet( mappingSubTask, complexTaskDefRoot, categoryId );
-			}else if( jaxbSubTaskDef instanceof ClozeSubTaskDef ){
-				ClozeSubTask clozeSubTask = objectFactory.createComplexTaskHandlingTypeTryTypePageTypeClozeSubTask();
-				clozeSubTask.setRefId( subTaskDef.getId() );
-				return instantiateSubTasklet( clozeSubTask, complexTaskDefRoot, categoryId );
-			}else if( jaxbSubTaskDef instanceof TextSubTaskDef ){
-				TextSubTask textSubTask = objectFactory.createComplexTaskHandlingTypeTryTypePageTypeTextSubTask();
-				textSubTask.setRefId( subTaskDef.getId() );
-				return instantiateSubTasklet( textSubTask, complexTaskDefRoot, categoryId );
-			}else if( jaxbSubTaskDef instanceof PaintSubTaskDef ){
-				PaintSubTask paintSubTask = objectFactory.createComplexTaskHandlingTypeTryTypePageTypePaintSubTask();
-				paintSubTask.setRefId( subTaskDef.getId() );
-				return instantiateSubTasklet( paintSubTask, complexTaskDefRoot, categoryId );
-			}else if( jaxbSubTaskDef instanceof AddonSubTaskDef ){
-				AddonSubTask atSubTask = objectFactory.createComplexTaskHandlingTypeTryTypePageTypeAddonSubTask();
-				atSubTask.setRefId( subTaskDef.getId() );
-				return instantiateSubTasklet( atSubTask, complexTaskDefRoot, categoryId );
-			}
-		} else
-        return null;//should be extended via addonsubtasks
+    if (subTaskDef instanceof GenericSubTaskDefImpl) {
+      Object jaxbSubTaskDef = ((GenericSubTaskDefImpl) subTaskDef).getJaxbSubTaskDef();
+      if (jaxbSubTaskDef instanceof McSubTaskDef) {
+        McSubTask mcSubTask = objectFactory.createComplexTaskHandlingTryPageMcSubTask();
+        mcSubTask.setRefId(subTaskDef.getId());
+        return instantiateSubTasklet(mcSubTask, complexTaskDefRoot, categoryId);
+      } else if (jaxbSubTaskDef instanceof MappingSubTaskDef) {
+        MappingSubTask mappingSubTask = objectFactory.createComplexTaskHandlingTryPageMappingSubTask();
+        mappingSubTask.setRefId(subTaskDef.getId());
+        return instantiateSubTasklet(mappingSubTask, complexTaskDefRoot, categoryId);
+      } else if (jaxbSubTaskDef instanceof ClozeSubTaskDef) {
+        ClozeSubTask clozeSubTask = objectFactory.createComplexTaskHandlingTryPageClozeSubTask();
+        clozeSubTask.setRefId(subTaskDef.getId());
+        return instantiateSubTasklet(clozeSubTask, complexTaskDefRoot, categoryId);
+      } else if (jaxbSubTaskDef instanceof TextSubTaskDef) {
+        TextSubTask textSubTask = objectFactory.createComplexTaskHandlingTryPageTextSubTask();
+        textSubTask.setRefId(subTaskDef.getId());
+        return instantiateSubTasklet(textSubTask, complexTaskDefRoot, categoryId);
+      } else if (jaxbSubTaskDef instanceof PaintSubTaskDef) {
+        PaintSubTask paintSubTask = objectFactory.createComplexTaskHandlingTryPagePaintSubTask();
+        paintSubTask.setRefId(subTaskDef.getId());
+        return instantiateSubTasklet(paintSubTask, complexTaskDefRoot, categoryId);
+      } else if (jaxbSubTaskDef instanceof AddonSubTaskDef) {
+        AddonSubTask atSubTask = objectFactory.createComplexTaskHandlingTryPageAddonSubTask();
+        atSubTask.setRefId(subTaskDef.getId());
+        return instantiateSubTasklet(atSubTask, complexTaskDefRoot, categoryId);
+      }
+    } else
+      return null;// should be extended via addonsubtasks
 
-		} catch (JAXBException e) {
-			throw new TaskApiException();
-		}
-
-		return null;
-	}
+    return null;
+  }
 
 
 	public SubTasklet instantiateSubTasklet( Object jaxbSubTask, ComplexTaskDefRoot complexTaskDefRoot, String categoryId ){
@@ -189,12 +182,8 @@ public class ComplexTaskFactoryImpl implements ComplexTaskFactory {
 	 * @see de.thorstenberger.taskmodel.complex.ComplexTaskFactory#createTry(long)
 	 */
   public Try createTry(long startTime, ComplexTaskFactory complexTaskFactory, ComplexTaskDefRoot complexTaskDefRoot, long randomSeed) throws TaskApiException {
-		TryType tryType;
-		try {
-			tryType = objectFactory.createComplexTaskHandlingTypeTryType();
-		} catch (JAXBException e) {
-			throw new TaskApiException( e );
-		}
+    ComplexTaskHandling.Try tryType;
+    tryType = objectFactory.createComplexTaskHandlingTry();
 		tryType.setStartTime( startTime );
 		// FIXME never used; remove?
 		tryType.setSubmitted( false );

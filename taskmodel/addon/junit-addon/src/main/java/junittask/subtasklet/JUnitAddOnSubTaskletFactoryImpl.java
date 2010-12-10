@@ -31,7 +31,6 @@ import ch.ethz.iks.r_osgi.RemoteOSGiService;
 import ch.ethz.iks.r_osgi.RemoteServiceEvent;
 import ch.ethz.iks.r_osgi.RemoteServiceListener;
 import ch.ethz.iks.r_osgi.URI;
-
 import correction.junit.JUnitTestCorrector;
 import correction.junit.JUnitTestResult;
 import de.thorstenberger.taskmodel.MethodNotSupportedException;
@@ -40,7 +39,7 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.AddOnSubTasklet;
 import de.thorstenberger.taskmodel.complex.jaxb.AddonSubTaskDef;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.AddonSubTask;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.AddonSubTask;
 
 public class JUnitAddOnSubTaskletFactoryImpl implements
 		AddOnSubTaskletFactory {
@@ -162,9 +161,8 @@ public class JUnitAddOnSubTaskletFactoryImpl implements
 		}
 
 		public JUnitTestCorrector retrieveRemoteService( URI uri ) {
-			if( ros != null) {
-				return (JUnitTestCorrector) ros.getRemoteService( ros.getRemoteServiceReference( uri ) );
-			}
+			if( ros != null)
+        return (JUnitTestCorrector) ros.getRemoteService( ros.getRemoteServiceReference( uri ) );
 			return null;
 		}
 	}

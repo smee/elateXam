@@ -28,7 +28,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.Validator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,9 +39,9 @@ import de.thorstenberger.examServer.dao.xml.jaxb.ObjectFactory;
 /**
  * DAO that accesses jaxb xml files within a transaction. Every call to {@link #load()} and {@link #save(Object)}
  * happens atomically with gurantee
- * 
+ *
  * @author Steffen Dienst
- * 
+ *
  */
 public class AbstractJAXBDao extends AbstractTransactionalFileIO {
     final Log log = LogFactory.getLog(AbstractJAXBDao.class);
@@ -64,7 +63,7 @@ public class AbstractJAXBDao extends AbstractTransactionalFileIO {
 
     /**
      * Does the file we are reading from/writing to exist?
-     * 
+     *
      * @return
      */
     protected boolean existsWorkingFile() {
@@ -74,7 +73,7 @@ public class AbstractJAXBDao extends AbstractTransactionalFileIO {
     /**
      * Unmarshall the given xml file and return the corresponding object. Will wrap any exception into a
      * {@link RuntimeException}.
-     * 
+     *
      * @return the deserialized object
      * @throws RuntimeException
      *             wrapping {@link JAXBException} of {@link FileNotFoundException}
@@ -87,7 +86,6 @@ public class AbstractJAXBDao extends AbstractTransactionalFileIO {
             // deserialize the xml
             Unmarshaller unmarshaller;
             unmarshaller = jc.createUnmarshaller();
-            unmarshaller.setValidating(true);
             final BufferedInputStream bis = new BufferedInputStream(getFRM().readResource(xmlFileName));
             final Object obj = unmarshaller.unmarshal(bis);
             bis.close();
@@ -105,7 +103,7 @@ public class AbstractJAXBDao extends AbstractTransactionalFileIO {
 
     /**
      * Serializes the object into xml. Will wrap any exception into a {@link RuntimeException}.
-     * 
+     *
      * @param obj
      *            the object to save.
      * @throws RuntimeException
@@ -117,8 +115,7 @@ public class AbstractJAXBDao extends AbstractTransactionalFileIO {
         try {
 
             final Marshaller marshaller = jc.createMarshaller();
-            final Validator validator = jc.createValidator();
-            validator.validate(obj);
+
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
             final BufferedOutputStream bos = new BufferedOutputStream(getFRM().writeResource(txId, this.xmlFileName));
             marshaller.marshal(obj, bos);

@@ -5,6 +5,14 @@
   <artifactId>taskmodel</artifactId>
   <groupId>de.elatexam</groupId>
   <version>1.0.0-SNAPSHOT</version>
+  
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>5</version>
+  </parent>
+
+  
   <packaging>pom</packaging>
   <name>Taskmodel Parent</name>
   <description>Parent for all taskmodel artifacts</description>
@@ -27,7 +35,9 @@
     <module>taskmodel-core</module>
     <module>drawTask</module>
     <module>taskmodel-core-view</module>
+	<!--
     <module>addon</module>
+	-->
   </modules>
   
   <distributionManagement>
@@ -123,7 +133,7 @@
   <prerequisites>
     <maven>2.1.0</maven>
   </prerequisites>
-
+<!--
   <repositories>
     <repository>
       <releases>
@@ -147,7 +157,7 @@
   <layout>default</layout>
 </repository>
 </repositories>
-
+-->
 
   <build>
     <defaultGoal>install</defaultGoal>
@@ -157,7 +167,15 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>${maven.compiler.plugin.version}</version>
-        </plugin>
+		  <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+          <encoding>UTF8</encoding>
+          <maxmem>300M</maxmem>
+          <fork>true</fork>
+          <optimize>true</optimize>
+        </configuration>
+      </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>

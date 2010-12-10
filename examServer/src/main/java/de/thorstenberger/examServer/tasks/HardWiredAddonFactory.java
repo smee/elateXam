@@ -1,13 +1,11 @@
 /**
- * 
+ *
  */
 package de.thorstenberger.examServer.tasks;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
-import de.elatePortal.autotool.AutotoolAddOnSubTaskletFactoryImpl;
-import de.elatePortal.autotool.view.AutotoolSubTaskViewFactory;
 import de.thorstenberger.taskmodel.complex.addon.AddOnSubTaskletFactory;
 import de.thorstenberger.taskmodel.complex.addon.AddonSubtaskletFactoryPerOSGi;
 import de.thorstenberger.taskmodel.view.AddonSubTaskViewFactory;
@@ -23,8 +21,10 @@ public class HardWiredAddonFactory implements AddonSubtaskletFactoryPerOSGi {
 	private final Collection<? extends AddonSubTaskViewFactory> viewfactories;
 
 	public HardWiredAddonFactory() {
-		this.taskletfactories =  Arrays.asList(new AutotoolAddOnSubTaskletFactoryImpl());
-		this.viewfactories = Arrays.asList(new AutotoolSubTaskViewFactory());
+    // this.taskletfactories = Arrays.asList(new AutotoolAddOnSubTaskletFactoryImpl());
+    this.taskletfactories = Collections.emptyList();
+    // this.viewfactories = Arrays.asList(new AutotoolSubTaskViewFactory());
+    this.viewfactories = Collections.emptyList();
 	}
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.addon.AddonSubtaskletFactoryPerOSGi#getSubTaskViewFactory(java.lang.String)

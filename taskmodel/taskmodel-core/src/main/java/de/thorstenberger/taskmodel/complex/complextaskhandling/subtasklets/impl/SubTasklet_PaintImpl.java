@@ -20,10 +20,7 @@ package de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl
 
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-
 import de.thorstenberger.taskmodel.TaskApiException;
-import de.thorstenberger.taskmodel.TaskModelPersistenceException;
 import de.thorstenberger.taskmodel.complex.TaskHandlingConstants;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
@@ -33,8 +30,8 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.correctionsubmitdata.PaintCorrectionSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.PaintSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Paint;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.PaintTaskBlock;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.PaintSubTask;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDef.Category.PaintTaskBlock;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.PaintSubTask;
 import de.thorstenberger.taskmodel.complex.jaxb.ManualCorrectionType;
 import de.thorstenberger.taskmodel.complex.jaxb.PaintSubTaskDef;
 import de.thorstenberger.taskmodel.complex.jaxb.SubTaskDefType;
@@ -107,11 +104,7 @@ public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTaskl
 			}
 			// corrector not found, so create a new ManualCorrection for him
 			ManualCorrectionType mc;
-			try {
-				mc = objectFactory.createManualCorrectionType();
-			} catch (JAXBException e) {
-				throw new TaskModelPersistenceException( e );
-			}
+      mc = objectFactory.createManualCorrectionType();
 			mc.setCorrector( pcsd.getCorrector() );
 			mc.setPoints( pcsd.getPoints() );
 			manualCorrections.add( mc );
@@ -122,11 +115,7 @@ public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTaskl
 			if( manualCorrections.size() > 0 ){
 				mc = manualCorrections.get( 0 );
 			}else{
-				try {
-					mc = objectFactory.createManualCorrectionType();
-				} catch (JAXBException e) {
-					throw new TaskModelPersistenceException( e );
-				}
+        mc = objectFactory.createManualCorrectionType();
 				manualCorrections.add( mc );
 			}
 			mc.setCorrector( pcsd.getCorrector() );

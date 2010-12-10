@@ -28,8 +28,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
@@ -37,15 +37,13 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.Validator;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import de.thorstenberger.examServer.dao.xml.jaxb.Config;
-import de.thorstenberger.examServer.dao.xml.jaxb.ConfigType.PdfSignatureSettingsType;
-import de.thorstenberger.examServer.dao.xml.jaxb.ConfigType.RadiusEmailSuffixes;
+import de.thorstenberger.examServer.dao.xml.jaxb.Config.PdfSignatureSettings;
 import de.thorstenberger.examServer.dao.xml.jaxb.ObjectFactory;
 import de.thorstenberger.examServer.pdf.signature.SignatureInfos;
 import de.thorstenberger.examServer.service.ConfigManager;
@@ -95,7 +93,6 @@ public class ConfigManagerImpl implements ConfigManager {
             // wenn vorhanden, dann auslesen
             Unmarshaller unmarshaller;
             unmarshaller = jc.createUnmarshaller();
-            unmarshaller.setValidating(true);
             final BufferedInputStream bis = new BufferedInputStream(new FileInputStream(configFile));
             config = (Config) unmarshaller.unmarshal(bis);
 
@@ -180,8 +177,6 @@ public class ConfigManagerImpl implements ConfigManager {
         try {
 
             final Marshaller marshaller = jc.createMarshaller();
-            final Validator validator = jc.createValidator();
-            validator.validate(config);
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
             final BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(this.configFile));
             marshaller.marshal(config, bos);
@@ -333,14 +328,10 @@ public class ConfigManagerImpl implements ConfigManager {
   @Override
   public void setPDFSignatureInfos(final SignatureInfos si) {
     if (!config.isSetPdfSignatureSettings()) {
-      try {
-        config.setPdfSignatureSettings(new ObjectFactory().createConfigTypePdfSignatureSettingsType());
-      } catch (final JAXBException e) {
-        log.warn("Could not store settings for pdf signatures!", e);
-      }
+      config.setPdfSignatureSettings(new ObjectFactory().createConfigPdfSignatureSettings());
     }
     try {
-      final PdfSignatureSettingsType pdfSettings = config.getPdfSignatureSettings();
+      final PdfSignatureSettings pdfSettings = config.getPdfSignatureSettings();
       BeanUtils.copyProperties(pdfSettings, si);
       save();
     } catch (final IllegalAccessException e) {
@@ -357,12 +348,7 @@ public class ConfigManagerImpl implements ConfigManager {
    */
   @Override
   public List<String> getRadiusMailSuffixes() {
-    List<String> result = new LinkedList<String>();
-    List<RadiusEmailSuffixes> radiusEmailSuffixes = config.getRadiusEmailSuffixes();
-    for (RadiusEmailSuffixes res : radiusEmailSuffixes) {
-      result.add(res.getValue());
-    }
-    return result;
+    return new ArrayList<String>(config.getRadiusEmailSuffixes());
   }
 
   /*
@@ -372,18 +358,10 @@ public class ConfigManagerImpl implements ConfigManager {
    */
   @Override
   public synchronized void setRadiusMailSuffixes(List<String> suffixes) {
-    List<RadiusEmailSuffixes> crntSuffixes = config.getRadiusEmailSuffixes();
+    List<String> crntSuffixes = config.getRadiusEmailSuffixes();
     crntSuffixes.clear();
-
-    try {
-      final ObjectFactory oF = new ObjectFactory();
-      for (String suffix : suffixes) {
-        crntSuffixes.add(oF.createConfigTypeRadiusEmailSuffixes(suffix));
-      }
-      save();
-    } catch (JAXBException e) {
-      log.error("Could not store radius mail suffixes!", e);
-    }
+    crntSuffixes.addAll(suffixes);
+    save();
   }
 
     /*
@@ -421,7 +399,7 @@ public class ConfigManagerImpl implements ConfigManager {
      */
     @Override
     public void clearRandomSeed() {
-        config.unsetRandomSeed();
+        config.setRandomSeed(null);
         save();
     }
 

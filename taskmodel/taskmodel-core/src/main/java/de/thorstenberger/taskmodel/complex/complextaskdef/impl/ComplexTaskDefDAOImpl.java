@@ -33,20 +33,23 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.Validator;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskModelPersistenceException;
 import de.thorstenberger.taskmodel.complex.ComplexTaskFactory;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefDAO;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.ComplexTaskHandlingRoot;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDef;
+import de.thorstenberger.taskmodel.util.JAXB2Validation;
 
 /**
  * @author Thorsten Berger
  *
  */
 public class ComplexTaskDefDAOImpl implements ComplexTaskDefDAO {
-
+  public static final Log logger = LogFactory.getLog(ComplexTaskDefDAOImpl.class);
 	private ComplexTaskFactory complexTaskFactory;
 
 	/**
@@ -65,7 +68,9 @@ public class ComplexTaskDefDAOImpl implements ComplexTaskDefDAO {
 		Unmarshaller unmarshaller;
 		try {
 			unmarshaller = jc.createUnmarshaller();
-			unmarshaller.setValidating( true );
+      // enable validation
+      unmarshaller.setSchema(JAXB2Validation.loadSchema("complexTaskDef.xsd"));
+
 			BufferedInputStream bis = new BufferedInputStream( complexTaskIS );
 			complexTask = (ComplexTaskDef) unmarshaller.
 				unmarshal( bis );
@@ -75,12 +80,12 @@ public class ComplexTaskDefDAOImpl implements ComplexTaskDefDAO {
 			throw new TaskModelPersistenceException( e1 );
 		} catch (IOException e2) {
 			throw new TaskModelPersistenceException( e2 );
-		}
+    }
 
 		return new ComplexTaskDefRootImpl( complexTask, complexTaskFactory );
 	}
 
-	private JAXBContext createJAXBContext()
+  private JAXBContext createJAXBContext()
 			throws TaskApiException {
 		JAXBContext jc;
 		try {

@@ -30,11 +30,11 @@ import org.junit.Before;
 
 import de.thorstenberger.taskmodel.complex.RandomUtil;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_MC;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.McSubTask;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.McSubTaskType.AnswerType;
-import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDefType;
-import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDefType.CorrectType;
-import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDefType.IncorrectType;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.McSubTask;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.McSubTask.Answer;
+import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDef;
+import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDef.Correct;
+import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDef.Incorrect;
 import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
 import de.thorstenberger.taskmodel.util.ReflectionHelper;
 /**
@@ -57,7 +57,7 @@ public class SubTasklet_MCBuilderTest {
         String[] answers = new String[] { "good1", "bad1", "good2", "bad2" };
         boolean[] correct = new boolean[] { true, false, true, false };
 
-        McSubTaskDefType mcSubTaskDef = create(answers, correct, 2, 2, 4, true);
+    McSubTaskDef mcSubTaskDef = create(answers, correct, 2, 2, 4, true);
         mcbuilder.constructAnswersForMCSubTask(subtask, mcSubTaskDef);
 
         Assert.assertTrue(ArrayUtils.isEquals(correct, getChoosenAnswerTypes()));
@@ -69,18 +69,18 @@ public class SubTasklet_MCBuilderTest {
         boolean[] correct = new boolean[] { true, false, true, false, false, true, false, false };
         int count = 300;
         while (count-- >= 0) {
-            McSubTaskDefType mcSubTaskDef = create(answers, correct, 1, 3, 5, true);
+      McSubTaskDef mcSubTaskDef = create(answers, correct, 1, 3, 5, true);
             mcbuilder.constructAnswersForMCSubTask(subtask, mcSubTaskDef);
 
             checkAnswersSorted(mcSubTaskDef, subtask);
         }
     }
 
-    void checkAnswersSorted(McSubTaskDefType mcSubTaskDef, McSubTask subtask) {
+  void checkAnswersSorted(McSubTaskDef mcSubTaskDef, McSubTask subtask) {
         List<String> answers = new ArrayList<String>();
 
         for (Object o : subtask.getAnswer()) {
-            AnswerType answer = (AnswerType) o;
+      Answer answer = (Answer) o;
             answers.add(getAnswertest(mcSubTaskDef.getCorrectOrIncorrect(), answer.getRefId()));
         }
         List<String> sortedAnswers = new ArrayList<String>(answers);
@@ -102,7 +102,7 @@ public class SubTasklet_MCBuilderTest {
 
         int count = 300;
         while (count-- >= 0) {
-            McSubTaskDefType mcSubTaskDef = create(answers, correct, 1, 3, 4, false);
+      McSubTaskDef mcSubTaskDef = create(answers, correct, 1, 3, 4, false);
             mcSubTaskDef.setCategory(SubTasklet_MC.CAT_SINGLESELECT);
             mcbuilder.constructAnswersForMCSubTask(subtask, mcSubTaskDef);
 
@@ -117,7 +117,7 @@ public class SubTasklet_MCBuilderTest {
 
         int count = 300;
         while (count-- >= 0) {
-            McSubTaskDefType mcSubTaskDef = create(answers, correct, 2, 2, 4, false);
+      McSubTaskDef mcSubTaskDef = create(answers, correct, 2, 2, 4, false);
             mcSubTaskDef.setCategory(SubTasklet_MC.CAT_MULTIPLESELECT);
             mcbuilder.constructAnswersForMCSubTask(subtask, mcSubTaskDef);
 
@@ -143,7 +143,7 @@ public class SubTasklet_MCBuilderTest {
         boolean[] result = new boolean[subtask.getAnswer().size()];
         int idx = 0;
         for (Object answerObject : subtask.getAnswer()) {
-            AnswerType answer = (AnswerType) answerObject;
+      Answer answer = (Answer) answerObject;
             String refId = answer.getRefId();
             result[idx++] = refId.startsWith("c");
         }
@@ -159,35 +159,30 @@ public class SubTasklet_MCBuilderTest {
      * @param sorted
      * @return
      */
-    private McSubTaskDefType create(String[] answers, boolean[] isCorrect, int minCorrect, int maxCorrect, int numAnswers, boolean sorted) {
-        try {
-            subtask = factory.createComplexTaskHandlingTypeTryTypePageTypeMcSubTask();
-            McSubTaskDefType mc = factory.createMcSubTaskDefType();
-            // add all answers
-            int idx = 0;
-            for (String ans : answers) {
-                if (isCorrect[idx]) {
-                    CorrectType answer = factory.createMcSubTaskDefTypeCorrectType();
-                    answer.setValue(ans);
-                    answer.setId("c" + idx++);
-                    mc.getCorrectOrIncorrect().add(answer);
-                } else {
-                    IncorrectType answer = factory.createMcSubTaskDefTypeIncorrectType();
-                    answer.setValue(ans);
-                    answer.setId("ic" + idx++);
-                    mc.getCorrectOrIncorrect().add(answer);
-                }
-            }
-            mc.setCategory(SubTasklet_MC.CAT_MULTIPLESELECT);
-            mc.setMinCorrectAnswers(minCorrect);
-            mc.setMaxCorrectAnswers(maxCorrect);
-            mc.setDisplayedAnswers(numAnswers);
-            mc.setPreserveOrderOfAnswers(sorted);
-
-            return mc;
-        } catch (JAXBException e) {
-            Assert.fail(e.getMessage());
-            return null;
-        }
+  private McSubTaskDef create(String[] answers, boolean[] isCorrect, int minCorrect, int maxCorrect, int numAnswers, boolean sorted) {
+    subtask = factory.createComplexTaskHandlingTryPageMcSubTask();
+    McSubTaskDef mc = factory.createMcSubTaskDef();
+    // add all answers
+    int idx = 0;
+    for (String ans : answers) {
+      if (isCorrect[idx]) {
+        Correct answer = factory.createMcSubTaskDefCorrect();
+        answer.setValue(ans);
+        answer.setId("c" + idx++);
+        mc.getCorrectOrIncorrect().add(answer);
+      } else {
+        Incorrect answer = factory.createMcSubTaskDefIncorrect();
+        answer.setValue(ans);
+        answer.setId("ic" + idx++);
+        mc.getCorrectOrIncorrect().add(answer);
+      }
     }
+    mc.setCategory(SubTasklet_MC.CAT_MULTIPLESELECT);
+    mc.setMinCorrectAnswers(minCorrect);
+    mc.setMaxCorrectAnswers(maxCorrect);
+    mc.setDisplayedAnswers(numAnswers);
+    mc.setPreserveOrderOfAnswers(sorted);
+
+    return mc;
+  }
 }

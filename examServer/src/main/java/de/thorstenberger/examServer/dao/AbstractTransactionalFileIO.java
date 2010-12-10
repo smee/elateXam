@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.examServer.dao;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -27,15 +28,13 @@ import org.apache.commons.transaction.file.ResourceManagerException;
 import org.apache.commons.transaction.file.ResourceManagerSystemException;
 import org.apache.commons.transaction.util.CommonsLoggingLogger;
 
-import com.google.common.collect.Maps;
-
 import de.thorstenberger.taskmodel.TaskModelPersistenceException;
 
 /**
  * Provide transactional file io functionality. Every access to any file within the directory specified in the
  * constructor has to happen via calls to the {@link FileResourceManager} returned by {@link #getFRM()}. No other ways
  * of accessing file contents of that directory are allowed, else the ACID properties won't be guranteed!
- * 
+ *
  * <p>
  * Usage: Writing access
  * <ol>
@@ -49,9 +48,9 @@ import de.thorstenberger.taskmodel.TaskModelPersistenceException;
  * <li>call readResource("filename") on {@link #getFRM()} without explicit start/commitTransaction calls</li>
  * <li>make sure to close the stream returned by readResource(String)!</li>
  * </ol>
- * 
+ *
  * @author Steffen Dienst
- * 
+ *
  */
 public class AbstractTransactionalFileIO {
     final Log log = LogFactory.getLog(AbstractTransactionalFileIO.class);
@@ -59,12 +58,12 @@ public class AbstractTransactionalFileIO {
      * Map of directories to {@link FileResourceManager} instances. This way we have exactly one manager
      * per directory.
      */
-    private static final Map<String, FileResourceManager> resourceManagers = Maps.newHashMap();
+  private static final Map<String, FileResourceManager> resourceManagers = new HashMap();
     protected final String workingPath;
 
     /**
      * Provide file transactions for the given directory.
-     * 
+     *
      * @param workingDirectory
      */
     public AbstractTransactionalFileIO(final String workingDirectory) {
@@ -74,7 +73,7 @@ public class AbstractTransactionalFileIO {
 
     /**
      * Commit the changes to the current working directory atomically.
-     * 
+     *
      * @param txId
      *            id of the current transaction
      */
@@ -92,7 +91,7 @@ public class AbstractTransactionalFileIO {
 
     /**
      * Get the current {@link FileResourceManager}. Use it for accessing file resources.
-     * 
+     *
      * @return
      */
     protected FileResourceManager getFRM() {
@@ -101,7 +100,7 @@ public class AbstractTransactionalFileIO {
 
     /**
      * Create a new file transaction manager for the given directory.
-     * 
+     *
      * @param path
      *            directory
      */
@@ -119,7 +118,7 @@ public class AbstractTransactionalFileIO {
 
     /**
      * Rollback all changes to the current working directory.
-     * 
+     *
      * @param txId
      *            id of the current transaction
      * @param e
@@ -135,7 +134,7 @@ public class AbstractTransactionalFileIO {
 
     /**
      * Start a new transaction on the current working directory.
-     * 
+     *
      * @return an unique transaction id
      */
     protected String startTransaction() {

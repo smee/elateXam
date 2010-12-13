@@ -28,6 +28,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,11 +47,13 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.apache.xmlrpc.XmlRpcException;
-
-import autotool.AutotoolServices;
-import autotool.AutotoolTaskConfig;
-import autotool.SignedAutotoolTaskConfig;
+import de.htwk.autolat.Connector.AutolatConnectorException;
+import de.htwk.autolat.Connector.AutolatConnector_0_1;
+import de.htwk.autolat.Connector.types.Either;
+import de.htwk.autolat.Connector.types.Pair;
+import de.htwk.autolat.Connector.types.Signed;
+import de.htwk.autolat.Connector.types.TaskTree;
+import de.htwk.autolat.Connector.xmlrpc.XmlRpcAutolatConnector_0_1;
 
 public class AutotoolConfigPanel extends JPanel {
 
@@ -61,21 +64,6 @@ public class AutotoolConfigPanel extends JPanel {
         f.add(atcp);
         f.pack();
         f.setVisible(true);
-        // Thread.sleep(3000);
-        // ComboBoxModel cbm=atcp.getJTaskTypesCb().getModel();
-        // for (int i = 0; i < cbm.getSize(); i++) {
-        // String o=(String) cbm.getElementAt(i);
-        // if(!o.contains("Quiz") || o.startsWith("Algebraic"))
-        // continue;
-        // cbm.setSelectedItem(o);
-        // atcp.invalidate();
-        // atcp.repaint();
-        // Thread.sleep(50);
-        // atcp.getJVerifyButton().doClick();
-        // while(atcp.getSignature().length()==0)
-        // Thread.sleep(50);
-        // atcp.getJGenerateXmlButton().doClick();
-        // }
     }
 
     private JComboBox jTaskTypesCb = null;
@@ -89,7 +77,7 @@ public class AutotoolConfigPanel extends JPanel {
     private JLabel jLabel = null;
     private JLabel jLabel1 = null;
     private JLabel jLabel2 = null;
-    private AutotoolServices ats;
+    private AutolatConnector_0_1 ats;
     private JLabel jLabel3 = null;
     private JTextField jSignatureTF = null;
     private JButton jGenerateXmlButton = null;
@@ -208,10 +196,9 @@ public class AutotoolConfigPanel extends JPanel {
                         String config = task2configMap.get(currentTaskType);
                         if (config == null) {
                             try {
-                                config = ats.getConfig(currentTaskType).getConfigString();
-                            } catch (final XmlRpcException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
+                                config = ats.getTaskDescription(currentTaskType).getTaskSampleConfig().getContents();
+                            } catch(AutolatConnectorException ex){
+                              ex.printStackTrace();
                             }
                         }
                         getConfigTextPane().setText(config);
@@ -236,33 +223,20 @@ public class AutotoolConfigPanel extends JPanel {
                     if (ats != null) {
                         try {
                             jVerifyButton.setEnabled(false);
-                            final SignedAutotoolTaskConfig satc = ats.getSignedConfig(new AutotoolTaskConfig() {
-                                    public String getConfigString() {
-                                    return AutotoolConfigPanel.this.getConfigString();
-                                    }
-
-                                public String getDocumentation() {
-                                    return "";
-                                    }
-
-                                public String getTaskType() {
-                                    return currentTaskType;
-                                    }
-
-                                public void setConfigString(final String arg0) {
-                                    }
-                                                                });
-                            getJSignatureTF().setText(satc.getSignature());
+                            Either<String, Signed<Pair<String, String>>> result = ats.verifyTaskConfig(currentTaskType, getConfigString());
+                            if(result.isRight()) {
+                              getJSignatureTF().setText(result.getRight().getSignature());
+                            }
                             getJGenerateXmlButton().setEnabled(true);
-                        } catch (final XmlRpcException e1) {
+                        } catch (AutolatConnectorException e1) {
                             e1.printStackTrace();
                             jVerifyButton.setEnabled(true);
                             jSignatureTF.setText("");
                             getJGenerateXmlButton().setEnabled(false);
-                        }
                     }
                 }
-            });
+        }
+      });
             getConfigTextPane().getDocument().addDocumentListener(new DocumentListener() {
                     public void changedUpdate(final DocumentEvent e) {
                     handleChange();
@@ -332,20 +306,30 @@ public class AutotoolConfigPanel extends JPanel {
 
     private void initAutotoolServices() {
         try {
-            this.ats = new AutotoolServices(new URL(url));
-            final List<String> tasktypes = ats.getTaskTypes();
+            this.ats = new XmlRpcAutolatConnector_0_1(new URL(url));
+            final List<String> tasktypes = extractTaskTypes(ats.getTaskTypes());
             final DefaultComboBoxModel model = (DefaultComboBoxModel) getJTaskTypesCb().getModel();
             model.removeAllElements();
             for (final String s : tasktypes) {
                 model.addElement(s);
             }
         } catch (final MalformedURLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
-        } catch (final XmlRpcException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (AutolatConnectorException e) {
+          e.printStackTrace();
         }
+    }
+
+    private List<String> extractTaskTypes(List<TaskTree> taskTypes) {
+    List<String> res = new ArrayList<String>();
+    for (TaskTree taskTree : taskTypes) {
+      if (taskTree.isTask()) {
+        res.add(taskTree.getTask().getTaskName());
+      } else {
+        res.addAll(extractTaskTypes(taskTree.getCategory().getSubTrees()));
+      }
+    }
+    return res;
     }
 
     /**
@@ -433,7 +417,7 @@ public class AutotoolConfigPanel extends JPanel {
 
     public void setTaskType(final String value) {
         currentTaskType = value;
-        if (!taskTypeKnown(value)) {
+    if (!isTaskTypeKnown(value)) {
             getJTaskTypesCb().addItem(value);
         }
         getJTaskTypesCb().setSelectedItem(value);
@@ -444,7 +428,7 @@ public class AutotoolConfigPanel extends JPanel {
         initAutotoolServices();
     }
 
-    private boolean taskTypeKnown(final String value) {
+  private boolean isTaskTypeKnown(final String value) {
         final ComboBoxModel model = getJTaskTypesCb().getModel();
         final int len = model.getSize();
         int ptr = 0;

@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+  xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  
-    <parent>
+
+  <parent>
     <artifactId>taskmodel-addon</artifactId>
     <groupId>de.elatexam</groupId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
-  
+
   <groupId>de.elatexam</groupId>
   <artifactId>autotool-addon</artifactId>
   <version>1.0.0-SNAPSHOT</version>
@@ -16,25 +17,25 @@
   <description>Communication with an Autotools Server to create/grade autotool tasks</description>
   <inceptionYear>2007</inceptionYear>
   <packaging>bundle</packaging>
-  
+
   <build>
     <plugins>
-      <plugin> 
+      <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
         <extensions>true</extensions>
         <configuration>
           <instructions>
             <Bundle-Activator>activator.Activator</Bundle-Activator>
-	  <Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>   
-             <Import-Package>*;resolution:=optional</Import-Package> 
-	  </instructions>
+            <Embed-Dependency>xmlrpc;inline=true,jdom:inline=true</Embed-Dependency>
+            <Import-Package>*;resolution:=optional</Import-Package>
+          </instructions>
         </configuration>
       </plugin>
     </plugins>
   </build>
 
-  
+
   <dependencies>
     <dependency>
       <groupId>de.elatexam</groupId>
@@ -46,38 +47,22 @@
       <groupId>de.elatexam</groupId>
       <artifactId>taskmodel-core</artifactId>
       <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+
+    <!-- osgi interfaces -->
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.osgi.core</artifactId>
+      <version>1.0.0</version>
       <scope>provided</scope>
     </dependency>
-    
-<!-- osgi interfaces -->
-    <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.osgi.core</artifactId>
-            <version>1.0.0</version>
-	  <scope>provided</scope>
-        </dependency>
     <!-- xmlrpc communication libs -->
     <dependency>
-      <groupId>xmlrpc</groupId>
-      <artifactId>xmlrpc-client</artifactId>
-      <version>3.0</version>
-    </dependency>
-    <dependency>
-      <groupId>xmlrpc</groupId>
-      <artifactId>xmlrpc-common</artifactId>
-      <version>3.0</version>
-    </dependency>
-    <!--
-    <dependency>
-      <groupId>ws-commons-util</groupId>
-      <artifactId>ws-commons-util</artifactId>
-      <version>1.0.1</version>
-    </dependency>
--->
-<dependency>
-      <groupId>commons-codec</groupId>
-      <artifactId>commons-codec</artifactId>
-      <version>1.3</version>
+      <groupId>redstone</groupId>
+      <artifactId>xmlrpc</artifactId>
+      <version>1.1.1</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/src/main/etc/xmlrpc-1.1.1.jar</systemPath>
     </dependency>
     <!-- provided webcontainer libs -->
     <dependency>
@@ -85,6 +70,12 @@
       <artifactId>servletapi</artifactId>
       <version>2.3</version>
       <scope>provided</scope>
-</dependency>   </dependencies>
-    </dependency>   </dependencies>
+    </dependency>
+    <dependency>
+    	<groupId>jdom</groupId>
+    	<artifactId>jdom</artifactId>
+    	<version>1.1</version>
+        <scope>provided</scope>
+    </dependency>
+  </dependencies>
 </project>

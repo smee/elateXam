@@ -21,29 +21,33 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.elatePortal.autotool;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
+import org.jdom.JDOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import autotool.AutotoolGrade;
-import autotool.AutotoolServices;
-import autotool.AutotoolTaskInstance;
-import autotool.SignedAutotoolTaskConfig;
 import de.elatePortal.autotool.view.AutotoolCorrectionSubmitData;
 import de.elatePortal.autotool.view.AutotoolSubmitData;
+import de.htwk.autolat.Connector.AutolatConnectorException;
+import de.htwk.autolat.Connector.AutolatConnector_0_1;
+import de.htwk.autolat.Connector.types.Documented;
+import de.htwk.autolat.Connector.types.Either;
+import de.htwk.autolat.Connector.types.Instance;
+import de.htwk.autolat.Connector.types.Pair;
+import de.htwk.autolat.Connector.types.Signed;
+import de.htwk.autolat.Connector.types.Triple;
+import de.htwk.autolat.Connector.xmlrpc.XmlRpcAutolatConnector_0_1;
+import de.htwk.autolat.tools.XMLParser.XMLParser;
 import de.thorstenberger.taskmodel.TaskApiException;
+import de.thorstenberger.taskmodel.TaskModelRuntimeException;
 import de.thorstenberger.taskmodel.complex.RandomUtil;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
@@ -59,11 +63,11 @@ import de.thorstenberger.taskmodel.complex.jaxb.SubTaskDefType;
  *
  */
 public class SubTasklet_AutotoolImpl extends AbstractAddonSubTasklet implements SubTasklet_Autotool {
-	private class AutotoolSubTaskDummy{
+	private class AutotoolSubtaskSettings{
 		private Element memento;
 
 
-		public AutotoolSubTaskDummy(AddonSubTask atSubTask) {
+		public AutotoolSubtaskSettings(AddonSubTask atSubTask) {
 			parseSubTask(atSubTask);
 			atSubTask.setTaskType(getAddOnType());
 		}
@@ -83,13 +87,13 @@ public class SubTasklet_AutotoolImpl extends AbstractAddonSubTasklet implements 
 		}
 
 		public String getAnswer() {
-			return getText(memento,"answer",null);
+      return getText(memento, "answer", "");
 		}
 		public void setAnswer(String value) {
 			setText(memento,"answer",value);
 		}
 		public String getLastCorrectedAnswer() {
-			return getText(memento,"lastCorrectedAnswer",null);
+      return getText(memento, "lastCorrectedAnswer", "");
 		}
 		public void setLastCorrectedAnswer(String value) {
 			setText(memento,"lastCorrectedAnswer",value);
@@ -99,16 +103,15 @@ public class SubTasklet_AutotoolImpl extends AbstractAddonSubTasklet implements 
 		}
 
 		public String getAutotoolDoc() {
-			return getText(memento,"autotoolDoc",null);
+      return getText(memento, "autotoolDoc", "");
 		}
 
 		public String getDefaultAnswer() {
-			return getText(memento,"defaultAnswer",null);
+      return getText(memento, "defaultAnswer", "");
 		}
 
-
 		public String getProblem() {
-			return getText(memento,"problem",null);
+      return getText(memento, "problem", "");
 		}
 
 		public void setProblem(String problem) {
@@ -119,23 +122,13 @@ public class SubTasklet_AutotoolImpl extends AbstractAddonSubTasklet implements 
 			setText(memento,"defaultAnswer",defaultAnswer);
 		}
 
-		public void setAnswerDoc(String answerDoc) {
-			setText(memento,"answerDoc",answerDoc);
-		}
 		public void setAutotoolScore(double score) {
 			setText(memento,"score",Double.toString(score));
 		}
 		public double getAutotoolScore() {
-			return Double.parseDouble(getText(memento,"score","-1"));
+      return Double.parseDouble(getText(memento, "score", "0"));
 		}
 
-		public byte[] getAutotoolInstanceBlob() {
-			return Base64.decodeBase64(getText(memento,"privateBlob","").getBytes());
-		}
-
-		public void setAutotoolInstanceBlob(byte[] bs) {
-			setText(memento,"privateBlob",new String(Base64.encodeBase64(bs)));
-		}
 
 	}
 	private class AutotoolTaskConfig{
@@ -165,10 +158,42 @@ public class SubTasklet_AutotoolImpl extends AbstractAddonSubTasklet implements 
 			return getText(memento,"autotoolServerUrl","http://localhost");
 		}
 
+    public String getTaskSignature() {
+      return getText(memento, "tasksignature", "");
+    }
+
+    public void setTaskSignature(String sig) {
+      setText(memento, "tasksignature", sig);
+    }
+
+    public Instance getInstance() {
+      return new Instance(getText(memento, "instancetagprivate", ""), getText(memento, "instancecontents", ""));
+    }
+
+    public void setInstance(Instance inst) {
+      setText(memento, "instancetagprivate", inst.getTag());
+      setText(memento, "instancecontents", inst.getContents());
+    }
+
+    public String getInstanceTag() {
+      return getText(memento, "instancetag", "");
+    }
+
+    public void setInstanceTag(String tag) {
+      setText(memento, "instancetag", tag);
+    }
+
+    public Signed<Pair<String, String>> getSignedTaskConfig() {
+      return new Signed<Pair<String, String>>(
+          new Pair<String, String>(
+              this.getTaskType(),
+              this.getConfigString()),
+          this.getSignature());
+    }
 	}
 
-	private AutotoolServices ats;
-	private AutotoolSubTaskDummy autotoolSubTask;
+  private AutolatConnector_0_1 ats;
+	private AutotoolSubtaskSettings autotoolSubTask;
 	private AutotoolTaskConfig autotoolTaskConfig;
 	/**
 	 *
@@ -176,7 +201,7 @@ public class SubTasklet_AutotoolImpl extends AbstractAddonSubTasklet implements 
 	public SubTasklet_AutotoolImpl( ComplexTaskDefRoot root, Block block, SubTaskDefType aoSubTaskDef, AddonSubTask atSubTask ) {
 		super(root, block,aoSubTaskDef,atSubTask);
 		this.autotoolTaskConfig=new AutotoolTaskConfig(((AddonSubTaskDef) aoSubTaskDef));
-		this.autotoolSubTask = new AutotoolSubTaskDummy(atSubTask);
+		this.autotoolSubTask = new AutotoolSubtaskSettings(atSubTask);
 	}
 
 	@Override
@@ -186,14 +211,14 @@ public class SubTasklet_AutotoolImpl extends AbstractAddonSubTasklet implements 
 
 	public String getAnswer(){
 		String answer=autotoolSubTask.getAnswer();
-		if(answer==null) {
+    if (StringUtils.isEmpty(answer)) {
             answer=autotoolSubTask.getDefaultAnswer();
         }
 		return answer;
 	}
 	public String getLastCorrectedAnswer(){
 		String answer=autotoolSubTask.getLastCorrectedAnswer();
-		if(answer==null) {
+    if (StringUtils.isEmpty(answer)) {
             answer=getAnswer();
         }
 		return answer;
@@ -205,15 +230,30 @@ public class SubTasklet_AutotoolImpl extends AbstractAddonSubTasklet implements 
 	}
 
 	public void doAutoCorrection(){
-		try {
-			AutotoolTaskInstance ati=new AutotoolTaskInstance.AutotoolTaskInstanceVO(autotoolTaskConfig.getTaskType(),(Map) deserialize(autotoolSubTask.getAutotoolInstanceBlob()));
-			AutotoolGrade grade=getAutotoolServices().gradeTaskInstance(ati,getAnswer());
-			setCorrection((grade.isSolved()?block.getPointsPerSubTask():0), grade.getGradeDocumentation(), true);//TODO autotools laenge der loesung speichern?
-			autotoolSubTask.setAutotoolScore(grade.getPoints());
+    AutolatConnector_0_1 auto;
+    try {
+      auto = new XmlRpcAutolatConnector_0_1(new URL(autotoolTaskConfig.getAutotoolServerUrl()));
+		  Instance taskInstance = autotoolTaskConfig.getInstance();
+      Either<String, Documented<Double>> grade = auto.gradeTaskSolution(new Signed(new Pair(autotoolTaskConfig.getInstanceTag(), taskInstance), autotoolTaskConfig.getTaskSignature()), getAnswer());
+
+      if (grade.isRight()) {
+        String doc = new XMLParser().parseString(grade.getRight().getDocumentation()).toString();
+        setCorrection(block.getPointsPerSubTask(), doc, true);
+        autotoolSubTask.setAutotoolScore(grade.getRight().getContents());
+      } else {
+        setCorrection(0, grade.getLeft(), true);
+        autotoolSubTask.setAutotoolScore(0);
+      }
 			autotoolSubTask.setLastCorrectedAnswer(getAnswer());
-		} catch (Exception e) {//TODO bloed
-			e.printStackTrace();
-		}
+    } catch (MalformedURLException e) {
+      throw new TaskModelRuntimeException("Invalid autotool url used: " + autotoolTaskConfig.getAutotoolServerUrl(), e);
+    } catch (AutolatConnectorException e) {
+      throw new TaskModelRuntimeException("Could not connect to autotool.", e);
+    } catch (IOException e) {
+      throw new TaskModelRuntimeException("Could not parse response from autotool.", e);
+    } catch (JDOMException e) {
+      throw new TaskModelRuntimeException("Could not parse response from autotool.", e);
+    }
 	}
 
 
@@ -244,49 +284,24 @@ public class SubTasklet_AutotoolImpl extends AbstractAddonSubTasklet implements 
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#build()
 	 */
     public void build(long randomSeed) throws TaskApiException {
-		SignedAutotoolTaskConfig satc=new SignedAutotoolTaskConfig.SignedAutotoolTaskConfigVO(this.autotoolTaskConfig.getTaskType(),autotoolTaskConfig.getConfigString(),"",autotoolTaskConfig.getSignature());
+    Signed<Pair<String, String>> signedTaskConfig = autotoolTaskConfig.getSignedTaskConfig();
 		try {
-            AutotoolTaskInstance task = getAutotoolServices().getTaskInstance(satc, new RandomUtil(randomSeed).getInt(1000000));
-			autotoolSubTask.setProblem(task.getProblem());
-			autotoolSubTask.setDefaultAnswer(task.getDefaultAnswer());
-			autotoolSubTask.setAnswerDoc(task.getAnswerDoc());
-			autotoolSubTask.setAutotoolInstanceBlob(serialize(task.getSignedInstance()));//nur fuer autotool interessant
+      Triple<Signed<Pair<String, Instance>>, String, Documented<String>> signedTask =
+          getAutotoolServices().getTaskInstance(signedTaskConfig, "" + new RandomUtil(randomSeed).getInt(1000000));
+
+      autotoolSubTask.setProblem(signedTask.getSecond());
+      autotoolSubTask.setDefaultAnswer(signedTask.getThird().getContents());
+      autotoolTaskConfig.setInstance(signedTask.getFirst().getContents().getSecond());
+      autotoolTaskConfig.setTaskSignature(signedTask.getFirst().getSignature());
+      autotoolTaskConfig.setInstanceTag(signedTask.getFirst().getContents().getFirst());
 		} catch (Exception e) {
 			throw new TaskApiException(e);
 		}
 	}
 
-	private byte[] serialize(Object obj) {
-		try {
-			ByteArrayOutputStream bos=new ByteArrayOutputStream();
-			ObjectOutputStream oos=new ObjectOutputStream(bos);
-			oos.writeObject(obj);
-			oos.close();
-			byte[] arr=bos.toByteArray();
-			bos.close();
-			return arr;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-	private Object deserialize(byte[] arr) {
-		try {
-			ByteArrayInputStream bos=new ByteArrayInputStream(arr);
-			ObjectInputStream oos=new ObjectInputStream(bos);
-			Object o=oos.readObject();
-			oos.close();
-			bos.close();
-			return o;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	private AutotoolServices getAutotoolServices() throws IOException {
+  private AutolatConnector_0_1 getAutotoolServices() throws AutolatConnectorException, MalformedURLException {
 		if(ats == null) {
-            ats=new AutotoolServices(new URL(autotoolTaskConfig.getAutotoolServerUrl()));
+      ats = new XmlRpcAutolatConnector_0_1(new URL(autotoolTaskConfig.getAutotoolServerUrl()));
         }
 		return ats;
 	}

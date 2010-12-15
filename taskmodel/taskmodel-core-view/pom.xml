@@ -177,11 +177,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>2.5.1-final-20040804</version>
-        </dependency>
-        <dependency>
             <groupId>jdom</groupId>
             <artifactId>jdom</artifactId>
             <version>1.0</version>
@@ -224,26 +219,6 @@
           	<exclusion>
           		<artifactId>junit</artifactId>
           		<groupId>junit</groupId>
-          	</exclusion>
-          	<exclusion>
-          		<artifactId>batik-xml</artifactId>
-          		<groupId>batik</groupId>
-          	</exclusion>
-          	<exclusion>
-          		<artifactId>batik-svggen</artifactId>
-          		<groupId>batik</groupId>
-          	</exclusion>
-          	<exclusion>
-          		<artifactId>batik-util</artifactId>
-          		<groupId>batik</groupId>
-          	</exclusion>
-          	<exclusion>
-          		<artifactId>batik-dom</artifactId>
-          		<groupId>batik</groupId>
-          	</exclusion>
-          	<exclusion>
-          		<artifactId>batik-awt-util</artifactId>
-          		<groupId>batik</groupId>
           	</exclusion>
           </exclusions>
         </dependency>   

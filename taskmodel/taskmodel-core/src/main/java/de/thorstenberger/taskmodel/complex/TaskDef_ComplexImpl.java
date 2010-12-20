@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.complex;
 
@@ -37,11 +37,9 @@ import de.thorstenberger.taskmodel.impl.AbstractTaskDef;
 public class TaskDef_ComplexImpl extends AbstractTaskDef implements TaskDef_Complex {
 
 	private boolean showCorrectionToUsers;
-	
-	private InputStream complexTaskIS;
-	private ComplexTaskDefDAO complexTaskDefDAO;
+
 	private ComplexTaskDefRoot complexTaskDefRoot;
-	
+
 	/**
 	 * @param id
 	 * @param title
@@ -51,21 +49,24 @@ public class TaskDef_ComplexImpl extends AbstractTaskDef implements TaskDef_Comp
 	 * @param stopped
 	 */
 	public TaskDef_ComplexImpl(long id, String title, String shortDescription, Long deadline, boolean stopped, Long followingTaskId, ComplexTaskDefDAO complexTaskDefDAO, InputStream complexTaskIS, boolean showCorrectionToUsers, boolean visible ) {
-		super(id, title, shortDescription, deadline, stopped, followingTaskId, visible);
-
-		this.complexTaskDefDAO = complexTaskDefDAO;
-		this.complexTaskIS = complexTaskIS;
-		this.showCorrectionToUsers = showCorrectionToUsers;
-		this.visible = visible;
-
-		try {
-//			if( complexTaskDefRoot == null )
-				complexTaskDefRoot = complexTaskDefDAO.getComplexTaskDefRoot( complexTaskIS );
-		} catch (TaskApiException e) {
-			throw new TaskModelPersistenceException( e );
-		}
-		
+    this(id, title, shortDescription, deadline, stopped, followingTaskId, showCorrectionToUsers, visible, load(complexTaskDefDAO, complexTaskIS));
 	}
+
+  private static ComplexTaskDefRoot load(ComplexTaskDefDAO complexTaskDefDAO, InputStream complexTaskIS) {
+    try {
+      return complexTaskDefDAO.getComplexTaskDefRoot(complexTaskIS);
+    } catch (TaskApiException e) {
+      throw new TaskModelPersistenceException(e);
+    }
+  }
+
+  public TaskDef_ComplexImpl(long id, String title, String shortDescription, Long deadline, boolean stopped,
+      Long followingTaskId, boolean showCorrectionToUsers, boolean visible, ComplexTaskDefRoot complexTaskDefRoot) {
+    super(id, title, shortDescription, deadline, stopped, followingTaskId, visible);
+    this.showCorrectionToUsers = showCorrectionToUsers;
+    this.visible = visible;
+    this.complexTaskDefRoot = complexTaskDefRoot;
+  }
 
 
 	/* (non-Javadoc)

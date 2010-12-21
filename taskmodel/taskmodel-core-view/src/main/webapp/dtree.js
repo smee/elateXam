@@ -41,20 +41,20 @@ function dTree(objName) {
 		inOrder					: false
 	}
 	this.icon = {
-		root				: '/taskmodel-core-view/icons/base.gif',
-		folder			: '/taskmodel-core-view/icons/folder.gif',
-		folderOpen	: '/taskmodel-core-view/icons/folderopen.gif',
-		node				: '/taskmodel-core-view/icons/page.gif',
-		empty				: '/taskmodel-core-view/icons/empty.gif',
-		line				: '/taskmodel-core-view/icons/line.gif',
-		join				: '/taskmodel-core-view/icons/join.gif',
-		joinBottom	: '/taskmodel-core-view/icons/joinbottom.gif',
-		plus				: '/taskmodel-core-view/icons/plus.gif',
-		plusBottom	: '/taskmodel-core-view/icons/plusbottom.gif',
-		minus				: '/taskmodel-core-view/icons/minus.gif',
-		minusBottom	: '/taskmodel-core-view/icons/minusbottom.gif',
-		nlPlus			: '/taskmodel-core-view/icons/nolines_plus.gif',
-		nlMinus			: '/taskmodel-core-view/icons/nolines_minus.gif'
+		root				: 'icons/base.gif',
+		folder			: 'icons/folder.gif',
+		folderOpen	: 'icons/folderopen.gif',
+		node				: 'icons/page.gif',
+		empty				: 'icons/empty.gif',
+		line				: 'icons/line.gif',
+		join				: 'icons/join.gif',
+		joinBottom	: 'icons/joinbottom.gif',
+		plus				: 'icons/plus.gif',
+		plusBottom	: 'icons/plusbottom.gif',
+		minus				: 'icons/minus.gif',
+		minusBottom	: 'icons/minusbottom.gif',
+		nlPlus			: 'icons/nolines_plus.gif',
+		nlMinus			: 'icons/nolines_minus.gif'
 	};
 	this.obj = objName;
 	this.aNodes = [];

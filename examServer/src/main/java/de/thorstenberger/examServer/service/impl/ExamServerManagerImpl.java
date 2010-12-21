@@ -45,6 +45,7 @@ public class ExamServerManagerImpl implements ExamServerManager, ApplicationCont
   static final String HOME = "home";
   static final String TASKDEFS = "taskdefs";
   static final String SYSTEM = "system";
+  private static final String CONTEXTNAME_PROPERTY = "elatexam.name";
 
   private ApplicationContext ac;
   private File repositoryFile;
@@ -111,19 +112,22 @@ public class ExamServerManagerImpl implements ExamServerManager, ApplicationCont
    */
   public void init() {
 
-    String contextName = null;
-    ServletContext sc = null;
+    String contextName = System.getProperty(CONTEXTNAME_PROPERTY);
 
     if (ac instanceof WebApplicationContext) {
-      sc = ((WebApplicationContext) ac).getServletContext();
-      final String path = sc.getRealPath("");
-      int pos = path.lastIndexOf('\\');
-      if (pos != -1) {
-        contextName = path.substring(pos + 1, path.length());
-      } else {
-        pos = path.lastIndexOf('/');
+      ServletContext sc = ((WebApplicationContext) ac).getServletContext();
+
+      // no configured context name, so use the last part of the path this webapp got extracted to
+      if (contextName == null) {
+        final String path = sc.getRealPath("");
+        int pos = path.lastIndexOf('\\');
         if (pos != -1) {
           contextName = path.substring(pos + 1, path.length());
+        } else {
+          pos = path.lastIndexOf('/');
+          if (pos != -1) {
+            contextName = path.substring(pos + 1, path.length());
+          }
         }
       }
     }
@@ -155,11 +159,8 @@ public class ExamServerManagerImpl implements ExamServerManager, ApplicationCont
     if (!taskDefs.exists()) {
       taskDefs.mkdirs();
     }
-
-    if (sc != null) {
-            configLogging(this.getClass().getClassLoader().getResourceAsStream("examserverLog4j.properties"));
-    }
-
+    // initialize logging
+    configLogging(this.getClass().getClassLoader().getResourceAsStream("examserverLog4j.properties"));
   }
 
   /*

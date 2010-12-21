@@ -29,7 +29,7 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDefOrChoice;
 import de.thorstenberger.taskmodel.complex.complextaskdef.choices.impl.GenericChoiceImpl;
 import de.thorstenberger.taskmodel.complex.complextaskdef.subtaskdefs.impl.GenericSubTaskDefImpl;
-import de.thorstenberger.taskmodel.complex.jaxb.ConfigType;
+import de.thorstenberger.taskmodel.complex.jaxb.Config;
 import de.thorstenberger.taskmodel.complex.jaxb.SubTaskDefType;
 import de.thorstenberger.taskmodel.complex.jaxb.TaskBlockType;
 
@@ -60,10 +60,11 @@ public class GenericBlockImpl implements Block{
 		Iterator it = subTaskDefOrChoice.iterator();
 		while( it.hasNext() ){
 			Object next = it.next();
-			if( next.getClass().getName().endsWith("SubTaskDefImpl") )
-				ret.add( new GenericSubTaskDefImpl( (SubTaskDefType) next ) );
-			else if( next.getClass().getName().endsWith("TaskBlockType.Choice"))
-				ret.add( new GenericChoiceImpl( next ) );
+      if (SubTaskDefType.class.isInstance(next)) {
+        ret.add( new GenericSubTaskDefImpl( (SubTaskDefType) next ) );
+      } else if (next.getClass().getName().endsWith("TaskBlock.Choice")) {
+        ret.add( new GenericChoiceImpl( next ) );
+      }
 		}
 
 		return ret;
@@ -72,12 +73,13 @@ public class GenericBlockImpl implements Block{
 	private List getJaxbSubTaskDefOrChoice() {
 		Method[] methods=jaxbTaskBlock.getClass().getMethods();
 		for (Method method : methods) {
-			if(method.getName().startsWith( "get" ) && method.getName().endsWith("SubTaskDefOrChoice"))
-				try {
+			if(method.getName().startsWith( "get" ) && method.getName().endsWith("SubTaskDefOrChoice")) {
+        try {
 					return (List) method.invoke(jaxbTaskBlock);
 				} catch (Exception e) {
 					throw new TaskModelRuntimeException(e);
 				}
+      }
 		}
 		return Collections.EMPTY_LIST;
 	}
@@ -90,7 +92,7 @@ public class GenericBlockImpl implements Block{
 		return getConfig().getNoOfSelectedTasks();
 	}
 
-	private ConfigType getConfig() {
+  private Config getConfig() {
 		return jaxbTaskBlock.getConfig();
 	}
 

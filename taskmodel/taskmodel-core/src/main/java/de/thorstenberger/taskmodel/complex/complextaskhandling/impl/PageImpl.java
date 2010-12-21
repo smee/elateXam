@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.complex.complextaskhandling.impl;
 
@@ -27,24 +27,23 @@ import java.util.List;
 
 import de.thorstenberger.taskmodel.complex.ComplexTaskFactory;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
-import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page;
 
 /**
  * @author Thorsten Berger
  *
  */
-public class PageImpl implements Page {
+public class PageImpl implements de.thorstenberger.taskmodel.complex.complextaskhandling.Page {
 
-	private PageType pageType;
+	private Page pageType;
 	private ComplexTaskFactory complexTaskFactory;
 	private ComplexTaskDefRoot complexTaskDefRoot;
-	
+
 	/**
-	 * 
+	 *
 	 */
-	public PageImpl( PageType pageType, ComplexTaskFactory complexTaskFactory, ComplexTaskDefRoot complexTaskDefRoot ) {
+  public PageImpl(Page pageType, ComplexTaskFactory complexTaskFactory, ComplexTaskDefRoot complexTaskDefRoot) {
 		this.pageType = pageType;
 		this.complexTaskFactory = complexTaskFactory;
 		this.complexTaskDefRoot = complexTaskDefRoot;
@@ -63,11 +62,12 @@ public class PageImpl implements Page {
 	public int getProcessStatus(){
 		List<SubTasklet> subtasklets = getSubTasklets();
 		int numOfProcessedSubTasks = 0;
-		
+
 		for( SubTasklet subTasklet : subtasklets )
-			if( subTasklet.isProcessed() )
-				numOfProcessedSubTasks++;
-		
+			if( subTasklet.isProcessed() ) {
+        numOfProcessedSubTasks++;
+      }
+
 		if( numOfProcessedSubTasks == 0 )
 			return NOT_PROCESSED;
 		else if( numOfProcessedSubTasks == subtasklets.size() )
@@ -75,18 +75,18 @@ public class PageImpl implements Page {
 		else
 			return PARTLY_PROCESSED;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.Page#getSubTasklets()
 	 */
 	public List<SubTasklet> getSubTasklets() {
 		List<SubTasklet> ret = new ArrayList<SubTasklet>();
-		
+
 		Iterator it = pageType.getMcSubTaskOrClozeSubTaskOrTextSubTask().iterator();
 		while( it.hasNext() ){
 			ret.add( complexTaskFactory.instantiateSubTasklet( it.next(), complexTaskDefRoot, getCategoryRefId() ) );
 		}
-		
+
 		return ret;
 	}
 
@@ -94,7 +94,7 @@ public class PageImpl implements Page {
 	 * Relevant for adding this page to a Try.
 	 * @return
 	 */
-	public PageType getPageType(){
+  public Page getPage() {
 		return pageType;
 	}
 
@@ -112,10 +112,11 @@ public class PageImpl implements Page {
 	public long getHash() {
 		long hash = 0;
 		List<SubTasklet> subtasklets = getSubTasklets();
-		for( SubTasklet subTasklet : subtasklets )
-			hash += subTasklet.getHash();
-		
+		for( SubTasklet subTasklet : subtasklets ) {
+      hash += subTasklet.getHash();
+    }
+
 		return hash;
 	}
-	
+
 }

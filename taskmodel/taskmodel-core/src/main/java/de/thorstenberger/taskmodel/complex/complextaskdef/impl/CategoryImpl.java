@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.complex.complextaskdef.impl;
 
@@ -27,23 +27,21 @@ import java.util.List;
 
 import de.thorstenberger.taskmodel.complex.ComplexTaskFactory;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
-import de.thorstenberger.taskmodel.complex.complextaskdef.Category;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDef.Category;
 import de.thorstenberger.taskmodel.complex.jaxb.TaskBlockType;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType;
-
 /**
  * @author Thorsten Berger
  *
  */
-public class CategoryImpl implements Category {
+public class CategoryImpl implements de.thorstenberger.taskmodel.complex.complextaskdef.Category {
 
-	private CategoryType categoryType;
+  private Category categoryType;
 	private ComplexTaskFactory complexTaskFactory;
-	
+
 	/**
-	 * 
+	 *
 	 */
-	public CategoryImpl( ComplexTaskFactory complexTaskFactory, CategoryType categoryType ) {
+  public CategoryImpl(ComplexTaskFactory complexTaskFactory, Category categoryType) {
 		this.complexTaskFactory = complexTaskFactory;
 		this.categoryType = categoryType;
 	}
@@ -76,21 +74,21 @@ public class CategoryImpl implements Category {
 	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.Category#isMixAllSubTasks()
 	 */
 	public boolean isMixAllSubTasks() {
-		return categoryType.isMixAllSubTasks();
+    return categoryType.isSetMixAllSubTasks() && categoryType.isMixAllSubTasks();
 	}
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.Category#isPreserveOrderOfBlocks()
 	 */
 	public boolean isIgnoreOrderOfBlocks() {
-		return categoryType.isIgnoreOrderOfBlocks();
+    return categoryType.isSetIgnoreOrderOfBlocks() && categoryType.isIgnoreOrderOfBlocks();
 	}
 
 	/**
 	 * backdoor access to JAXB element
 	 * @return Returns the categoryType.
 	 */
-	public CategoryType getCategoryType() {
+  public Category getCategory() {
 		return categoryType;
 	}
 
@@ -99,10 +97,11 @@ public class CategoryImpl implements Category {
 	 */
 	public List<Block> getBlocks() {
 		List<Block> ret = new ArrayList<Block>();
-		Iterator it = categoryType.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock().iterator();
+    Iterator it = categoryType.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock().iterator();
 		int i = 0;
-		while( it.hasNext() )
-			ret.add( complexTaskFactory.instantiateBlock( (TaskBlockType) it.next(), i++ ) );
+		while( it.hasNext() ) {
+      ret.add( complexTaskFactory.instantiateBlock( (TaskBlockType) it.next(), i++ ) );
+    }
 		return ret;
 	}
 
@@ -110,13 +109,13 @@ public class CategoryImpl implements Category {
 	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.Category#getBlock(int)
 	 */
 	public Block getBlock(int index) {
-		
-		if( categoryType.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock().size() <= index )
+
+    if (categoryType.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock().size() <= index)
 			return null;
-		
-		return complexTaskFactory.instantiateBlock( (TaskBlockType) categoryType.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock().get( index ), index );
-		
+
+    return complexTaskFactory.instantiateBlock(categoryType.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock().get(index), index);
+
 	}
-	
-	
+
+
 }

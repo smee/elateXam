@@ -31,7 +31,6 @@ import de.thorstenberger.taskmodel.complex.ComplexTaskFactory;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Category;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDef;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType;
 
 /**
  * @author Thorsten Berger
@@ -57,7 +56,7 @@ public class ComplexTaskDefRootImpl implements ComplexTaskDefRoot {
 		Map<String, Category> ret = new HashMap<String, Category>();
 		Iterator it = complexTaskDef.getCategory().iterator();
 		while( it.hasNext() ){
-			CategoryType category = (CategoryType) it.next();
+      ComplexTaskDef.Category category = (ComplexTaskDef.Category) it.next();
 			ret.put( category.getId(), new CategoryImpl( complexTaskFactory, category ) );
 		}
 		return ret;
@@ -70,7 +69,7 @@ public class ComplexTaskDefRootImpl implements ComplexTaskDefRoot {
 		List<Category> ret = new ArrayList<Category>();
 		Iterator it = complexTaskDef.getCategory().iterator();
 		while( it.hasNext() ){
-			CategoryType category = (CategoryType) it.next();
+      ComplexTaskDef.Category category = (ComplexTaskDef.Category) it.next();
 			ret.add( new CategoryImpl( complexTaskFactory, category ) );
 		}
 		return ret;
@@ -160,27 +159,27 @@ public class ComplexTaskDefRootImpl implements ComplexTaskDefRoot {
 		else
 			return complexTaskDef.isShowHandlingHintsBeforeStart();
 	}
-	
-	
+
+
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot#getCorrectionMode()
 	 */
 	public CorrectionMode getCorrectionMode() {
-		
+
 		if( complexTaskDef.getConfig().isSetCorrectionMode() ){
-			
+
 			if( complexTaskDef.getConfig().getCorrectionMode().isSetRegular() )
 				return new RegularCorrectionMode();
 			else if( complexTaskDef.getConfig().getCorrectionMode().isSetCorrectOnlyProcessedTasks() )
 				return new CorrectOnlyProcessedTasksCorrectionMode( complexTaskDef.getConfig().getCorrectionMode().getCorrectOnlyProcessedTasks().getNumberOfTasks() );
 			else if( complexTaskDef.getConfig().getCorrectionMode().isSetMultipleCorrectors() )
 				return new MultipleCorrectorsCorrectionMode( complexTaskDef.getConfig().getCorrectionMode().getMultipleCorrectors().getNumberOfCorrectors() );
-			
+
 		}
-		
+
 		return new RegularCorrectionMode();
 	}
-	
+
 	public class RegularCorrectionMode implements CorrectionMode{
 
 		/* (non-Javadoc)
@@ -189,11 +188,11 @@ public class ComplexTaskDefRootImpl implements ComplexTaskDefRoot {
 		public CorrectionModeType getType() {
 			return ComplexTaskDefRoot.CorrectionModeType.REGULAR;
 		}
-		
+
 	}
-	
+
 	public class CorrectOnlyProcessedTasksCorrectionMode implements CorrectionMode{
-		
+
 		private int first_n_tasks;
 
 		/**
@@ -216,13 +215,13 @@ public class ComplexTaskDefRootImpl implements ComplexTaskDefRoot {
 		public CorrectionModeType getType() {
 			return ComplexTaskDefRoot.CorrectionModeType.CORRECTONLYPROCESSEDTASKS;
 		}
-		
+
 	}
-	
+
 	public class MultipleCorrectorsCorrectionMode implements CorrectionMode{
 
 		private int correctors;
-		
+
 		/**
 		 * @param correctors
 		 */
@@ -244,9 +243,9 @@ public class ComplexTaskDefRootImpl implements ComplexTaskDefRoot {
 		public CorrectionModeType getType() {
 			return ComplexTaskDefRoot.CorrectionModeType.MULTIPLECORRECTORS;
 		}
-		
+
 	}
-	
+
 
 	public ComplexTaskDef getJAXBContent() {
 		return complexTaskDef;

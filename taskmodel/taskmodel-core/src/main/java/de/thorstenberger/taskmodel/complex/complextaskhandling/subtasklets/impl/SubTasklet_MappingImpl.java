@@ -35,11 +35,10 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitD
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.MappingSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Mapping;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.MappingTaskBlock;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.MappingSubTask;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDef.Category.MappingTaskBlock;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.MappingSubTask;
 import de.thorstenberger.taskmodel.complex.jaxb.MappingSubTaskDef;
-import de.thorstenberger.taskmodel.complex.jaxb.MappingSubTaskDefType;
 import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
 import de.thorstenberger.taskmodel.complex.jaxb.SubTaskDefType;
 import de.thorstenberger.taskmodel.complex.jaxb.SubTaskType;
@@ -166,10 +165,10 @@ public class SubTasklet_MappingImpl extends AbstractSubTasklet implements SubTas
 		Concept[] ret = new Concept[ conceptDefs.size() ];
 
 		for( int i=0; i<concepts.size(); i++ ){
-			MappingSubTaskDefType.ConceptType conceptDef =
-				(MappingSubTaskDefType.ConceptType) conceptDefs.get( i );
-			ComplexTaskHandlingType.TryType.PageType.MappingSubTaskType.ConceptType concept =
-				(ComplexTaskHandlingType.TryType.PageType.MappingSubTaskType.ConceptType) concepts.get( i );
+      MappingSubTaskDef.Concept conceptDef =
+          (MappingSubTaskDef.Concept) conceptDefs.get(i);
+      ComplexTaskHandling.Try.Page.MappingSubTask.Concept concept =
+          (ComplexTaskHandling.Try.Page.MappingSubTask.Concept) concepts.get(i);
 
 			ret[ i ] = new ConceptImpl( i, concept, conceptDef, findAssignment( concept.getAssigned() ) );
 
@@ -184,7 +183,7 @@ public class SubTasklet_MappingImpl extends AbstractSubTasklet implements SubTas
 		Assignment[] ret = new Assignment[ assignments.size() ];
 		for( int i=0; i<ret.length; i++ ) {
             ret[i] = new AssignmentImpl(
-					(MappingSubTaskDefType.AssignmentType) assignments.get( i ) );
+          (MappingSubTaskDef.Assignment) assignments.get(i));
         }
 		return ret;
 	}
@@ -195,8 +194,8 @@ public class SubTasklet_MappingImpl extends AbstractSubTasklet implements SubTas
 
 		List assignments = mappingSubTaskDef.getAssignment();
 		for( int i=0; i<assignments.size(); i++ ){
-			MappingSubTaskDefType.AssignmentType assignment =
-				(MappingSubTaskDefType.AssignmentType) assignments.get( i );
+      MappingSubTaskDef.Assignment assignment =
+          (MappingSubTaskDef.Assignment) assignments.get(i);
 			if( assignment.getId().equals( id ) )
 				return new AssignmentImpl( assignment );
 		}
@@ -208,13 +207,13 @@ public class SubTasklet_MappingImpl extends AbstractSubTasklet implements SubTas
 	public class ConceptImpl implements Concept{
 
 		private int index;
-		private ComplexTaskHandlingType.TryType.PageType.MappingSubTaskType.ConceptType concept;
-		private MappingSubTaskDefType.ConceptType conceptDef;
+    private ComplexTaskHandling.Try.Page.MappingSubTask.Concept concept;
+    private MappingSubTaskDef.Concept conceptDef;
 		private Assignment assignment;
 
 		public ConceptImpl( int index,
-				ComplexTaskHandlingType.TryType.PageType.MappingSubTaskType.ConceptType concept,
-				MappingSubTaskDefType.ConceptType conceptDef,
+        ComplexTaskHandling.Try.Page.MappingSubTask.Concept concept,
+        MappingSubTaskDef.Concept conceptDef,
 				Assignment assignment ){
 
 			this.index = index;
@@ -270,9 +269,9 @@ public class SubTasklet_MappingImpl extends AbstractSubTasklet implements SubTas
 
 	public class AssignmentImpl implements Assignment{
 
-		private MappingSubTaskDefType.AssignmentType assignment;
+    private MappingSubTaskDef.Assignment assignment;
 
-		public AssignmentImpl( MappingSubTaskDefType.AssignmentType assignment ){
+		public AssignmentImpl(MappingSubTaskDef.Assignment assignment) {
 			this.assignment = assignment;
 		}
 
@@ -314,15 +313,15 @@ public class SubTasklet_MappingImpl extends AbstractSubTasklet implements SubTas
 	 * @param newMappingSubTask
 	 * @param mappingSubTaskDef
 	 */
-	private void addAssignments( ComplexTaskHandlingType.TryType.PageType.MappingSubTask newMappingSubTask,
-							MappingSubTaskDefType mappingSubTaskDef ) throws JAXBException{
+  private void addAssignments(ComplexTaskHandling.Try.Page.MappingSubTask newMappingSubTask,
+              MappingSubTaskDef mappingSubTaskDef) throws JAXBException {
 
 		ObjectFactory objectFactory = new ObjectFactory();
 		List concepts = mappingSubTaskDef.getConcept();
 		for( int i=0; i<concepts.size(); i++ ){
 
-			ComplexTaskHandlingType.TryType.PageType.MappingSubTaskType.ConceptType newConcept =
-					objectFactory.createComplexTaskHandlingTypeTryTypePageTypeMappingSubTaskTypeConceptType();
+      ComplexTaskHandling.Try.Page.MappingSubTask.Concept newConcept =
+          objectFactory.createComplexTaskHandlingTryPageMappingSubTaskConcept();
 			newMappingSubTask.getConcept().add( newConcept );
 
 

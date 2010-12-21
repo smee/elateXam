@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.complex.complextaskhandling.impl;
 
@@ -31,7 +31,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.Validator;
 
 import de.thorstenberger.taskmodel.TaskModelPersistenceException;
 import de.thorstenberger.taskmodel.complex.ComplexTaskFactory;
@@ -40,6 +39,7 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.ComplexTaskHandli
 import de.thorstenberger.taskmodel.complex.complextaskhandling.ComplexTaskHandlingRoot;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling;
 import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
+import de.thorstenberger.taskmodel.util.JAXB2Validation;
 
 /**
  * @author Thorsten Berger
@@ -49,9 +49,9 @@ public class ComplexTaskHandlingDAOImpl implements ComplexTaskHandlingDAO {
 
 	private ComplexTaskFactory complexTaskFactory;
 	private JAXBContext jc;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public ComplexTaskHandlingDAOImpl( ComplexTaskFactory complexTaskFactory ) {
 		this.complexTaskFactory = complexTaskFactory;
@@ -69,28 +69,29 @@ public class ComplexTaskHandlingDAOImpl implements ComplexTaskHandlingDAO {
 			InputStream complexTaskletIS, ComplexTaskDefRoot complexTaskDefRoot) {
 
 		ObjectFactory objectFactory = new ObjectFactory();
-		ComplexTaskHandling complexTaskHandlingElem;		
-		
+		ComplexTaskHandling complexTaskHandlingElem;
+
 		BufferedInputStream bis = new BufferedInputStream( complexTaskletIS );
 		Unmarshaller unmarshaller;
 		try {
-			
+
 			if( bis.available() <= 0 ){
 				// create it for the first time
 				complexTaskHandlingElem = objectFactory.createComplexTaskHandling();
 
 			}else{
-			
+
 				unmarshaller = jc.createUnmarshaller();
-				unmarshaller.setValidating( true );
+        unmarshaller.setSchema(JAXB2Validation.loadSchema("complexTaskHandling.xsd"));
 				complexTaskHandlingElem = (ComplexTaskHandling) unmarshaller.unmarshal( bis );
-	
+
 				// create it for the first time
-				if( complexTaskHandlingElem == null )
-					complexTaskHandlingElem = objectFactory.createComplexTaskHandling();
-			
+				if( complexTaskHandlingElem == null ) {
+          complexTaskHandlingElem = objectFactory.createComplexTaskHandling();
+        }
+
 			}
-			
+
 		} catch (JAXBException e1) {
 			throw new TaskModelPersistenceException( e1 );
 		} catch( IOException e2 ){
@@ -102,9 +103,9 @@ public class ComplexTaskHandlingDAOImpl implements ComplexTaskHandlingDAO {
 				throw new TaskModelPersistenceException( e );
 			}
 		}
-		
+
 		return new ComplexTaskHandlingRootImpl( complexTaskDefRoot, complexTaskFactory, complexTaskHandlingElem );
-		
+
 	}
 
 	/* (non-Javadoc)
@@ -116,17 +117,15 @@ public class ComplexTaskHandlingDAOImpl implements ComplexTaskHandlingDAO {
 	}
 
 	private void save( OutputStream complexTaskletOS, ComplexTaskHandling complexTaskHandlingElem ){
-		
+
 		BufferedOutputStream bos = new BufferedOutputStream( complexTaskletOS );
-		
+
 		try {
-			
+
 			Marshaller marshaller = jc.createMarshaller();
-			Validator validator = jc.createValidator();
-			validator.validate( complexTaskHandlingElem );
 			marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true) );
 			marshaller.marshal( complexTaskHandlingElem, bos );
-			
+
 		} catch (JAXBException e) {
 			throw new TaskModelPersistenceException( e );
 		} finally{
@@ -136,7 +135,7 @@ public class ComplexTaskHandlingDAOImpl implements ComplexTaskHandlingDAO {
 				throw new TaskModelPersistenceException( e );
 			}
 		}
-		
+
 	}
-	
+
 }

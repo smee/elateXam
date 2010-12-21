@@ -41,10 +41,9 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.correctionsubmitd
 import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.ClozeSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Cloze;
 import de.thorstenberger.taskmodel.complex.jaxb.ClozeSubTaskDef;
-import de.thorstenberger.taskmodel.complex.jaxb.ClozeSubTaskDefType;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDefType.CategoryType.ClozeTaskBlock;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.ClozeSubTask;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDef.Category.ClozeTaskBlock;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.ClozeSubTask;
 import de.thorstenberger.taskmodel.complex.jaxb.ManualCorrectionType;
 import de.thorstenberger.taskmodel.complex.jaxb.SubTaskDefType;
 import de.thorstenberger.taskmodel.complex.jaxb.SubTaskType;
@@ -77,8 +76,8 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 		List gaps = clozeSubTask.getGap();
 		ret.append( gaps.size() );
 		for( int i=0; i<gaps.size(); i++ ){
-			ComplexTaskHandlingType.TryType.PageType.ClozeSubTaskType.GapType gap =
-				(ComplexTaskHandlingType.TryType.PageType.ClozeSubTaskType.GapType) gaps.get( i );
+      ComplexTaskHandling.Try.Page.ClozeSubTask.Gap gap =
+          (ComplexTaskHandling.Try.Page.ClozeSubTask.Gap) gaps.get(i);
 			ret.append( gap.getGapValue() );
 		}
 
@@ -238,43 +237,35 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 		return true;
 	}
 
-	private void setManualCorrectionInMultipleCorrectorMode( String corrector, float points ){
-		// try to find the corrector
-		List<ManualCorrectionType> mcs = clozeSubTask.getManualCorrection();
-		for( ManualCorrectionType mc : mcs ){
-			if( mc.getCorrector().equals( corrector ) ){
-				mc.setPoints( points );
-				return;
-			}
-		}
-		// not found, so create a new manual correction for that corrector
-		try {
-			ManualCorrectionType mct = objectFactory.createManualCorrectionType();
-			mct.setCorrector( corrector );
-			mct.setPoints( points );
-			mcs.add( mct );
-		} catch (JAXBException e) {
-			throw new TaskModelPersistenceException( e );
-		}
-	}
+  private void setManualCorrectionInMultipleCorrectorMode(String corrector, float points) {
+    // try to find the corrector
+    List<ManualCorrectionType> mcs = clozeSubTask.getManualCorrection();
+    for (ManualCorrectionType mc : mcs) {
+      if (mc.getCorrector().equals(corrector)) {
+        mc.setPoints(points);
+        return;
+      }
+    }
+    // not found, so create a new manual correction for that corrector
+    ManualCorrectionType mct = objectFactory.createManualCorrectionType();
+    mct.setCorrector(corrector);
+    mct.setPoints(points);
+    mcs.add(mct);
+  }
 
-	private void setManualCorrectionInSingleCorrectorMode( String corrector, float points ){
-		// get the first corrector
-		List<ManualCorrectionType> mcs = clozeSubTask.getManualCorrection();
-		if( mcs.size() < 1 ){
-			try {
-				de.thorstenberger.taskmodel.complex.jaxb.ManualCorrectionType mct = objectFactory.createManualCorrectionType();
-				mct.setCorrector( corrector );
-				mct.setPoints( points );
-				mcs.add( mct );
-			} catch (JAXBException e) {
-				throw new TaskModelPersistenceException( e );
-			}
-		}else{
-			mcs.get( 0 ).setCorrector( corrector );
-			mcs.get( 0 ).setPoints( points );
-		}
-	}
+  private void setManualCorrectionInSingleCorrectorMode(String corrector, float points) {
+    // get the first corrector
+    List<ManualCorrectionType> mcs = clozeSubTask.getManualCorrection();
+    if (mcs.size() < 1) {
+      de.thorstenberger.taskmodel.complex.jaxb.ManualCorrectionType mct = objectFactory.createManualCorrectionType();
+      mct.setCorrector(corrector);
+      mct.setPoints(points);
+      mcs.add(mct);
+    } else {
+      mcs.get(0).setCorrector(corrector);
+      mcs.get(0).setPoints(points);
+    }
+  }
 
 //	public float getPoints() throws IllegalStateException{
 //		if( !isCorrected() )
@@ -299,10 +290,10 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 
 		for( int i=0; i<content.size(); i++ ){
 
-			if( content.get( i ) instanceof ClozeSubTaskDefType.ClozeType.Gap ){
+      if (content.get(i) instanceof ClozeSubTaskDef.Cloze.Gap) {
 				ret[gapIndex] = new GapImpl( gapIndex,
-						(ComplexTaskHandlingType.TryType.PageType.ClozeSubTaskType.GapType) gaps.get( gapIndex ),
-						(ClozeSubTaskDefType.ClozeType.Gap)content.get( i ) );
+            (ComplexTaskHandling.Try.Page.ClozeSubTask.Gap) gaps.get(gapIndex),
+            (ClozeSubTaskDef.Cloze.Gap) content.get(i));
 				gapIndex++;
 			}
 		}
@@ -324,12 +315,12 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 		int gapIndex = 0;
 
 		for( int i=0; i<content.size(); i++ ){
-			if( content.get( i ) instanceof ClozeSubTaskDefType.ClozeType.Text ) {
-                ret.add( ( (ClozeSubTaskDefType.ClozeType.Text)content.get( i ) ).getValue() );
-            } else if( content.get( i ) instanceof ClozeSubTaskDefType.ClozeType.Gap ){
+      if (content.get(i) instanceof String) {
+        ret.add(content.get(i));
+      } else {
 				ret.add( new GapImpl( gapIndex,
-						(ComplexTaskHandlingType.TryType.PageType.ClozeSubTaskType.GapType) gaps.get( gapIndex ),
-						(ClozeSubTaskDefType.ClozeType.Gap)content.get( i ) ) );
+            (ComplexTaskHandling.Try.Page.ClozeSubTask.Gap) gaps.get(gapIndex),
+            (ClozeSubTaskDef.Cloze.Gap) content.get(i)));
 				gapIndex++;
 			}
 		}
@@ -345,11 +336,11 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 	public class GapImpl implements Gap{
 
 		private int index;
-		private ComplexTaskHandlingType.TryType.PageType.ClozeSubTaskType.GapType gap;
-		private ClozeSubTaskDefType.ClozeType.Gap gapDef;
+    private ComplexTaskHandling.Try.Page.ClozeSubTask.Gap gap;
+    private ClozeSubTaskDef.Cloze.Gap gapDef;
 
-		public GapImpl( int index, ComplexTaskHandlingType.TryType.PageType.ClozeSubTaskType.GapType gap,
-								ClozeSubTaskDefType.ClozeType.Gap gapDef ){
+		public GapImpl(int index, ComplexTaskHandling.Try.Page.ClozeSubTask.Gap gap,
+                ClozeSubTaskDef.Cloze.Gap gapDef) {
 			this.index = index;
 			this.gap = gap;
 			this.gapDef = gapDef;
@@ -412,8 +403,8 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 		 */
 		public List<ManualGapCorrection> getManualCorrections() throws IllegalStateException {
 			List<ManualGapCorrection> ret = new LinkedList<ManualGapCorrection>();
-			List<de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.ClozeSubTaskType.GapType.ManualCorrectionType> mcs = gap.getManualCorrection();
-			for( de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.ClozeSubTaskType.GapType.ManualCorrectionType mc : mcs ) {
+      List<de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.ClozeSubTask.Gap.ManualCorrection> mcs = gap.getManualCorrection();
+      for (de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.ClozeSubTask.Gap.ManualCorrection mc : mcs) {
                 ret.add( new ManualGapCorrectionImpl( mc.getCorrector(), mc.isCorrect() ) );
             }
 			return ret;
@@ -472,39 +463,31 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 		 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Cloze.Gap#setManualCorrection(java.lang.String, boolean)
 		 */
 		public void setManualCorrection(String corrector, boolean multiCorrectorMode, boolean correct) {
-			List<de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.ClozeSubTaskType.GapType.ManualCorrectionType> manualCorrections = gap.getManualCorrection();
+      List<de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.ClozeSubTask.Gap.ManualCorrection> manualCorrections = gap.getManualCorrection();
 			if( multiCorrectorMode ){
 
-				for( de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.ClozeSubTaskType.GapType.ManualCorrectionType mc : manualCorrections ){
+        for (de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.ClozeSubTask.Gap.ManualCorrection mc : manualCorrections) {
 					if( mc.getCorrector().equals( corrector ) ){
 						mc.setCorrect( correct );
 						return;
 					}
 				}
 				// corrector not found, so create a new ManualCorrection for him
-				de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.ClozeSubTaskType.GapType.ManualCorrectionType mc;
-				try {
-					mc = objectFactory.createComplexTaskHandlingTypeTryTypePageTypeClozeSubTaskTypeGapTypeManualCorrectionType();
-				} catch (JAXBException e) {
-					throw new TaskModelPersistenceException( e );
-				}
+        de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.ClozeSubTask.Gap.ManualCorrection mc;
+        mc = objectFactory.createComplexTaskHandlingTryPageClozeSubTaskGapManualCorrection();
 				mc.setCorrector( corrector );
 				mc.setCorrect( correct );
 				manualCorrections.add( mc );
 
 			}else{
 
-				de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.ClozeSubTaskType.GapType.ManualCorrectionType mc;
+        de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.ClozeSubTask.Gap.ManualCorrection mc;
 				if( manualCorrections.size() > 0 ){
 					mc = manualCorrections.get( 0 );
 					mc.setCorrector( corrector );
 					mc.setCorrect( correct );
 				}else{
-					try {
-						mc = objectFactory.createComplexTaskHandlingTypeTryTypePageTypeClozeSubTaskTypeGapTypeManualCorrectionType();
-					} catch (JAXBException e) {
-						throw new TaskModelPersistenceException( e );
-					}
+          mc = objectFactory.createComplexTaskHandlingTryPageClozeSubTaskGapManualCorrection();
 					mc.setCorrector( corrector );
 					mc.setCorrect( correct );
 					manualCorrections.add( mc );
@@ -514,13 +497,9 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 
 
 		public void setAutoCorrection( boolean correct ){
-			de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.ClozeSubTaskType.GapType.AutoCorrectionType ac = gap.getAutoCorrection();
+      de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.ClozeSubTask.Gap.AutoCorrection ac = gap.getAutoCorrection();
 			if( ac == null ){
-				try {
-					ac = objectFactory.createComplexTaskHandlingTypeTryTypePageTypeClozeSubTaskTypeGapTypeAutoCorrectionType();
-				} catch (JAXBException e) {
-					throw new TaskModelPersistenceException( e );
-				}
+        ac = objectFactory.createComplexTaskHandlingTryPageClozeSubTaskGapAutoCorrection();
 				gap.setAutoCorrection( ac );
 			}
 			ac.setCorrect( correct );
@@ -556,18 +535,18 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 		}
 	}
 
-	private void addGaps( ComplexTaskHandlingType.TryType.PageType.ClozeSubTask newClozeSubTask,
-			ClozeSubTaskDefType clozeSubTaskDef ) throws JAXBException{
+  private void addGaps(ComplexTaskHandling.Try.Page.ClozeSubTask newClozeSubTask,
+      ClozeSubTaskDef clozeSubTaskDef) throws JAXBException {
 
 		List content = clozeSubTaskDef.getCloze().getTextOrGap();
 		for( int i=0; i<content.size(); i++ ){
 			Object token = content.get( i );
-			if( token instanceof ClozeSubTaskDefType.ClozeType.Gap ){
+      if (token instanceof ClozeSubTaskDef.Cloze.Gap) {
 
-				ComplexTaskHandlingType.TryType.PageType.ClozeSubTaskType.GapType gap;
-				gap = objectFactory.createComplexTaskHandlingTypeTryTypePageTypeClozeSubTaskTypeGapType();
-				gap.setGapValue( ( ( ClozeSubTaskDefType.ClozeType.Gap ) token ).isSetInitialValue() ?
-					( ( ClozeSubTaskDefType.ClozeType.Gap ) token ).getInitialValue() : "");
+				ComplexTaskHandling.Try.Page.ClozeSubTask.Gap gap;
+        gap = objectFactory.createComplexTaskHandlingTryPageClozeSubTaskGap();
+        gap.setGapValue(((ClozeSubTaskDef.Cloze.Gap) token).isSetInitialValue() ?
+            ((ClozeSubTaskDef.Cloze.Gap) token).getInitialValue() : "");
 				newClozeSubTask.getGap().add( gap );
 
 			}

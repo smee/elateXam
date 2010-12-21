@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.complex.complextaskhandling.impl;
 
@@ -28,7 +28,6 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.ComplexTaskHandlingRoot;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Try;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType;
 
 /**
  * @author Thorsten Berger
@@ -39,7 +38,7 @@ public class ComplexTaskHandlingRootImpl implements ComplexTaskHandlingRoot {
 	private ComplexTaskHandling complexTaskHandlingElem;
 	private ComplexTaskFactory complexTaskFactory;
 	private ComplexTaskDefRoot complexTaskDefRoot;
-	
+
 	/**
 	 * @param root
 	 * @param factory
@@ -63,20 +62,20 @@ public class ComplexTaskHandlingRootImpl implements ComplexTaskHandlingRoot {
 	 */
 	public void addTry(Try theTry) {
 		TryImpl tryImpl = (TryImpl)theTry;
-		complexTaskHandlingElem.getTry().add( tryImpl.getTryType() );		
+		complexTaskHandlingElem.getTry().add( tryImpl.getTryType() );
 	}
 
 	/* (non-Javadoc)
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.ComplexTaskHandlingHelper#getRecentTry()
 	 */
 	public Try getRecentTry() {
-		List tries = complexTaskHandlingElem.getTry();
+    List<ComplexTaskHandling.Try> tries = complexTaskHandlingElem.getTry();
 		if( tries.size() != 0 )
-			return new TryImpl( (ComplexTaskHandlingType.TryType) tries.get( tries.size() -1 ), complexTaskFactory, complexTaskDefRoot );
+      return new TryImpl(tries.get(tries.size() - 1), complexTaskFactory, complexTaskDefRoot);
 		else
 			return null;
 	}
-	
+
 	/**
 	 * @return Returns the complexTaskDefRoot.
 	 */
@@ -91,5 +90,5 @@ public class ComplexTaskHandlingRootImpl implements ComplexTaskHandlingRoot {
 	public ComplexTaskHandling getComplexTaskHandlingElem() {
 		return complexTaskHandlingElem;
 	}
-	
+
 }

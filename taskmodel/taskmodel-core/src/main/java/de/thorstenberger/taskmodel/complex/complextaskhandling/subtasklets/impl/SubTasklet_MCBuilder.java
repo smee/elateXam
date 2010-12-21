@@ -35,11 +35,11 @@ import org.apache.commons.logging.LogFactory;
 
 import de.thorstenberger.taskmodel.complex.RandomUtil;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_MC;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandlingType.TryType.PageType.McSubTaskType;
-import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDefType;
-import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDefType.CorrectType;
-import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDefType.IncorrectType;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.McSubTask;
+import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDef;
+import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDef.Correct;
+import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDef.Incorrect;
 import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
 import de.thorstenberger.taskmodel.util.ReflectionHelper;
 
@@ -61,12 +61,12 @@ public class SubTasklet_MCBuilder {
 	 * @param newMcSubTask
 	 * @param mcSubTaskDef
 	 */
-	void constructAnswersForMCSubTask( ComplexTaskHandlingType.TryType.PageType.McSubTask newMcSubTask,
-            McSubTaskDefType mcSubTaskDef) throws JAXBException {
+  void constructAnswersForMCSubTask(ComplexTaskHandling.Try.Page.McSubTask newMcSubTask,
+            McSubTaskDef mcSubTaskDef) throws JAXBException {
 
         List allAvailableAnswers = mcSubTaskDef.getCorrectOrIncorrect();
-        int[] availCorrectAnswersIndices = getIndices(allAvailableAnswers, CorrectType.class);
-        int[] availIncorrectAnswersIndices = getIndices(allAvailableAnswers, IncorrectType.class);
+    int[] availCorrectAnswersIndices = getIndices(allAvailableAnswers, Correct.class);
+    int[] availIncorrectAnswersIndices = getIndices(allAvailableAnswers, Incorrect.class);
 
         // make sure the task definition is correct, i.e. that there are answers at all!
         if (availCorrectAnswersIndices.length == 0 || mcSubTaskDef.getDisplayedAnswers() == 0) {
@@ -100,13 +100,13 @@ public class SubTasklet_MCBuilder {
         }
 
         // Array der ausgew�hlten Antworten
-        ComplexTaskHandlingType.TryType.PageType.McSubTaskType.AnswerType[] toInsert =
-                new ComplexTaskHandlingType.TryType.PageType.McSubTaskType.AnswerType[numOfAnswers];
+    ComplexTaskHandling.Try.Page.McSubTask.Answer[] toInsert =
+                new ComplexTaskHandling.Try.Page.McSubTask.Answer[numOfAnswers];
 
 		int insertIndex = 0;
         // insert correct answers to represent
         for (int i = 0; i < numOfAnswers; i++) {
-            toInsert[insertIndex++] = createAnswerType(
+      toInsert[insertIndex++] = createAnswerType(
                     allAvailableAnswers.get(choosenAnswerIndices[i]));
         }
 
@@ -149,7 +149,7 @@ public class SubTasklet_MCBuilder {
      *            number of existing incorrect answer definitions
      * @return
      */
-    protected int getChosenNumCorrectAnswers(McSubTaskDefType mcSubTaskDef, int availCorrectAnswers, int availIncorrectAnswers) {
+  protected int getChosenNumCorrectAnswers(McSubTaskDef mcSubTaskDef, int availCorrectAnswers, int availIncorrectAnswers) {
         int numOfCorrectAnswers;
 		// nach Kategorie die Anzahl der richtigen Antworten festlegen
 		if( mcSubTaskDef.getCategory().equals( SubTasklet_MC.CAT_SINGLESELECT ) ){
@@ -185,11 +185,11 @@ public class SubTasklet_MCBuilder {
         return numOfCorrectAnswers;
     }
 
-	void constructPreviewAnswersForMCSubTask( ComplexTaskHandlingType.TryType.PageType.McSubTask newMcSubTask,
-			McSubTaskDefType mcSubTaskDef) throws JAXBException{
+  void constructPreviewAnswersForMCSubTask(ComplexTaskHandling.Try.Page.McSubTask newMcSubTask,
+      McSubTaskDef mcSubTaskDef) throws JAXBException {
 
-        List<CorrectType> correctAnswers = SubTasklet_MCBuilder.filterList(mcSubTaskDef.getCorrectOrIncorrect(), CorrectType.class);
-        List<IncorrectType> incorrectAnswers = SubTasklet_MCBuilder.filterList(mcSubTaskDef.getCorrectOrIncorrect(), IncorrectType.class);
+        List<Correct> correctAnswers = SubTasklet_MCBuilder.filterList(mcSubTaskDef.getCorrectOrIncorrect(), Correct.class);
+    List<Incorrect> incorrectAnswers = SubTasklet_MCBuilder.filterList(mcSubTaskDef.getCorrectOrIncorrect(), Incorrect.class);
 
 		// sicherheitshalber pr�fen, d�rfte aber schon durch XML-Schema ausgeschlossen sein
 		if( correctAnswers.size() == 0 || mcSubTaskDef.getDisplayedAnswers() == 0 ){
@@ -198,10 +198,10 @@ public class SubTasklet_MCBuilder {
 		}
 
 		List answers = newMcSubTask.getAnswer();
-		for( CorrectType ct : correctAnswers ) {
+    for (Correct ct : correctAnswers) {
             answers.add( createAnswerType( ct ) );
         }
-		for( IncorrectType ict : incorrectAnswers ) {
+    for (Incorrect ict : incorrectAnswers) {
             answers.add( createAnswerType( ict ) );
         }
 
@@ -213,11 +213,11 @@ public class SubTasklet_MCBuilder {
 	 * @param correct
 	 * @return
 	 */
-    private McSubTaskType.AnswerType createAnswerType(Object answer) throws JAXBException {
+  private McSubTask.Answer createAnswerType(Object answer) throws JAXBException {
 
-        ComplexTaskHandlingType.TryType.PageType.McSubTaskType.AnswerType ret;
+        ComplexTaskHandling.Try.Page.McSubTask.Answer ret;
 
-		ret = taskHandlingobjectFactory.createComplexTaskHandlingTypeTryTypePageTypeMcSubTaskTypeAnswerType();
+		ret = taskHandlingobjectFactory.createComplexTaskHandlingTryPageMcSubTaskAnswer();
 
         ret.setRefId((String) ReflectionHelper.callMethod(answer, "getId", new Object[0]));
 		ret.setSelected( false );

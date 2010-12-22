@@ -151,15 +151,10 @@ public class ExportPDFFilter implements Filter {
      * {@inheritDoc}
      */
     public void init(final FilterConfig filterConfig) {
-        final String bufferParam = filterConfig.getInitParameter("buffer");
-        if (log.isDebugEnabled()) {
-            log.debug("bufferParam=" + bufferParam);
-        }
         this.fontPath = filterConfig.getServletContext().getRealPath("/WEB-INF/lsansuni.ttf");
         if (this.fontPath == null) {
           log.error("Could not locate lsansuni.ttf font file, is needed for utf-8 glyphs in PDFs!");
         }
-        log.info("Filter initialized.");
     }
 
     /**
@@ -235,12 +230,14 @@ public class ExportPDFFilter implements Filter {
      *             if the document could not get renderered
      */
   private void renderPdf(final Document dom, final HttpServletRequest request, final ServletResponse response) throws IOException {
-    log.debug("Using unicode font at path " + fontPath);
     final ITextRenderer renderer = new ITextRenderer(80 / 3f, 15);
-    try {
-      renderer.getFontResolver().addFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-    } catch (DocumentException e1) {
-      e1.printStackTrace();
+    if (fontPath != null) {
+      try {
+        log.debug("Using unicode font at path " + fontPath);
+        renderer.getFontResolver().addFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+      } catch (DocumentException e1) {
+        e1.printStackTrace();
+      }
     }
     renderer.setDocument(dom, getLocalURL(request));
     renderer.layout();

@@ -23,16 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.JFreeChart;
-import org.jfree.data.general.Dataset;
-import org.jfree.data.statistics.BoxAndWhiskerCategoryDataset;
-import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
-
-import de.laures.cewolf.DatasetProduceException;
-import de.laures.cewolf.DatasetProducer;
-import de.laures.cewolf.taglib.CewolfChartFactory;
-import de.laures.cewolf.taglib.IncompatibleDatasetException;
 import de.thorstenberger.taskmodel.Tasklet;
 import de.thorstenberger.taskmodel.complex.ComplexTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.ManualSubTaskletCorrection;
@@ -45,22 +35,24 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTa
 
 /**
  * Chart dataset to show box and whisker charts of point distribution per subtasklet type.
- * 
+ *
  * @author Steffen Dienst
- * 
+ *
  */
-public class BoxScoresDatasetProducer implements DatasetProducer {
-  static {
-    // make sure we can render boxandwhisker charts, too
-    CewolfChartFactory.registerFactory(new CewolfChartFactory("box") {
-
-      @Override
-      public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
-        CewolfChartFactory.check(data, BoxAndWhiskerCategoryDataset.class, "box");
-        return ChartFactory.createBoxAndWhiskerChart(title, xAxisLabel, yAxisLabel, (BoxAndWhiskerCategoryDataset) data, true);
-      }
-    });
-  }
+public class BoxScoresDatasetProducer {// implements DatasetProducer {
+// static {
+// // make sure we can render boxandwhisker charts, too
+// CewolfChartFactory.registerFactory(new CewolfChartFactory("box") {
+//
+// @Override
+// public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws
+// IncompatibleDatasetException {
+// CewolfChartFactory.check(data, BoxAndWhiskerCategoryDataset.class, "box");
+// return ChartFactory.createBoxAndWhiskerChart(title, xAxisLabel, yAxisLabel, (BoxAndWhiskerCategoryDataset) data,
+// true);
+// }
+// });
+// }
 
   private List mc, cloze, mapping, text;
 
@@ -108,20 +100,20 @@ public class BoxScoresDatasetProducer implements DatasetProducer {
     return res;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see de.laures.cewolf.DatasetProducer#produceDataset(java.util.Map)
-   */
-  public Object produceDataset(Map params) throws DatasetProduceException {
-    DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
-    dataset.add(mc, "MC", "MC");
-    dataset.add(cloze, "Lückentext", "Lückentext");
-    dataset.add(mapping, "Zuordnung", "Zuordnung");
-    dataset.add(text, "Freitext", "Freitext");
-    return dataset;
-
-  }
+  // /*
+  // * (non-Javadoc)
+  // *
+  // * @see de.laures.cewolf.DatasetProducer#produceDataset(java.util.Map)
+  // */
+  // public Object produceDataset(Map params) throws DatasetProduceException {
+  // DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
+  // dataset.add(mc, "MC", "MC");
+  // dataset.add(cloze, "Lückentext", "Lückentext");
+  // dataset.add(mapping, "Zuordnung", "Zuordnung");
+  // dataset.add(text, "Freitext", "Freitext");
+  // return dataset;
+  //
+  // }
 
   /*
    * (non-Javadoc)

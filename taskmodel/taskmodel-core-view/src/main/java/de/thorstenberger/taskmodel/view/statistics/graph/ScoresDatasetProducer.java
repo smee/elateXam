@@ -23,11 +23,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.jfree.data.statistics.HistogramDataset;
-import org.jfree.data.statistics.HistogramType;
-
-import de.laures.cewolf.DatasetProduceException;
-import de.laures.cewolf.DatasetProducer;
+//import org.jfree.data.statistics.HistogramDataset;
+//import org.jfree.data.statistics.HistogramType;
+//
+//import de.laures.cewolf.DatasetProduceException;
+//import de.laures.cewolf.DatasetProducer;
 import de.thorstenberger.taskmodel.ManualCorrection;
 import de.thorstenberger.taskmodel.Tasklet;
 import de.thorstenberger.taskmodel.TaskletCorrection;
@@ -41,7 +41,7 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
  * @author Steffen Dienst
  *
  */
-public class ScoresDatasetProducer implements DatasetProducer {
+public class ScoresDatasetProducer {//implements DatasetProducer {
 
   private double[] scores, autoscores;
 
@@ -104,19 +104,19 @@ public class ScoresDatasetProducer implements DatasetProducer {
     return null;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see de.laures.cewolf.DatasetProducer#produceDataset(java.util.Map)
-   */
-  public Object produceDataset(Map params) throws DatasetProduceException {
-    HistogramDataset dataset = new HistogramDataset();
-    dataset.addSeries("Gesamt", scores, 50);
-    dataset.addSeries("Automatisch", autoscores, 50);
-    dataset.setType(HistogramType.FREQUENCY);
-    return dataset;
-
-  }
+//  /*
+//   * (non-Javadoc)
+//   *
+//   * @see de.laures.cewolf.DatasetProducer#produceDataset(java.util.Map)
+//   */
+//  public Object produceDataset(Map params) throws DatasetProduceException {
+//    HistogramDataset dataset = new HistogramDataset();
+//    dataset.addSeries("Gesamt", scores, 50);
+//    dataset.addSeries("Automatisch", autoscores, 50);
+//    dataset.setType(HistogramType.FREQUENCY);
+//    return dataset;
+//
+//  }
 
   /*
    * (non-Javadoc)

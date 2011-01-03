@@ -50,16 +50,6 @@
   <servlet-name>AjaxResponse</servlet-name>
   <servlet-class>de.thorstenberger.taskmodel.view.AjaxResponseServlet</servlet-class>
  </servlet>
- 
- <servlet>
-  <servlet-name>CewolfServlet</servlet-name>
-  <servlet-class>de.laures.cewolf.CewolfRenderer</servlet-class>
-  <load-on-startup>1</load-on-startup>
- </servlet>
- <servlet-mapping>
-  <servlet-name>CewolfServlet</servlet-name>
-  <url-pattern>/cewolf/*</url-pattern>
- </servlet-mapping>
  <servlet-mapping>
   <servlet-name>action</servlet-name>
   <url-pattern>*.do</url-pattern>

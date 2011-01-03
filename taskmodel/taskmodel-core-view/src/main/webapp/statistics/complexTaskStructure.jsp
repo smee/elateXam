@@ -1,7 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="/WEB-INF/cewolf.tld" prefix="chart" %>
 
 <html:html>
 <head>
@@ -59,7 +58,7 @@
         </ul>    
 	</fieldset><br>
 	<fieldset>
-        <chart:chart 
+<!--        <chart:chart 
             id="line" 
             title="Punkte-Histogramm" 
             type="histogram" 
@@ -82,7 +81,7 @@
             </chart:data>
         </chart:chart>
         <p>
-        <chart:img chartid="boxes" renderer="cewolf" width="600" height="500"/>
+        <chart:img chartid="boxes" renderer="cewolf" width="600" height="500"/>-->
 	</fieldset>
 	</td>
   </tr>

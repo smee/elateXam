@@ -208,20 +208,10 @@
         <!-- must not use version > 2.0.8, itext has changed a method signature, leads to binary incompatibility :( -->
         </dependency>
         <dependency>
-          <groupId>cewolf</groupId>
-          <artifactId>cewolf</artifactId>
+          <groupId>com.googlecode</groupId>
+          <artifactId>charts4j</artifactId>
           <version>1.2-SNAPSHOT</version>
-          <exclusions>
-          	<exclusion>
-          		<artifactId>crimson</artifactId>
-          		<groupId>crimson</groupId>
-          	</exclusion>
-          	<exclusion>
-          		<artifactId>junit</artifactId>
-          		<groupId>junit</groupId>
-          	</exclusion>
-          </exclusions>
-        </dependency>   
+        </dependency>
     </dependencies>
    <build>
        <resources>

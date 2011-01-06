@@ -34,8 +34,8 @@ import de.thorstenberger.examServer.service.ExamServerManager;
 import de.thorstenberger.examServer.service.UserManager;
 import de.thorstenberger.examServer.tasks.TaskFactoryImpl;
 import de.thorstenberger.taskmodel.Tasklet;
-import de.thorstenberger.taskmodel.TaskmodelUtil;
 import de.thorstenberger.taskmodel.Tasklet.Status;
+import de.thorstenberger.taskmodel.TaskmodelUtil;
 import de.thorstenberger.taskmodel.complex.ComplexTaskBuilder;
 import de.thorstenberger.taskmodel.complex.ComplexTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefDAO;
@@ -70,8 +70,12 @@ public class EnhancedTaskFactoryImpl extends TaskFactoryImpl implements Applicat
    */
   @Override
   protected void onStoreTasklet(final Tasklet tasklet, final TaskletVO taskletVO) {
-    if (tasklet instanceof ComplexTasklet && tasklet.hasOrPassedStatus(Status.SOLVED)
-        && TaskmodelUtil.getStatus(taskletVO.getStatus()).getOrder() < tasklet.getStatus().getOrder()) {
+    boolean isComplexTasklet = tasklet instanceof ComplexTasklet;
+    boolean isSolved = tasklet.hasOrPassedStatus(Status.SOLVED);
+    boolean statusIncreased = TaskmodelUtil.getStatus(taskletVO.getStatus()).getOrder() < tasklet.getStatus().getOrder();
+    boolean statusIsCorrected = tasklet.hasOrPassedStatus(Status.CORRECTED);
+
+    if (isComplexTasklet && isSolved && (statusIncreased || statusIsCorrected)) {
       // if the status has changed AND is at least 'SOLVED' we should dump a signed
       // and timestamped pdf file.
       // do so in 5 seconds...

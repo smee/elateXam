@@ -98,7 +98,9 @@ public class TaskDefDaoImpl extends AbstractJAXBDao implements TaskDefDao {
                 taskDefVO.setShortDescription(taskDef.getShortDescription());
                 taskDefVO.setStopped(taskDef.isStopped());
                 taskDefVO.setId(taskDef.getId());
-                taskDefVO.setDeadline(taskDef.getDeadline() == 0 ? null : taskDef.getDeadline());
+                if(taskDef.isSetDeadline() && taskDef.getDeadline()> 0){
+                  taskDefVO.setDeadline(taskDef.getDeadline());
+                }
                 taskDefVO.setVisible(taskDef.isVisible());
                 if (taskDef.isSetFollowingTaskId()) {
                     taskDefVO.setFollowingTaskId(taskDef.getFollowingTaskId());
@@ -136,7 +138,9 @@ public class TaskDefDaoImpl extends AbstractJAXBDao implements TaskDefDao {
             taskDefVO.setShortDescription(taskDef.getShortDescription());
             taskDefVO.setStopped(taskDef.isStopped());
             taskDefVO.setId(taskDef.getId());
-            taskDefVO.setDeadline(taskDef.getDeadline() == 0 ? null : taskDef.getDeadline());
+            if(taskDef.isSetDeadline() && taskDef.getDeadline()> 0){
+              taskDefVO.setDeadline(taskDef.getDeadline());
+            }
             taskDefVO.setVisible(taskDef.isVisible());
             if (taskDef.isSetFollowingTaskId()) {
                 taskDefVO.setFollowingTaskId(taskDef.getFollowingTaskId());

@@ -124,8 +124,7 @@ public class SubTaskView_Paint extends SubTaskView {
         ret.append("<textarea name=\"task[" + relativeTaskNumber + "].text\" cols=\"" +
                 paintSubTasklet.getTextFieldWidth() + "\" rows=\"" + paintSubTasklet.getTextFieldHeight() +
                 "\" onChange=\"setModified()\"" +
-                " readonly=" + (corrected ? "\"true\"" : "\"false\"") +
-                ">\n");
+                (corrected ? " readonly=\"true\"" : "") + ">\n");
         ret.append(paintSubTasklet.getTextualAnswer());
         ret.append("</textarea>\n");
         ret.append("</div>\n");

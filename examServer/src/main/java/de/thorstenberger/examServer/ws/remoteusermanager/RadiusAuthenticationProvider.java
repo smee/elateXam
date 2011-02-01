@@ -95,26 +95,26 @@ public class RadiusAuthenticationProvider extends AbstractUserDetailsAuthenticat
       final String password = (authentication.getCredentials() == null) ? "NONE_PROVIDED"
           : (String) authentication.getCredentials();
 
-      UserBean userBean;
+      UserBean remoteUserBean;
       try {
 
-        userBean = getRemoteUserInfos(username, password);
+        remoteUserBean = getRemoteUserInfos(username, password);
 
-        if (userBean.getRole().equals("student") && !configManager.isStudentsLoginEnabled())
-            throw new AuthenticationServiceException("Login disabled for student role.");
 
         try {
+          User localUser = userManager.getUserByUsername(remoteUserBean.getLogin());
 
-          userManager.getUserByUsername(userBean.getLogin());
+          if (localUser.getRoles().contains("student") && !configManager.isStudentsLoginEnabled())
+            throw new AuthenticationServiceException("Login disabled for student role.");
 
         } catch (final UsernameNotFoundException e) {
           final User user = new User();
           user.setEnabled(true);
-          user.setUsername(userBean.getLogin());
-          user.setFirstName(userBean.getFirstName() == null ? "" : userBean.getFirstName());
-          user.setLastName(userBean.getName() == null ? "" : userBean.getName());
-          user.setEmail(userBean.getEmail() == null ? "" : userBean.getEmail());
-          user.setPassword(StringUtil.encodePassword(userBean.getPassword(), "SHA"));
+          user.setUsername(remoteUserBean.getLogin());
+          user.setFirstName(remoteUserBean.getFirstName() == null ? "" : remoteUserBean.getFirstName());
+          user.setLastName(remoteUserBean.getName() == null ? "" : remoteUserBean.getName());
+          user.setEmail(remoteUserBean.getEmail() == null ? "" : remoteUserBean.getEmail());
+          user.setPassword(StringUtil.encodePassword(remoteUserBean.getPassword(), "SHA"));
           user.addRole(roleManager.getRole("student"));
           try {
             userManager.saveUser(user);
@@ -144,6 +144,14 @@ public class RadiusAuthenticationProvider extends AbstractUserDetailsAuthenticat
 
   }
 
+  /**
+   * Authenticate user via radius server.
+   *
+   * @param login
+   * @param pwd
+   * @return userbean with role student
+   * @throws AuthenticationServiceException
+   */
   private UserBean getRemoteUserInfos(final String login, final String pwd) throws AuthenticationServiceException {
     final boolean auth = authenticateUser(login, pwd);
     if (auth) {

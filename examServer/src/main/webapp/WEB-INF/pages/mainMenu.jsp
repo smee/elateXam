@@ -6,7 +6,7 @@
     <meta name="menu" content="MainMenu"/>
 </head>
 
-<p>Gratulation, Sie haben sich erfolgreich angemeldet! Als Administrator haben Sie folgende Möglichkeiten:</p>
+<p><fmt:message key="mainMenu."/></p>
 
 <div class="separator"></div>
 

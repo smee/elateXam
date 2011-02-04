@@ -1,10 +1,10 @@
 <%@ include file="/common/taglibs.jsp"%>
 <head>
     <title><fmt:message key="mainMenu.title"/></title>
-    <content tag="heading">Hallo <authz:authentication operation="fullName"/>!</content>
+    <content tag="heading"><fmt:message key="common.hello"/> <authz:authentication operation="fullName"/>!</content>
     <meta name="menu" content="MainMenu"/>
 </head>
-<p>Bitte vervollst&auml;ndigen Sie Ihre Daten und klicken Sie auf OK!<br>
+<p><fmt:message key="mainMenu.complete.data"/><br>
 <html:form action="/submitStudentsInfo" styleId="userForm" onsubmit="return validateUserForm(this)">
 <html:hidden property="id"/>
 <ul>

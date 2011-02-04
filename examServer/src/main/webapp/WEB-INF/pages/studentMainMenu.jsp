@@ -5,7 +5,7 @@
     <content tag="heading">Hallo <authz:authentication operation="fullName"/>!</content>
     <meta name="menu" content="MainMenu"/>
 </head>
-<p>In der folgenden Liste finden Sie alle verfügbaren Aufgaben. Klicken Sie auf den Titel der Aufgabe, um zu ihrer Übersicht zu gelangen.</p>
+<p>In der folgenden Liste finden Sie alle verfÃ¼gbaren Aufgaben. Klicken Sie auf den Titel der Aufgabe, um zu ihrer Ãœbersicht zu gelangen.</p>
 
 	<display:table partialList="false" name="TaskDefs" uid="row" pagesize="30" sort="list" class="table">
 		<display:column title="Name&nbsp;&nbsp;&nbsp;" sortable="true">

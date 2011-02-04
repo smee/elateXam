@@ -19,16 +19,16 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.actions.DispatchAction;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import de.thorstenberger.examServer.Constants;
 import de.thorstenberger.examServer.util.ConvertUtil;
 import de.thorstenberger.examServer.util.CurrencyConverter;
 import de.thorstenberger.examServer.util.DateConverter;
-
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * Implementation of <strong>Action</strong> that contains base methods for
@@ -92,7 +92,7 @@ public class BaseAction extends DispatchAction {
      * @return Object bean from ApplicationContext
      */
     public Object getBean(String name) {
-        ApplicationContext ctx = 
+        ApplicationContext ctx =
             WebApplicationContextUtils.getRequiredWebApplicationContext(servlet.getServletContext());
         return ctx.getBean(name);
     }
@@ -117,6 +117,7 @@ public class BaseAction extends DispatchAction {
      * @param request the current request
      * @return the populated (or empty) messages
      */
+    @Override
     public ActionMessages getMessages(HttpServletRequest request) {
         ActionMessages messages = null;
         HttpSession session = request.getSession();
@@ -136,18 +137,18 @@ public class BaseAction extends DispatchAction {
     }
 
     /**
-     * Gets the method name based on the mapping passed to it 
+     * Gets the method name based on the mapping passed to it
      */
     private String getActionMethodWithMapping(HttpServletRequest request, ActionMapping mapping) {
         return getActionMethod(request, mapping.getParameter());
     }
 
-    /** 
+    /**
      * Gets the method name based on the prepender passed to it.
      */
     protected String getActionMethod(HttpServletRequest request, String prepend) {
         String name = null;
-        
+
         // for backwards compatibility, try with no prepend first
         name = request.getParameter(prepend);
         if (name != null) {
@@ -156,7 +157,7 @@ public class BaseAction extends DispatchAction {
             // lowercase first letter
             return name.replace(name.charAt(0), Character.toLowerCase(name.charAt(0)));
         }
-        
+
         Enumeration e = request.getParameterNames();
 
         while (e.hasMoreElements()) {
@@ -172,11 +173,11 @@ public class BaseAction extends DispatchAction {
                 break;
             }
         }
-        
+
         return name;
     }
 
-    /** 
+    /**
      * Override the execute method in DispatchAction to parse
      * URLs and forward to methods without parameters.</p>
      * <p>
@@ -188,11 +189,12 @@ public class BaseAction extends DispatchAction {
      * <li>view*.html -> search method</li>
      * </ul>
      */
+    @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form,
                                  HttpServletRequest request,
                                  HttpServletResponse response)
     throws Exception {
-        
+
         if (isCancelled(request)) {
             try {
                 getMethod("cancel");
@@ -205,19 +207,18 @@ public class BaseAction extends DispatchAction {
 
         // Check to see if methodName indicated by request parameter
         String actionMethod = getActionMethodWithMapping(request, mapping);
-        
-        if (actionMethod != null) {
-            return dispatchMethod(mapping, form, request, response, actionMethod);
-        } else {
+
+        if (actionMethod != null)
+          return dispatchMethod(mapping, form, request, response, actionMethod);
+        else {
             String[] rules = {"edit", "save", "search", "view"};
             for (int i = 0; i < rules.length; i++) {
                 // apply the rules for automatically appending the method name
-                if (request.getServletPath().indexOf(rules[i]) > -1) {
-                    return dispatchMethod(mapping, form, request, response, rules[i]);
-                }
+                if (request.getServletPath().indexOf(rules[i]) > -1)
+                  return dispatchMethod(mapping, form, request, response, rules[i]);
             }
         }
-        
+
         return super.execute(mapping, form, request, response);
     }
 
@@ -255,9 +256,8 @@ public class BaseAction extends DispatchAction {
         Map config = (HashMap) getServlet().getServletContext().getAttribute(Constants.CONFIG);
 
         // so unit tests don't puke when nothing's been set
-        if (config == null) {
-            return new HashMap();
-        }
+        if (config == null)
+          return new HashMap();
 
         return config;
     }
@@ -298,4 +298,19 @@ public class BaseAction extends DispatchAction {
             }
         }
     }
+
+  /**
+   * Convenience method to add global messages to the request.
+   * 
+   * @param request
+   * @param messages
+   */
+  protected void saveMessages(HttpServletRequest request, ActionMessage... messages) {
+    ActionMessages errors = new ActionMessages();
+    for (ActionMessage msg : messages) {
+      errors.add(ActionMessages.GLOBAL_MESSAGE, msg);
+    }
+    saveErrors(request, errors);
+  }
+
 }

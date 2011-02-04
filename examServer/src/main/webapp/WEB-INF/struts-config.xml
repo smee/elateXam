@@ -102,6 +102,7 @@
     </action>
     <action path="/ComplexTaskOverview" type="de.thorstenberger.examServer.webapp.action.ComplexTaskOverviewAction" roles="student">
       <forward name="success" path="/WEB-INF/pages/complexTask/index.jsp"/>
+      <forward name="error" path="/mainMenu"/>
     </action>
     
     <!-- Preview feature -->
@@ -163,7 +164,7 @@
     </action>
     <action path="/storeNewTask" name="taskUploadForm" type="de.thorstenberger.examServer.webapp.action.TaskUploadAction" scope="request" validate="false" input="/WEB-INF/pages/taskList.jsp" roles="admin">
       <forward name="success" redirect="false" path="/TaskConfig.html"/>
-      <forward name="error" path="/WEB-INF/pages/taskUploadError.jsp"/>
+      <forward name="error" path="/TaskConfigList.html"/>
     </action>
     <!-- actions for importing users from an OPAL group (see http://bildungsportal.sachsen.de) -->
     <action path="/importOpalUsers" name="opalGroupMembersImportForm" type="de.thorstenberger.examServer.webapp.action.userimport.ImportOpalGroupMembersAction" scope="request" validate="false" input="/WEB-INF/pages/importOpal.jsp" roles="admin">

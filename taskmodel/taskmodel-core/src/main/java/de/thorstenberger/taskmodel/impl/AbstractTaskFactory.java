@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.taskmodel.impl;
 
@@ -39,19 +39,20 @@ public abstract class AbstractTaskFactory implements TaskFactory {
 	 */
 	public List<String> getUserIdsOfTaskletsAssignedToCorrector(long taskId,
 			String correctorId ) {
-		
+
 		List<Tasklet> tasklets = getTasklets( taskId );
 		List<String> ret = new ArrayList<String>();
-		
+
 		for( Tasklet tasklet : tasklets ){
-			
-			if( tasklet.getStatus() != Tasklet.Status.INITIALIZED && correctorId.equals( tasklet.getTaskletCorrection().getCorrector() ) )
-				ret.add( tasklet.getUserId() );				
-			
+
+			if( tasklet.getStatus() != Tasklet.Status.INITIALIZED && correctorId.equals( tasklet.getTaskletCorrection().getCorrector() ) ) {
+        ret.add( tasklet.getUserId() );
+      }
+
 		}
-		
+
 		return ret;
-		
+
 	}
 
 	/**
@@ -60,11 +61,19 @@ public abstract class AbstractTaskFactory implements TaskFactory {
 	public List<String> getUserIdsOfAvailableTasklets(long taskId) {
 		List<Tasklet> tasklets = getTasklets( taskId );
 		List<String> ret = new ArrayList<String>();
-		for( Tasklet tasklet : tasklets )
-			ret.add( tasklet.getUserId() );
+		for( Tasklet tasklet : tasklets ) {
+      ret.add( tasklet.getUserId() );
+    }
 		return ret;
 	}
-	
-	
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.thorstenberger.taskmodel.TaskFactory#reset()
+   */
+  public void reset() {
+  };
+
 
 }

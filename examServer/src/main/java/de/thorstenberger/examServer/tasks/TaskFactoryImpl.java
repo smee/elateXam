@@ -66,6 +66,7 @@ import de.thorstenberger.taskmodel.TaskFilter;
 import de.thorstenberger.taskmodel.TaskFilterException;
 import de.thorstenberger.taskmodel.TaskManager.UserAttribute;
 import de.thorstenberger.taskmodel.TaskModelPersistenceException;
+import de.thorstenberger.taskmodel.TaskModelRuntimeException;
 import de.thorstenberger.taskmodel.Tasklet;
 import de.thorstenberger.taskmodel.TaskletCorrection;
 import de.thorstenberger.taskmodel.TaskmodelUtil;
@@ -607,6 +608,8 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
                 title = complexTaskDefRoot.getTitle();
             } catch (final TaskApiException e) {
                 throw new TaskApiException("Invalid taskDef format.", e);
+            } catch(TaskModelRuntimeException e){
+              throw new TaskApiException("Invalid taskDef format.", e);
             }
 
             // write to file system
@@ -803,4 +806,8 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     }
 
+    @Override
+    public void reset(){
+      this.taskDefCache = null;
+    }
 }

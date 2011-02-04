@@ -253,7 +253,7 @@ public class TaskletContainerImpl implements TaskletContainer {
 		} catch (final CacheException e) {
 			throw new TaskModelPersistenceException( e );
 		}
-
+    taskFactory.reset();
 	}
 
 	/* (non-Javadoc)

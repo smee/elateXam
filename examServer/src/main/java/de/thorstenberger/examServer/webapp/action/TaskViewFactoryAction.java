@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /**
- * 
+ *
  */
 package de.thorstenberger.examServer.webapp.action;
 
@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.ActionMessage;
 
 import de.thorstenberger.taskmodel.TaskContants;
 import de.thorstenberger.taskmodel.TaskDef;
@@ -39,34 +39,37 @@ import de.thorstenberger.taskmodel.TaskManager;
  */
 public class TaskViewFactoryAction extends BaseAction {
 
-	public ActionForward execute(
+	@Override
+  public ActionForward execute(
 	        ActionMapping mapping,
 	        ActionForm form,
 	        HttpServletRequest request,
 	        HttpServletResponse response)
 	        throws Exception {
-		
+
 		long taskId;
-		
+
 		try {
 			taskId = Long.parseLong( request.getParameter( "taskId" ) );
 		} catch (NumberFormatException e) {
 			throw new RuntimeException( "Invalid parameter taskId! " + e.getMessage() );
 		}
-		
+
 		TaskManager tm = (TaskManager)getBean( "TaskManager" );
 		TaskDef td = tm.getTaskDef( taskId );
-		
+
+    if (td == null) {
+      saveMessages(request, new ActionMessage("errors.invalidtask", taskId));
+      return mapping.findForward("mainMenu");
+    }
+
 		if( td.getType().equals( TaskContants.TYPE_COMPLEX ) ){
-			
+
 			ActionForward caf = mapping.findForward( "complex" );
 			return new ActionForward( caf.getPath() + "?taskId=" + taskId, true );
-			
-		}else{
-			
-			throw new RuntimeException( "unsupported type: \"" + td.getType() + "\"" );
-			
-		}
+
+		} else
+      throw new RuntimeException( "unsupported type: \"" + td.getType() + "\"" );
 	}
 
 }

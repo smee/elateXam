@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 
 import de.thorstenberger.examServer.model.User;
 import de.thorstenberger.examServer.service.ConfigManager;
@@ -75,6 +76,10 @@ public class ComplexTaskOverviewAction extends BaseAction {
 			throw new RuntimeException( "invalid type: \"" + td.getType() + "\", " + e.getMessage() );
 		}
 
+    if (ctd == null) {
+      saveMessages(request, new ActionMessage("errors.invalidtask", taskId));
+      return mapping.findForward("mainMenu");
+    }
 		ComplexTaskInfoVO tivo = new ComplexTaskInfoVO();
 		tivo.setActive( ctd.isActive() );
 		if( ctd.getDeadline() != null ) {

@@ -6,7 +6,7 @@
     <meta name="menu" content="MainMenu"/>
 </head>
 
-<p><fmt:message key="mainMenu."/></p>
+<p><fmt:message key="mainMenu.message.admin"/></p>
 
 <div class="separator"></div>
 

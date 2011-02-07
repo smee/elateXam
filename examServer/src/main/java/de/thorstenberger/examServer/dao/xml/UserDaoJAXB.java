@@ -21,6 +21,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.examServer.dao.xml;
 
+import static org.apache.commons.lang.StringUtils.containsIgnoreCase;
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -30,6 +33,7 @@ import java.util.Set;
 import org.acegisecurity.userdetails.UserDetails;
 import org.acegisecurity.userdetails.UserDetailsService;
 import org.acegisecurity.userdetails.UsernameNotFoundException;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.orm.ObjectRetrievalFailureException;
@@ -43,7 +47,6 @@ import de.thorstenberger.examServer.model.Address;
 import de.thorstenberger.examServer.model.Role;
 import de.thorstenberger.examServer.service.ExamServerManager;
 import de.thorstenberger.examServer.util.StringUtil;
-
 /**
  * @author Thorsten Berger
  *
@@ -129,33 +132,68 @@ public class UserDaoJAXB extends AbstractJAXBDao implements UserDao, UserDetails
    *
    * @see de.thorstenberger.examServer.dao.UserDao#getUsers(de.thorstenberger.examServer.model.User)
    */
-  public synchronized List getUsers(final de.thorstenberger.examServer.model.User user) {
+  public synchronized List getUsers(final de.thorstenberger.examServer.model.User userTemplate) {
 
     final List<User> usersList = users.getUser();
     final List<de.thorstenberger.examServer.model.User> ret = new ArrayList<de.thorstenberger.examServer.model.User>();
 
-    final Set<Role> roles = user.getRoles();
-    final boolean checkRoles = roles != null && !roles.isEmpty();
+    final boolean checkRoles = CollectionUtils.isEmpty(userTemplate.getRoles());
 
     for (final User userType : usersList) {
-      boolean passed = true;
-      if (checkRoles) {
-        final List<String> roleRefs = userType.getRoleRef();
-        for (final Role role : roles) {
-          if (!roleRefs.contains(role.getName())) {
-            passed = false;
-          }
-        }
-      }
-
-      if (passed) {
-        ret.add(populateUser(userType));
+      if (checkRoles){
+    	  if(hasRole(userType,userTemplate.getRoles())) {
+    		ret.add(populateUser(userType));
+    	  }
+      }else{
+    	  ret.add(populateUser(userType));
       }
     }
 
     return ret;
 
   }
+
+	/**
+	 * @param userType
+	 * @param roles
+	 * @return
+	 */
+	private boolean hasRole(User userType, Set<Role> roles) {
+		final List<String> roleRefs = userType.getRoleRef();
+		for (final Role role : roles) {
+			if (!roleRefs.contains(role.getName()))
+				return false;
+		}
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * de.thorstenberger.examServer.dao.UserDao#getUsersMatching(java.lang.String
+	 * )
+	 */
+  @Override
+	public List<de.thorstenberger.examServer.model.User> getUsersMatching(
+			String filter) {
+		final List<User> usersList = users.getUser();
+		final List<de.thorstenberger.examServer.model.User> ret = new ArrayList<de.thorstenberger.examServer.model.User>();
+
+		for (final User userType : usersList) {
+			if (isEmpty(filter)) {
+				ret.add(populateUser(userType));
+			} else
+ if (containsIgnoreCase(userType.getFirstName(), filter)
+					|| containsIgnoreCase(userType.getLastName(), filter)
+					|| containsIgnoreCase(userType.getUsername(), filter)
+					|| containsIgnoreCase(userType.getEmail(), filter)) {
+				ret.add(populateUser(userType));
+			}
+		}
+		return ret;
+  }
+
 
   private User getUserType(final long userId) {
     final List<User> usersList = users.getUser();

@@ -293,25 +293,39 @@ public final class UserAction extends BaseAction {
       return isAdmin;
     }
 
-    public ActionForward search(ActionMapping mapping, ActionForm form,
-                                HttpServletRequest request,
-                                HttpServletResponse response)
-    throws Exception {
-        if (log.isDebugEnabled()) {
-            log.debug("Entering 'search' method");
-        }
+	public ActionForward search(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) {
+		if (log.isDebugEnabled()) {
+			log.debug("Entering 'searchwildcard' method");
+		}
+		// Exceptions are caught by ActionExceptionHandler
+		UserManager mgr = (UserManager) getBean("userManager");
+		List users = mgr.getUsers(request.getParameter("username"));
+		request.setAttribute(Constants.USER_LIST, users);
 
-        UserForm userForm = (UserForm) form;
+		// return a forward to the user list definition
+		return mapping.findForward("list");
+	}
 
-        // Exceptions are caught by ActionExceptionHandler
-        UserManager mgr = (UserManager) getBean("userManager");
-        User user = (User) convert(userForm);
-        List users = mgr.getUsers(user);
-        request.setAttribute(Constants.USER_LIST, users);
-
-        // return a forward to the user list definition
-        return mapping.findForward("list");
-    }
+	// public ActionForward search(ActionMapping mapping, ActionForm form,
+	// HttpServletRequest request,
+	// HttpServletResponse response)
+	// throws Exception {
+	// if (log.isDebugEnabled()) {
+	// log.debug("Entering 'search' method");
+	// }
+	//
+	// UserForm userForm = (UserForm) form;
+	//
+	// // Exceptions are caught by ActionExceptionHandler
+	// UserManager mgr = (UserManager) getBean("userManager");
+	// User user = (User) convert(userForm);
+	// List users = mgr.getUsers(user);
+	// request.setAttribute(Constants.USER_LIST, users);
+	//
+	// // return a forward to the user list definition
+	// return mapping.findForward("list");
+	// }
 
     @Override
     public ActionForward unspecified(ActionMapping mapping, ActionForm form,

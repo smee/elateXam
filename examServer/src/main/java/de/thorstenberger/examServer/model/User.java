@@ -41,7 +41,7 @@ public class User extends BaseObject implements Serializable, UserDetails {
     protected String website;
     protected Address address = new Address();
     protected Integer version;
-    protected Set roles = new HashSet();
+    protected Set<Role> roles = new HashSet();
     protected boolean enabled;
     protected boolean accountExpired;
     protected boolean accountLocked;
@@ -183,7 +183,7 @@ public class User extends BaseObject implements Serializable, UserDetails {
      * @hibernate.collection-key column="user_id"
      * @hibernate.collection-many-to-many class="de.thorstenberger.examServer.model.Role" column="role_id"
      */
-    public Set getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 

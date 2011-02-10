@@ -246,110 +246,110 @@ public class TaskHandlingDaoImpl extends AbstractJAXBDao implements TaskHandling
    *
    * @see de.thorstenberger.examServer.dao.TaskHandlingDao#saveTasklet(de.thorstenberger.examServer.model.TaskletVO)
    */
-  public void saveTasklet(final TaskletVO taskletVO) {
+	synchronized public void saveTasklet(final TaskletVO taskletVO) {
 
-    Tasklet taskletType = null;
+		Tasklet taskletType = null;
 
-    synchronized (taskHandling.getTasklet()) {
+		final Iterator it = taskHandling.getTasklet().iterator();
+		while (it.hasNext()) {
+			final Tasklet tempTaskletType = (Tasklet) it.next();
 
-      final Iterator it = taskHandling.getTasklet().iterator();
-      while (it.hasNext()) {
-        final Tasklet tempTaskletType = (Tasklet) it.next();
+			if (tempTaskletType.getTaskDefId() == taskletVO.getTaskDefId()
+					&& tempTaskletType.getLogin().equals(taskletVO.getLogin())) {
+				taskletType = tempTaskletType;
+				break;
+			}
+		}
 
-        if (tempTaskletType.getTaskDefId() == taskletVO.getTaskDefId()
-                        && tempTaskletType.getLogin().equals(taskletVO.getLogin())) {
-          taskletType = tempTaskletType;
-          break;
-        }
-      }
+		if (taskletType == null) {
+			taskletType = objectFactory.createTaskHandlingTasklet();
+			// FIXME handle overflow
+			synchronized (taskHandling) {
+				taskHandling.setIdCount(taskHandling.getIdCount() + 1);
+			}
+			taskletType.setId(taskHandling.getIdCount());
+			taskletType.setTaskDefId(taskletVO.getTaskDefId());
+			taskletType.setLogin(taskletVO.getLogin());
 
-    }
+			taskHandling.getTasklet().add(taskletType);
 
-    if (taskletType == null) {
-      taskletType = objectFactory.createTaskHandlingTasklet();
-      // FIXME handle overflow
-      synchronized (taskHandling) {
-        taskHandling.setIdCount(taskHandling.getIdCount() + 1);
-      }
-      taskletType.setId(taskHandling.getIdCount());
-      taskletType.setTaskDefId(taskletVO.getTaskDefId());
-      taskletType.setLogin(taskletVO.getLogin());
+		}
 
-      synchronized (taskHandling.getTasklet()) {
-        taskHandling.getTasklet().add(taskletType);
-      }
+		taskletType.setStatus(taskletVO.getStatus());
+		taskletType.setAssignedCorrector(taskletVO.getCorrectorLogin());
 
-    }
+		// set corrections (points)
+		if (taskletType.isSetAutoCorrection()) {
+			if (taskletVO.getAutoCorrectionPoints() == null) {
+				taskletType.setAutoCorrection(null);
+			} else {
+				taskletType.getAutoCorrection().setPoints(
+						taskletVO.getAutoCorrectionPoints());
+			}
+		} else {
+			if (taskletVO.getAutoCorrectionPoints() != null) {
+				AutoCorrection act = objectFactory
+						.createTaskHandlingTaskletAutoCorrection();
 
-    synchronized (taskletType) {
+				act.setPoints(taskletVO.getAutoCorrectionPoints());
+				taskletType.setAutoCorrection(act);
+			}
+		}
+		if (taskletType.isSetManualCorrection()) {
+			taskletType.getManualCorrection().clear();
+		}
+		if (taskletVO.getManualCorrections() != null) {
+			for (final ManualCorrectionsVO mcvo : taskletVO
+					.getManualCorrections()) {
+				ManualCorrection mct = objectFactory
+						.createTaskHandlingTaskletManualCorrection();
+				mct.setCorrector(mcvo.getCorrector());
+				mct.setPoints(mcvo.getPoints());
+				taskletType.getManualCorrection().add(mct);
+			}
+		}
 
-      taskletType.setStatus(taskletVO.getStatus());
-      taskletType.setAssignedCorrector(taskletVO.getCorrectorLogin());
+		// the annotations
+		taskletType.getCorrectorAnnotation().clear();
+		for (final CorrectorTaskletAnnotationVO tavo : taskletVO
+				.getCorrectorAnnotations()) {
+			CorrectorAnnotation cat = objectFactory
+					.createTaskHandlingTaskletCorrectorAnnotation();
+			cat.setValue(tavo.getText() == null ? "" : tavo.getText());
+			cat.setCorrector(tavo.getCorrector());
+			taskletType.getCorrectorAnnotation().add(cat);
+		}
+		taskletType.getStudentAnnotation().clear();
+		for (final StudentTaskletAnnotationVO tavo : taskletVO
+				.getStudentAnnotations()) {
+			StudentAnnotation sat = objectFactory
+					.createTaskHandlingTaskletStudentAnnotation();
+			sat.setDate(tavo.getDate());
+			sat.setValue(tavo.getText());
+			sat.setAcknowledged(tavo.isAcknowledged());
+			taskletType.getStudentAnnotation().add(sat);
+		}
 
-      // set corrections (points)
-      if (taskletType.isSetAutoCorrection()) {
-        if (taskletVO.getAutoCorrectionPoints() == null) {
-          taskletType.setAutoCorrection(null);
-        } else {
-          taskletType.getAutoCorrection().setPoints(taskletVO.getAutoCorrectionPoints());
-        }
-      } else {
-        if (taskletVO.getAutoCorrectionPoints() != null) {
-          AutoCorrection act = objectFactory.createTaskHandlingTaskletAutoCorrection();
+		// flags
+		taskletType.getFlag().clear();
+		taskletType.getFlag().addAll(taskletVO.getFlags());
 
-          act.setPoints(taskletVO.getAutoCorrectionPoints());
-          taskletType.setAutoCorrection(act);
-        }
-      }
-      if (taskletType.isSetManualCorrection()) {
-        taskletType.getManualCorrection().clear();
-      }
-      if (taskletVO.getManualCorrections() != null) {
-        for (final ManualCorrectionsVO mcvo : taskletVO.getManualCorrections()) {
-          ManualCorrection mct = objectFactory.createTaskHandlingTaskletManualCorrection();
-          mct.setCorrector(mcvo.getCorrector());
-          mct.setPoints(mcvo.getPoints());
-          taskletType.getManualCorrection().add(mct);
-        }
-      }
+		// correctors history
+		taskletType.getCorrectorHistory().clear();
 
-      // the annotations
-      taskletType.getCorrectorAnnotation().clear();
-      for (final CorrectorTaskletAnnotationVO tavo : taskletVO.getCorrectorAnnotations()) {
-        CorrectorAnnotation cat = objectFactory.createTaskHandlingTaskletCorrectorAnnotation();
-        cat.setValue(tavo.getText() == null ? "" : tavo.getText());
-        cat.setCorrector(tavo.getCorrector());
-        taskletType.getCorrectorAnnotation().add(cat);
-      }
-      taskletType.getStudentAnnotation().clear();
-      for (final StudentTaskletAnnotationVO tavo : taskletVO.getStudentAnnotations()) {
-        StudentAnnotation sat = objectFactory.createTaskHandlingTaskletStudentAnnotation();
-        sat.setDate(tavo.getDate());
-        sat.setValue(tavo.getText());
-        sat.setAcknowledged(tavo.isAcknowledged());
-        taskletType.getStudentAnnotation().add(sat);
-      }
+		if (taskletVO.getCorrectorHistory() != null
+				&& taskletVO.getCorrectorHistory().size() > 0) {
+			final List<String> ch = taskletVO.getCorrectorHistory();
+			for (final String c : ch) {
+				CorrectorHistory cht = objectFactory
+						.createTaskHandlingTaskletCorrectorHistory();
+				cht.setCorrector(c);
+				taskletType.getCorrectorHistory().add(cht);
+			}
+		}
 
-      // flags
-      taskletType.getFlag().clear();
-      taskletType.getFlag().addAll(taskletVO.getFlags());
+		save(taskHandling);
 
-      // correctors history
-      taskletType.getCorrectorHistory().clear();
-
-      if (taskletVO.getCorrectorHistory() != null && taskletVO.getCorrectorHistory().size() > 0) {
-        final List<String> ch = taskletVO.getCorrectorHistory();
-        for (final String c : ch) {
-          CorrectorHistory cht = objectFactory.createTaskHandlingTaskletCorrectorHistory();
-          cht.setCorrector(c);
-          taskletType.getCorrectorHistory().add(cht);
-        }
-      }
-
-    }
-
-    save(taskHandling);
-
-  }
+	}
 
 }

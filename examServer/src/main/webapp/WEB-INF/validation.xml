@@ -75,12 +75,12 @@ PUBLIC "-//Apache Software Foundation//DTD Commons Validator Rules Configuration
                   <arg0 key="userForm.lastName"/>
               </field>
                             <field property="semester"
-                     depends="integer,required">
+                     depends="required">
 
                   <arg0 key="userForm.semester"/>
               </field>
               <field property="matrikel"
-                     depends="integer,required">
+                     depends="required">
 
                   <arg0 key="userForm.matrikel"/>
               </field>

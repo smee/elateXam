@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.acegisecurity.userdetails.UserDetails;
 import org.acegisecurity.userdetails.UsernameNotFoundException;
+
 import de.thorstenberger.examServer.model.User;
 
 /**
@@ -29,13 +30,13 @@ public interface UserDao extends Dao {
      * @return userDetails populated userDetails object
      */
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
-    
+
     /**
      * Gets a list of users based on parameters passed in.
      *
      * @return List populated list of users
      */
-    public List getUsers(User user);
+    public List<User> getUsers(User user);
 
     /**
      * Saves a user's information
@@ -48,4 +49,13 @@ public interface UserDao extends Dao {
      * @param userId the user's id
      */
     public void removeUser(Long userId);
+
+	/**
+	 * Gets a list of users where <code>substring</code> is within at least one
+	 * of username, email, first name, last name
+	 *
+	 * @param substring
+	 * @return
+	 */
+  public List<User> getUsersMatching(String substring);
 }

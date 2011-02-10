@@ -52,6 +52,10 @@
       <forward name="list" redirect="false" path="/WEB-INF/pages/userList.jsp"/>
       <forward name="edit" redirect="false" path="/WEB-INF/pages/userForm.jsp"/>
     </action>
+    <action path="/search" name="userForm" type="de.thorstenberger.examServer.webapp.action.UserAction" scope="request" validate="false" input="mainMenu" parameter="method" roles="admin">
+      <forward name="list" redirect="false" path="/WEB-INF/pages/userList.jsp"/>
+      <forward name="edit" redirect="false" path="/WEB-INF/pages/userForm.jsp"/>
+    </action>
     <action path="/editUser" name="userForm" type="de.thorstenberger.examServer.webapp.action.UserAction" scope="request" validate="false" input="list" parameter="method" roles="admin">
       <forward name="list" redirect="false" path="/WEB-INF/pages/userList.jsp"/>
       <forward name="edit" redirect="false" path="/WEB-INF/pages/userForm.jsp"/>

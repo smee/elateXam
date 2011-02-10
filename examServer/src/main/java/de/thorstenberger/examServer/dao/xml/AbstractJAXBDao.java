@@ -109,7 +109,7 @@ public class AbstractJAXBDao extends AbstractTransactionalFileIO {
      * @throws RuntimeException
      *             wrapping {@link JAXBException} of {@link IOException}
      */
-    protected void save(final Object obj) {
+	synchronized protected void save(final Object obj) {
         log.debug(String.format("Trying to save xml package to file '%s'", workingPath + "/" + xmlFileName));
         final String txId = startTransaction();
         try {
@@ -131,6 +131,9 @@ public class AbstractJAXBDao extends AbstractTransactionalFileIO {
         } catch (final ResourceManagerException e) {
             rollback(txId, e);
             throw new RuntimeException(e);
+		} catch (RuntimeException e) {
+			rollback(txId, e);
+			throw e;
         }
     }
 }

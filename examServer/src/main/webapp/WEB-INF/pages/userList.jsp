@@ -7,7 +7,7 @@
     <meta name="menu" content="AdminMenu"/>
 </head>
 
-<html:form action="/editUser.html?from=list">
+<html:form action="/search.html?from=list">
     <html-el:text property="username"></html-el:text>
 	<html:submit>Suchen</html:submit>
 </html:form>	

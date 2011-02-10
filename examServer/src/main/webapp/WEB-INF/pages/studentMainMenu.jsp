@@ -2,10 +2,10 @@
 
 <head>
     <title><fmt:message key="mainMenu.title"/></title>
-    <content tag="heading">Hallo <authz:authentication operation="fullName"/>!</content>
+    <content tag="heading"><fmt:message key="common.hello"/> <authz:authentication operation="fullName"/>!</content>
     <meta name="menu" content="MainMenu"/>
 </head>
-<p>In der folgenden Liste finden Sie alle verfügbaren Aufgaben. Klicken Sie auf den Titel der Aufgabe, um zu ihrer Übersicht zu gelangen.</p>
+<p><fmt:message key="mainMenu.student"/></p>
 
 	<display:table partialList="false" name="TaskDefs" uid="row" pagesize="30" sort="list" class="table">
 		<display:column title="Name&nbsp;&nbsp;&nbsp;" sortable="true">

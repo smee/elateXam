@@ -3,16 +3,17 @@ package de.thorstenberger.examServer.service.impl;
 import java.util.List;
 
 import org.acegisecurity.userdetails.UsernameNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
+
 import de.thorstenberger.examServer.dao.UserDao;
 import de.thorstenberger.examServer.model.User;
 import de.thorstenberger.examServer.service.UserExistsException;
 import de.thorstenberger.examServer.service.UserManager;
-import org.springframework.dao.DataIntegrityViolationException;
 
 
 /**
  * Implementation of UserManager interface.</p>
- * 
+ *
  * <p>
  * <a href="UserManagerImpl.java.html"><i>View Source</i></a>
  * </p>
@@ -73,4 +74,14 @@ public class UserManagerImpl extends BaseManager implements UserManager {
     public User getUserByUsername(String username) throws UsernameNotFoundException {
         return (User) dao.loadUserByUsername(username);
     }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.thorstenberger.examServer.service.UserManager#getUsers(java.lang.String)
+   */
+  @Override
+  public List getUsers(String substring) {
+    return dao.getUsersMatching(substring);
+  }
 }

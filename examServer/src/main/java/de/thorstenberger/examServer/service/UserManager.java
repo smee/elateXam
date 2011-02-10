@@ -3,6 +3,7 @@ package de.thorstenberger.examServer.service;
 import java.util.List;
 
 import org.acegisecurity.userdetails.UsernameNotFoundException;
+
 import de.thorstenberger.examServer.dao.UserDao;
 import de.thorstenberger.examServer.model.User;
 
@@ -14,10 +15,10 @@ import de.thorstenberger.examServer.model.User;
  * <p><a href="UserManager.java.html"><i>View Source</i></a></p>
  *
  * @author <a href="mailto:matt@raibledesigns.com">Matt Raible</a>
- *  Modified by <a href="mailto:dan@getrolling.com">Dan Kibler </a> 
+ *  Modified by <a href="mailto:dan@getrolling.com">Dan Kibler </a>
  */
 public interface UserManager {
-    
+
     public void setUserDao(UserDao userDao);
 
     /**
@@ -27,7 +28,7 @@ public interface UserManager {
      * @return User
      */
     public User getUser(String userId);
-    
+
     /**
      * Finds a user by their username.
      * @param username
@@ -41,6 +42,15 @@ public interface UserManager {
      * @return List
      */
     public List getUsers(User user);
+
+  /**
+   * Retrieves a list of users where the given substring can be found within at least on of the following properties:
+   * {@link User#getFirstName()}, {@link User#getFullName()}, {@link User#getUsername()}, {@link User#getEmail()}.
+   * 
+   * @param substring
+   * @return
+   */
+  List getUsers(String substring);
 
     /**
      * Saves a user's information

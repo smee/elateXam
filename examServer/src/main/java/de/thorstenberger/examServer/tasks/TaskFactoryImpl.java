@@ -120,6 +120,7 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
 
     }
 
+    public static final String USER_ATTRIBUTE_MATRIKEL = "user.student-info.matrikel";
     public static final String USER_ATTRIBUTE_SEMESTER = "user.student-info.semester";
 
     private final List<String> availableTypes;
@@ -186,7 +187,8 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
      */
     public List<UserAttribute> availableUserAttributes() {
         final List<UserAttribute> ret = new LinkedList<UserAttribute>();
-        ret.add(new UserAttributeImpl(USER_ATTRIBUTE_SEMESTER, "Semester")); // TODO externalize String
+		ret.add(new UserAttributeImpl(USER_ATTRIBUTE_MATRIKEL, "Matrikel")); // TODO externalize String
+		ret.add(new UserAttributeImpl(USER_ATTRIBUTE_SEMESTER, "Semester")); // TODO externalize String
         return ret;
     }
 
@@ -340,7 +342,8 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
             ui.setFirstName(u.getFirstName());
             ui.setName(u.getLastName());
             ui.setEMail(u.getEmail());
-            ui.setUserAttribute(USER_ATTRIBUTE_SEMESTER, u.getPhoneNumber());
+            ui.setUserAttribute(USER_ATTRIBUTE_MATRIKEL, u.getMatrikel());
+			ui.setUserAttribute(USER_ATTRIBUTE_SEMESTER, u.getSemester());
             ret.add(ui);
         }
         return ret;
@@ -500,7 +503,8 @@ public class TaskFactoryImpl extends AbstractTaskFactory implements TaskFactory 
         ret.setFirstName(user.getFirstName());
         ret.setName(user.getLastName());
         ret.setEMail(user.getEmail());
-        ret.setUserAttribute(USER_ATTRIBUTE_SEMESTER, user.getPhoneNumber());
+		ret.setUserAttribute(USER_ATTRIBUTE_SEMESTER, user.getSemester());
+		ret.setUserAttribute(USER_ATTRIBUTE_MATRIKEL, user.getMatrikel());
 
         return ret;
 

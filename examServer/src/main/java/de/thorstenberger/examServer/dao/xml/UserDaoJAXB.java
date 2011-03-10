@@ -137,7 +137,7 @@ public class UserDaoJAXB extends AbstractJAXBDao implements UserDao, UserDetails
     final List<User> usersList = users.getUser();
     final List<de.thorstenberger.examServer.model.User> ret = new ArrayList<de.thorstenberger.examServer.model.User>();
 
-    final boolean checkRoles = CollectionUtils.isEmpty(userTemplate.getRoles());
+    final boolean checkRoles = !CollectionUtils.isEmpty(userTemplate.getRoles());
 
     for (final User userType : usersList) {
       if (checkRoles){

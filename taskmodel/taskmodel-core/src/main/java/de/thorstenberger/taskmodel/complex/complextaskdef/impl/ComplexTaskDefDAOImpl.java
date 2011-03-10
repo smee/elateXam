@@ -43,6 +43,7 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefDAO;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDef;
 import de.thorstenberger.taskmodel.util.JAXB2Validation;
+import de.thorstenberger.taskmodel.util.JAXBUtils;
 
 /**
  * @author Thorsten Berger
@@ -65,9 +66,9 @@ public class ComplexTaskDefDAOImpl implements ComplexTaskDefDAO {
 	public ComplexTaskDefRoot getComplexTaskDefRoot( InputStream complexTaskIS ) throws TaskApiException {
 		ComplexTaskDef complexTask;
 		JAXBContext jc = createJAXBContext();
-		Unmarshaller unmarshaller;
+		Unmarshaller unmarshaller=null;
 		try {
-			unmarshaller = jc.createUnmarshaller();
+			unmarshaller = JAXBUtils.getJAXBUnmarshaller(jc);
       // enable validation
       unmarshaller.setSchema(JAXB2Validation.loadSchema("complexTaskDef.xsd"));
 
@@ -80,6 +81,9 @@ public class ComplexTaskDefDAOImpl implements ComplexTaskDefDAO {
 			throw new TaskModelPersistenceException( e1 );
 		} catch (IOException e2) {
 			throw new TaskModelPersistenceException( e2 );
+    }finally{
+      if(unmarshaller!=null)
+        JAXBUtils.releaseJAXBUnmarshaller(jc, unmarshaller);
     }
 
 		return new ComplexTaskDefRootImpl( complexTask, complexTaskFactory );
@@ -106,9 +110,10 @@ public class ComplexTaskDefDAOImpl implements ComplexTaskDefDAO {
 	public void save(ComplexTaskDefRoot ctdr, OutputStream os) throws TaskApiException {
 		BufferedOutputStream bos = new BufferedOutputStream( os );
 
+		Marshaller marshaller = null;
 		try {
-			JAXBContext jc=createJAXBContext();
-			Marshaller marshaller = jc.createMarshaller();
+		  JAXBContext jc=createJAXBContext();
+		  marshaller=JAXBUtils.getJAXBMarshaller(jc);
 			Validator validator = jc.createValidator();
 			ComplexTaskDef ctd=((ComplexTaskDefRootImpl)ctdr).getJAXBContent();
 			validator.validate( ctd );
@@ -123,6 +128,8 @@ public class ComplexTaskDefDAOImpl implements ComplexTaskDefDAO {
 			} catch (IOException e) {
 				throw new TaskModelPersistenceException( e );
 			}
+      if(marshaller!=null)
+	      JAXBUtils.releaseJAXBMarshaller(jc, marshaller);
 		}
 
 	}

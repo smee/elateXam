@@ -35,6 +35,7 @@ import org.apache.commons.transaction.file.ResourceManagerException;
 
 import de.thorstenberger.examServer.dao.AbstractTransactionalFileIO;
 import de.thorstenberger.examServer.dao.xml.jaxb.ObjectFactory;
+import de.thorstenberger.taskmodel.util.JAXBUtils;
 
 /**
  * DAO that accesses jaxb xml files within a transaction. Every call to {@link #load()} and {@link #save(Object)}
@@ -82,10 +83,10 @@ public class AbstractJAXBDao extends AbstractTransactionalFileIO {
         log.debug(String.format("Trying to load xml package from file '%s'", workingPath + "/" + xmlFileName));
         // start new file transaction
 
+        Unmarshaller unmarshaller = null;
         try {
             // deserialize the xml
-            Unmarshaller unmarshaller;
-            unmarshaller = jc.createUnmarshaller();
+            unmarshaller = JAXBUtils.getJAXBUnmarshaller(jc);
             final BufferedInputStream bis = new BufferedInputStream(getFRM().readResource(xmlFileName));
             final Object obj = unmarshaller.unmarshal(bis);
             bis.close();
@@ -98,7 +99,10 @@ public class AbstractJAXBDao extends AbstractTransactionalFileIO {
             throw new RuntimeException(e);
         } catch (final IOException e) {
             throw new RuntimeException(e);
-        }
+        }finally{
+            if(unmarshaller!=null)
+                JAXBUtils.releaseJAXBUnmarshaller(jc, unmarshaller);
+            }
     }
 
     /**
@@ -112,10 +116,10 @@ public class AbstractJAXBDao extends AbstractTransactionalFileIO {
 	synchronized protected void save(final Object obj) {
         log.debug(String.format("Trying to save xml package to file '%s'", workingPath + "/" + xmlFileName));
         final String txId = startTransaction();
+        Marshaller marshaller = null;
         try {
 
-            final Marshaller marshaller = jc.createMarshaller();
-
+        	marshaller = JAXBUtils.getJAXBMarshaller(jc);
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
             final BufferedOutputStream bos = new BufferedOutputStream(getFRM().writeResource(txId, this.xmlFileName));
             marshaller.marshal(obj, bos);
@@ -134,6 +138,9 @@ public class AbstractJAXBDao extends AbstractTransactionalFileIO {
 		} catch (RuntimeException e) {
 			rollback(txId, e);
 			throw e;
-        }
+        }finally{
+            if(marshaller!=null)
+                JAXBUtils.releaseJAXBMarshaller(jc, marshaller);
+            }
     }
 }

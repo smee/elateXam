@@ -51,7 +51,7 @@ import de.thorstenberger.taskmodel.util.JAXB2Validation;
 public class ComplexTaskDefDAOImpl implements ComplexTaskDefDAO {
   public static final Log logger = LogFactory.getLog(ComplexTaskDefDAOImpl.class);
 	private ComplexTaskFactory complexTaskFactory;
-
+	private JAXBContext jc;
 	/**
 	 * @param factory
 	 */
@@ -85,16 +85,21 @@ public class ComplexTaskDefDAOImpl implements ComplexTaskDefDAO {
 		return new ComplexTaskDefRootImpl( complexTask, complexTaskFactory );
 	}
 
+  /**
+   * Lazily create a jaxb context. Does not need to be synchronized.
+   * @return
+   * @throws TaskApiException
+   */
   private JAXBContext createJAXBContext()
 			throws TaskApiException {
-		JAXBContext jc;
-		try {
-			jc = JAXBContext.newInstance( "de.thorstenberger.taskmodel.complex.jaxb", this.getClass().getClassLoader() );
-		} catch (IllegalArgumentException e) {
-			throw new TaskApiException( e );
-		} catch (JAXBException e) {
-			throw new TaskModelPersistenceException( e );
-		}
+		if(jc == null)
+  		try {
+  			jc = JAXBContext.newInstance( "de.thorstenberger.taskmodel.complex.jaxb", this.getClass().getClassLoader() );
+  		} catch (IllegalArgumentException e) {
+  			throw new TaskApiException( e );
+  		} catch (JAXBException e) {
+  			throw new TaskModelPersistenceException( e );
+  		}
 		return jc;
 	}
 

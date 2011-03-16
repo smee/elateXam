@@ -41,7 +41,7 @@ a:link
 
 .FailureMessage {  font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-style: normal; font-weight: normal; color: #FF0000}
 legend {  font-family: "Times New Roman", Times, serif; font-size: 15px; color: #0046D5; font-weight: normal; padding-top: 5px; padding-bottom: 5px; }
-fieldset {  border: 1px #BFB8BF solid; -moz-border-radius: 15px; padding:10px; background-color: #ffffff; }
+fieldset {  border: 1px #BFB8BF solid; -moz-border-radius: 15px; border-radius: 15px; padding:10px; background-color: #ffffff; }
 
 .correction fieldset{
 	background: url(pics/fade_black_white_bg.jpg);
@@ -122,7 +122,7 @@ a.complexTaskLink:visited {  font-family: Arial, Helvetica, sans-serif; font-siz
 a.complexTaskLink:active {  font-family: Arial, Helvetica, sans-serif; font-size: 12px; text-decoration: none; color: #00327D;}
 a.complexTaskLink:hover {  font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: orange; text-decoration: underline; }
 
-fieldset.complexTask {  border: 1px #BFB8BF solid; -moz-border-radius: 15px; padding-top: 0px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px; background-color: #FFFFFF; }
+fieldset.complexTask {  border: 1px #BFB8BF solid; -moz-border-radius: 15px; border-radius: 15px; padding-top: 0px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px; background-color: #FFFFFF; }
 legend.complexTask {  font-family: "Times New Roman", Times, serif; font-size: 15px; color: #0046D5; font-weight: normal; padding-top: 5px; padding-bottom: 0px; }
 .ComplexTaskHint {  font-family: Arial, Helvetica, sans-serif; font-size: 10px; border-color: #bfb8bf black black #CCCCCC; background-color: #fafbfc; border-style: dotted; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 1px; border-left-width: 0px; padding-top: 2px; padding-bottom: 2px }
 select {  font-family: Arial, Helvetica, sans-serif; font-size: 12px}
@@ -274,6 +274,7 @@ div.topwatch {
   border: 1px solid black;
   border-right:none; 
   -moz-border-radius: 10px 0 0 10px;
+  border-radius: 10px 0 0 10px;
   display: none;
   padding: 10px 0px 10px 10px;
   font-size: 1em;

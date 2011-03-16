@@ -49,17 +49,23 @@ import de.thorstenberger.taskmodel.util.JAXBUtils;
 public class ComplexTaskHandlingDAOImpl implements ComplexTaskHandlingDAO {
 
 	private ComplexTaskFactory complexTaskFactory;
-	private JAXBContext jc;
+	/**
+	 * Since JAXBContext is thread safe we can just use one global instance to avoid
+	 * repeated initialization costs.
+	 */
+	private static JAXBContext jc = null;
 
 	/**
 	 *
 	 */
 	public ComplexTaskHandlingDAOImpl( ComplexTaskFactory complexTaskFactory ) {
 		this.complexTaskFactory = complexTaskFactory;
-		try {
-			jc = JAXBContext.newInstance( "de.thorstenberger.taskmodel.complex.jaxb", this.getClass().getClassLoader() );
-		} catch (JAXBException e) {
-			throw new TaskModelPersistenceException( e );
+		if(jc == null){
+		  try {
+		    jc = JAXBContext.newInstance( "de.thorstenberger.taskmodel.complex.jaxb", this.getClass().getClassLoader() );
+		  } catch (JAXBException e) {
+		    throw new TaskModelPersistenceException( e );
+		  }
 		}
 	}
 

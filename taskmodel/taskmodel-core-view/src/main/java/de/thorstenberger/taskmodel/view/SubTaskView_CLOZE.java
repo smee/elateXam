@@ -69,10 +69,12 @@ public class SubTaskView_CLOZE extends SubTaskView {
 				ret.append( content.get( i ) );
 			}else if( content.get( i ) instanceof SubTasklet_Cloze.Gap ){
 				SubTasklet_Cloze.Gap gap = (SubTasklet_Cloze.Gap) content.get( i );
-				ret.append( " &nbsp;<input type=\"text\" name=\"task[" + relativeTaskNumber + "].gap_" +
+				ret.append( " &nbsp;<input type=\"text\" " 
+				+ "lang=\"" + clozeSubTasklet.getInputLanguage() + "\" "
+				+ "name=\"task[" + relativeTaskNumber + "].gap_" +
 						gap.getIndex() + "\" size=\"" + gap.getInputLength() + "\" value=\"" +
 								escapeQuotes( gap.getGapValue() ) + "\" onChange=\"setModified()\"" +
-										">&nbsp;" );
+										" >&nbsp;" );
 			}
 		}
 

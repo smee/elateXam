@@ -60,10 +60,16 @@ public class SubTaskView_TEXT extends SubTaskView {
 		StringBuffer ret = new StringBuffer();
 
 		ret.append("<div align=\"center\">\n");
-		ret.append("<textarea name=\"task[" + relativeTaskNumber + "].text\" cols=\"" +
-						textSubTasklet.getTextFieldWidth() + "\" rows=\"" + textSubTasklet.getTextFieldHeight() + "\" onChange=\"setModified()\"" +
-            (corrected ? "readonly=\"true\" " : "") + ">\n");
-		ret.append( textSubTasklet.getAnswer() );
+				
+		ret.append("<textarea lang=\"" + textSubTasklet.getInputLanguage() + "\" name=\"task[" + relativeTaskNumber + "].text\" cols=\"" +
+ 						textSubTasklet.getTextFieldWidth() + "\" rows=\"" + textSubTasklet.getTextFieldHeight() + "\" onChange=\"setModified()\"" +
+ 						( corrected ? "disabled=\"disabled\"" : "" ) + ">\n");
+ 		ret.append( textSubTasklet.getAnswer() );
+		
+		// ret.append("<textarea name=\"task[" + relativeTaskNumber + "].text\" cols=\"" +
+		// 				textSubTasklet.getTextFieldWidth() + "\" rows=\"" + textSubTasklet.getTextFieldHeight() + "\" onChange=\"setModified()\"" +
+		//             (corrected ? "readonly=\"true\" " : "") + ">\n");
+		// ret.append( textSubTasklet.getAnswer() );
 		ret.append("</textarea></div>\n");
 
 		return ret.toString();

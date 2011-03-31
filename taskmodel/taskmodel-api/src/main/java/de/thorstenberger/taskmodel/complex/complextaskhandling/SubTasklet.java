@@ -151,5 +151,10 @@ public interface SubTasklet {
 	 * the automatic correction after saving.
 	 */
 	public boolean isInteractiveFeedback();
-
+	
+	/**
+	 * Flag for various input languages in textfields or textarea
+	 */
+	public String getInputLanguage();
+	
 }

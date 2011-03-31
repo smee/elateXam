@@ -1,0 +1,15 @@
+diff a/taskmodel/taskmodel-core/src/main/java/de/thorstenberger/taskmodel/complex/complextaskhandling/subtasklets/impl/AbstractSubTasklet.java b/taskmodel/taskmodel-core/src/main/java/de/thorstenberger/taskmodel/complex/complextaskhandling/subtasklets/impl/AbstractSubTasklet.java	(rejected hunks)
+@@ -267,5 +267,13 @@ public abstract class AbstractSubTasklet implements SubTasklet{
+ 		build();
+ 	}
+ 	
++
++	/*
++		Input language property.
++	*/
++	public String getInputLanguage() {
++		return jaxbSubTaskDef.getInputLanguage();
++	}
++	
+ 	
+ }

@@ -211,6 +211,7 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 															</xs:simpleType>
 														</xs:attribute>
 														<xs:attribute name="ignoreCase" type="xs:boolean" use="optional"/>
+														<xs:attribute name="needManualCorrection" type="xs:boolean" use="optional"/>
 													</xs:complexType>
 												</xs:element>
 												<xs:choice maxOccurs="unbounded">
@@ -470,6 +471,7 @@ mixAllSubTasks -  damit werden alle Aufgaben aus allen Blöcken in zufälliger R
 											</xs:attribute>
 											<xs:attribute name="ignoreCase" type="xs:boolean" use="optional"/>
 											<xs:attribute name="initialValue" type="xs:string" use="optional"/>
+											<xs:attribute name="needManualCorrection" type="xs:boolean" use="optional"/>
 										</xs:complexType>
 									</xs:element>
 								</xs:choice>

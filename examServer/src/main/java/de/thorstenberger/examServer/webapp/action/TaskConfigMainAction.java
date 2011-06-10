@@ -68,20 +68,21 @@ public class TaskConfigMainAction extends BaseAction {
 
 		List<TaskDefVO> tdvos = new ArrayList<TaskDefVO>();
 
-		for( TaskDef taskDef : taskDefs ){
+		for (TaskDef taskDef : taskDefs) {
 
-			if( !taskDef.isVisible() ) {
-        continue;
-      }
+			if (!taskDef.isVisible()) {
+				continue;
+			}
 
 			TaskDefVO tdvo = new TaskDefVO();
-        	tdvo.setId( "" + taskDef.getId() );
-        	tdvo.setTitle( taskDef.getTitle() );
-        	tdvo.setShortDescription( taskDef.getShortDescription() );
-        	tdvo.setType( taskDef.getType() );
-        	tdvo.setStopped( taskDef.isStopped() );
-        	tdvo.setActive( taskDef.isActive() );
-        	tdvos.add( tdvo );
+			tdvo.setId("" + taskDef.getId());
+			tdvo.setTitle(taskDef.getTitle());
+			tdvo.setShortDescription(taskDef.getShortDescription());
+			tdvo.setType(taskDef.getType());
+			tdvo.setStopped(taskDef.isStopped());
+			tdvo.setActive(taskDef.isActive());
+			tdvo.setMaxPoints(taskDef.getReachablePoints());
+			tdvos.add(tdvo);
 		}
     return tdvos;
   }

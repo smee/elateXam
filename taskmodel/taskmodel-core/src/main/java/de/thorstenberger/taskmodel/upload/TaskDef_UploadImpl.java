@@ -112,6 +112,15 @@ public class TaskDef_UploadImpl extends AbstractTaskDef implements TaskDef_Uploa
 	public String getResourceMimeType() {
 		return resourceMimeType;
 	}
+
+
+  /* (non-Javadoc)
+   * @see de.thorstenberger.taskmodel.TaskDef#reachablePoints()
+   */
+  public float getReachablePoints() {
+    // TODO 
+    return 0;
+  }
 	
 	
 	

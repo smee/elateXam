@@ -15,6 +15,7 @@
 		</display:column>
 		<display:column property="type" title="Typ&nbsp;&nbsp;&nbsp;" sortable="true"/>
 		<display:column property="shortDescription" title="Kurzbeschreibung&nbsp;&nbsp;&nbsp;" sortable="true"/>
+		<display:column property="maxPoints" title="Erreichbare Punkte" sortable="true"/>
 		<display:column title="Externer Direktlink&nbsp;&nbsp;&nbsp;" sortable="false">
           <html:link action="/TaskViewFactory" paramId="taskId" paramName="row" paramProperty="id"><c:out value="Link"></c:out></html:link>
         </display:column>

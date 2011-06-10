@@ -26,8 +26,12 @@ import java.io.InputStream;
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskContants;
 import de.thorstenberger.taskmodel.TaskModelPersistenceException;
+import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
+import de.thorstenberger.taskmodel.complex.complextaskdef.Category;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefDAO;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
+import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot.CorrectionModeType;
+import de.thorstenberger.taskmodel.complex.complextaskdef.impl.ComplexTaskDefRootImpl.CorrectOnlyProcessedTasksCorrectionMode;
 import de.thorstenberger.taskmodel.impl.AbstractTaskDef;
 
 /**
@@ -96,6 +100,36 @@ public class TaskDef_ComplexImpl extends AbstractTaskDef implements TaskDef_Comp
 	public ComplexTaskDefRoot getComplexTaskDefRoot() {
 		return complexTaskDefRoot;
 	}
+
+  /* (non-Javadoc)
+   * @see de.thorstenberger.taskmodel.TaskDef#reachablePoints()
+   */
+  public float getReachablePoints() {
+    if(this.complexTaskDefRoot.getCorrectionMode().getType()== CorrectionModeType.CORRECTONLYPROCESSEDTASKS){
+      return countReachablePoints(complexTaskDefRoot, ((CorrectOnlyProcessedTasksCorrectionMode)complexTaskDefRoot.getCorrectionMode()).getFirst_n_tasks());
+    }else{
+      return countReachablePoints(complexTaskDefRoot, Integer.MAX_VALUE);
+    }
+    
+  }
+
+  /**
+   * @param root
+   * @param first_n_tasks
+   * @return
+   */
+  private float countReachablePoints(ComplexTaskDefRoot root, int n) {
+    int count = 0;
+    float score = 0;
+    for (Category cat : root.getCategoriesList()) {
+      for(Block block: cat.getBlocks()){
+        int tasksFromBlock = Math.min( n - count ,block.getNumberOfSelectedSubTasks());
+        count += tasksFromBlock;
+        score += tasksFromBlock * block.getPointsPerSubTask();
+      }
+    }
+    return score;
+  }
 
 
 

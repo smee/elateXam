@@ -72,4 +72,8 @@ public interface TaskDef {
 	 */
 	public Long getFollowingTaskId();
 
+	 /**
+	 * @return the points that a user may get if he answers all questions correctly.
+	 */
+	public float getReachablePoints();
 }

@@ -36,7 +36,7 @@ public class TaskDefVO {
     private boolean active;
     private boolean visible;
     private int numberOfOpenCorrections;
-
+    private float maxPoints;
     /**
      * @return Returns the deadline.
      */
@@ -173,5 +173,19 @@ public class TaskDefVO {
     public void setVisible(final boolean visible) {
         this.visible = visible;
     }
+
+	/**
+	 * @param maxPoints the maxPoints to set
+	 */
+	public void setMaxPoints(float maxPoints) {
+		this.maxPoints = maxPoints;
+	}
+
+	/**
+	 * @return the maxPoints
+	 */
+	public float getMaxPoints() {
+		return maxPoints;
+	}
 
 }

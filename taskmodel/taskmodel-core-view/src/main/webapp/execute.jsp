@@ -178,15 +178,9 @@ function checkedLink(name, target, linkClass)
   <tr>
 
     <td bgcolor="#F2F9FF" class="complexTaskNav">
-      <div align="left"><img src="<%= request.getContextPath() %>/pics/exit.gif" width="20" height="16" align="absbottom">
-        <script type="text/javascript">
-		 <!--
-			checkedLink("Hauptseite", "${ReturnURL}", "ComplexTaskLink");
-		 //-->
-		</script>
-		  <noscript>
-		  	<a href="${ReturnURL}" class="ComplexTaskLink">Hauptseite</a>
-		  </noscript>
+      <div align="left">
+	  	<a href="${ReturnURL}" class="ComplexTaskLink">
+	  	<img src="<%= request.getContextPath() %>/pics/exit.gif" width="20" height="16" align="absbottom" hspace="4px">Hauptseite</a>
 		</div>
     </td>
 

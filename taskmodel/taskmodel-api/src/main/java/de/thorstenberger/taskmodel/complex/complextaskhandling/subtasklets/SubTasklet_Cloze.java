@@ -95,6 +95,15 @@ public interface SubTasklet_Cloze extends SubTasklet {
 		public List<ManualGapCorrection> getManualCorrections() throws IllegalStateException;
 		
 		public String[] getCorrectValues();
+
+    /**
+     * If this gap has only the correct values as returned by {@link #getCorrectValues()} and no other correct solution
+     * whatsoever, every other answer is incorrect.
+     * @return
+     */
+    public boolean isNeedsManualCorrection();
+    
+    public boolean isSetNeedsManualCorrection();
 		
 	}
 	

@@ -42,8 +42,10 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.ClozeS
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Cloze;
 import de.thorstenberger.taskmodel.complex.jaxb.ClozeSubTaskDef;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDef.Category.ClozeTaskBlock;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDef.Category.ClozeTaskBlock.ClozeConfig;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.ClozeSubTask;
+import de.thorstenberger.taskmodel.complex.jaxb.Config;
 import de.thorstenberger.taskmodel.complex.jaxb.ManualCorrectionType;
 import de.thorstenberger.taskmodel.complex.jaxb.SubTaskDefType;
 import de.thorstenberger.taskmodel.complex.jaxb.SubTaskType;
@@ -65,7 +67,7 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 		super( complexTaskDefRoot, block, clozeSubTaskDef, clozeSubTask  );
 		this.clozeTaskBlock = (ClozeTaskBlock) ((GenericBlockImpl)block).getJaxbTaskBlock();
 		this.clozeSubTaskDef = (ClozeSubTaskDef) clozeSubTaskDef;
-		this.clozeSubTask = (ClozeSubTask) clozeSubTask;;
+		this.clozeSubTask = (ClozeSubTask) clozeSubTask;
 	}
 
 
@@ -94,7 +96,10 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 	}
 
 	public void doAutoCorrection(){
-
+    ClozeConfig cfg = clozeTaskBlock.getClozeConfig();
+    //this taskblock is set as fully automatic correction,
+    final boolean isBlockFullyAutomatic = cfg.isSetNeedManualCorrection() && cfg.isNeedManualCorrection() == false;
+    
 		Gap[] gaps = getGaps();
 		float points = clozeTaskBlock.getConfig().getPointsPerTask();
 		float negativePoints = clozeTaskBlock.getClozeConfig().getNegativePoints();
@@ -107,8 +112,16 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 				gaps[i].setAutoCorrection( false );
 				points -= negativePoints;
 			}else if( gaps[i].valueEqualsCorrectContent() ){
+			  // gap value matches a given correct value
 				gaps[i].setAutoCorrection( true );
 				noneProcessed = false;
+			}else if(isBlockFullyAutomatic && !gaps[i].isSetNeedsManualCorrection() || !gaps[i].isNeedsManualCorrection()){
+			  /* if the task block does not need manual corrections and this gap do
+			   * this gap is wrong iff its contents are not defined as valid solution
+			   */
+			  gaps[i].setAutoCorrection( false );
+			  noneProcessed = false;
+			  points -= negativePoints;
 			}else{
 				couldCorrectAllGaps = false;
 				noneProcessed = false;
@@ -121,7 +134,8 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 			return;
 		}
 
-		if( couldCorrectAllGaps ){
+    // either some gaps where empty or correct, or this taskblock is set as fully automatic correction
+		if( couldCorrectAllGaps){
 			if( points < 0 ) {
                 points = 0;
             }
@@ -381,16 +395,15 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 		}
 
 		public boolean valueEqualsCorrectContent(){
-			List<String> correct = gapDef.getCorrect();
-			final String gapValue = StringUtils.trim(getGapValue());
+			List<String> correct = trimWhitespace(gapDef.getCorrect());
+			final String gapValue = trimWhitespace(getGapValue());
 
 			for( String alternative: correct ){
-				final String correctAlternative = StringUtils.trim(alternative);
 				if( !isIgnoreCase() ){
-					if( gapValue.equals( correctAlternative ) )
+					if( gapValue.equals( alternative ) )
 						return true;
 				}else{
-					if( gapValue.equalsIgnoreCase( correctAlternative ) )
+					if( gapValue.equalsIgnoreCase( alternative ) )
 						return true;
 				}
 			}
@@ -398,7 +411,30 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 			return false;
 		}
 
-		/* (non-Javadoc)
+		/**
+		 * Remove multiple occurances of whitespace from every string in the list. 
+		 * I.e. "    a b  c      d  " ==> "a b c d"
+     * @param correct
+     * @return
+     */
+    private List<String> trimWhitespace(List<String> correct) {
+      List<String> res = new ArrayList<String>();
+      for (String string : correct) {
+        res.add(trimWhitespace(string));
+      }
+      return res;
+    }
+    /**
+     * Remove multiple occurances of whitespace. I.e. "    a b  c      d  " ==> "a b c d"
+     * @param correct
+     * @return
+     */
+    private String trimWhitespace(String string){
+      return StringUtils.trim(string).replaceAll("\\s\\s", " ");
+    }
+
+
+    /* (non-Javadoc)
 		 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Cloze.Gap#getManualCorrections()
 		 */
 		public List<ManualGapCorrection> getManualCorrections() throws IllegalStateException {
@@ -521,6 +557,22 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
             }
 		    return ret;
 		}
+
+
+    /* (non-Javadoc)
+     * @see de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Cloze.Gap#isNeedsManualCorrection()
+     */
+    public boolean isNeedsManualCorrection() {
+      return !gapDef.isSetNeedManualCorrection() || gapDef.isNeedManualCorrection();
+    }
+
+
+    /* (non-Javadoc)
+     * @see de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Cloze.Gap#isSetNeedsManualCorrection()
+     */
+    public boolean isSetNeedsManualCorrection() {
+      return gapDef.isSetNeedManualCorrection();
+    }
 
 	}
 

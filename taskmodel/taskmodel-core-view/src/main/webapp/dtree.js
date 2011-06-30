@@ -117,9 +117,7 @@ dTree.prototype.addNode = function(pNode) {
 	return str;
 };
 
-// Creates the node icon, url and text
-dTree.prototype.node = function(node, nodeId) {
-	var str = '<div class="dTreeNode">' + this.indent(node, nodeId);
+dTree.prototype.renderIcon = function(node, nodeId) {
 	if (this.config.useIcons) {
 		if (!node.icon) node.icon = (this.root.id == node.pid) ? this.icon.root : ((node._hc) ? this.icon.folder : this.icon.node);
 		if (!node.iconOpen) node.iconOpen = (node._hc) ? this.icon.folderOpen : this.icon.node;
@@ -127,8 +125,13 @@ dTree.prototype.node = function(node, nodeId) {
 			node.icon = this.icon.root;
 			node.iconOpen = this.icon.root;
 		}
-		str += '<img id="i' + this.obj + nodeId + '" src="' + ((node._io) ? node.iconOpen : node.icon) + '" alt="" />';
+		return '<img id="i' + this.obj + nodeId + '" src="' + ((node._io) ? node.iconOpen : node.icon) + '" alt="" />';
 	}
+};
+
+// Creates the node icon, url and text
+dTree.prototype.node = function(node, nodeId) {
+	var str = '<div class="dTreeNode">' + this.indent(node, nodeId);
 	if (node.url) {
 		str += '<a id="s' + this.obj + nodeId + '" class="' + ((this.config.useSelection) ? ((node._is ? 'nodeSel' : 'node')) : 'node') + '" href="' + node.url + '"';
 		if (node.title) str += ' title="' + node.title + '"';
@@ -140,7 +143,21 @@ dTree.prototype.node = function(node, nodeId) {
 	}
 	else if ((!this.config.folderLinks || !node.url) && node._hc && node.pid != this.root.id)
 		str += '<a href="javascript: ' + this.obj + '.o(' + nodeId + ');" class="node">';
-	str += node.name;
+	// if the link itself looks like a link, insert the icon within so the
+	// user may click the icon as well as the link.
+	if(node.name.substring(0,3) === "<a " && node.name.indexOf(">")>0){
+		  var idx = node.name.indexOf(">");
+		  // insert opening link tag
+		  str += node.name.substring(0,idx+1);
+		  // insert icon
+		  str += this.renderIcon(node, nodeId);
+          // insert rest of the link
+		  str += node.name.substring(idx+1);
+    }
+	else {
+		str += this.renderIcon(node, nodeId);
+		str += node.name;
+	}
 	if (node.url || ((!this.config.folderLinks || !node.url) && node._hc)) str += '</a>';
 	str += '</div>';
 	if (node._hc) {

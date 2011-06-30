@@ -197,7 +197,7 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
     // page 3
     verifyTrue(selenium.isElementPresent("//div[@id='dd4']/div/img[@src='/taskmodel-core-view/pics/sparkle001bu.gif']"));
     // page 1 is partly processed
-    verifyTrue(selenium.isElementPresent("//div[@id='dd1']/div/img[@src='/taskmodel-core-view/icons/partlyProcessed.gif']"));
+    verifyTrue(selenium.isElementPresent("//div[@id='dd1']/div/a/img[@src='/taskmodel-core-view/icons/partlyProcessed.gif']"));
     selenium.select("task[0].concept_0", "index=0");
     selenium.select("task[0].concept_1", "index=1");
     selenium.select("task[0].concept_2", "index=2");
@@ -210,7 +210,7 @@ public class ExamServerIntegrationTest extends SeleneseTestNgHelper {
 
     assertEquals(selenium.getTitle(), "Bearbeitung: Test");
     // page 3 is completely processed
-    verifyTrue(selenium.isElementPresent("//div[@id='dd4']/div/img[@src='/taskmodel-core-view/icons/processed.gif']"));
+    verifyTrue(selenium.isElementPresent("//div[@id='dd4']/div/a/img[@src='/taskmodel-core-view/icons/processed.gif']"));
     // cloze subtask
     clickAndWait("link=Seite 5");
 

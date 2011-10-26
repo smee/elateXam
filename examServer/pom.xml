@@ -340,7 +340,10 @@
     <dependency>
       <groupId>opensymphony</groupId>
       <artifactId>clickstream</artifactId>
-      <version>1.0.2</version>
+      <version>1.0.3</version>
+      <!-- since this version is not available in the central repos, we just add it manually -->
+      <scope>system</scope>
+      <systemPath>${basedir}/src/main/etc/clickstream-1.0.3.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>commons-beanutils</groupId>

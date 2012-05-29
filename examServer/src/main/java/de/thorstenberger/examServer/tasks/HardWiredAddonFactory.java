@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import de.thorstenberger.taskmodel.complex.addon.AddOnSubTaskletFactory;
-import de.thorstenberger.taskmodel.complex.addon.AddonSubtaskletFactoryPerOSGi;
+import de.thorstenberger.taskmodel.complex.addon.AddonSubtaskletFactories;
 import de.thorstenberger.taskmodel.view.AddonSubTaskViewFactory;
 
 /**
@@ -15,7 +15,7 @@ import de.thorstenberger.taskmodel.view.AddonSubTaskViewFactory;
  * @author Steffen Dienst
  *
  */
-public class HardWiredAddonFactory implements AddonSubtaskletFactoryPerOSGi {
+public class HardWiredAddonFactory implements AddonSubtaskletFactories {
 
 	private final Collection<? extends AddOnSubTaskletFactory> taskletfactories;
 	private final Collection<? extends AddonSubTaskViewFactory> viewfactories;

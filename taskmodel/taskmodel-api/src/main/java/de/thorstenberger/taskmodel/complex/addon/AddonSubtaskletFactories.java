@@ -26,7 +26,7 @@ import de.thorstenberger.taskmodel.view.AddonSubTaskViewFactory;
  * @author Steffen Dienst
  *
  */
-public interface AddonSubtaskletFactoryPerOSGi {
+public interface AddonSubtaskletFactories {
 
 	/**
 	 * Get the subtaskview factory for the addon task.

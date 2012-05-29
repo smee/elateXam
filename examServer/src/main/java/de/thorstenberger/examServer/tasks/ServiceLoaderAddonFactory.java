@@ -25,9 +25,8 @@ import java.util.ServiceLoader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import de.thorstenberger.examServer.webapp.listener.StartupListener;
 import de.thorstenberger.taskmodel.complex.addon.AddOnSubTaskletFactory;
-import de.thorstenberger.taskmodel.complex.addon.AddonSubtaskletFactoryPerOSGi;
+import de.thorstenberger.taskmodel.complex.addon.AddonSubtaskletFactories;
 import de.thorstenberger.taskmodel.view.AddonSubTaskViewFactory;
 
 /**
@@ -36,7 +35,7 @@ import de.thorstenberger.taskmodel.view.AddonSubTaskViewFactory;
  * @author Steffen Dienst
  * 
  */
-public class ServiceLoaderAddonFactory implements AddonSubtaskletFactoryPerOSGi {
+public class ServiceLoaderAddonFactory implements AddonSubtaskletFactories {
 	private static final Log LOG = LogFactory.getLog(ServiceLoaderAddonFactory.class);
 	private final Map<String, AddonSubTaskViewFactory> viewFactories = new HashMap<String, AddonSubTaskViewFactory>();
 	private final Map<String, AddOnSubTaskletFactory> taskletFactories = new HashMap<String, AddOnSubTaskletFactory>();

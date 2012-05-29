@@ -21,9 +21,8 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import de.thorstenberger.examServer.Constants;
 import de.thorstenberger.examServer.service.LookupManager;
-import de.thorstenberger.examServer.tasks.HardWiredAddonFactory;
 import de.thorstenberger.taskmodel.TaskModelServices;
-import de.thorstenberger.taskmodel.complex.addon.AddonSubtaskletFactoryPerOSGi;
+import de.thorstenberger.taskmodel.complex.addon.AddonSubtaskletFactories;
 
 /**
  * <p>StartupListener class used to initialize and database settings
@@ -89,7 +88,7 @@ public class StartupListener extends ContextLoaderListener
                 }
                 config.put(Constants.ENC_ALGORITHM, algorithm);
             }
-            AddonSubtaskletFactoryPerOSGi addonFactory = (AddonSubtaskletFactoryPerOSGi) ctx.getBean("addonFactory");
+            AddonSubtaskletFactories addonFactory = (AddonSubtaskletFactories) ctx.getBean("addonFactory");
             // enable autotool addon subtasks
             TaskModelServices.getInstance().setAddonSubtaskletFactory(addonFactory);
         } catch (NoSuchBeanDefinitionException n) {

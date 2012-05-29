@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel;
 
-import de.thorstenberger.taskmodel.complex.addon.AddonSubtaskletFactoryPerOSGi;
+import de.thorstenberger.taskmodel.complex.addon.AddonSubtaskletFactories;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.AddOnSubTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 import de.thorstenberger.taskmodel.view.AddonSubTaskViewFactory;
@@ -39,7 +39,7 @@ public class TaskModelServices implements SubTaskViewFactory {
         return instance;
     }
 
-    AddonSubtaskletFactoryPerOSGi factory;
+    AddonSubtaskletFactories factory;
 
     private SubTaskViewFactory delegate;
 
@@ -50,7 +50,7 @@ public class TaskModelServices implements SubTaskViewFactory {
      * @see
      * de.thorstenberger.taskmodel.complex.addon.AddonSubtaskletFactoryPerOSGi
      */
-    public AddonSubtaskletFactoryPerOSGi getAddonSubtaskletFactory() {
+    public AddonSubtaskletFactories getAddonSubtaskletFactory() {
         return factory;
     }
 
@@ -83,7 +83,7 @@ public class TaskModelServices implements SubTaskViewFactory {
      * @see
      * de.thorstenberger.taskmodel.complex.addon.AddonSubtaskletFactoryPerOSGi
      */
-    public void setAddonSubtaskletFactory(final AddonSubtaskletFactoryPerOSGi f) {
+    public void setAddonSubtaskletFactory(final AddonSubtaskletFactories f) {
         this.factory = f;
     }
 

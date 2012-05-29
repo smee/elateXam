@@ -22,7 +22,7 @@ Building
 Make sure you have a recent installation of [Java JDK 1.6.0+](http://www.oracle.com/technetwork/java/javase/downloads/index.html) as well as [Maven 2](http://maven.apache.org/download.html). Also there are two more external dependencies:   
 
 * [HttpBot](http://github.com/smee/httpbot): scriptable http crawler (importing users from moodle via .csv download)
-* [Flanagan] (http://github.com/smee/flanagan): vast amount of math, statistics etc. (used for test statistics)
+* [CEWolf] (https://github.com/smee/cewolf): Struts 1.x charts
 
 ### Steps ###
 

@@ -129,4 +129,6 @@
       <ref bean="PreviewTaskletContainer" />
     </constructor-arg>
   </bean>
+  <!-- Provider for addon subtasks. -->
+  <bean id="addonFactory" class="de.thorstenberger.examServer.tasks.ServiceLoaderAddonFactory"/>
 </beans>

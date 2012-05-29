@@ -23,6 +23,7 @@ import de.thorstenberger.examServer.Constants;
 import de.thorstenberger.examServer.service.LookupManager;
 import de.thorstenberger.examServer.tasks.HardWiredAddonFactory;
 import de.thorstenberger.taskmodel.TaskModelServices;
+import de.thorstenberger.taskmodel.complex.addon.AddonSubtaskletFactoryPerOSGi;
 
 /**
  * <p>StartupListener class used to initialize and database settings
@@ -88,9 +89,9 @@ public class StartupListener extends ContextLoaderListener
                 }
                 config.put(Constants.ENC_ALGORITHM, algorithm);
             }
-//            AddonSubtaskletFactoryPerOSGi addonFactory = (AddonSubtaskletFactoryPerOSGi) ctx.getBean("addonFactory");
+            AddonSubtaskletFactoryPerOSGi addonFactory = (AddonSubtaskletFactoryPerOSGi) ctx.getBean("addonFactory");
             // enable autotool addon subtasks
-            TaskModelServices.getInstance().setAddonSubtaskletFactory(new HardWiredAddonFactory());
+            TaskModelServices.getInstance().setAddonSubtaskletFactory(addonFactory);
         } catch (NoSuchBeanDefinitionException n) {
             // ignore, should only happen when testing
         }

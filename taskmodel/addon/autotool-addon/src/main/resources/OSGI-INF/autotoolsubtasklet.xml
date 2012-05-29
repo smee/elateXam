@@ -1,0 +1,6 @@
+<component name="Autotool-Subtasklets">
+    <implementation class="de.elatePortal.autotool.AutotoolAddOnSubTaskletFactoryImpl"/>
+    <service>
+        <provide interface="de.thorstenberger.taskmodel.complex.addon.AddOnSubTaskletFactory"/>
+    </service>
+</component>

@@ -25,9 +25,9 @@
         <extensions>true</extensions>
         <configuration>
           <instructions>
-            <Bundle-Activator>activator.Activator</Bundle-Activator>
-	  <Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>   
-             <Import-Package>*;resolution:=optional</Import-Package> 
+	        <Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>   
+            <Import-Package>*;resolution:=optional</Import-Package> 
+            <Service-Component>OSGI-INF/*.xml</Service-Component>
 	  </instructions>
         </configuration>
       </plugin>
@@ -59,12 +59,6 @@
     </dependency>
     
 <!-- osgi interfaces -->
-    <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.osgi.core</artifactId>
-            <version>1.0.0</version>
-	  <scope>provided</scope>
-        </dependency>
     <!-- xmlrpc communication libs -->
     <dependency>
       <groupId>xmlrpc</groupId>

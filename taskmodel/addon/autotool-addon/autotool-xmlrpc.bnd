@@ -7,3 +7,4 @@ Private-Package: autotool,activator, de.elatePortal.autotool.*
 Import-Package: *;resolution:=optional
 Bundle-ClassPath: .,ws-commons-util-1.0.1.jar,xmlrpc-client-3.0.jar,xmlrpc-common-3.0.jar,commons-httpclient-3.0.jar
 Include-Resource: target/lib/
+Service-Component: OSGI-INF/*.xml

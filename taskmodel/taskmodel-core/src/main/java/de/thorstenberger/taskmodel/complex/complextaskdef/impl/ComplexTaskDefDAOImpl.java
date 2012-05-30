@@ -30,6 +30,7 @@ import java.io.OutputStream;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.Validator;
 
@@ -77,10 +78,12 @@ public class ComplexTaskDefDAOImpl implements ComplexTaskDefDAO {
 				unmarshal( bis );
 			bis.close();
 
+		} catch (UnmarshalException e) {
+		  throw new TaskApiException(e.getLinkedException());
 		} catch (JAXBException e1) {
-			throw new TaskModelPersistenceException( e1 );
+			throw new TaskApiException( e1 );
 		} catch (IOException e2) {
-			throw new TaskModelPersistenceException( e2 );
+			throw new TaskApiException( e2 );
     }finally{
       if(unmarshaller!=null)
         JAXBUtils.releaseJAXBUnmarshaller(jc, unmarshaller);

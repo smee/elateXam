@@ -21,13 +21,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package de.thorstenberger.taskmodel;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-
-import de.thorstenberger.taskmodel.complex.ComplexTaskletCorrectorImpl.CorrectorIndexCount;
 
 /**
  * @author Thorsten Berger

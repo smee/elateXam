@@ -29,9 +29,9 @@ import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.Map;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.apache.commons.codec.binary.Base64;
-import org.apache.xerces.dom.CoreDocumentImpl;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -43,8 +43,7 @@ import de.elatePortal.autotool.view.AutotoolCorrectionSubmitData;
 import de.elatePortal.autotool.view.AutotoolSubmitData;
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.complex.RandomUtil;
-import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
+import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot.CorrectionModeType;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl.AbstractAddonSubTasklet;
@@ -69,8 +68,12 @@ public class SubTasklet_AutotoolImpl extends AbstractAddonSubTasklet implements 
 		private void parseSubTask(AddonSubTask atSubTask) {
 			this.memento=atSubTask.getMemento();
 			if(memento==null) {
-				Document doc=new CoreDocumentImpl();
-				memento=doc.createElementNS("http://complex.taskmodel.thorstenberger.de/complexTaskHandling","Memento");
+				try {
+          memento=DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument().createElementNS("http://complex.taskmodel.thorstenberger.de/complexTaskHandling","Memento");
+        } catch (Exception e) {
+          // TODO make sure there is always a memento element!
+          e.printStackTrace();
+        }
 				atSubTask.setMemento(memento);
 			}
 		}
@@ -166,8 +169,8 @@ public class SubTasklet_AutotoolImpl extends AbstractAddonSubTasklet implements 
 	/**
 	 *
 	 */
-	public SubTasklet_AutotoolImpl( ComplexTaskDefRoot root, Block block, SubTaskDefType aoSubTaskDef, AddonSubTask atSubTask ) {
-		super(root, block,aoSubTaskDef,atSubTask);
+	public SubTasklet_AutotoolImpl( SubTaskDefType aoSubTaskDef, AddonSubTask atSubTask, CorrectionModeType correctionMode, float reachablePoints ) {
+		super(aoSubTaskDef, atSubTask, correctionMode, reachablePoints);
 		this.autotoolTaskConfig=new AutotoolTaskConfig(((AddonSubTaskDef) aoSubTaskDef));
 		this.autotoolSubTask = new AutotoolSubTaskDummy(atSubTask);
 	}
@@ -201,7 +204,7 @@ public class SubTasklet_AutotoolImpl extends AbstractAddonSubTasklet implements 
 		try {
 			AutotoolTaskInstance ati=new AutotoolTaskInstance.AutotoolTaskInstanceVO(autotoolTaskConfig.getTaskType(),(Map) deserialize(autotoolSubTask.getAutotoolInstanceBlob()));
 			AutotoolGrade grade=getAutotoolServices().gradeTaskInstance(ati,getAnswer());
-			setCorrection((grade.isSolved()?block.getPointsPerSubTask():0), grade.getGradeDocumentation(), true);//TODO autotools laenge der loesung speichern?
+			setCorrection((grade.isSolved()?getReachablePoints():0), grade.getGradeDocumentation(), true);//TODO autotools laenge der loesung speichern?
 			autotoolSubTask.setAutotoolScore(grade.getPoints());
 			autotoolSubTask.setLastCorrectedAnswer(getAnswer());
 		} catch (Exception e) {//TODO bloed

@@ -32,16 +32,15 @@ import org.apache.commons.lang.StringUtils;
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.TaskModelPersistenceException;
 import de.thorstenberger.taskmodel.complex.TaskHandlingConstants;
-import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
-import de.thorstenberger.taskmodel.complex.complextaskdef.blocks.impl.GenericBlockImpl;
+import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot.CorrectionModeType;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.correctionsubmitdata.ClozeCorrectionSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.ClozeSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Cloze;
 import de.thorstenberger.taskmodel.complex.jaxb.ClozeSubTaskDef;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDef.Category.ClozeTaskBlock;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDef.Category.ClozeTaskBlock.ClozeConfig;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.ClozeSubTask;
 import de.thorstenberger.taskmodel.complex.jaxb.ManualCorrectionType;
@@ -54,18 +53,17 @@ import de.thorstenberger.taskmodel.complex.jaxb.SubTaskType;
  */
 public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTasklet_Cloze {
 
-	private ClozeTaskBlock clozeTaskBlock;
 	private ClozeSubTaskDef clozeSubTaskDef;
 	private ClozeSubTask clozeSubTask;
-
+	private ClozeConfig clozeConfig;
 	/**
 	 *
 	 */
-	public SubTasklet_ClozeImpl( Block block, SubTaskDefType clozeSubTaskDef, SubTaskType clozeSubTask, ComplexTaskDefRoot complexTaskDefRoot ) {
-		super( complexTaskDefRoot, block, clozeSubTaskDef, clozeSubTask  );
-		this.clozeTaskBlock = (ClozeTaskBlock) ((GenericBlockImpl)block).getJaxbTaskBlock();
+	public SubTasklet_ClozeImpl( SubTaskDefType clozeSubTaskDef, SubTaskType clozeSubTask, CorrectionModeType correctionMode, float reachablePoints, ClozeConfig clozeConfig ) {
+		super( clozeSubTaskDef, clozeSubTask, correctionMode, reachablePoints );
 		this.clozeSubTaskDef = (ClozeSubTaskDef) clozeSubTaskDef;
-		this.clozeSubTask = (ClozeSubTask) clozeSubTask;;
+		this.clozeSubTask = (ClozeSubTask) clozeSubTask;
+		this.clozeConfig = clozeConfig;
 	}
 
 
@@ -96,8 +94,8 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 	public void doAutoCorrection(){
 
 		Gap[] gaps = getGaps();
-		float points = clozeTaskBlock.getConfig().getPointsPerTask();
-		float negativePoints = clozeTaskBlock.getClozeConfig().getNegativePoints();
+		float points = getReachablePoints();
+		float negativePoints = clozeConfig.getNegativePoints();
 		boolean noneProcessed = true;
 		boolean couldCorrectAllGaps = true;
 
@@ -146,11 +144,11 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 	    for( int i=0; i<gaps.length; i++ ){
 	        if( !gaps[i].isAutoCorrected() ) {
                 gaps[i].setManualCorrection( csd.getCorrector(),
-	            		complexTaskDefRoot.getCorrectionMode().getType() == ComplexTaskDefRoot.CorrectionModeType.MULTIPLECORRECTORS, ccsd.isCorrect( i ) );
+	            		correctionMode == ComplexTaskDefRoot.CorrectionModeType.MULTIPLECORRECTORS, ccsd.isCorrect( i ) );
             }
 	    }
 
-	    calculatePoints( csd.getCorrector(), complexTaskDefRoot.getCorrectionMode().getType() == ComplexTaskDefRoot.CorrectionModeType.MULTIPLECORRECTORS );
+	    calculatePoints( csd.getCorrector(), correctionMode == ComplexTaskDefRoot.CorrectionModeType.MULTIPLECORRECTORS );
 	}
 
 	/**
@@ -164,8 +162,8 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 	 */
 	private void calculatePoints( String corrector, boolean multipleCorrectionMode ){
 	    Gap[] gaps = getGaps();
-		float points = clozeTaskBlock.getConfig().getPointsPerTask();
-		float negativePoints = clozeTaskBlock.getClozeConfig().getNegativePoints();
+		float points = getReachablePoints();
+		float negativePoints = clozeConfig.getNegativePoints();
 		boolean allCorrected = true;
 
 	    for( int i=0; i<gaps.length; i++ ){
@@ -374,8 +372,8 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 		private boolean isIgnoreCase(){
 			if( gapDef.isSetIgnoreCase() )
 				return gapDef.isIgnoreCase();
-			else if( clozeTaskBlock.getClozeConfig().isSetIgnoreCase() )
-				return clozeTaskBlock.getClozeConfig().isIgnoreCase();
+			else if( clozeConfig.isSetIgnoreCase() )
+				return clozeConfig.isIgnoreCase();
 			else
 				return false;	// default
 		}
@@ -416,7 +414,7 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 		 */
 		public boolean isCorrectByCorrector(String corrector) throws IllegalStateException {
 			List<ManualGapCorrection> gcs = getManualCorrections();
-			if( complexTaskDefRoot.getCorrectionMode().getType() != ComplexTaskDefRoot.CorrectionModeType.MULTIPLECORRECTORS ){
+			if( correctionMode != ComplexTaskDefRoot.CorrectionModeType.MULTIPLECORRECTORS ){
 				if( gcs.size() <= 0 )
 					throw new IllegalStateException( "Gap has not been corrected by any corrector." );
 				return gcs.get( 0 ).isCorrect();
@@ -438,7 +436,7 @@ public class SubTasklet_ClozeImpl extends AbstractSubTasklet implements SubTaskl
 				return false;
 			List<ManualGapCorrection> gapCorrections = getManualCorrections();
 
-			if( complexTaskDefRoot.getCorrectionMode().getType() != ComplexTaskDefRoot.CorrectionModeType.MULTIPLECORRECTORS )
+			if( correctionMode != ComplexTaskDefRoot.CorrectionModeType.MULTIPLECORRECTORS )
 				return gapCorrections != null && gapCorrections.size() > 0;
 
 			for( ManualGapCorrection gc : gapCorrections )

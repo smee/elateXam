@@ -22,15 +22,13 @@ import java.util.List;
 
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.complex.TaskHandlingConstants;
-import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
-import de.thorstenberger.taskmodel.complex.complextaskdef.blocks.impl.GenericBlockImpl;
+import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot.CorrectionModeType;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.correctionsubmitdata.PaintCorrectionSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.PaintSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Paint;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDef.Category.PaintTaskBlock;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.PaintSubTask;
 import de.thorstenberger.taskmodel.complex.jaxb.ManualCorrectionType;
 import de.thorstenberger.taskmodel.complex.jaxb.PaintSubTaskDef;
@@ -40,16 +38,14 @@ import de.thorstenberger.taskmodel.complex.jaxb.SubTaskType;
 
 public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTasklet_Paint {
 
-	private PaintTaskBlock paintTaskBlock;
 	private PaintSubTaskDef paintSubTaskDef;
 	private PaintSubTask paintSubTask;
 
 	/**
 	 *
 	 */
-	public SubTasklet_PaintImpl( Block block, SubTaskDefType paintSubTaskDef, SubTaskType paintSubTask, ComplexTaskDefRoot complexTaskDefRoot ) {
-		super( complexTaskDefRoot, block, paintSubTaskDef, paintSubTask  );
-		this.paintTaskBlock = (PaintTaskBlock) ((GenericBlockImpl)block).getJaxbTaskBlock();
+	public SubTasklet_PaintImpl( float reachablePoints, SubTaskDefType paintSubTaskDef, SubTaskType paintSubTask, CorrectionModeType correctionMode ) {
+		super( paintSubTaskDef, paintSubTask, correctionMode, reachablePoints );
 		this.paintSubTaskDef = (PaintSubTaskDef) paintSubTaskDef;
 		this.paintSubTask = (PaintSubTask) paintSubTask;;
 	}
@@ -90,11 +86,11 @@ public class SubTasklet_PaintImpl extends AbstractSubTasklet implements SubTaskl
 
 		PaintCorrectionSubmitData pcsd = (PaintCorrectionSubmitData) csd;
 
-		if( pcsd.getPoints() < 0 || pcsd.getPoints() > paintTaskBlock.getConfig().getPointsPerTask() )
+		if( pcsd.getPoints() < 0 || pcsd.getPoints() > reachablePoints )
 			return;
 
 		List<ManualCorrectionType> manualCorrections = paintSubTask.getManualCorrection();
-		if( complexTaskDefRoot.getCorrectionMode().getType() == ComplexTaskDefRoot.CorrectionModeType.MULTIPLECORRECTORS ){
+		if( correctionMode == ComplexTaskDefRoot.CorrectionModeType.MULTIPLECORRECTORS ){
 
 			for( ManualCorrectionType mc : manualCorrections ){
 				if( mc.getCorrector().equals( pcsd.getCorrector() ) ){

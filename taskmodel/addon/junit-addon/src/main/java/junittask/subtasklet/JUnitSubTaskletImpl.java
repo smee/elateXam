@@ -32,6 +32,7 @@ import correction.junit.JUnitTestResult;
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
+import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot.CorrectionModeType;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl.AbstractAddonSubTasklet;
@@ -107,12 +108,12 @@ public class JUnitSubTaskletImpl extends AbstractAddonSubTasklet implements SubT
 	private JUnitSubTaskDef justdd;
 	private JUnitTestCorrector taskCorrector;
 
-	public JUnitSubTaskletImpl(ComplexTaskDefRoot complexTaskDefRoot, Block block,SubTaskDefType subTaskDef, SubTaskType subTaskType, JUnitTestCorrector corrector) {
-		this(complexTaskDefRoot, block, subTaskDef, subTaskType);
+	public JUnitSubTaskletImpl(SubTaskDefType subTaskDef, SubTaskType subTaskType, CorrectionModeType correctionMode, float reachablePoints, JUnitTestCorrector corrector) {
+		this( subTaskDef, subTaskType, correctionMode, reachablePoints);
 		this.taskCorrector=corrector;
 	}
-	public JUnitSubTaskletImpl(ComplexTaskDefRoot complexTaskDefRoot, Block block,SubTaskDefType subTaskDef, SubTaskType subTaskType) {
-		super(complexTaskDefRoot, block, subTaskDef, subTaskType);
+	public JUnitSubTaskletImpl(SubTaskDefType subTaskDef, SubTaskType subTaskType, CorrectionModeType correctionMode, float reachablePoints) {
+		super(subTaskDef, subTaskType, correctionMode, reachablePoints);
 		this.justd=new JUnitSubtaskDummy((AddonSubTask) subTaskType);
 		this.justdd=new JUnitSubTaskDef((AddonSubTaskDef) subTaskDef);
 
@@ -126,7 +127,7 @@ public class JUnitSubTaskletImpl extends AbstractAddonSubTasklet implements SubT
 	public void doAutoCorrection() {
 			JUnitTestResult result=taskCorrector.runUnitTest( justdd.getInterfaceClassDef(), this.getClassDef(), justdd.getTestClassDef(), justdd.getTimeout() );
 			if(result != null) {
-                setCorrection(result.isCorrect()?block.getPointsPerSubTask():0,result.getResult(),true);
+                setCorrection(result.isCorrect()?getReachablePoints():0,result.getResult(),true);
             }
             else {
                 ;//TODO needs manual correction

@@ -22,13 +22,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 package de.thorstenberger.taskmodel.complex.complextaskhandling.impl;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import de.thorstenberger.taskmodel.complex.ComplexTaskFactory;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page;
+import de.thorstenberger.taskmodel.complex.jaxb.SubTaskType;
 
 /**
  * @author Thorsten Berger
@@ -82,9 +82,9 @@ public class PageImpl implements de.thorstenberger.taskmodel.complex.complextask
 	public List<SubTasklet> getSubTasklets() {
 		List<SubTasklet> ret = new ArrayList<SubTasklet>();
 
-		Iterator it = pageType.getMcSubTaskOrClozeSubTaskOrTextSubTask().iterator();
-		while( it.hasNext() ){
-			ret.add( complexTaskFactory.instantiateSubTasklet( it.next(), complexTaskDefRoot, getCategoryRefId() ) );
+		for(SubTaskType stt: pageType.getMcSubTaskOrClozeSubTaskOrTextSubTask()){
+			ret.add( complexTaskFactory.instantiateSubTasklet( stt, complexTaskDefRoot, getCategoryRefId() ) );
+			
 		}
 
 		return ret;

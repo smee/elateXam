@@ -21,7 +21,6 @@ package de.thorstenberger.taskmodel.util;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import javax.xml.XMLConstants;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 

@@ -37,6 +37,7 @@ import de.thorstenberger.taskmodel.MethodNotSupportedException;
 import de.thorstenberger.taskmodel.complex.addon.AddOnSubTaskletFactory;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
+import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot.CorrectionModeType;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.AddOnSubTasklet;
 import de.thorstenberger.taskmodel.complex.jaxb.AddonSubTaskDef;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.AddonSubTask;
@@ -50,9 +51,9 @@ public class JUnitAddOnSubTaskletFactoryImpl implements
 		corr = new CorrectorServiceTrackerProxy(context, remoteUrl);
 	}
 
-	public AddOnSubTasklet createAddOnSubTasklet(ComplexTaskDefRoot root, Block block, Object subTaskDef, Object subTask) {
+	public AddOnSubTasklet createAddOnSubTasklet(Object subTaskDef, Object subTask, CorrectionModeType correctionMode, float reachablePoints) {
 		//System.out.println("[JUnitAddOnSubTaskletFactoryImpl] creating JUnitSubTaskletImpl(...)");
-		return new JUnitSubTaskletImpl(root, block,(AddonSubTaskDef)subTaskDef,(AddonSubTask)subTask,corr);
+		return new JUnitSubTaskletImpl((AddonSubTaskDef)subTaskDef,(AddonSubTask)subTask,correctionMode, reachablePoints, corr);
 	}
 
 	public String getAddonTaskType() {

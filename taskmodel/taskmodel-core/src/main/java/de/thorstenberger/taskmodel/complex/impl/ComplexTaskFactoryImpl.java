@@ -32,6 +32,7 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Category;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Choice;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
+import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot.CorrectionModeType;
 import de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef;
 import de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDefOrChoice;
 import de.thorstenberger.taskmodel.complex.complextaskdef.blocks.impl.GenericBlockImpl;
@@ -46,6 +47,12 @@ import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl.
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl.SubTasklet_TextImpl;
 import de.thorstenberger.taskmodel.complex.jaxb.AddonSubTaskDef;
 import de.thorstenberger.taskmodel.complex.jaxb.ClozeSubTaskDef;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDef.Category.ClozeTaskBlock;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDef.Category.ClozeTaskBlock.ClozeConfig;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDef.Category.MappingTaskBlock;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDef.Category.MappingTaskBlock.MappingConfig;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDef.Category.McTaskBlock;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDef.Category.McTaskBlock.McConfig;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.AddonSubTask;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.ClozeSubTask;
@@ -57,6 +64,8 @@ import de.thorstenberger.taskmodel.complex.jaxb.MappingSubTaskDef;
 import de.thorstenberger.taskmodel.complex.jaxb.McSubTaskDef;
 import de.thorstenberger.taskmodel.complex.jaxb.ObjectFactory;
 import de.thorstenberger.taskmodel.complex.jaxb.PaintSubTaskDef;
+import de.thorstenberger.taskmodel.complex.jaxb.SubTaskDefType;
+import de.thorstenberger.taskmodel.complex.jaxb.SubTaskType;
 import de.thorstenberger.taskmodel.complex.jaxb.TaskBlockType;
 import de.thorstenberger.taskmodel.complex.jaxb.TextSubTaskDef;
 
@@ -134,45 +143,43 @@ public class ComplexTaskFactoryImpl implements ComplexTaskFactory {
   }
 
 
-	public SubTasklet instantiateSubTasklet( Object jaxbSubTask, ComplexTaskDefRoot complexTaskDefRoot, String categoryId ){
-
-		if( jaxbSubTask instanceof McSubTask ){
+	public SubTasklet instantiateSubTasklet( SubTaskType jaxbSubTask, ComplexTaskDefRoot complexTaskDefRoot, String categoryId ){
+    BlockAndSubTaskDef blockAndSubTaskDef = lookupTaskBlockAndSubTaskDef( complexTaskDefRoot, categoryId, jaxbSubTask.getRefId() );
+    SubTaskDefType stdt = ((GenericSubTaskDefImpl)blockAndSubTaskDef.getSubTaskDef()).getJaxbSubTaskDef();    
+    CorrectionModeType correctionMode = complexTaskDefRoot.getCorrectionMode().getType();
+    TaskBlockType block = (TaskBlockType) ((GenericBlockImpl)blockAndSubTaskDef.getBlock()).getJaxbTaskBlock();
+    float maxPoints = block.getConfig().getPointsPerTask();
+    
+	  if( jaxbSubTask instanceof McSubTask ){
 
 			McSubTask mcSubTask = (McSubTask)jaxbSubTask;
-			BlockAndSubTaskDef blockAndSubTaskDef = lookupTaskBlockAndSubTaskDef( complexTaskDefRoot, categoryId, mcSubTask.getRefId() );
-			return new SubTasklet_MCImpl( blockAndSubTaskDef.getBlock(), ((GenericSubTaskDefImpl)blockAndSubTaskDef.getSubTaskDef()).getJaxbSubTaskDef(), mcSubTask, complexTaskDefRoot );
+			McConfig mcConfig = ((McTaskBlock)block).getMcConfig();
+			return new SubTasklet_MCImpl( stdt, mcSubTask, correctionMode, maxPoints, mcConfig );
 
 		}else if( jaxbSubTask instanceof MappingSubTask ){
-
 			MappingSubTask mappingSubTask = (MappingSubTask)jaxbSubTask;
-			BlockAndSubTaskDef blockAndSubTaskDef = lookupTaskBlockAndSubTaskDef( complexTaskDefRoot, categoryId, mappingSubTask.getRefId() );
-			return new SubTasklet_MappingImpl( blockAndSubTaskDef.getBlock(), ((GenericSubTaskDefImpl)blockAndSubTaskDef.getSubTaskDef()).getJaxbSubTaskDef(), mappingSubTask, complexTaskDefRoot );
+			MappingConfig mappingConfig = ((MappingTaskBlock)block).getMappingConfig();
+			return new SubTasklet_MappingImpl( stdt, mappingSubTask, correctionMode, maxPoints, mappingConfig );
 
 		}else if( jaxbSubTask instanceof ClozeSubTask ){
-
 			ClozeSubTask clozeSubTask = (ClozeSubTask)jaxbSubTask;
-			BlockAndSubTaskDef blockAndSubTaskDef = lookupTaskBlockAndSubTaskDef( complexTaskDefRoot, categoryId, clozeSubTask.getRefId() );
-			return new SubTasklet_ClozeImpl( blockAndSubTaskDef.getBlock(), ((GenericSubTaskDefImpl)blockAndSubTaskDef.getSubTaskDef()).getJaxbSubTaskDef(), clozeSubTask, complexTaskDefRoot );
+			ClozeConfig clozeConfig = ((ClozeTaskBlock)block).getClozeConfig();
+			return new SubTasklet_ClozeImpl( stdt, clozeSubTask, correctionMode, maxPoints, clozeConfig );
 
 		}else if( jaxbSubTask instanceof TextSubTask ){
-
 			TextSubTask textSubTask = (TextSubTask)jaxbSubTask;
-			BlockAndSubTaskDef blockAndSubTaskDef = lookupTaskBlockAndSubTaskDef( complexTaskDefRoot, categoryId, textSubTask.getRefId() );
-			return new SubTasklet_TextImpl( blockAndSubTaskDef.getBlock(), ((GenericSubTaskDefImpl)blockAndSubTaskDef.getSubTaskDef()).getJaxbSubTaskDef(), textSubTask, complexTaskDefRoot );
+			return new SubTasklet_TextImpl( maxPoints, stdt, textSubTask, correctionMode );
 
 		}else if( jaxbSubTask instanceof PaintSubTask ){
-
 			PaintSubTask paintSubTask = (PaintSubTask)jaxbSubTask;
-			BlockAndSubTaskDef blockAndSubTaskDef = lookupTaskBlockAndSubTaskDef( complexTaskDefRoot, categoryId, paintSubTask.getRefId() );
-			return new SubTasklet_PaintImpl( blockAndSubTaskDef.getBlock(), ((GenericSubTaskDefImpl)blockAndSubTaskDef.getSubTaskDef()).getJaxbSubTaskDef(), paintSubTask, complexTaskDefRoot );
+			return new SubTasklet_PaintImpl( maxPoints, stdt, paintSubTask, correctionMode );
 
 		}else if( jaxbSubTask instanceof AddonSubTask ){
 			AddonSubTask atSubTask = (AddonSubTask)jaxbSubTask;
-			BlockAndSubTaskDef blockAndSubTaskDef = lookupTaskBlockAndSubTaskDef( complexTaskDefRoot, categoryId, atSubTask.getRefId() );
-			String addonType=((AddonSubTaskDef)((GenericSubTaskDefImpl)blockAndSubTaskDef.getSubTaskDef()).getJaxbSubTaskDef()).getTaskType();
+			String addonType=((AddonSubTaskDef)stdt).getTaskType();
 			AddOnSubTaskletFactory factory=TaskModelServices.getInstance().getAddonSubtaskletFactory().getSubTaskletFactory(addonType);
 			if(factory!=null)
-				return factory.createAddOnSubTasklet(complexTaskDefRoot, blockAndSubTaskDef.getBlock(), ((GenericSubTaskDefImpl)blockAndSubTaskDef.getSubTaskDef()).getJaxbSubTaskDef(), atSubTask );
+				return factory.createAddOnSubTasklet( stdt, atSubTask, correctionMode, maxPoints );
 		}
 		return null;
 

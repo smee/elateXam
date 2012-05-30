@@ -18,8 +18,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 package de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.impl;
 
-import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
+import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot.CorrectionModeType;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.AddOnSubTasklet;
 import de.thorstenberger.taskmodel.complex.jaxb.AddonSubTaskDef;
 import de.thorstenberger.taskmodel.complex.jaxb.SubTaskDefType;
@@ -28,8 +27,8 @@ import de.thorstenberger.taskmodel.complex.jaxb.SubTaskType;
 public abstract class AbstractAddonSubTasklet extends AbstractSubTasklet implements
 		AddOnSubTasklet {
 
-	public AbstractAddonSubTasklet(ComplexTaskDefRoot complexTaskDefRoot, Block block,SubTaskDefType subTaskDef, SubTaskType subTaskType) {
-		super(complexTaskDefRoot, block, subTaskDef, subTaskType );
+	public AbstractAddonSubTasklet( SubTaskDefType subTaskDef, SubTaskType subTaskType, CorrectionModeType correctionMode, float reachablePoints ) {
+		super(subTaskDef, subTaskType, correctionMode, reachablePoints);
 	}
 
 	public int getTextFieldWidth(){

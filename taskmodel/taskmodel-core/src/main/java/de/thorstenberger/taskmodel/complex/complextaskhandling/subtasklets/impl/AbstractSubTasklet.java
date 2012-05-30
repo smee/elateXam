@@ -27,8 +27,8 @@ import java.util.List;
 
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.complex.TaskHandlingConstants;
-import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
+import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot.CorrectionModeType;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.ManualSubTaskletCorrection;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Page;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
@@ -42,19 +42,18 @@ import de.thorstenberger.taskmodel.complex.jaxb.SubTaskDefType;
 import de.thorstenberger.taskmodel.complex.jaxb.SubTaskType;
 
 public abstract class AbstractSubTasklet implements SubTasklet{
-	protected Block block;
+	protected float reachablePoints;
+	protected final CorrectionModeType correctionMode;
 	protected SubTaskDefType jaxbSubTaskDef;
 	protected SubTaskType subTaskType;
 
-	protected ComplexTaskDefRoot complexTaskDefRoot;
 	protected ObjectFactory objectFactory = new ObjectFactory();
 
 	/**
 	 * @param complexTaskDefRoot
 	 */
-	public AbstractSubTasklet(ComplexTaskDefRoot complexTaskDefRoot, Block block,SubTaskDefType subTaskDefImpl, SubTaskType subTaskType) {
-		this.complexTaskDefRoot = complexTaskDefRoot;
-		this.block=block;
+	public AbstractSubTasklet( SubTaskDefType subTaskDefImpl, SubTaskType subTaskType, CorrectionModeType correctionMode, float reachablePoints) {
+		this.correctionMode=correctionMode;
 		this.jaxbSubTaskDef=subTaskDefImpl;
 		this.subTaskType=subTaskType;
 	}
@@ -113,7 +112,7 @@ public abstract class AbstractSubTasklet implements SubTasklet{
 		List<ManualSubTaskletCorrection> mcs = getManualCorrections();
 
 		// if multiple corrector mode
-		if( complexTaskDefRoot.getCorrectionMode().getType() == ComplexTaskDefRoot.CorrectionModeType.MULTIPLECORRECTORS ){
+		if( correctionMode == ComplexTaskDefRoot.CorrectionModeType.MULTIPLECORRECTORS ){
 			for( ManualSubTaskletCorrection mc : mcs )
 				if( mc.getCorrector().equals( corrector ) )
 					return mc.getPoints();
@@ -131,7 +130,7 @@ public abstract class AbstractSubTasklet implements SubTasklet{
 	 * @see de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet#getReachablePoints()
 	 */
 	public float getReachablePoints(){
-		return block.getReachablePoints();
+		return this.reachablePoints;
 	}
 
 
@@ -141,7 +140,7 @@ public abstract class AbstractSubTasklet implements SubTasklet{
 	public boolean isCorrectedByCorrector(String corrector) {
 
 		List<ManualSubTaskletCorrection> corrections = getManualCorrections();
-		if( complexTaskDefRoot.getCorrectionMode().getType() == ComplexTaskDefRoot.CorrectionModeType.MULTIPLECORRECTORS ){
+		if( correctionMode == ComplexTaskDefRoot.CorrectionModeType.MULTIPLECORRECTORS ){
 			if( corrections != null) {
                 for( ManualSubTaskletCorrection mstc : corrections )
 					if( mstc.getCorrector().equals( corrector ) )
@@ -190,7 +189,7 @@ public abstract class AbstractSubTasklet implements SubTasklet{
 		if( !isCorrected() ) // if there has not been at least one (manual) correction, the flag is the decisive factor
 			return true;
 
-		if( complexTaskDefRoot.getCorrectionMode().getType() == ComplexTaskDefRoot.CorrectionModeType.MULTIPLECORRECTORS ){
+		if( correctionMode == ComplexTaskDefRoot.CorrectionModeType.MULTIPLECORRECTORS ){
 
 			if( isAutoCorrected() ) // should not happen, as the needsManualCorrection is only set if no auto-correction has been possible
 				return false;

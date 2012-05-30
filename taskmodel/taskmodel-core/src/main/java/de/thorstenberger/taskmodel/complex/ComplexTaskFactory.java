@@ -27,6 +27,7 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
 import de.thorstenberger.taskmodel.complex.complextaskdef.SubTaskDef;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubTasklet;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.Try;
+import de.thorstenberger.taskmodel.complex.jaxb.SubTaskType;
 import de.thorstenberger.taskmodel.complex.jaxb.TaskBlockType;
 
 /**
@@ -46,8 +47,8 @@ public interface ComplexTaskFactory {
 
 	public SubTasklet createSubTaskletForSubTaskDef( SubTaskDef subTaskDef, ComplexTaskDefRoot complexTaskDefRoot, String categoryId ) throws TaskApiException;
 
-	public SubTasklet instantiateSubTasklet( Object subTask, ComplexTaskDefRoot complexTaskDefRoot, String categoryId );
-
+	public SubTasklet instantiateSubTasklet( SubTaskType jaxbSubTask, ComplexTaskDefRoot complexTaskDefRoot, String categoryId );
+	
   /**
    * A student starts a new try.
    *

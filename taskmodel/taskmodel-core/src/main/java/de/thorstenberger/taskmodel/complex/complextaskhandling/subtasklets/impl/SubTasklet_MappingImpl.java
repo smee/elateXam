@@ -28,14 +28,12 @@ import javax.xml.bind.JAXBException;
 
 import de.thorstenberger.taskmodel.TaskApiException;
 import de.thorstenberger.taskmodel.complex.TaskHandlingConstants;
-import de.thorstenberger.taskmodel.complex.complextaskdef.Block;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot;
-import de.thorstenberger.taskmodel.complex.complextaskdef.blocks.impl.GenericBlockImpl;
+import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDefRoot.CorrectionModeType;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.CorrectionSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.SubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.submitdata.MappingSubmitData;
 import de.thorstenberger.taskmodel.complex.complextaskhandling.subtasklets.SubTasklet_Mapping;
-import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDef.Category.MappingTaskBlock;
+import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskDef.Category.MappingTaskBlock.MappingConfig;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling;
 import de.thorstenberger.taskmodel.complex.jaxb.ComplexTaskHandling.Try.Page.MappingSubTask;
 import de.thorstenberger.taskmodel.complex.jaxb.MappingSubTaskDef;
@@ -49,18 +47,18 @@ import de.thorstenberger.taskmodel.complex.jaxb.SubTaskType;
  */
 public class SubTasklet_MappingImpl extends AbstractSubTasklet implements SubTasklet_Mapping {
 
-	private MappingTaskBlock mappingTaskBlock;
 	private MappingSubTaskDef mappingSubTaskDef;
 	private MappingSubTask mappingSubTask;
+  private MappingConfig mappingConfig;
 
 	/**
 	 *
 	 */
-	public SubTasklet_MappingImpl( Block block, SubTaskDefType mappingSubTaskDef, SubTaskType mappingSubTask, ComplexTaskDefRoot complexTaskDefRoot ) {
-		super( complexTaskDefRoot, block, mappingSubTaskDef, mappingSubTask  );
-		this.mappingTaskBlock = (MappingTaskBlock) ((GenericBlockImpl)block).getJaxbTaskBlock();
+	public SubTasklet_MappingImpl( SubTaskDefType mappingSubTaskDef, SubTaskType mappingSubTask, CorrectionModeType correctionMode, float reachablePoints, MappingConfig mappingConfig ) {
+		super( mappingSubTaskDef, mappingSubTask, correctionMode, reachablePoints );
 		this.mappingSubTaskDef = (MappingSubTaskDef) mappingSubTaskDef;
-		this.mappingSubTask = (MappingSubTask) mappingSubTask;;
+		this.mappingSubTask = (MappingSubTask) mappingSubTask;
+		this.mappingConfig = mappingConfig;
 	}
 
 	/* (non-Javadoc)
@@ -115,8 +113,8 @@ public class SubTasklet_MappingImpl extends AbstractSubTasklet implements SubTas
 
 	public void doAutoCorrection() {
 
-		float points = mappingTaskBlock.getConfig().getPointsPerTask();
-		float negativePoints = mappingTaskBlock.getMappingConfig().getNegativePoints();
+		float points = getReachablePoints();
+		float negativePoints = mappingConfig.getNegativePoints();
 		boolean noneProcessed = true;
 
 		Concept[] concepts = getConcepts();

@@ -187,6 +187,7 @@ public class ExecuteAction extends org.apache.struts.action.Action {
                 stivo.setCorrectedHTML(TaskModelServices.getInstance().getSubTaskView(subTasklet).getCorrectedHTML(context, i));
             }
             stivo.setInteractiveFeedback(subTasklet.isInteractiveFeedback());
+            stivo.setInputLanguage(subTasklet.getInputLanguage());
             stivos.add(stivo);
         }
         request.setAttribute("SubTasklets", stivos);

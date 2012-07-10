@@ -45,6 +45,8 @@ public class SubTaskletInfoVO {
 	private String correctedHTML;
 	private String correctionHTML;
 	
+	private String inputLanguage;
+	
 	
 /**
 	 * @return the corrections
@@ -209,6 +211,14 @@ public class SubTaskletInfoVO {
 		this.interactiveFeedback = interactiveFeedback;
 	}
 	
+	public String getInputLanguage() {
+	    return inputLanguage;
+	}
+	
+	public void setInputLanguage(String inputLanguage) {
+	    this.inputLanguage = inputLanguage;
+	}
+		
 	
 	public class Correction{
 		

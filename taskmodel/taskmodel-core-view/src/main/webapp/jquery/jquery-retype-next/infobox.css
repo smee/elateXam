@@ -1,0 +1,9 @@
+#infobox-language {
+	background: lightgray;
+	padding: 5px;
+	position:absolute;
+	top:10px;
+	left:0%;
+	margin-left:10px;
+	opacity:0.9; filter:alpha(opacity=90);
+}

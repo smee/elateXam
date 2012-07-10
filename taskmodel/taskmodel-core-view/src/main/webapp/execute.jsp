@@ -173,6 +173,10 @@ function checkedLink(name, target, linkClass)
 //-->
 </script>
 
+
+<jsp:include page="language.jsp" />
+
+
 <br><br>
 <table border="0" cellspacing="0" cellpadding="5" width="790">
   <tr>

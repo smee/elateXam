@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<title>Test</title>
+	<script type="text/javascript" charset="utf-8"
+		src="../jquery-1.4.2.min.js"></script>
+	<script type="text/javascript" charset="utf-8"
+		src="jquery.textreset.js"></script>
+		
+	<script type="text/javascript" charset="utf-8">
+		$(document).ready(function(){
+			var graphical_hint = "<img style='border: 0px' src='images/left38.gif'></img>";
+			$("input[type='text']").textreset({ "linktext" : graphical_hint });
+			$("textarea").textareareset({ "linktext" : graphical_hint });
+		});
+	</script>
+</head>
+<body>
+	<h1>Textreset-Test</h1>
+	<p><input type="text" name="some_name_1" value="Some Value" id="id_1"></p>
+	<p><input type="text" name="some_name_2" value="Some Value" id="id_2"></p>
+	<p><input type="text" name="some_name_3" value="Some Value" id="id_3"></p>
+	
+	<br />
+	
+	<textarea name="Name" rows="8" cols="40">Hello World!</textarea>
+</body>
+</html>
